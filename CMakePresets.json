@@ -1,0 +1,33 @@
+{
+  "version": 6,
+  "configurePresets": [
+    {
+      "name": "mingw-base",
+      "hidden": true,
+      "displayName": "clang + MinGW-w64 (i686), hosted by Indy3D.exe v1.2",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/Build/${presetName}",
+      "toolchainFile": "${sourceDir}/cmake/toolchains/i686-w64-mingw32-clang.cmake",
+      "cacheVariables": {
+        "JONES3D_BUILD_PROGRAMS": "OFF",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    },
+    {
+      "name": "mingw-dx9-debug",
+      "inherits": "mingw-base",
+      "displayName": "DirectX 9 renderer, debug",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug", "JONES3D_USE_DIRECTX9": "ON" }
+    },
+    {
+      "name": "mingw-dx9-release",
+      "inherits": "mingw-base",
+      "displayName": "DirectX 9 renderer, release with debug info",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "RelWithDebInfo", "JONES3D_USE_DIRECTX9": "ON" }
+    }
+  ],
+  "buildPresets": [
+    { "name": "mingw-dx9-debug", "configurePreset": "mingw-dx9-debug" },
+    { "name": "mingw-dx9-release", "configurePreset": "mingw-dx9-release" }
+  ]
+}
