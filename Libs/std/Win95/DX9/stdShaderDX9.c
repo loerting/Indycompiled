@@ -49,12 +49,12 @@ static D3DVERTEXELEMENT9 std3D_vertexElements[] =
     D3DDECL_END()
 };
 
-inline size_t stdShader_GetMaxParams(StdShaderType type)
+static inline size_t stdShader_GetMaxParams(StdShaderType type) // INDY: static, file-local (C99 inline semantics)
 {
     return (type == STDSHADER_TYPE_VERTEX) ? stdShader_maxVsParams : STDSHADERDX9_MAX_PS_PARAMS;
 }
 
-inline StdShaderDX9* stdShader_GetShaderPtr(StdShaderHandle sh)
+static inline StdShaderDX9* stdShader_GetShaderPtr(StdShaderHandle sh) // INDY: static, file-local (C99 inline semantics)
 {
     STD_ASSERT(STDSHADER_ISVALIDHANDLE(sh)); //Only in debug
     return &stdShader_aShaders[STDSHADER_HANDLE_TO_INDEX(sh)];

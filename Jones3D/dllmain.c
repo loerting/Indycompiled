@@ -17,7 +17,7 @@
 #include "Play/jonesCog.h"
 #include "Play/JonesControl.h"
 #include "Play/jonesInventory.h"
-#include "RTI/addresses.h"
+#include <Jones3D/RTI/addresses.h> // INDY: via include path, so the generated v1.2 copy can take precedence
 #include "RTI/symbols.h"
 
 #include <rdroid/Engine/rdCamera.h>

@@ -128,6 +128,13 @@ inline bool J3DEndHookContext(J3DHookContext* pCtx)
  */
 static bool J3DHookFunction(intptr_t pFuncAddr, void* pHookFunc)
 {
+    // INDY: unverified v1.2 addresses are generated as 0, and every function entry in the host exe is
+    // 16-byte aligned: refuse anything else, so the original function keeps running (PROJECT.md §5.7)
+    if ( pFuncAddr == 0 || (pFuncAddr & 0xF) != 0 )
+    {
+        return false;
+    }
+
     if ( pFuncAddr == (intptr_t)pHookFunc )
     {
         printf("WARNING J3DHookFunction: Attempted to hook function at address %x to itself!\n", pFuncAddr);

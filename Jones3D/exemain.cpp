@@ -13,7 +13,11 @@
 #include "sha256.h"
 
 namespace fs = std::filesystem;
+#ifdef INDY_HOST_EXE_SHA256 // INDY: host exe chosen by the build (v1.2 through the address map, PROJECT.md §5.7)
+constexpr std::string_view Indy3D_v1_0_sha256 = INDY_HOST_EXE_SHA256;
+#else
 constexpr std::string_view Indy3D_v1_0_sha256 = "3fbaf8cd401b4af80967cbe42e3420fb803288b336ebbe72a9a01b6dfd661a53";
+#endif
 
 bool iequals(const std::string_view& lhs, const std::string_view& rhs)
 {

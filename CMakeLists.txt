@@ -87,9 +87,9 @@ else()
 endif()
 
 # Configure the version header file
-configure_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/LIBS/j3dcore/j3d.h.in"
-    "${CMAKE_CURRENT_SOURCE_DIR}/LIBS/j3dcore/j3d.h"
+configure_file( # INDY: "Libs", not "LIBS" (case-sensitive file systems)
+    "${CMAKE_CURRENT_SOURCE_DIR}/Libs/j3dcore/j3d.h.in"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Libs/j3dcore/j3d.h"
 )
 
 # Set global property for MSVC runtime library (CMake 3.15+)
@@ -118,6 +118,8 @@ if (MSVC)
         "$<$<CONFIG:DEBUG>:/ZI>"
     )
     add_link_options("/Brepro")
+elseif(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU") # INDY: clang + MinGW-w64 build on Linux (PROJECT.md §5)
+    include(cmake/indy.cmake)
 else()
     message(FATAL_ERROR "Unsupported compiler: ${CMAKE_CXX_COMPILER_ID}")
 endif()
