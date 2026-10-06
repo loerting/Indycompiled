@@ -8,6 +8,7 @@
 #
 # INDY_SMOKE_PROC=<name> checks another process (e.g. Indy3D.exe when starting the Jones3D.exe launcher).
 # INDY_SMOKE_INTERVAL=<s> screenshot interval (default 15); INDY_SMOKE_NOKEYS=1 sends no Escape key presses.
+# INDY_SMOKE_ACTIONS="<second>:<xdotool command>;..." runs scripted input, e.g. "40:keydown Up;44:keyup Up".
 # Usage: Scripts/indy/smoke.sh [seconds=45] [exe relative to game/run=Resource/Indy3D.exe] [game args...]
 # Output: game/screens/smoke-<timestamp>-<t>s.png and smoke-<timestamp>.log
 set -euo pipefail
@@ -50,8 +51,18 @@ cd "$run/$(dirname "$exe")"
 # full Windows path: explorer/start.exe do not search the working directory
 wine explorer /desktop=Indy,800x600 "$(winepath -w "$run/$exe")" "$@" >"$log" 2>&1 &
 proc="${INDY_SMOKE_PROC:-$(basename "$exe")}"   # process to check, e.g. Indy3D.exe when starting the launcher
+# INDY_SMOKE_ACTIONS="<second>:<xdotool command>;..." e.g. "40:keydown Up;44:keyup Up" (scripted input)
+declare -A actions
+IFS=';' read -ra parts <<< "${INDY_SMOKE_ACTIONS:-}"
+for part in "${parts[@]}"; do
+    [[ -n "$part" ]] && actions[${part%%:*}]+="${part#*:};"
+done
 for ((t = 1; t <= secs; t++)); do
     sleep 1
+    if [[ -n "${actions[$t]:-}" ]]; then
+        IFS=';' read -ra cmds <<< "${actions[$t]}"
+        for c in "${cmds[@]}"; do [[ -n "$c" ]] && xdotool $c 2>/dev/null; done
+    fi
     if (( t % ${INDY_SMOKE_INTERVAL:-15} == 0 )); then
         import -window root "$shot-${t}s.png"
         [[ "${INDY_SMOKE_NOKEYS:-0}" == 1 ]] || xdotool key Escape 2>/dev/null || true   # skip intro videos / splash screens
