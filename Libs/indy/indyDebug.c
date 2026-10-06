@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <sith/Dss/sithGamesave.h>
 #include <sith/World/sithWorld.h>
 #include <std/General/stdUtil.h>
 #include <std/types.h>
@@ -166,7 +167,8 @@ void indyDebug_FrameCap(void)
 // World snapshots compare runs, but heap addresses differ between runs (levels whose loading overlaps a cutscene or
 // streaming don't allocate deterministically). So every word that points into the heap is written as what it points
 // to: a world array element (T/O/S/... index + offset), a stdMemory block (size and, a few levels deep, its
-// canonical contents), a name (string), or just "P". Other words are written as hex.
+// canonical contents), or just "P". Other words are written as hex. (No guessing by the bytes at the address:
+// a flags word that happens to look like an address would read different memory in each run.)
 #define INDY_DUMP_HEADERMAGIC 0x12345678 // stdMemory block header magic
 
 typedef struct sIndyDumpArray
@@ -274,19 +276,6 @@ static void indyDebug_DumpWord(FILE* pFile, uint32_t value, int depth)
         return;
     }
 
-    // name (resources start with their name)
-    const char* pName = (const char*)value;
-    size_t len = 0;
-    while ( len < 64 && indyDebug_IsHeapMemory(value + len, 1) && pName[len] >= 0x21 && pName[len] < 0x7f )
-    {
-        len++;
-    }
-    if ( len >= 2 && len < 64 && pName[len] == '\0' )
-    {
-        fprintf(pFile, "\"%.*s\" ", (int)len, pName);
-        return;
-    }
-
     fputs("P ", pFile);
 }
 
@@ -305,7 +294,60 @@ static void indyDebug_DumpCanonical(FILE* pFile, const uint8_t* pData, size_t si
     }
 }
 
+uint32_t indyDebug_GetFixedFrameMs(void)
+{
+    static int frameMs = -1;
+    if ( frameMs < 0 )
+    {
+        const char* pValue = getenv("INDY_FIXED_FRAME_MS");
+        frameMs = pValue ? atoi(pValue) : 0;
+        frameMs = frameMs < 0 ? 0 : frameMs > 1000 ? 1000 : frameMs;
+    }
+    return (uint32_t)frameMs;
+}
+
+static int indyDebug_simFrame;
+
+static void indyDebug_WriteWorld(void);
+
+void indyDebug_SimFrame(void)
+{
+    static int dumpFrame = -1;
+    static int saveFrame = -1;
+    if ( dumpFrame < 0 )
+    {
+        const char* pValue = getenv("INDY_DUMP_WORLD_FRAME");
+        dumpFrame = pValue ? atoi(pValue) : 0;
+        pValue    = getenv("INDY_SAVE_FRAME");
+        saveFrame = pValue ? atoi(pValue) : 0;
+    }
+
+    ++indyDebug_simFrame;
+
+    // Savegame A/B: save at frame n (written by sithGamesave_Process on the next frame)
+    const char* pSaveFile = getenv("INDY_SAVE_FILE");
+    if ( saveFrame > 0 && indyDebug_simFrame == saveFrame && pSaveFile )
+    {
+        sithGamesave_Save(pSaveFile, /*bOverwrite=*/1);
+    }
+
+    if ( dumpFrame > 0 && indyDebug_simFrame == dumpFrame )
+    {
+        indyDebug_WriteWorld();
+        ExitProcess(0);
+    }
+}
+
 void indyDebug_DumpWorld(void)
+{
+    indyDebug_simFrame = 0;
+    if ( !getenv("INDY_DUMP_WORLD_FRAME") )
+    {
+        indyDebug_WriteWorld();
+    }
+}
+
+static void indyDebug_WriteWorld(void)
 {
     const char* pPath = getenv("INDY_DUMP_WORLD");
     const SithWorld* pWorld = sithWorld_g_pCurrentWorld;

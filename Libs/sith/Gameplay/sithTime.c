@@ -5,6 +5,7 @@
 
 #include <std/General/stdMath.h>
 #include <std/General/stdPlatform.h>
+#include <indy/indyDebug.h>
 
 #define SITHTIME_MAXFRAMETIME 200 // 200ms
 
@@ -38,7 +39,8 @@ void sithTime_Advance(void)
         return;
     }
 
-    uint32_t curTime = stdPlatform_GetTimeMsec();
+    // INDY: fixed frame time for deterministic A/B tests (INDY_FIXED_FRAME_MS)
+    uint32_t curTime = indyDebug_GetFixedFrameMs() ? sithTime_g_clockTime + indyDebug_GetFixedFrameMs() : stdPlatform_GetTimeMsec();
     if ( curTime >= sithTime_g_clockTime )
     {
         sithTime_g_frameTime = curTime - sithTime_g_clockTime;

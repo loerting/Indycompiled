@@ -476,6 +476,9 @@ Each stage gets a milestone tag: `s1-linux-build`, `s2-modded`, `s4-standalone`,
 | Modern controls: `Scripts/indy/test_modern.sh` (virtual pad: stick right / down relative to the camera) | When movement or camera code changes |
 | Stage 3 progress: `Scripts/indy/progress.py` (functions still reached through `J3D_TRAMPOLINE_CALL`, by module and size) | After each reimplemented module |
 | Differential test (Stage 3): `Scripts/indy/test_diff.sh <suite>`: original v1.2 function vs our C version, same inputs, byte-compared in-process (`Libs/indy/indyDiff.c`) | For every reimplemented function |
+| A/B level load (Stage 3): `Scripts/indy/test_ab.sh <func,...> [levels]`: each level loaded with the original functions (`INDY_NOHOOK`) and with ours, world snapshots compared (`INDY_DUMP_WORLD`: every template and thing, pointers written as what they point to) | For every reimplemented loader |
+| A/B simulation (Stage 3): `test_ab.sh` with `INDY_FIXED_FRAME_MS=<ms>` (fixed game time per frame), `INDY_DUMP_WORLD_FRAME=<n>` (snapshot after n frames) and `INDY_SMOKE_NOKEYS=1`; differences are named per field by `Scripts/indy/compare_world.py` (float tolerance `INDY_AB_TOL`) | For AI, physics and other per-frame code |
+| Exe constants: `Scripts/indy/exe_value.py <0xaddr>...` (values the decompiler shows as `DAT_`) | While reimplementing |
 
 ---
 

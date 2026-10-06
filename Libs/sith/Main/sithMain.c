@@ -594,6 +594,7 @@ void sithUpdate(void)
             sithThing_Update(sithTime_g_frameTimeFlex, sithTime_g_frameTime);
             sithCog_ProcessCogs();
             sithMulti_Update(sithTime_g_frameTime);
+            indyDebug_SimFrame(); // INDY: world snapshot after n frames (INDY_DUMP_WORLD_FRAME)
         }
     }
 }
