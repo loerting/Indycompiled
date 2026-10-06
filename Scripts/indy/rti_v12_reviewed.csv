@@ -1,7 +1,7 @@
 name,v12,verdict,reviewer,evidence
 AudioLib_CompressBlock,0x004dfee0,confirmed,auto,signature matches (7 params)
 AudioLib_UncompressBlock,0x004e01d0,confirmed,auto,signature matches (6 params)
-AudioLib_WVSMCompressBlock,0x004e0470,confirmed,auto,signature matches (4 params)
+AudioLib_WVSMCompressBlock,0x004e0470,confirmed,semantic,unique string shared with upstream: 'L = %4d:'
 AudioLib_WVSMUncompressBlock,0x004e07d0,confirmed,auto,signature matches (3 params)
 AudioLib_aDeltaTable,0x014e49e8,confirmed,auto,exact refs from own module (AudioLib_UncompressBlock)
 AudioLib_aIndexTableTable,0x0054bcf0,confirmed,auto,"exact refs from own module (AudioLib_CompressBlock, AudioLib_UncompressBlock)"
@@ -9,11 +9,37 @@ AudioLib_aStepBits,0x0050a358,confirmed,auto,"exact refs from own module (AudioL
 AudioLib_aStepTable,0x0050a2a0,confirmed,auto,"exact refs from own module (AudioLib_CompressBlock, AudioLib_UncompressBlock)"
 AudioLib_bDeltaTableInitialized,0x014e7668,confirmed,auto,exact refs from own module (AudioLib_UncompressBlock)
 AudioLib_word_14E4928,0x014e4a68,confirmed,auto,exact refs from own module (AudioLib_UncompressBlock)
+Indy3D_WinMain,0x0041c9e0,confirmed,semantic,unique string shared with upstream: 'INDY3D'
+JonesConsole_Open,0x0040f110,confirmed,semantic,unique string shared with upstream: 'version'
+JonesConsole_PrintPolys,0x0040f9b0,confirmed,semantic,unique string shared with upstream: 'Arch polys: %d'
 JonesConsole_pFuncHashtbl,0x005531a8,confirmed,auto,"exact refs from own module (JonesConsole_Close, JonesConsole_ExeCommand)"
+JonesDialog_AllocOffScreenDIBSection,0x00411d50,confirmed,semantic,unique string shared with upstream: 'JonesDialog_AllocOffScreenDIBSection: Bi'
+JonesDialog_AllocOffScreenGDISection,0x00411b60,confirmed,semantic,unique string shared with upstream: 'JonesDialog_AllocOffScreenGDISection: Cr'
+JonesDialog_CopyRectToDrawBuffer,0x00410530,confirmed,semantic,unique string shared with upstream: 'JonesDialog_CopyRectToDrawBuffer: BitBlt'
 JonesDialog_DummyFlipGDI,0x00410cd0,confirmed,auto,signature matches (0 params)
+JonesDialog_HandleWM_ERASEBKGND,0x00411800,confirmed,semantic,unique string shared with upstream: 'JonesDialog_HandleWM_ERASEBKGND: GDIDIBS'
+JonesDialog_HandleWM_NCPAINT,0x00411970,confirmed,semantic,unique string shared with upstream: 'JonesDialog_HandleWM_NCPAINT: GDIDIBSect'
+JonesDialog_HandleWM_PAINT,0x004118c0,confirmed,semantic,unique string shared with upstream: 'JonesDialog_HandleWM_PAINT: hScreenDC is'
+JonesDialog_InitCursorTracking,0x0040fd00,confirmed,semantic,unique string shared with upstream: 'JonesDialog_InitCursorTracking: Error ca'
+JonesDialog_RestoreBackground,0x00410760,confirmed,semantic,unique string shared with upstream: 'JonesDialog_RestoreBackground: BitBlt fa'
+JonesDialog_SubclassDialogProc,0x00410ce0,confirmed,semantic,unique string shared with upstream: 'JonesDialog_SubclassDialogProc: Too many'
+JonesDialog_SubclassDialogWindowProc,0x00410fd0,confirmed,semantic,unique string shared with upstream: 'JonesDialog_SubclassDialogWindowProc: Er'
+JonesDialog_SubclassFileDialogProc,0x00411f90,confirmed,semantic,unique string shared with upstream: 'JonesDialog_SubclassFileDialogProc: hDlg'
+JonesDialog_TrackCursor,0x004100c0,confirmed,semantic,unique string shared with upstream: 'JonesDialog_TrackCursor: BitBlt of curso'
 JonesDisplay_backBufferHeight,0x00553414,confirmed,auto,exact refs from own module (JonesDisplay_Startup)
 JonesDisplay_backBufferWidth,0x00553410,confirmed,auto,exact refs from own module (JonesDisplay_Startup)
 JonesFile_FileExists,0x00412eb0,confirmed,auto,signature matches (1 params)
+JonesFile_FilePrintf,0x00413820,confirmed,semantic,"unique string shared with upstream: ""Error tried to printf to bundled file '%"""
+JonesFile_FileWrite,0x00413560,confirmed,semantic,"unique string shared with upstream: ""Error tried to write to bundled file '%s"""
+JonesFile_GetCurrentCDNum,0x00412e30,confirmed,semantic,unique string shared with upstream: 'CD1.GOB'
+JonesFile_OpenFile,0x00413220,confirmed,semantic,unique string shared with upstream: 'Out of file handles!\n'
+JonesFile_OpenResource,0x004130d0,confirmed,semantic,"unique string shared with upstream: ""Error opening gob '%s'.\n"""
+JonesFile_SetCDPath,0x00412f10,confirmed,semantic,unique string shared with upstream: 'Empty CD path specified.\n'
+JonesHud_InitializeMenu,0x00417100,confirmed,semantic,unique string shared with upstream: 'Menu already initialized.\n'
+JonesHud_MenuActivateItem,0x00418950,confirmed,semantic,unique string shared with upstream: 'riv_raft_repair.wav'
+JonesHud_Open,0x00413b70,confirmed,semantic,"unique string shared with upstream: ""Unable to open Hud: Couldn't load %s\n"""
+JonesHud_OpenHelp,0x0041aaf0,confirmed,semantic,unique string shared with upstream: 'SITHSTRING_HELPFILE'
+JonesHud_RenderMenuItem,0x00417e20,confirmed,semantic,unique string shared with upstream: 'JONES_STR_INV_NOUSE'
 JonesHud_aCreditFontColors,0x005163c0,confirmed,auto,used by JonesHud_DrawCredits
 JonesHud_aCreditsTextHeights,0x00554bd8,confirmed,auto,exact refs from own module (JonesHud_DrawCredits)
 JonesHud_aDfltMenuItemsOrients,0x005156f8,confirmed,auto,"exact refs from own module (JonesHud_RenderChangedItem, JonesHud_RenderMenuItem)"
@@ -47,32 +73,115 @@ JonesHud_pyrInventoryOrient,0x005064d0,confirmed,auto,exact refs from own module
 JonesHud_screenHeightScalar,0x005544bc,confirmed,auto,"exact refs from own module (JonesHud_RenderMenuItem, JonesHud_Shutdown)"
 JonesHud_screenWidthScalar,0x005544c0,confirmed,auto,"exact refs from own module (JonesHud_RenderMenuItem, JonesHud_Shutdown)"
 JonesHud_selectedOptionsMenuItemID,0x00554ad8,confirmed,auto,"exact refs from own module (JonesHud_MenuCollapseColumn, JonesHud_MenuMoveDown)"
+JonesMain_DevDialogInitDisplayDevices,0x004211a0,confirmed,semantic,unique string shared with upstream: '%dx%d %dbpp'
 JonesMain_FilePrintf,0x0041ea30,confirmed,auto,"between verified JonesMain_CloseWindow and JonesMain_LogError, same shift -0x230"
+JonesMain_HandleWMPowerBroadcast,0x0041da50,confirmed,semantic,unique string shared with upstream: 'WM_POWERBROADCAST Query Suspend.\n'
+JonesMain_InitDevDialog,0x00420230,confirmed,semantic,unique string shared with upstream: 'Vertex Only'
 JonesMain_IsGamePaused,0x0041dc70,confirmed,auto,called by JonesDialog_SetGameState
+JonesMain_LoadSettings,0x0041fb20,confirmed,semantic,unique string shared with upstream: 'NoName'
+JonesMain_LogErrorToFile,0x0041f9e0,confirmed,semantic,unique string shared with upstream: 'JONES_STR_ERRORFILE'
+JonesMain_PlayIntroMovie,0x0041eb30,confirmed,semantic,unique string shared with upstream: 'jonesopn.snm'
+JonesMain_PrintQuickSave,0x0041d760,confirmed,semantic,unique string shared with upstream: 'JONES_STR_QUICKSAVE'
 JonesMain_Process,0x0041dc80,confirmed,auto,signature matches (0 params)
+JonesMain_ProcessGame,0x0041dca0,confirmed,semantic,unique string shared with upstream: 'JONES_STR_VIDEOERROR'
+JonesMain_ProcessGamesaveState,0x0041e500,confirmed,semantic,unique string shared with upstream: 'JONES_STR_SAVEERROR'
+JonesMain_ProcessStartGame,0x0041e790,confirmed,semantic,unique string shared with upstream: 'JONES_STR_CLOSEERROR'
+JonesMain_Restore,0x0041e390,confirmed,semantic,unique string shared with upstream: 'mat\\cyb_amap'
+JonesMain_Startup,0x0041ca40,confirmed,semantic,unique string shared with upstream: 'Software\\LucasArts Entertainment Company'
 JonesMain_bDisplayError,0x00555680,confirmed,auto,exact refs from own module (JonesMain_ProcessMenu)
 JonesMain_bEndCredits,0x00555670,confirmed,auto,field used by JonesMain_ProcessCredits
 JonesMain_bMenuToggled,0x0055567c,confirmed,auto,field used by JonesMain_ProcessMenu
 JonesMain_frameRate,0x00555684,confirmed,auto,field used by JonesMain_PrintFramerate
+SoundDriver_CreateDirectSound,0x004de9c0,confirmed,semantic,unique string shared with upstream: 'DirectSound: Original DS fails\n'
+SoundDriver_DSCheckStatus,0x004dede0,confirmed,semantic,unique string shared with upstream: 'Sound.DLL Driver.C:%d Return value: %s\n'
+SoundDriver_SetOuputFormat,0x004debb0,confirmed,semantic,unique string shared with upstream: 'Sound.DLL: SetOuputFormat: Grabbing prim'
+Sound_FadeVolumeThing,0x004dc790,confirmed,semantic,"unique string shared with upstream: ""Sound_FadeVolumeThing: Don't know what '"""
 Sound_GenerateChannelHandle,0x004dd2f0,confirmed,auto,called by Sound_Play
+Sound_Get3DHWState,0x004db230,confirmed,semantic,unique string shared with upstream: 'Sound_Get3DHWState: module is not open.\n'
 Sound_GetChannelBySoundHandle,0x004dd530,confirmed,auto,called by Sound_Play
+Sound_GetFreeCache,0x004dd330,confirmed,semantic,unique string shared with upstream: 'Sound_Load: Sound cache out of memory! ('
+Sound_GetLengthMsec,0x004dbb50,confirmed,semantic,unique string shared with upstream: 'Sound_GetLengthMsec: Bad header data for'
+Sound_Has3DHW,0x004db0f0,confirmed,semantic,unique string shared with upstream: 'Sound_Has3DHW: module is not open.\n'
+Sound_ImportBank,0x004dd8b0,confirmed,semantic,unique string shared with upstream: 'Sound:ImportBank: Failed to allocate %d '
 Sound_Initialize,0x004da110,confirmed,auto,signature matches (1 params)
+Sound_IsThingFadingVol,0x004dc860,confirmed,semantic,"unique string shared with upstream: ""Sound_IsThingFadingVol: Don't know what """
+Sound_Load,0x004db2a0,confirmed,semantic,"unique string shared with upstream: ""Sound_Load: Can't load %s because loads """
+Sound_MemFileWrite,0x004dd690,confirmed,semantic,"unique string shared with upstream: ""Sound.MemFileWrite: Couldn't realloc %d."""
+Sound_Open,0x004da1e0,confirmed,semantic,unique string shared with upstream: 'Sound_Open: module already in open state'
+Sound_Pause,0x004daf80,confirmed,semantic,unique string shared with upstream: 'Sound_Pause: module is not open.\n'
+Sound_Restore,0x004da7a0,confirmed,semantic,unique string shared with upstream: 'Sound_Restore: module is not open.\n'
+Sound_Resume,0x004db000,confirmed,semantic,unique string shared with upstream: 'Sound_Resume: module is not open.\n'
+Sound_Save,0x004da370,confirmed,semantic,unique string shared with upstream: 'Sound_Save: module is not initialized.\n'
+Sound_Set3DGlobals,0x004db0b0,confirmed,semantic,unique string shared with upstream: 'Sound_Set3DGlobals: module is not open.\n'
+Sound_Set3DHWState,0x004db120,confirmed,semantic,unique string shared with upstream: 'Sound_Set3DHWState: module is not open.\n'
+Sound_SetPitchThing,0x004dcaa0,confirmed,semantic,"unique string shared with upstream: ""Sound_SetPitchThing: Don't know what 'so"""
+Sound_SetVolumeThing,0x004dc6d0,confirmed,semantic,"unique string shared with upstream: ""Sound_SetVolumeThing: Don't know what 's"""
 Sound_Shutdown,0x004da1c0,confirmed,auto,called by sithSound_ShutdownSound
-Sound_Startup,0x004da170,confirmed,auto,called by sithSound_StartupSound
+Sound_Startup,0x004da170,confirmed,semantic,unique string shared with upstream: 'Sound_Startup: module already in startup'
+Sound_StopThing,0x004dc460,confirmed,semantic,"unique string shared with upstream: ""Sound_StopThing: Don't know what 'sound'"""
 Sound_Uninitialize,0x004da150,confirmed,auto,called by sithSound_Uninitialize
+Sound_Update,0x004dcb80,confirmed,semantic,unique string shared with upstream: 'Sound_Update: Error restarting distant s'
 Sound_nextHandle,0x014e1ce0,confirmed,auto,"exact refs from own module (Sound_ExportBank, Sound_GenerateChannelHandle)"
+jonesCog_EnableInterfaceFunc,0x00401480,confirmed,semantic,"v1.2 registers it as COG verb ""enableinterface"""
+jonesCog_EndCutscene,0x004013c0,confirmed,semantic,"v1.2 registers it as COG verb ""endcutscene"""
+jonesCog_EndLevelFunc,0x004011b0,confirmed,semantic,"v1.2 registers it as COG verb ""jonesendlevel"""
+jonesCog_ExitToShell,0x00401250,confirmed,semantic,"v1.2 registers it as COG verb ""exittoshell"""
+jonesCog_HideHealthDisplay,0x00401150,confirmed,semantic,"v1.2 registers it as COG verb ""healthdisplayoff"""
+jonesCog_InventoryItemChanged,0x00401190,confirmed,semantic,"v1.2 registers it as COG verb ""jonesinvitemchanged"""
+jonesCog_RegisterFunctions,0x00401060,confirmed,semantic,unique string shared with upstream: 'healthdisplayoff'
+jonesCog_ShowHealthDisplay,0x00401170,confirmed,semantic,"v1.2 registers it as COG verb ""healthdisplayon"""
+jonesCog_StartCutsceneFunc,0x00401260,confirmed,semantic,"v1.2 registers it as COG verb ""startcutscene"""
+jonesCog_UpdateDifficulty,0x00401450,confirmed,semantic,"v1.2 registers it as COG verb ""updatedifficulty"""
+jonesConfig_AddStoreCartItem,0x0040e5e0,confirmed,semantic,unique string shared with upstream: 'JONES_STR_PERU'
+jonesConfig_AdvanceDisplaySettings_HandleWM_COMMAND,0x0040be50,confirmed,semantic,unique string shared with upstream: 'JONES_STR_PERFORMANCE'
+jonesConfig_AssignControlKey_ReadKey,0x00409ff0,confirmed,semantic,unique string shared with upstream: 'JONES_STR_KEYONLY'
+jonesConfig_AssignKey_CheckBindForKey,0x00409d30,confirmed,semantic,unique string shared with upstream: 'index: %i function: %i offset: %i\n'
+jonesConfig_ControlOptions_UpdateButtons,0x00407d20,confirmed,semantic,unique string shared with upstream: 'JONES_STR_EDIT_SCHEME'
+jonesConfig_ControlOptions_WriteScheme,0x004077d0,confirmed,semantic,unique string shared with upstream: 'JONES_STR_HEADING'
+jonesConfig_CreateControlScheme_Handle_WM_COMMAND,0x00408790,confirmed,semantic,unique string shared with upstream: 'JONES_STR_NO_SCHEME'
+jonesConfig_CreateDialogFont,0x00403eb0,confirmed,semantic,unique string shared with upstream: 'JONES_STR_FONT'
+jonesConfig_EditControlScheme_Handle_WM_COMMAND,0x00408fc0,confirmed,semantic,unique string shared with upstream: 'JONES_STR_NO_MAPNG'
+jonesConfig_EditControlScheme_SetListColumn,0x00408c90,confirmed,semantic,unique string shared with upstream: 'JONES_STR_FCTN'
+jonesConfig_GameSaveSetData,0x004058f0,confirmed,semantic,unique string shared with upstream: 'JONES_STR_PROGRESS1'
+jonesConfig_GetLoadGameFilePath,0x00405a10,confirmed,semantic,unique string shared with upstream: ' (.nds)'
+jonesConfig_GetSaveGameFilePath,0x00404b20,confirmed,semantic,unique string shared with upstream: '(.nds)'
+jonesConfig_InitAssignKeyDlg,0x00409f60,confirmed,semantic,unique string shared with upstream: 'JONES_STR_NEXTBUTTON'
+jonesConfig_InitDialogInsertCD,0x0040efc0,confirmed,semantic,unique string shared with upstream: 'JONES_STR_INSERT2'
+jonesConfig_InitDisplaySettingsDialog,0x0040ac50,confirmed,semantic,unique string shared with upstream: 'JONES_STR_16BBP'
+jonesConfig_InitEditControlSchemeDlg,0x00408b60,confirmed,semantic,unique string shared with upstream: 'JONES_STR_MAPKEY'
+jonesConfig_InitKeySetsPath,0x00401660,confirmed,semantic,unique string shared with upstream: 'SITHSTRING_KEYSETS'
+jonesConfig_InitPurchaseMessageBox,0x0040ecb0,confirmed,semantic,unique string shared with upstream: 'JONES_STR_ADDINV'
+jonesConfig_InitReassignKeyDialog,0x0040a510,confirmed,semantic,unique string shared with upstream: 'JONES_STR_NEWMAP'
+jonesConfig_InitStoreDialog,0x0040e090,confirmed,semantic,unique string shared with upstream: 'JONES_STR_COST'
 jonesConfig_JONES_STR_SUMMERY,0x00510bcc,confirmed,auto,exact refs from own module (jonesConfig_StatisticsDialogProc)
+jonesConfig_LoadGameDialogHookProc,0x00405d30,confirmed,semantic,unique string shared with upstream: 'code: %i\n'
+jonesConfig_ParseJoystickControlId,0x00402fd0,confirmed,semantic,unique string shared with upstream: 'JONES_STR_CAPS_BUTTON'
+jonesConfig_SetPositionAndTextCallback,0x00404280,confirmed,semantic,unique string shared with upstream: 'STATIC'
+jonesConfig_SetWindowFontAndPosition,0x004043a0,confirmed,semantic,unique string shared with upstream: 'ToolbarWindow32'
+jonesConfig_ShowAssignKeyDialog,0x00409ae0,confirmed,semantic,unique string shared with upstream: 'JONES_STR_SAMEMAP'
+jonesConfig_StoreSetListColumns,0x0040e2b0,confirmed,semantic,unique string shared with upstream: 'JONES_STR_ITEMNAME'
 jonesConfig_aStoreItemsInfo,0x00513a18,confirmed,auto,"between verified JonesDisplay_primaryDisplayNum and JonesHud_aDfltMenuItemsOrients, same shift +0x0"
 jonesConfig_apDialogIconFiles,0x00510b70,confirmed,auto,exact refs from own module (jonesConfig_Startup)
 jonesConfig_bStartup,0x00551ee8,confirmed,auto,exact refs from own module (jonesConfig_Startup)
+jonesString_Startup,0x00421ad0,confirmed,semantic,unique string shared with upstream: 'misc\\jonesStrings.uni'
+rdCamera_Free,0x004c5480,confirmed,semantic,unique string shared with upstream: 'Warning: attempt to free NULL camera ptr'
+rdCamera_New,0x004c52f0,confirmed,semantic,unique string shared with upstream: 'Error allocating memory for camera.\n'
+rdCamera_NewEntry,0x004c5360,confirmed,semantic,unique string shared with upstream: 'Error allocating memory for camera clip '
+rdCanvas_Free,0x004c6230,confirmed,semantic,unique string shared with upstream: 'Warning: Attempt to free NULL Canvas ptr'
+rdCanvas_New,0x004c6110,confirmed,semantic,unique string shared with upstream: 'Error allocating memory for canvas.\n'
 rdClip_SphereInFrustrum,0x004d7d30,confirmed,auto,called by sithRender_RenderThings
 rdFont_DrawChar,0x004c4d10,confirmed,auto,signature matches (5 params)
 rdFont_DrawTextLineClipped,0x004c4f60,confirmed,auto,signature matches (6 params)
+rdFont_LoadEntry,0x004c4720,confirmed,semantic,"unique string shared with upstream: ""Error: Unable to open file '%s'.\n"""
+rdKeyframe_LoadEntry,0x004ce500,confirmed,semantic,unique string shared with upstream: ' type %x'
 rdKeyframe_pKeyframeLoader,0x014ddad0,confirmed,auto,exact refs from own module (rdKeyframe_RegisterLoader)
+rdMaterial_LoadEntry,0x004c8c70,confirmed,semantic,"unique string shared with upstream: ""Error: Bad header for '%s'\n"""
 rdMaterial_pfMaterialLoader,0x014daa60,confirmed,auto,"exact refs from own module (rdMaterial_Load, rdMaterial_RegisterLoader)"
 rdMaterial_pfMaterialUnloader,0x014daa64,confirmed,auto,exact refs from own module (rdMaterial_Free)
 rdMatrix_Copy34,0x004c8150,confirmed,auto,signature matches (2 params)
 rdModel3_GetThingColor,0x004cb0a0,confirmed,auto,"called by JonesHud_RenderMenuItem, sithThing_Draw"
+rdModel3_LoadEntry,0x004c9820,confirmed,semantic,unique string shared with upstream: ' 3do %d.%d'
+rdModel3_SwapMesh,0x004cafd0,confirmed,semantic,"unique string shared with upstream: ""Error: SwapMesh for models '%s and %s'.\n"""
 rdModel3_aView,0x014daa68,confirmed,auto,exact refs from own module (rdModel3_DrawMesh)
 rdModel3_apMeshLights,0x0183b900,confirmed,auto,exact refs from own module (rdModel3_DrawMesh)
 rdModel3_bCalcRadius,0x014dda80,confirmed,auto,"exact refs from own module (rdModel3_BuildExpandedRadius, rdModel3_LoadEntry)"
@@ -90,11 +199,27 @@ rdModel3_maxGeoRadius,0x014dda84,confirmed,auto,"exact refs from own module (rdM
 rdModel3_pCurThing,0x014dda68,confirmed,auto,"exact refs from own module (rdModel3_Draw, rdModel3_DrawHNode)"
 rdModel3_pModel3Loader,0x014dda70,confirmed,auto,exact refs from own module (rdModel3_RegisterLoader)
 rdModel3_pfDrawFace,0x0054ac4c,confirmed,auto,exact refs from own module (rdModel3_DrawMesh)
+rdParticle_Free,0x004d9600,confirmed,semantic,unique string shared with upstream: 'Warning: Attempt to free NULL particle p'
+rdParticle_LoadEntry,0x004d96a0,confirmed,semantic,unique string shared with upstream: ' par %d.%d'
+rdParticle_NewEntry,0x004d93b0,confirmed,semantic,unique string shared with upstream: 'Error: Bad memory allocation for particl'
+rdPolyline_Free,0x004d8700,confirmed,semantic,unique string shared with upstream: 'Warning: Attempt to free NULL polyline p'
+rdPolyline_NewEntry,0x004d8550,confirmed,semantic,unique string shared with upstream: 'Error: Bad memory allocation for polylin'
+rdPuppet_AdvanceTrack,0x004cca70,confirmed,semantic,unique string shared with upstream: 'Track %d does not exist.\n'
+rdPuppet_BuildJointMatrices,0x004ccf60,confirmed,semantic,unique string shared with upstream: 'KEY %s playing on model %s - mismatched '
+rdPuppet_Free,0x004cc540,confirmed,semantic,unique string shared with upstream: 'Warning: attempt to free NULL puppet ptr'
+rdStartup,0x004c5fb0,confirmed,semantic,unique string shared with upstream: 'Warning: rdStartup() has already been ca'
+rdThing_Free,0x004c92b0,confirmed,semantic,unique string shared with upstream: 'Warning: attempt to free NULL thing ptr.'
+rdThing_SetModel3,0x004c9380,confirmed,semantic,unique string shared with upstream: 'Error allocating memory for joint matric'
+rdWallpaper_NewWallLine,0x004c67f0,confirmed,semantic,unique string shared with upstream: 'Error allocating memory for WallLine.\n'
 sithAIAwareness_IsInTransmittingRange,0x004b0b10,confirmed,auto,signature matches (3 params)
 sithAIAwareness_aEvents,0x0059bef0,confirmed,auto,"exact refs from own module (sithAIAwareness_CreateEvent, sithAIAwareness_ProcessEvents)"
 sithAIAwareness_bOpened,0x0059c278,confirmed,auto,"exact refs from own module (sithAIAwareness_Close, sithAIAwareness_Open)"
 sithAIAwareness_curProcessID,0x0059c27c,confirmed,auto,"exact refs from own module (sithAIAwareness_ProcessEvent, sithAIAwareness_Update)"
 sithAIAwareness_numEvents,0x0059c274,confirmed,auto,"exact refs from own module (sithAIAwareness_CreateEvent, sithAIAwareness_Open)"
+sithAIClass_AllocWorldAIClasses,0x00456960,confirmed,semantic,unique string shared with upstream: 'Memory allocation failure.\n'
+sithAIClass_Load,0x00456ad0,confirmed,semantic,unique string shared with upstream: 'No space to load AI class %s.\n'
+sithAIClass_LoadEntry,0x00456cd0,confirmed,semantic,unique string shared with upstream: 'Syntax error reading AI info.  File %s l'
+sithAIClass_ReadStaticAIClassesListText,0x00456620,confirmed,semantic,unique string shared with upstream: 'aiclasses'
 sithAIClass_WriteStaticAIClassesListBinary,0x00456870,confirmed,auto,signature matches (2 params)
 sithAIInstinct_AlternateFire,0x00490f40,confirmed,auto,"same-module refs (sithAIInstinct_InitInstincts), 3/5 params used"
 sithAIInstinct_BasicFallow,0x004934f0,confirmed,auto,signature matches (5 params)
@@ -125,6 +250,7 @@ sithAIInstinct_WallCrawl,0x00493fa0,confirmed,auto,signature matches (5 params)
 sithAIInstinct_flt_539AB8,0x00539bd8,confirmed,auto,exact refs from own module (sithAIInstinct_SnakeFollow)
 sithAIInstinct_sub_494360,0x00494280,confirmed,auto,signature matches (3 params)
 sithAIInstinct_sub_494FF0,0x00494f10,confirmed,auto,signature matches (2 params)
+sithAIMove_AISetLookPos,0x00497940,confirmed,semantic,"unique string shared with upstream: ""WARNING!  Look target issued to '%s'. AI"""
 sithAIMove_UpdateBoss,0x00498cb0,confirmed,auto,signature matches (2 params)
 sithAIMove_UpdateMardukTail,0x0049b180,confirmed,auto,signature matches (2 params)
 sithAIMove_UpdateMineCar,0x00495280,confirmed,auto,signature matches (2 params)
@@ -197,6 +323,13 @@ sithAIUtil_thingsInViewFovX,0x005855ec,confirmed,auto,"exact refs from own modul
 sithAIUtil_thingsInViewFovY,0x005855b8,confirmed,auto,"exact refs from own module (sithAIUtil_GetNextThingsInView, sithAIUtil_GetThingsInView)"
 sithAIUtil_vec_585490,0x005855d0,confirmed,auto,"exact refs from own module (sithAIUtil_MakeRandPoint, sithAIUtil_RetryMakeRandPoint)"
 sithAIUtil_vec_585718,0x00585858,confirmed,auto,"exact refs from own module (sithAIUtil_MakeRandPoint, sithAIUtil_RetryMakeRandPoint)"
+sithAI_Create,0x00429e10,confirmed,semantic,"unique string shared with upstream: 'Too many AI things, not enough local con'"
+sithAI_CreateInstinctRegistry,0x0042b030,confirmed,semantic,unique string shared with upstream: 'Startup failure on AI - no mem for insti'
+sithAI_EnableInstinct,0x0042ad30,confirmed,semantic,"unique string shared with upstream: ""Invalid instinct '%s' passed to EnableIn"""
+sithAI_FindInstinct,0x0042ac10,confirmed,semantic,unique string shared with upstream: 'Null parameter passed to FindInstinct().'
+sithAI_ForceInstinctUpdate,0x0042a270,confirmed,semantic,"unique string shared with upstream: ""Invalid instinct '%s' passed to sithAI_F"""
+sithAI_Open,0x00429d50,confirmed,semantic,unique string shared with upstream: 'Error: Attempt to open uninitialized sys'
+sithAI_ParseArg,0x0042ae10,confirmed,semantic,unique string shared with upstream: 'Too many AI frames for thing %d.\n'
 sithAI_RegisterInstinct,0x0042ab10,confirmed,auto,signature matches (5 params)
 sithAI_aFreeAIIndices,0x0055eb00,confirmed,auto,"exact refs from own module (sithAI_CreateAI, sithAI_FreeAI)"
 sithAI_aRegisteredInstincts,0x0055ef08,confirmed,auto,"exact refs from own module (sithAI_CreateInstinctRegistry, sithAI_FindInstinct)"
@@ -204,7 +337,15 @@ sithAI_bStartup,0x0055ef04,confirmed,auto,"exact refs from own module (sithAI_Op
 sithAI_numFreeAIs,0x0055eafc,confirmed,auto,"exact refs from own module (sithAI_CreateAI, sithAI_FreeAI)"
 sithAI_numRegisteredInstincts,0x0055ef0c,confirmed,auto,"exact refs from own module (sithAI_FindInstinct, sithAI_RegisterInstinct)"
 sithAI_pRegisteredInstinctHashtbl,0x0055eaf8,confirmed,auto,"exact refs from own module (sithAI_CreateInstinctRegistry, sithAI_Shutdown)"
+sithAnimate_CameraZoom,0x00462570,confirmed,semantic,"unique string shared with upstream: 'Out of animation slots, CameraZoom.\n'"
 sithAnimate_Create,0x00462be0,confirmed,auto,signature matches (0 params)
+sithAnimate_PullItem,0x00462710,confirmed,semantic,"unique string shared with upstream: 'Out of animation slots, PullItem.\n'"
+sithAnimate_PushItem,0x00462630,confirmed,semantic,"unique string shared with upstream: 'Out of animation slots, PushItem.\n'"
+sithAnimate_StartMaterialAnim,0x00461ad0,confirmed,semantic,unique string shared with upstream: 'Bad parameters to startMaterialAnim.\n'
+sithAnimate_StartSurfaceAnim,0x004619a0,confirmed,semantic,unique string shared with upstream: 'Bad parameters to startSurfaceAnim.\n'
+sithAnimate_StartThingMove,0x004621b0,confirmed,semantic,unique string shared with upstream: 'Thing is NULL in sithAnimate_StartThingM'
+sithAnimate_StartThingMoveToPos,0x00462300,confirmed,semantic,unique string shared with upstream: 'Thing is NULL in sithAnimate_StartThingM'
+sithAnimate_UpdatePageFlipAnim,0x004638f0,confirmed,semantic,"unique string shared with upstream: 'Unexpected flags for pageflip animation,'"
 sithAnimate_aAnims,0x005704b8,confirmed,auto,"exact refs from own module (sithAnimate_FreeAllAnims, sithAnimate_FreeAnim)"
 sithAnimate_aFreeAnimNums,0x0056fcac,confirmed,auto,exact refs from own module (sithAnimate_NewAnim)
 sithAnimate_aPullItemAnimFrames,0x0052f9a4,confirmed,auto,"between verified sithAnimate_lastPullItemAnimFrameIdx and sithAnimate_aPullItemDistances, same shift +0x120"
@@ -229,7 +370,547 @@ sithCamera_vecCameraOffsetSlideForward,0x0052a288,confirmed,auto,used by sithCam
 sithCamera_vecCameraOffsetWeaponDrawn,0x0052a1d8,confirmed,auto,used by sithCamera_Update
 sithCamera_vecDefaulExtCameraOffset,0x0052a228,confirmed,auto,exact refs from own module (sithCamera_Update)
 sithCamera_vecOffsetCamType40,0x0052a2b8,confirmed,auto,used by sithCamera_Update
-sithCogParse_LexerSetVector,0x00453490,confirmed,auto,signature matches (1 params)
+sithCogExec_AssignOp,0x00426c00,confirmed,semantic,unique string shared with upstream: 'Cog %s: Error in assignment statement.\n'
+sithCogExec_CallOp,0x004269c0,confirmed,semantic,unique string shared with upstream: 'Cog %s: Max call depth exceeded.\n'
+sithCogExec_ExecuteMessage,0x00425730,confirmed,semantic,unique string shared with upstream: 'Cog %s: Message type %d not defined in t'
+sithCogExec_FunctionCallOp,0x004267c0,confirmed,semantic,unique string shared with upstream: 'Cog %s: Unrecognized or malformed functi'
+sithCogExec_GetOpCode,0x00426520,confirmed,semantic,"unique string shared with upstream: 'End of code reached, cannot get opcode.\n'"
+sithCogExec_IntererOps,0x00426cd0,confirmed,semantic,unique string shared with upstream: 'Unrecognized opcode passed to IntegerOps'
+sithCogExec_PopAIClass,0x00426250,confirmed,semantic,unique string shared with upstream: 'Cog %s: Bad AI index %d on stack.\n'
+sithCogExec_PopCog,0x00425ba0,confirmed,semantic,unique string shared with upstream: 'Cog %s: Bad cog index %d on stack.\n'
+sithCogExec_PopFlex,0x004258b0,confirmed,semantic,unique string shared with upstream: 'Could not convert value type %d to flex.'
+sithCogExec_PopInt,0x00425980,confirmed,semantic,unique string shared with upstream: 'Could not convert value type %d to INT.\n'
+sithCogExec_PopMaterial,0x00425fd0,confirmed,semantic,unique string shared with upstream: 'Cog %s: Bad material index %d on stack.\n'
+sithCogExec_PopSector,0x00425eb0,confirmed,semantic,unique string shared with upstream: 'Cog %s: Bad sector index %d on stack.\n'
+sithCogExec_PopStack,0x00426700,confirmed,semantic,unique string shared with upstream: 'Cog %s: PopStack failed -- stack size < '
+sithCogExec_PopSurface,0x00425f40,confirmed,semantic,unique string shared with upstream: 'Cog %s: Bad surface index %d on stack.\n'
+sithCogExec_PopTemplate,0x00425d90,confirmed,semantic,unique string shared with upstream: 'Cog %s: Bad template index %d on stack.\n'
+sithCogExec_PopVector,0x00425aa0,confirmed,semantic,"unique string shared with upstream: 'Cog %s: Expected vector, got int/flex co'"
+sithCogExec_PushCallstack,0x004265f0,confirmed,semantic,unique string shared with upstream: 'Cog %s: tried to exceed max execution de'
+sithCogExec_PushStack,0x00426370,confirmed,semantic,unique string shared with upstream: 'Stack overflow in script %s.  Bottom ele'
+sithCogExec_RetOp,0x00426890,confirmed,semantic,unique string shared with upstream: 'Cog %s: Returned from depth %d.\n'
+sithCogFunctionAI_AIClearAllowedSurfaceType,0x0046add0,confirmed,semantic,"v1.2 registers it as COG verb ""aiclearallowedsurfacetype"""
+sithCogFunctionAI_AIClearCutsceneMode,0x0046a2e0,confirmed,semantic,"v1.2 registers it as COG verb ""aiclearcutscenemode"""
+sithCogFunctionAI_AIClearInstinctWpntMode,0x0046b320,confirmed,semantic,"v1.2 registers it as COG verb ""aiclearinstinctwpntmode"""
+sithCogFunctionAI_AIClearMode,0x00469b50,confirmed,semantic,"v1.2 registers it as COG verb ""aiclearmode"""
+sithCogFunctionAI_AIClearSubMode,0x00469d20,confirmed,semantic,"v1.2 registers it as COG verb ""aiclearsubmode"""
+sithCogFunctionAI_AIClearTraverseWpnts,0x0046b080,confirmed,semantic,"v1.2 registers it as COG verb ""aicleartraversewpnts"""
+sithCogFunctionAI_AIClearWpntFlags,0x0046af10,confirmed,semantic,"v1.2 registers it as COG verb ""aiclearwpntflags"""
+sithCogFunctionAI_AIConnectWpnts,0x0046af60,confirmed,semantic,"v1.2 registers it as COG verb ""aiconnectwpnts"""
+sithCogFunctionAI_AIConnectWpntsOneWay,0x0046af90,confirmed,semantic,"v1.2 registers it as COG verb ""aiconnectwpntsoneway"""
+sithCogFunctionAI_AIDisableBodyTracking,0x00469720,confirmed,semantic,"v1.2 registers it as COG verb ""aidisablebodytracking"""
+sithCogFunctionAI_AIDisableHeadTracking,0x00469600,confirmed,semantic,"v1.2 registers it as COG verb ""aidisableheadtracking"""
+sithCogFunctionAI_AIEnableBodyTracking,0x00469680,confirmed,semantic,"v1.2 registers it as COG verb ""aienablebodytracking"""
+sithCogFunctionAI_AIEnableHeadTracking,0x00469560,confirmed,semantic,"v1.2 registers it as COG verb ""aienableheadtracking"""
+sithCogFunctionAI_AIEnableInstinct,0x0046a1b0,confirmed,semantic,"v1.2 registers it as COG verb ""aienableinstinct"""
+sithCogFunctionAI_AIFindNearestWpnt,0x0046b0e0,confirmed,semantic,"v1.2 registers it as COG verb ""aifindnearestwpnt"""
+sithCogFunctionAI_AIFlee,0x0046a400,confirmed,semantic,"v1.2 registers it as COG verb ""aiflee"""
+sithCogFunctionAI_AIFleeToWpnt,0x0046b380,confirmed,semantic,"v1.2 registers it as COG verb ""aifleetowpnt"""
+sithCogFunctionAI_AIGetArmedMode,0x0046a960,confirmed,semantic,"v1.2 registers it as COG verb ""aigetarmedmode"""
+sithCogFunctionAI_AIGetGoalLVec,0x004691b0,confirmed,semantic,"v1.2 registers it as COG verb ""aigetgoallvec"""
+sithCogFunctionAI_AIGetGoalThing,0x004690c0,confirmed,semantic,"v1.2 registers it as COG verb ""aigetgoalthing"""
+sithCogFunctionAI_AIGetHomePos,0x00468f20,confirmed,semantic,"v1.2 registers it as COG verb ""aigethomepos"""
+sithCogFunctionAI_AIGetMode,0x00469ac0,confirmed,semantic,"v1.2 registers it as COG verb ""aigetmode"""
+sithCogFunctionAI_AIGetMovePos,0x004698f0,confirmed,semantic,"v1.2 registers it as COG verb ""aigetmovepos"""
+sithCogFunctionAI_AIGetSubMode,0x00469c00,confirmed,semantic,"v1.2 registers it as COG verb ""aigetsubmode"""
+sithCogFunctionAI_AIJump,0x00469260,confirmed,semantic,"v1.2 registers it as COG verb ""aijump"""
+sithCogFunctionAI_AIKnockout,0x0046aa00,confirmed,semantic,"v1.2 registers it as COG verb ""aiknockout"""
+sithCogFunctionAI_AIPauseMove,0x00469980,confirmed,semantic,"v1.2 registers it as COG verb ""aipausemove"""
+sithCogFunctionAI_AIRunOver,0x0046aba0,confirmed,semantic,"v1.2 registers it as COG verb ""airunover"""
+sithCogFunctionAI_AISetActiveWpntLayer,0x0046af40,confirmed,semantic,"v1.2 registers it as COG verb ""aisetactivewpntlayer"""
+sithCogFunctionAI_AISetAllowedSurfaceType,0x0046ad60,confirmed,semantic,"v1.2 registers it as COG verb ""aisetallowedsurfacetype"""
+sithCogFunctionAI_AISetClass,0x0046a590,confirmed,semantic,"v1.2 registers it as COG verb ""aisetclass"""
+sithCogFunctionAI_AISetCutsceneMode,0x0046a240,confirmed,semantic,"v1.2 registers it as COG verb ""aisetcutscenemode"""
+sithCogFunctionAI_AISetFireTarget,0x0046a0b0,confirmed,semantic,"v1.2 registers it as COG verb ""aisetfiretarget"""
+sithCogFunctionAI_AISetGoalThing,0x004694d0,confirmed,semantic,"v1.2 registers it as COG verb ""aisetgoalthing"""
+sithCogFunctionAI_AISetInstinctWpntMode,0x0046b2c0,confirmed,semantic,"v1.2 registers it as COG verb ""aisetinstinctwpntmode"""
+sithCogFunctionAI_AISetLookFrame,0x00469840,confirmed,semantic,"v1.2 registers it as COG verb ""aisetlookframe"""
+sithCogFunctionAI_AISetLookPos,0x004697a0,confirmed,semantic,"v1.2 registers it as COG verb ""aisetlookpos"""
+sithCogFunctionAI_AISetLookThing,0x0046a610,confirmed,semantic,unique string shared with upstream: 'Cog %s: Bad thing in AISetLookThing()\n'
+sithCogFunctionAI_AISetLookThingEyeLevel,0x0046a700,confirmed,semantic,"v1.2 registers it as COG verb ""aisetlookthingeyelevel"""
+sithCogFunctionAI_AISetMaxHomeDist,0x00469030,confirmed,semantic,"v1.2 registers it as COG verb ""aisetmaxhomedist"""
+sithCogFunctionAI_AISetMode,0x00469a10,confirmed,semantic,"v1.2 registers it as COG verb ""aisetmode"""
+sithCogFunctionAI_AISetMoveFrame,0x00469320,confirmed,semantic,"v1.2 registers it as COG verb ""aisetmoveframe"""
+sithCogFunctionAI_AISetMovePos,0x00468e20,confirmed,semantic,"v1.2 registers it as COG verb ""aisetmovepos"""
+sithCogFunctionAI_AISetMoveSpeed,0x00468cf0,confirmed,semantic,"v1.2 registers it as COG verb ""aisetmovespeed"""
+sithCogFunctionAI_AISetMoveThing,0x00469400,confirmed,semantic,"v1.2 registers it as COG verb ""aisetmovething"""
+sithCogFunctionAI_AISetSubMode,0x00469c90,confirmed,semantic,"v1.2 registers it as COG verb ""aisetsubmode"""
+sithCogFunctionAI_AISetWpnt,0x0046ae50,confirmed,semantic,"v1.2 registers it as COG verb ""aisetwpnt"""
+sithCogFunctionAI_AISetWpntFlags,0x0046aee0,confirmed,semantic,"v1.2 registers it as COG verb ""aisetwpntflags"""
+sithCogFunctionAI_AISetWpntRank,0x0046aeb0,confirmed,semantic,"v1.2 registers it as COG verb ""aisetwpntrank"""
+sithCogFunctionAI_AISpat,0x0046b430,confirmed,semantic,"v1.2 registers it as COG verb ""aispat"""
+sithCogFunctionAI_AIStopFlee,0x0046a4b0,confirmed,semantic,"v1.2 registers it as COG verb ""aistopflee"""
+sithCogFunctionAI_AITraverseWpnts,0x0046afc0,confirmed,semantic,"v1.2 registers it as COG verb ""aitraversewpnts"""
+sithCogFunctionAI_AIWaitForHeadTracking,0x0046a8b0,confirmed,semantic,"v1.2 registers it as COG verb ""aiwaitforheadtracking"""
+sithCogFunctionAI_AIWaitForStop,0x0046a800,confirmed,semantic,"v1.2 registers it as COG verb ""aiwaitforstop"""
+sithCogFunctionAI_AIWpntHuntTarget,0x0046b160,confirmed,semantic,"v1.2 registers it as COG verb ""aiwpnthunttarget"""
+sithCogFunctionAI_FirstThingInView,0x00469db0,confirmed,semantic,"v1.2 registers it as COG verb ""firstthinginview"""
+sithCogFunctionAI_IsAITargetInSight,0x0046a370,confirmed,semantic,"v1.2 registers it as COG verb ""isaitargetinsight"""
+sithCogFunctionAI_NextThingInView,0x00469f10,confirmed,semantic,"v1.2 registers it as COG verb ""nextthinginview"""
+sithCogFunctionAI_ThingViewDot,0x00469f60,confirmed,semantic,"v1.2 registers it as COG verb ""thingviewdot"""
+sithCogFunctionPlayer_ClearGoalFlags,0x00464d20,confirmed,semantic,"v1.2 registers it as COG verb ""cleargoalflags"""
+sithCogFunctionPlayer_CreateBackpack,0x004651c0,confirmed,semantic,"v1.2 registers it as COG verb ""createbackpack"""
+sithCogFunctionPlayer_GetAbsoluteMaxPlayers,0x00464e50,confirmed,semantic,"v1.2 registers it as COG verb ""getabsolutemaxplayers"""
+sithCogFunctionPlayer_GetCurItem,0x00465360,confirmed,semantic,"v1.2 registers it as COG verb ""getcuritem"""
+sithCogFunctionPlayer_GetCutsceneMode,0x00465640,confirmed,semantic,"v1.2 registers it as COG verb ""getcutscenemode"""
+sithCogFunctionPlayer_GetLastWeapon,0x00465670,confirmed,semantic,"v1.2 registers it as COG verb ""getlastweapon"""
+sithCogFunctionPlayer_GetLocalPlayerThing,0x00464e60,confirmed,semantic,"v1.2 registers it as COG verb ""getlocalplayerthing"""
+sithCogFunctionPlayer_GetMaxPlayers,0x00464e30,confirmed,semantic,"v1.2 registers it as COG verb ""getmaxplayers"""
+sithCogFunctionPlayer_GetNumBackbackItems,0x00465150,confirmed,semantic,"v1.2 registers it as COG verb ""numbackpackitems"""
+sithCogFunctionPlayer_GetNumPlayers,0x00464e00,confirmed,semantic,"v1.2 registers it as COG verb ""getnumplayers"""
+sithCogFunctionPlayer_GetPlayerNum,0x00464f10,confirmed,semantic,"v1.2 registers it as COG verb ""getplayernum"""
+sithCogFunctionPlayer_GetPlayerThing,0x00464e90,confirmed,semantic,"v1.2 registers it as COG verb ""getplayerthing"""
+sithCogFunctionPlayer_GetRespawnMask,0x00465270,confirmed,semantic,"v1.2 registers it as COG verb ""getrespawnmask"""
+sithCogFunctionPlayer_IMPEndFiring,0x004646a0,confirmed,semantic,"v1.2 registers it as COG verb ""impendfiring"""
+sithCogFunctionPlayer_IMPStartFiring,0x00464680,confirmed,semantic,"v1.2 registers it as COG verb ""impstartfiring"""
+sithCogFunctionPlayer_IsAming,0x004653e0,confirmed,semantic,"v1.2 registers it as COG verb ""isaiming"""
+sithCogFunctionPlayer_IsInvActivated,0x00464aa0,confirmed,semantic,"v1.2 registers it as COG verb ""isinvactivated"""
+sithCogFunctionPlayer_IsInvAvailable,0x00464b70,confirmed,semantic,"v1.2 registers it as COG verb ""isinvavailable"""
+sithCogFunctionPlayer_IsInvisible,0x004654e0,confirmed,semantic,"v1.2 registers it as COG verb ""isinvisible"""
+sithCogFunctionPlayer_IsItemFound,0x004655a0,confirmed,semantic,"v1.2 registers it as COG verb ""isitemfound"""
+sithCogFunctionPlayer_JewelFlyingStatus,0x00464700,confirmed,semantic,"v1.2 registers it as COG verb ""jewelflyingstatus"""
+sithCogFunctionPlayer_MakeMeStop,0x00464770,confirmed,semantic,"v1.2 registers it as COG verb ""makemestop"""
+sithCogFunctionPlayer_NthBackpackBin,0x00465050,confirmed,semantic,"v1.2 registers it as COG verb ""nthbackpackbin"""
+sithCogFunctionPlayer_NthBackpackValue,0x004650d0,confirmed,semantic,"v1.2 registers it as COG verb ""nthbackpackvalue"""
+sithCogFunctionPlayer_PickupBackpack,0x00464fa0,confirmed,semantic,"v1.2 registers it as COG verb ""pickupbackpack"""
+sithCogFunctionPlayer_ResetInventory,0x00465510,confirmed,semantic,"v1.2 registers it as COG verb ""resetinventory"""
+sithCogFunctionPlayer_SetElectricWhip,0x004655f0,confirmed,semantic,"v1.2 registers it as COG verb ""setwhipelectric"""
+sithCogFunctionPlayer_SetGoalFlags,0x00464c40,confirmed,semantic,"v1.2 registers it as COG verb ""setgoalflags"""
+sithCogFunctionPlayer_SetInvActivated,0x00464850,confirmed,semantic,"v1.2 registers it as COG verb ""setinvactivated"""
+sithCogFunctionPlayer_SetInvAvailable,0x00464920,confirmed,semantic,"v1.2 registers it as COG verb ""setinvavailable"""
+sithCogFunctionPlayer_SetInvDisabled,0x004649f0,confirmed,semantic,"v1.2 registers it as COG verb ""setinvdisabled"""
+sithCogFunctionPlayer_SetPlayerInPor,0x004646c0,confirmed,semantic,"v1.2 registers it as COG verb ""playerinpor"""
+sithCogFunctionPlayer_SetRespawnMask,0x004652e0,confirmed,semantic,"v1.2 registers it as COG verb ""setrespawnmask"""
+sithCogFunctionPlayer_SetSwimmingInventory,0x00465460,confirmed,semantic,"v1.2 registers it as COG verb ""setswimminginventory"""
+sithCogFunctionPlayer_StartJewelFlying,0x00464750,confirmed,semantic,"v1.2 registers it as COG verb ""startjewelflying"""
+sithCogFunctionPlayer_SyncScores,0x00465350,confirmed,semantic,"v1.2 registers it as COG verb ""syncscores"""
+sithCogFunctionSector_ClearSectorFlags,0x004660b0,confirmed,semantic,"v1.2 registers it as COG verb ""clearsectorflags"""
+sithCogFunctionSector_ClearSectorSurfflags,0x00465de0,confirmed,semantic,"v1.2 registers it as COG verb ""clearsectorsurfflags"""
+sithCogFunctionSector_FindSectorAtPos,0x004664d0,confirmed,semantic,"v1.2 registers it as COG verb ""findsectoratpos"""
+sithCogFunctionSector_GetNumSectorSurfaces,0x004662b0,confirmed,semantic,"v1.2 registers it as COG verb ""getnumsectorsurfaces"""
+sithCogFunctionSector_GetNumSectorVertices,0x00466250,confirmed,semantic,"v1.2 registers it as COG verb ""getnumsectorvertices"""
+sithCogFunctionSector_GetSectorCenter,0x004661f0,confirmed,semantic,"v1.2 registers it as COG verb ""getsectorcenter"""
+sithCogFunctionSector_GetSectorColormap,0x00465e70,confirmed,semantic,"v1.2 registers it as COG verb ""getsectorcolormap"""
+sithCogFunctionSector_GetSectorCount,0x004661d0,confirmed,semantic,"v1.2 registers it as COG verb ""getsectorcount"""
+sithCogFunctionSector_GetSectorFlags,0x00466120,confirmed,semantic,"v1.2 registers it as COG verb ""getsectorflags"""
+sithCogFunctionSector_GetSectorLight,0x00465b70,confirmed,semantic,"v1.2 registers it as COG verb ""getsectorlight"""
+sithCogFunctionSector_GetSectorPlayerCount,0x00466190,confirmed,semantic,"v1.2 registers it as COG verb ""sectorplayercount"""
+sithCogFunctionSector_GetSectorSurfaceRef,0x004663d0,confirmed,semantic,"v1.2 registers it as COG verb ""getsectorsurfaceref"""
+sithCogFunctionSector_GetSectorThingCount,0x00466150,confirmed,semantic,"v1.2 registers it as COG verb ""sectorthingcount"""
+sithCogFunctionSector_GetSectorThrust,0x00465f00,confirmed,semantic,"v1.2 registers it as COG verb ""getsectorthrust"""
+sithCogFunctionSector_GetSectorTint,0x004659e0,confirmed,semantic,"v1.2 registers it as COG verb ""getsectortint"""
+sithCogFunctionSector_GetSectorVertexPos,0x00466310,confirmed,semantic,"v1.2 registers it as COG verb ""getsectorvertexpos"""
+sithCogFunctionSector_RegisterFunctions,0x004656a0,confirmed,semantic,unique string shared with upstream: 'getsectortint'
+sithCogFunctionSector_SetSectorAdjoins,0x00465cb0,confirmed,semantic,"v1.2 registers it as COG verb ""sectoradjoins"""
+sithCogFunctionSector_SetSectorColormap,0x00465ec0,confirmed,semantic,"v1.2 registers it as COG verb ""setsectorcolormap"""
+sithCogFunctionSector_SetSectorFlags,0x00466040,confirmed,semantic,"v1.2 registers it as COG verb ""setsectorflags"""
+sithCogFunctionSector_SetSectorLight,0x00465bf0,confirmed,semantic,"v1.2 registers it as COG verb ""sectorlight"""
+sithCogFunctionSector_SetSectorSurfflags,0x00465d50,confirmed,semantic,"v1.2 registers it as COG verb ""setsectorsurfflags"""
+sithCogFunctionSector_SetSectorThrust,0x00465f60,confirmed,semantic,"v1.2 registers it as COG verb ""sectorthrust"""
+sithCogFunctionSector_SetSectorTint,0x00465a40,confirmed,semantic,"v1.2 registers it as COG verb ""setsectortint"""
+sithCogFunctionSector_SyncSector,0x00466480,confirmed,semantic,"v1.2 registers it as COG verb ""syncsector"""
+sithCogFunctionSound_ChangePitch,0x00467120,confirmed,semantic,"v1.2 registers it as COG verb ""changesoundpitch"""
+sithCogFunctionSound_ChangeVolume,0x00467050,confirmed,semantic,"v1.2 registers it as COG verb ""changesoundvol"""
+sithCogFunctionSound_GetSoundLen,0x00467260,confirmed,semantic,"v1.2 registers it as COG verb ""getsoundlen"""
+sithCogFunctionSound_LoadSound,0x00466ee0,confirmed,semantic,"v1.2 registers it as COG verb ""loadsound"""
+sithCogFunctionSound_PlaySoundClass,0x00466f30,confirmed,semantic,"v1.2 registers it as COG verb ""playsoundclass"""
+sithCogFunctionSound_PlaySoundGlobal,0x00466c90,confirmed,semantic,"v1.2 registers it as COG verb ""playsoundglobal"""
+sithCogFunctionSound_PlaySoundLocal,0x00466b70,confirmed,semantic,"v1.2 registers it as COG verb ""playsoundlocal"""
+sithCogFunctionSound_PlaySoundPos,0x004669a0,confirmed,semantic,"v1.2 registers it as COG verb ""playsoundpos"""
+sithCogFunctionSound_PlaySoundThing,0x004666e0,confirmed,semantic,"v1.2 registers it as COG verb ""playsoundthing"""
+sithCogFunctionSound_PlayVoiceMode,0x00467020,confirmed,semantic,"v1.2 registers it as COG verb ""playvoicemode"""
+sithCogFunctionSound_RegisterFunctions,0x00466530,confirmed,semantic,unique string shared with upstream: 'playsoundthing'
+sithCogFunctionSound_SectorSound,0x004671f0,confirmed,semantic,"v1.2 registers it as COG verb ""sectorsound"""
+sithCogFunctionSound_StopAllSoundsThing,0x00466950,confirmed,semantic,"v1.2 registers it as COG verb ""stopallsoundsthing"""
+sithCogFunctionSound_StopSound,0x00466e20,confirmed,semantic,"v1.2 registers it as COG verb ""stopsound"""
+sithCogFunctionSound_StopSoundClass,0x00466fc0,confirmed,semantic,"v1.2 registers it as COG verb ""stopsoundclass"""
+sithCogFunctionSound_StopSoundThing,0x004668f0,confirmed,semantic,"v1.2 registers it as COG verb ""stopsoundthing"""
+sithCogFunctionSound_WaitForSound,0x004672b0,confirmed,semantic,"v1.2 registers it as COG verb ""waitforsound"""
+sithCogFunctionSurface_ClearAdjoinFlags,0x00468130,confirmed,semantic,"v1.2 registers it as COG verb ""clearadjoinflags"""
+sithCogFunctionSurface_ClearFaceType,0x00468250,confirmed,semantic,"v1.2 registers it as COG verb ""clearfacetype"""
+sithCogFunctionSurface_ClearSurfaceFlags,0x00468020,confirmed,semantic,"v1.2 registers it as COG verb ""clearsurfaceflags"""
+sithCogFunctionSurface_GetAdjoinAlpha,0x00467610,confirmed,semantic,"v1.2 registers it as COG verb ""getadjoinalpha"""
+sithCogFunctionSurface_GetAdjoinFlags,0x004681a0,confirmed,semantic,"v1.2 registers it as COG verb ""getadjoinflags"""
+sithCogFunctionSurface_GetCeilingSkyOffset,0x00467a40,confirmed,semantic,"v1.2 registers it as COG verb ""getceilingskyoffset"""
+sithCogFunctionSurface_GetFaceGeoMode,0x00468380,confirmed,semantic,"v1.2 registers it as COG verb ""getfacegeomode"""
+sithCogFunctionSurface_GetFaceLightMode,0x00468410,confirmed,semantic,"v1.2 registers it as COG verb ""getfacelightmode"""
+sithCogFunctionSurface_GetHorizonSkyOffset,0x004679c0,confirmed,semantic,"v1.2 registers it as COG verb ""gethorizonskyoffset"""
+sithCogFunctionSurface_GetNumSurfaceVertices,0x00467860,confirmed,semantic,"v1.2 registers it as COG verb ""getnumsurfacevertices"""
+sithCogFunctionSurface_GetSurfaceAdjoin,0x00467750,confirmed,semantic,"v1.2 registers it as COG verb ""getsurfaceadjoin"""
+sithCogFunctionSurface_GetSurfaceCenter,0x00468580,confirmed,semantic,"v1.2 registers it as COG verb ""getsurfacecenter"""
+sithCogFunctionSurface_GetSurfaceCount,0x004685d0,confirmed,semantic,"v1.2 registers it as COG verb ""getsurfacecount"""
+sithCogFunctionSurface_GetSurfaceFlags,0x00468090,confirmed,semantic,"v1.2 registers it as COG verb ""getsurfaceflags"""
+sithCogFunctionSurface_GetSurfaceLight,0x00468520,confirmed,semantic,"v1.2 registers it as COG verb ""getsurfacelight"""
+sithCogFunctionSurface_GetSurfaceMaterial,0x00467ed0,confirmed,semantic,"v1.2 registers it as COG verb ""getsurfacemat"""
+sithCogFunctionSurface_GetSurfaceNormal,0x00468600,confirmed,semantic,"v1.2 registers it as COG verb ""getsurfacenormal"""
+sithCogFunctionSurface_GetSurfaceSector,0x004677e0,confirmed,semantic,"v1.2 registers it as COG verb ""getsurfacesector"""
+sithCogFunctionSurface_GetSurfaceVertexPos,0x004678c0,confirmed,semantic,"v1.2 registers it as COG verb ""getsurfacevertexpos"""
+sithCogFunctionSurface_GetWallCel,0x00467d90,confirmed,semantic,"v1.2 registers it as COG verb ""getsurfacecel"""
+sithCogFunctionSurface_RegisterFunctions,0x00467310,confirmed,semantic,unique string shared with upstream: 'getsurfaceadjoin'
+sithCogFunctionSurface_SetAdjoinAlpha,0x00467680,confirmed,semantic,"v1.2 registers it as COG verb ""setadjoinalpha"""
+sithCogFunctionSurface_SetAdjoinFlags,0x004680c0,confirmed,semantic,"v1.2 registers it as COG verb ""setadjoinflags"""
+sithCogFunctionSurface_SetCeilingSkyOffset,0x00467a00,confirmed,semantic,"v1.2 registers it as COG verb ""setceilingskyoffset"""
+sithCogFunctionSurface_SetFaceGeoMode,0x004682f0,confirmed,semantic,"v1.2 registers it as COG verb ""setfacegeomode"""
+sithCogFunctionSurface_SetFaceLightMode,0x004683b0,confirmed,semantic,"v1.2 registers it as COG verb ""setfacelightmode"""
+sithCogFunctionSurface_SetFaceType,0x004681e0,confirmed,semantic,"v1.2 registers it as COG verb ""setfacetype"""
+sithCogFunctionSurface_SetHorizonSkyOffset,0x00467980,confirmed,semantic,"v1.2 registers it as COG verb ""sethorizonskyoffset"""
+sithCogFunctionSurface_SetSurfaceFlags,0x00467fb0,confirmed,semantic,"v1.2 registers it as COG verb ""setsurfaceflags"""
+sithCogFunctionSurface_SetSurfaceLight,0x00468440,confirmed,semantic,"v1.2 registers it as COG verb ""setsurfacelight"""
+sithCogFunctionSurface_SetSurfaceMaterial,0x00467f30,confirmed,semantic,"v1.2 registers it as COG verb ""setsurfacemat"""
+sithCogFunctionSurface_SetWallCel,0x00467e10,confirmed,semantic,"v1.2 registers it as COG verb ""setsurfacecel"""
+sithCogFunctionSurface_SlideCeilingSky,0x00467af0,confirmed,semantic,"v1.2 registers it as COG verb ""slideceilingsky"""
+sithCogFunctionSurface_SlideHorizonSky,0x00467a80,confirmed,semantic,"v1.2 registers it as COG verb ""slidehorizonsky"""
+sithCogFunctionSurface_SlideWall,0x00467c70,confirmed,semantic,"v1.2 registers it as COG verb ""slidesurface"""
+sithCogFunctionSurface_SurfaceLightAnim,0x00467b60,confirmed,semantic,"v1.2 registers it as COG verb ""surfacelightanim"""
+sithCogFunctionSurface_SyncSurface,0x00468660,confirmed,semantic,"v1.2 registers it as COG verb ""syncsurface"""
+sithCogFunctionThing_AddThingVel,0x00470700,confirmed,semantic,"v1.2 registers it as COG verb ""addthingvel"""
+sithCogFunctionThing_AmputateJoint,0x00472a30,confirmed,semantic,"v1.2 registers it as COG verb ""amputatejoint"""
+sithCogFunctionThing_AnimateSpriteSize,0x0046d790,confirmed,semantic,"v1.2 registers it as COG verb ""animatespritesize"""
+sithCogFunctionThing_ApplyForce,0x004706a0,confirmed,semantic,"v1.2 registers it as COG verb ""applyforce"""
+sithCogFunctionThing_AttachThingToSurf,0x00470940,confirmed,semantic,"v1.2 registers it as COG verb ""attachthingtosurf"""
+sithCogFunctionThing_AttachThingToThing,0x00470a00,confirmed,semantic,unique string shared with upstream: 'Cog %s: Bad thing in AttachThingToThing('
+sithCogFunctionThing_AttachThingToThingEx,0x00470ac0,confirmed,semantic,"v1.2 registers it as COG verb ""attachthingtothingex"""
+sithCogFunctionThing_AttachThingToThingMesh,0x004754d0,confirmed,semantic,"v1.2 registers it as COG verb ""attachthingtothingmesh"""
+sithCogFunctionThing_BoardVehicle,0x004762b0,confirmed,semantic,"v1.2 registers it as COG verb ""boardvehicle"""
+sithCogFunctionThing_CaptureThing,0x004700f0,confirmed,semantic,"v1.2 registers it as COG verb ""capturething"""
+sithCogFunctionThing_ChangeInventory,0x004703c0,confirmed,semantic,"v1.2 registers it as COG verb ""changeinv"""
+sithCogFunctionThing_CheckFloorDistance,0x00475cf0,confirmed,semantic,"v1.2 registers it as COG verb ""checkfloordistance"""
+sithCogFunctionThing_CheckPathToPoint,0x00475d80,confirmed,semantic,"v1.2 registers it as COG verb ""checkpathtopoint"""
+sithCogFunctionThing_ClearPhysicsFlags,0x00472cc0,confirmed,semantic,"v1.2 registers it as COG verb ""clearphysicsflags"""
+sithCogFunctionThing_ClearThingAttachFlags,0x00473860,confirmed,semantic,"v1.2 registers it as COG verb ""clearthingattachflags"""
+sithCogFunctionThing_ClearThingFlags,0x00471ea0,confirmed,semantic,"v1.2 registers it as COG verb ""clearthingflags"""
+sithCogFunctionThing_ClearTypeFlags,0x00473e50,confirmed,semantic,"v1.2 registers it as COG verb ""clearparticleflags"""
+sithCogFunctionThing_CopyOrient,0x0046d2d0,confirmed,semantic,"v1.2 registers it as COG verb ""copyorient"""
+sithCogFunctionThing_CopyOrientAndPos,0x0046d370,confirmed,semantic,"v1.2 registers it as COG verb ""copyorientandpos"""
+sithCogFunctionThing_CreateLaser,0x0046d490,confirmed,semantic,"v1.2 registers it as COG verb ""createlaser"""
+sithCogFunctionThing_CreateLightning,0x0046d610,confirmed,semantic,"v1.2 registers it as COG verb ""createlightning"""
+sithCogFunctionThing_CreatePolylineThing,0x0046d150,confirmed,semantic,"v1.2 registers it as COG verb ""createpolylinething"""
+sithCogFunctionThing_CreateThing,0x0046dc40,confirmed,semantic,"v1.2 registers it as COG verb ""creatething"""
+sithCogFunctionThing_CreateThingAtPos,0x0046ddc0,confirmed,semantic,"v1.2 registers it as COG verb ""createthingatpos"""
+sithCogFunctionThing_DamageThing,0x0046dfc0,confirmed,semantic,"v1.2 registers it as COG verb ""damagething"""
+sithCogFunctionThing_DestroyThing,0x0046e260,confirmed,semantic,"v1.2 registers it as COG verb ""destroything"""
+sithCogFunctionThing_DetachThing,0x004708c0,confirmed,semantic,"v1.2 registers it as COG verb ""detachthing"""
+sithCogFunctionThing_DetachThingMesh,0x00475650,confirmed,semantic,"v1.2 registers it as COG verb ""detachthingmesh"""
+sithCogFunctionThing_FadeInTrack,0x00476350,confirmed,semantic,"v1.2 registers it as COG verb ""fadeintrack"""
+sithCogFunctionThing_FirstThingInSector,0x00472110,confirmed,semantic,"v1.2 registers it as COG verb ""firstthinginsector"""
+sithCogFunctionThing_GetActorHeadPYR,0x00470880,confirmed,semantic,"v1.2 registers it as COG verb ""getactorheadpyr"""
+sithCogFunctionThing_GetActorWeapon,0x00472b70,confirmed,semantic,"v1.2 registers it as COG verb ""getactorweapon"""
+sithCogFunctionThing_GetCameraFOV,0x0046f100,confirmed,semantic,"v1.2 registers it as COG verb ""getcamerafov"""
+sithCogFunctionThing_GetCameraPosition,0x0046f120,confirmed,semantic,"v1.2 registers it as COG verb ""getcameraposition"""
+sithCogFunctionThing_GetCollideType,0x00472060,confirmed,semantic,"v1.2 registers it as COG verb ""getcollidetype"""
+sithCogFunctionThing_GetCurFrame,0x0046fc50,confirmed,semantic,"v1.2 registers it as COG verb ""getcurframe"""
+sithCogFunctionThing_GetFireOffset,0x00474020,confirmed,semantic,"v1.2 registers it as COG verb ""getthingfireoffset"""
+sithCogFunctionThing_GetGoalFrame,0x0046fd00,confirmed,semantic,"v1.2 registers it as COG verb ""getgoalframe"""
+sithCogFunctionThing_GetGuidThing,0x004746f0,confirmed,semantic,"v1.2 registers it as COG verb ""getguidthing"""
+sithCogFunctionThing_GetHealth,0x0046e100,confirmed,semantic,"v1.2 registers it as COG verb ""gethealth"""
+sithCogFunctionThing_GetInventory,0x00470270,confirmed,semantic,"v1.2 registers it as COG verb ""getinv"""
+sithCogFunctionThing_GetInventoryCog,0x00470490,confirmed,semantic,"v1.2 registers it as COG verb ""getinvcog"""
+sithCogFunctionThing_GetInventoryMaximum,0x00472300,confirmed,semantic,"v1.2 registers it as COG verb ""getinvmax"""
+sithCogFunctionThing_GetInventoryMinimum,0x00472270,confirmed,semantic,"v1.2 registers it as COG verb ""getinvmin"""
+sithCogFunctionThing_GetJointAngle,0x004749e0,confirmed,semantic,"v1.2 registers it as COG verb ""getthingjointangle"""
+sithCogFunctionThing_GetLifeleft,0x004728a0,confirmed,semantic,"v1.2 registers it as COG verb ""getlifeleft"""
+sithCogFunctionThing_GetMajorMode,0x00474530,confirmed,semantic,"v1.2 registers it as COG verb ""getmajormode"""
+sithCogFunctionThing_GetMaxHealth,0x0046e190,confirmed,semantic,"v1.2 registers it as COG verb ""getthingmaxhealth"""
+sithCogFunctionThing_GetMeshByName,0x004753f0,confirmed,semantic,"v1.2 registers it as COG verb ""getmeshbyname"""
+sithCogFunctionThing_GetMoveStatus,0x0046d270,confirmed,semantic,"v1.2 registers it as COG verb ""getmovestatus"""
+sithCogFunctionThing_GetNodeByName,0x00475460,confirmed,semantic,"v1.2 registers it as COG verb ""getnodebyname"""
+sithCogFunctionThing_GetParticleGrowthSpeed,0x00473a20,confirmed,semantic,"v1.2 registers it as COG verb ""getparticlegrowthspeed"""
+sithCogFunctionThing_GetParticleSize,0x004738f0,confirmed,semantic,"v1.2 registers it as COG verb ""getparticlesize"""
+sithCogFunctionThing_GetParticleTimeoutRate,0x00473b50,confirmed,semantic,"v1.2 registers it as COG verb ""getparticletimeoutrate"""
+sithCogFunctionThing_GetPhysicsFlags,0x00472bf0,confirmed,semantic,"v1.2 registers it as COG verb ""getphysicsflags"""
+sithCogFunctionThing_GetRotThrust,0x00472fe0,confirmed,semantic,"v1.2 registers it as COG verb ""getthingrotthrust"""
+sithCogFunctionThing_GetThingAlpha,0x0046d0e0,confirmed,semantic,"v1.2 registers it as COG verb ""getthingalpha"""
+sithCogFunctionThing_GetThingAttachFlags,0x00470910,confirmed,semantic,"v1.2 registers it as COG verb ""getthingattachflags"""
+sithCogFunctionThing_GetThingAttachedThing,0x00470b90,confirmed,semantic,"v1.2 registers it as COG verb ""getthingattachedthing"""
+sithCogFunctionThing_GetThingCaptureCog,0x00473660,confirmed,semantic,"v1.2 registers it as COG verb ""getthingcapturecog"""
+sithCogFunctionThing_GetThingClassCog,0x00473590,confirmed,semantic,"v1.2 registers it as COG verb ""getthingclasscog"""
+sithCogFunctionThing_GetThingCollideSize,0x004741c0,confirmed,semantic,"v1.2 registers it as COG verb ""getthingcollidesize"""
+sithCogFunctionThing_GetThingCurLightMode,0x00472690,confirmed,semantic,"v1.2 registers it as COG verb ""getthingcurlightmode"""
+sithCogFunctionThing_GetThingEyeOffset,0x00475c80,confirmed,semantic,"v1.2 registers it as COG verb ""getthingeyeoffset"""
+sithCogFunctionThing_GetThingFlags,0x00471df0,confirmed,semantic,"v1.2 registers it as COG verb ""getthingflags"""
+sithCogFunctionThing_GetThingGuid,0x004746c0,confirmed,semantic,"v1.2 registers it as COG verb ""getthingguid"""
+sithCogFunctionThing_GetThingInsertOffset,0x00475af0,confirmed,semantic,"v1.2 registers it as COG verb ""getthinginsertoffset"""
+sithCogFunctionThing_GetThingJointPos,0x00475280,confirmed,semantic,"v1.2 registers it as COG verb ""getthingjointpos"""
+sithCogFunctionThing_GetThingLVec,0x004707c0,confirmed,semantic,"v1.2 registers it as COG verb ""getthinglvec"""
+sithCogFunctionThing_GetThingLVecPYR,0x00474f70,confirmed,semantic,"v1.2 registers it as COG verb ""getthinglvecpyr"""
+sithCogFunctionThing_GetThingLight,0x0046ead0,confirmed,semantic,"v1.2 registers it as COG verb ""getthinglight"""
+sithCogFunctionThing_GetThingMass,0x00474340,confirmed,semantic,"v1.2 registers it as COG verb ""getthingmass"""
+sithCogFunctionThing_GetThingMaxAngVel,0x00474830,confirmed,semantic,"v1.2 registers it as COG verb ""getthingmaxangvel"""
+sithCogFunctionThing_GetThingMaxHeadPitch,0x00474bb0,confirmed,semantic,"v1.2 registers it as COG verb ""getthingmaxheadpitch"""
+sithCogFunctionThing_GetThingMaxHeadVel,0x004757f0,confirmed,semantic,"v1.2 registers it as COG verb ""getthingmaxheadvel"""
+sithCogFunctionThing_GetThingMaxHeadYaw,0x00474d80,confirmed,semantic,"v1.2 registers it as COG verb ""getthingmaxheadyaw"""
+sithCogFunctionThing_GetThingMaxRotVel,0x004756a0,confirmed,semantic,"v1.2 registers it as COG verb ""getthingmaxrotvel"""
+sithCogFunctionThing_GetThingMaxVel,0x00474760,confirmed,semantic,"v1.2 registers it as COG verb ""getthingmaxvel"""
+sithCogFunctionThing_GetThingMinHeadPitch,0x00474c60,confirmed,semantic,"v1.2 registers it as COG verb ""getthingminheadpitch"""
+sithCogFunctionThing_GetThingMoveSize,0x00474280,confirmed,semantic,"v1.2 registers it as COG verb ""getthingmovesize"""
+sithCogFunctionThing_GetThingParent,0x00470160,confirmed,semantic,"v1.2 registers it as COG verb ""getthingparent"""
+sithCogFunctionThing_GetThingPos,0x004701a0,confirmed,semantic,"v1.2 registers it as COG verb ""getthingpos"""
+sithCogFunctionThing_GetThingRVec,0x00470840,confirmed,semantic,"v1.2 registers it as COG verb ""getthingrvec"""
+sithCogFunctionThing_GetThingRespawn,0x00473730,confirmed,semantic,"v1.2 registers it as COG verb ""getthingrespawn"""
+sithCogFunctionThing_GetThingRotVel,0x00472ed0,confirmed,semantic,"v1.2 registers it as COG verb ""getthingrotvel"""
+sithCogFunctionThing_GetThingSector,0x0046fbc0,confirmed,semantic,"v1.2 registers it as COG verb ""getthingsector"""
+sithCogFunctionThing_GetThingSignature,0x00473790,confirmed,semantic,"v1.2 registers it as COG verb ""getthingsignature"""
+sithCogFunctionThing_GetThingTemplate,0x00472750,confirmed,semantic,"v1.2 registers it as COG verb ""getthingtemplate"""
+sithCogFunctionThing_GetThingThrust,0x004729d0,confirmed,semantic,"v1.2 registers it as COG verb ""getthingthrust"""
+sithCogFunctionThing_GetThingType,0x0046d8b0,confirmed,semantic,"v1.2 registers it as COG verb ""getthingtype"""
+sithCogFunctionThing_GetThingUVec,0x00470800,confirmed,semantic,"v1.2 registers it as COG verb ""getthinguvec"""
+sithCogFunctionThing_GetThingUserData,0x00474100,confirmed,semantic,"v1.2 registers it as COG verb ""getthinguserdata"""
+sithCogFunctionThing_GetThingVelocity,0x00470550,confirmed,semantic,"v1.2 registers it as COG verb ""getthingvel"""
+sithCogFunctionThing_GetTypeFlags,0x00473c80,confirmed,semantic,"v1.2 registers it as COG verb ""getparticleflags"""
+sithCogFunctionThing_HasLOS,0x00473f90,confirmed,semantic,"v1.2 registers it as COG verb ""haslos"""
+sithCogFunctionThing_HealThing,0x0046e090,confirmed,semantic,"v1.2 registers it as COG verb ""healthing"""
+sithCogFunctionThing_InterpolatePYR,0x00474e30,confirmed,semantic,"v1.2 registers it as COG verb ""interpolatepyr"""
+sithCogFunctionThing_IsGhostVisible,0x0046ce70,confirmed,semantic,"v1.2 registers it as COG verb ""isghostvisible"""
+sithCogFunctionThing_IsModePlaying,0x00470f50,confirmed,semantic,"v1.2 registers it as COG verb ""ismodeplaying"""
+sithCogFunctionThing_IsThingCrouching,0x00473540,confirmed,semantic,"v1.2 registers it as COG verb ""iscrouching"""
+sithCogFunctionThing_IsThingModelName,0x00475350,confirmed,semantic,"v1.2 registers it as COG verb ""isthingmodelname"""
+sithCogFunctionThing_IsThingMoving,0x0046fe10,confirmed,semantic,"v1.2 registers it as COG verb ""ismoving"""
+sithCogFunctionThing_IsThingVisible,0x00472540,confirmed,semantic,"v1.2 registers it as COG verb ""isthingvisible"""
+sithCogFunctionThing_JumpToFrame,0x0046e2b0,confirmed,semantic,"v1.2 registers it as COG verb ""jumptoframe"""
+sithCogFunctionThing_MakeCamera2LikeCamera1,0x0046ed70,confirmed,semantic,"v1.2 registers it as COG verb ""makecamera2likecamera1"""
+sithCogFunctionThing_MakeFairyDust,0x004763e0,confirmed,semantic,"v1.2 registers it as COG verb ""makefairydust"""
+sithCogFunctionThing_MakeFairyDustDeluxe,0x00476460,confirmed,semantic,"v1.2 registers it as COG verb ""makefairydustdeluxe"""
+sithCogFunctionThing_MoveThing,0x00475e60,confirmed,semantic,"v1.2 registers it as COG verb ""movething"""
+sithCogFunctionThing_MoveThingToPos,0x00475fd0,confirmed,semantic,"v1.2 registers it as COG verb ""movethingtopos"""
+sithCogFunctionThing_MoveToFrame,0x0046e3b0,confirmed,semantic,"v1.2 registers it as COG verb ""movetoframe"""
+sithCogFunctionThing_NextThingInSector,0x00472190,confirmed,semantic,"v1.2 registers it as COG verb ""nextthinginsector"""
+sithCogFunctionThing_ParseArg,0x00472d30,confirmed,semantic,"v1.2 registers it as COG verb ""parsearg"""
+sithCogFunctionThing_PathMovePause,0x00472390,confirmed,semantic,"v1.2 registers it as COG verb ""pathmovepause"""
+sithCogFunctionThing_PathMoveResume,0x004725b0,confirmed,semantic,"v1.2 registers it as COG verb ""pathmoveresume"""
+sithCogFunctionThing_PauseKey,0x004716a0,confirmed,semantic,"v1.2 registers it as COG verb ""pausekey"""
+sithCogFunctionThing_PauseMode,0x00471040,confirmed,semantic,"v1.2 registers it as COG verb ""pausemode"""
+sithCogFunctionThing_PlayForceMoveMode,0x0046d8e0,fixed,semantic,"v1.2 registers it as COG verb ""playforcemovemode"""
+sithCogFunctionThing_PlayKey,0x004712f0,confirmed,semantic,"v1.2 registers it as COG verb ""playkey"""
+sithCogFunctionThing_PlayKeyEx,0x004714e0,confirmed,semantic,"v1.2 registers it as COG verb ""playkeyex"""
+sithCogFunctionThing_PlayMode,0x00470cf0,confirmed,semantic,"v1.2 registers it as COG verb ""playmode"""
+sithCogFunctionThing_PrevThingInSector,0x00472200,confirmed,semantic,"v1.2 registers it as COG verb ""prevthinginsector"""
+sithCogFunctionThing_ReleaseThing,0x00470120,confirmed,semantic,"v1.2 registers it as COG verb ""releasething"""
+sithCogFunctionThing_ResetCameraFOV,0x0046f2f0,confirmed,semantic,"v1.2 registers it as COG verb ""resetcamerafov"""
+sithCogFunctionThing_ResetThing,0x00475a80,confirmed,semantic,"v1.2 registers it as COG verb ""resetthing"""
+sithCogFunctionThing_RestoreThingMesh,0x00471ae0,confirmed,semantic,"v1.2 registers it as COG verb ""restorethingmesh"""
+sithCogFunctionThing_ResumeKey,0x00471790,confirmed,semantic,"v1.2 registers it as COG verb ""resumekey"""
+sithCogFunctionThing_ResumeMode,0x00471130,confirmed,semantic,"v1.2 registers it as COG verb ""resumemode"""
+sithCogFunctionThing_Rotate,0x0046e730,confirmed,semantic,"v1.2 registers it as COG verb ""rotate"""
+sithCogFunctionThing_RotatePivot,0x0046e630,confirmed,semantic,"v1.2 registers it as COG verb ""rotatepivot"""
+sithCogFunctionThing_RotateToPYR,0x0046e980,confirmed,semantic,"v1.2 registers it as COG verb ""rotatetopyr"""
+sithCogFunctionThing_SetActorExtraSpeed,0x004726f0,confirmed,semantic,"v1.2 registers it as COG verb ""setactorextraspeed"""
+sithCogFunctionThing_SetActorWeapon,0x00472b00,confirmed,semantic,"v1.2 registers it as COG verb ""setactorweapon"""
+sithCogFunctionThing_SetArmedMode,0x00471d20,confirmed,semantic,"v1.2 registers it as COG verb ""setarmedmode"""
+sithCogFunctionThing_SetCameraFOV,0x0046f230,confirmed,semantic,"v1.2 registers it as COG verb ""setcamerafov"""
+sithCogFunctionThing_SetCameraFadeThing,0x0046f3a0,confirmed,semantic,"v1.2 registers it as COG verb ""setcamerafadething"""
+sithCogFunctionThing_SetCameraInterpSpeed,0x0046f1c0,confirmed,semantic,"v1.2 registers it as COG verb ""setcamerainterpspeed"""
+sithCogFunctionThing_SetCameraLookInterp,0x0046efe0,confirmed,semantic,unique string shared with upstream: 'Cog %s: Invalid camera in SetCameraLookI'
+sithCogFunctionThing_SetCameraPosInterp,0x0046f070,confirmed,semantic,"v1.2 registers it as COG verb ""setcameraposinterp"""
+sithCogFunctionThing_SetCameraPosition,0x0046ef90,confirmed,semantic,"v1.2 registers it as COG verb ""setcameraposition"""
+sithCogFunctionThing_SetCollideType,0x00472090,confirmed,semantic,"v1.2 registers it as COG verb ""setcollidetype"""
+sithCogFunctionThing_SetExtCamLookOffset,0x0046ec70,confirmed,semantic,"v1.2 registers it as COG verb ""setextcamlookoffset"""
+sithCogFunctionThing_SetExtCamLookOffsetToThing,0x0046eca0,confirmed,semantic,"v1.2 registers it as COG verb ""setextcamlookoffsettothing"""
+sithCogFunctionThing_SetExtCamOffset,0x0046eb70,confirmed,semantic,"v1.2 registers it as COG verb ""setextcamoffset"""
+sithCogFunctionThing_SetExtCamOffsetToThing,0x0046eba0,confirmed,semantic,"v1.2 registers it as COG verb ""setextcamoffsettothing"""
+sithCogFunctionThing_SetFireOffset,0x00474080,confirmed,semantic,"v1.2 registers it as COG verb ""setthingfireoffset"""
+sithCogFunctionThing_SetHeadLightIntensity,0x00472410,confirmed,semantic,"v1.2 registers it as COG verb ""setheadlightintensity"""
+sithCogFunctionThing_SetHeadPYR,0x004750a0,confirmed,semantic,"v1.2 registers it as COG verb ""setactorheadpyr"""
+sithCogFunctionThing_SetHealth,0x0046e220,confirmed,semantic,"v1.2 registers it as COG verb ""sethealth"""
+sithCogFunctionThing_SetInventory,0x00470320,confirmed,semantic,"v1.2 registers it as COG verb ""setinv"""
+sithCogFunctionThing_SetJointAngle,0x00474900,confirmed,semantic,"v1.2 registers it as COG verb ""setthingjointangle"""
+sithCogFunctionThing_SetLifeleft,0x004727d0,confirmed,semantic,"v1.2 registers it as COG verb ""setlifeleft"""
+sithCogFunctionThing_SetMaxHeadPitch,0x00474ad0,confirmed,semantic,"v1.2 registers it as COG verb ""setthingmaxheadpitch"""
+sithCogFunctionThing_SetMaxHeadYaw,0x00474d10,confirmed,semantic,"v1.2 registers it as COG verb ""setthingmaxheadyaw"""
+sithCogFunctionThing_SetMinHeadPitch,0x00474b40,confirmed,semantic,"v1.2 registers it as COG verb ""setthingminheadpitch"""
+sithCogFunctionThing_SetMoveMode,0x0046dba0,confirmed,semantic,"v1.2 registers it as COG verb ""setmovemode"""
+sithCogFunctionThing_SetParticleGrowthSpeed,0x00473ab0,confirmed,semantic,"v1.2 registers it as COG verb ""setparticlegrowthspeed"""
+sithCogFunctionThing_SetParticleSize,0x00473980,confirmed,semantic,"v1.2 registers it as COG verb ""setparticlesize"""
+sithCogFunctionThing_SetParticleTimeoutRate,0x00473be0,confirmed,semantic,"v1.2 registers it as COG verb ""setparticletimeoutrate"""
+sithCogFunctionThing_SetPhysicsFlags,0x00472c30,confirmed,semantic,"v1.2 registers it as COG verb ""setphysicsflags"""
+sithCogFunctionThing_SetPuppetModeFPS,0x00475940,confirmed,semantic,"v1.2 registers it as COG verb ""setpuppetmodefps"""
+sithCogFunctionThing_SetRotThrust,0x00472f40,confirmed,semantic,"v1.2 registers it as COG verb ""setthingrotthrust"""
+sithCogFunctionThing_SetThingAirDrag,0x00475210,confirmed,semantic,"v1.2 registers it as COG verb ""setthingairdrag"""
+sithCogFunctionThing_SetThingAlpha,0x0046cff0,confirmed,semantic,"v1.2 registers it as COG verb ""setthingalpha"""
+sithCogFunctionThing_SetThingAttachFlags,0x004737d0,confirmed,semantic,"v1.2 registers it as COG verb ""setthingattachflags"""
+sithCogFunctionThing_SetThingCaptureCog,0x004736a0,confirmed,semantic,"v1.2 registers it as COG verb ""setthingcapturecog"""
+sithCogFunctionThing_SetThingClassCog,0x004735d0,confirmed,semantic,"v1.2 registers it as COG verb ""setthingclasscog"""
+sithCogFunctionThing_SetThingCollideSize,0x00474220,confirmed,semantic,"v1.2 registers it as COG verb ""setthingcollidesize"""
+sithCogFunctionThing_SetThingCurLightMode,0x00472630,confirmed,semantic,"v1.2 registers it as COG verb ""setthingcurlightmode"""
+sithCogFunctionThing_SetThingFlags,0x00471e20,confirmed,semantic,"v1.2 registers it as COG verb ""setthingflags"""
+sithCogFunctionThing_SetThingHeadLookPos,0x00473310,confirmed,semantic,"v1.2 registers it as COG verb ""setthingheadlookpos"""
+sithCogFunctionThing_SetThingHeadLookThing,0x00473430,confirmed,semantic,"v1.2 registers it as COG verb ""setthingheadlookthing"""
+sithCogFunctionThing_SetThingInsertOffset,0x00475b80,confirmed,semantic,"v1.2 registers it as COG verb ""setthinginsertoffset"""
+sithCogFunctionThing_SetThingLVec,0x00474fe0,confirmed,semantic,"v1.2 registers it as COG verb ""setthinglvecpyr"""
+sithCogFunctionThing_SetThingLook,0x00473050,confirmed,semantic,"v1.2 registers it as COG verb ""setthinglook"""
+sithCogFunctionThing_SetThingMass,0x004743b0,confirmed,semantic,"v1.2 registers it as COG verb ""setthingmass"""
+sithCogFunctionThing_SetThingMaxAngVel,0x004748a0,confirmed,semantic,"v1.2 registers it as COG verb ""setthingmaxangvel"""
+sithCogFunctionThing_SetThingMaxHeadVel,0x004758a0,confirmed,semantic,"v1.2 registers it as COG verb ""setthingmaxheadvel"""
+sithCogFunctionThing_SetThingMaxRotVel,0x00475750,confirmed,semantic,"v1.2 registers it as COG verb ""setthingmaxrotvel"""
+sithCogFunctionThing_SetThingMaxVel,0x004747d0,confirmed,semantic,"v1.2 registers it as COG verb ""setthingmaxvel"""
+sithCogFunctionThing_SetThingMesh,0x00471a00,confirmed,semantic,"v1.2 registers it as COG verb ""setthingmesh"""
+sithCogFunctionThing_SetThingModel,0x00471b70,confirmed,semantic,"v1.2 registers it as COG verb ""setthingmodel"""
+sithCogFunctionThing_SetThingMoveSize,0x004742e0,confirmed,semantic,"v1.2 registers it as COG verb ""setthingmovesize"""
+sithCogFunctionThing_SetThingPos,0x004701e0,confirmed,semantic,"v1.2 registers it as COG verb ""setthingpos"""
+sithCogFunctionThing_SetThingPosEx,0x004745d0,confirmed,semantic,"v1.2 registers it as COG verb ""setthingposex"""
+sithCogFunctionThing_SetThingPulse,0x0046ffb0,confirmed,semantic,"v1.2 registers it as COG verb ""setthingpulse"""
+sithCogFunctionThing_SetThingRotVel,0x00472e30,confirmed,semantic,"v1.2 registers it as COG verb ""setthingrotvel"""
+sithCogFunctionThing_SetThingStateChange,0x00476120,confirmed,semantic,"v1.2 registers it as COG verb ""setthingstatechange"""
+sithCogFunctionThing_SetThingThrust,0x00472910,confirmed,semantic,"v1.2 registers it as COG verb ""setthingthrust"""
+sithCogFunctionThing_SetThingTimer,0x00470050,confirmed,semantic,"v1.2 registers it as COG verb ""setthingtimer"""
+sithCogFunctionThing_SetThingType,0x00472030,confirmed,semantic,"v1.2 registers it as COG verb ""setthingtype"""
+sithCogFunctionThing_SetThingUserData,0x00474160,confirmed,semantic,"v1.2 registers it as COG verb ""setthinguserdata"""
+sithCogFunctionThing_SetThingVel,0x00470600,confirmed,semantic,"v1.2 registers it as COG verb ""setthingvel"""
+sithCogFunctionThing_SetTypeFlags,0x00473d60,confirmed,semantic,"v1.2 registers it as COG verb ""setparticleflags"""
+sithCogFunctionThing_SkipToFrame,0x0046e520,confirmed,semantic,"v1.2 registers it as COG verb ""skiptoframe"""
+sithCogFunctionThing_StartQuetzAnim,0x004761d0,confirmed,semantic,"v1.2 registers it as COG verb ""startquetzanim"""
+sithCogFunctionThing_StopKey,0x00471880,confirmed,semantic,"v1.2 registers it as COG verb ""stopkey"""
+sithCogFunctionThing_StopMode,0x00470e40,confirmed,semantic,"v1.2 registers it as COG verb ""stopmode"""
+sithCogFunctionThing_StopThing,0x0046fd90,confirmed,semantic,"v1.2 registers it as COG verb ""stopthing"""
+sithCogFunctionThing_SyncThingAttachment,0x00474480,confirmed,semantic,"v1.2 registers it as COG verb ""syncthingattachment"""
+sithCogFunctionThing_SyncThingPos,0x00474430,confirmed,semantic,"v1.2 registers it as COG verb ""syncthingpos"""
+sithCogFunctionThing_SyncThingState,0x004744e0,confirmed,semantic,unique string shared with upstream: 'Cog %s: Bad thing in SyncThingState().\n'
+sithCogFunctionThing_SynchMode,0x00470eb0,confirmed,semantic,"v1.2 registers it as COG verb ""synchmode"""
+sithCogFunctionThing_TakeItem,0x00473f50,confirmed,semantic,"v1.2 registers it as COG verb ""takeitem"""
+sithCogFunctionThing_TeleportThing,0x00471f20,confirmed,semantic,"v1.2 registers it as COG verb ""teleportthing"""
+sithCogFunctionThing_ThingFadeAnim,0x0046f870,confirmed,semantic,"v1.2 registers it as COG verb ""thingfadeanim"""
+sithCogFunctionThing_ThingLight,0x0046f5e0,confirmed,semantic,"v1.2 registers it as COG verb ""thinglight"""
+sithCogFunctionThing_ThingLightAnim,0x0046f710,confirmed,semantic,"v1.2 registers it as COG verb ""thinglightanim"""
+sithCogFunctionThing_TrackToMode,0x00471220,confirmed,semantic,"v1.2 registers it as COG verb ""tracktomode"""
+sithCogFunctionThing_WaitForAnimStop,0x0046fb30,confirmed,semantic,"v1.2 registers it as COG verb ""waitforanimstop"""
+sithCogFunctionThing_WaitForStop,0x0046fa60,confirmed,semantic,"v1.2 registers it as COG verb ""waitforstop"""
+sithCogFunctionThing_WaitMode,0x00470c40,confirmed,semantic,"v1.2 registers it as COG verb ""waitmode"""
+sithCogFunction_ActivateWeapon,0x00479250,confirmed,semantic,"v1.2 registers it as COG verb ""activateweapon"""
+sithCogFunction_ArcTan,0x00479f30,confirmed,semantic,"v1.2 registers it as COG verb ""arctan"""
+sithCogFunction_AutoSavegame,0x004799c0,confirmed,semantic,"v1.2 registers it as COG verb ""autosavegame"""
+sithCogFunction_BitClear,0x00478580,confirmed,semantic,"v1.2 registers it as COG verb ""bitclear"""
+sithCogFunction_BitSet,0x00478520,confirmed,semantic,"v1.2 registers it as COG verb ""bitset"""
+sithCogFunction_BitTest,0x00478550,confirmed,semantic,"v1.2 registers it as COG verb ""bittest"""
+sithCogFunction_ClearDebugModeFlags,0x004784e0,confirmed,semantic,"v1.2 registers it as COG verb ""cleardebugmodeflags"""
+sithCogFunction_ClearMapModeFlags,0x004789b0,confirmed,semantic,"v1.2 registers it as COG verb ""clearmapmodeflags"""
+sithCogFunction_ClearSubModeFlags,0x00478480,confirmed,semantic,"v1.2 registers it as COG verb ""clearsubmodeflags"""
+sithCogFunction_CopyPlayerHolsters,0x0047a460,confirmed,semantic,"v1.2 registers it as COG verb ""copyplayerholsters"""
+sithCogFunction_DeactivateCurrentWeapon,0x00479340,confirmed,semantic,"v1.2 registers it as COG verb ""deactivatecurweapon"""
+sithCogFunction_DeactivateWeapon,0x004792d0,confirmed,semantic,"v1.2 registers it as COG verb ""deactivateweapon"""
+sithCogFunction_DeselectWeapon,0x004796f0,confirmed,semantic,"v1.2 registers it as COG verb ""deselectweapon"""
+sithCogFunction_DeselectWeaponWait,0x00479760,confirmed,semantic,"v1.2 registers it as COG verb ""deselectweaponwait"""
+sithCogFunction_FindNewSector,0x0047a6f0,confirmed,semantic,"v1.2 registers it as COG verb ""findnewsector"""
+sithCogFunction_FindNewSectorFromThing,0x0047a770,confirmed,semantic,"v1.2 registers it as COG verb ""findnewsectorfromthing"""
+sithCogFunction_FireProjectile,0x00479050,confirmed,semantic,"v1.2 registers it as COG verb ""fireprojectile"""
+sithCogFunction_GetCameraMode,0x00478ca0,confirmed,semantic,"v1.2 registers it as COG verb ""getcurrentcamera"""
+sithCogFunction_GetCameraStateFlags,0x00479920,confirmed,semantic,"v1.2 registers it as COG verb ""getcamerastateflags"""
+sithCogFunction_GetCogByIndex,0x00479010,confirmed,semantic,"v1.2 registers it as COG verb ""getcogbyindex"""
+sithCogFunction_GetCurWeapon,0x004798b0,confirmed,semantic,"v1.2 registers it as COG verb ""getcurweapon"""
+sithCogFunction_GetDebugModeFlags,0x00478500,confirmed,semantic,"v1.2 registers it as COG verb ""getdebugmodeflags"""
+sithCogFunction_GetDifficulty,0x00478440,confirmed,semantic,"v1.2 registers it as COG verb ""getdifficulty"""
+sithCogFunction_GetFlexGameTime,0x00478420,confirmed,semantic,"v1.2 registers it as COG verb ""getflexgametime"""
+sithCogFunction_GetGameTime,0x00478400,confirmed,semantic,"v1.2 registers it as COG verb ""getgametime"""
+sithCogFunction_GetGravity,0x004786a0,confirmed,semantic,"v1.2 registers it as COG verb ""getgravity"""
+sithCogFunction_GetHintSolved,0x00479a20,confirmed,semantic,"v1.2 registers it as COG verb ""gethintsolved"""
+sithCogFunction_GetKeyLen,0x00478310,confirmed,semantic,"v1.2 registers it as COG verb ""getkeylen"""
+sithCogFunction_GetLastPistol,0x0047a370,confirmed,semantic,"v1.2 registers it as COG verb ""getlastpistol"""
+sithCogFunction_GetLastRifle,0x0047a3d0,confirmed,semantic,"v1.2 registers it as COG verb ""getlastrifle"""
+sithCogFunction_GetLevelTime,0x004785b0,confirmed,semantic,"v1.2 registers it as COG verb ""getleveltime"""
+sithCogFunction_GetMapModelFlags,0x00478990,confirmed,semantic,"v1.2 registers it as COG verb ""getmapmodeflags"""
+sithCogFunction_GetMasterCog,0x00478fc0,confirmed,semantic,"v1.2 registers it as COG verb ""getmastercog"""
+sithCogFunction_GetMaterialCel,0x00478890,confirmed,semantic,"v1.2 registers it as COG verb ""getmaterialcel"""
+sithCogFunction_GetParam,0x00478700,confirmed,semantic,"v1.2 registers it as COG verb ""getparam"""
+sithCogFunction_GetPerformanceLevel,0x0047a570,confirmed,semantic,"v1.2 registers it as COG verb ""getperformancelevel"""
+sithCogFunction_GetPrimaryFocus,0x00478b10,confirmed,semantic,"v1.2 registers it as COG verb ""getprimaryfocus"""
+sithCogFunction_GetSecondaryFocus,0x00478ba0,confirmed,semantic,"v1.2 registers it as COG verb ""getsecondaryfocus"""
+sithCogFunction_GetSelfCog,0x00478fa0,confirmed,semantic,"v1.2 registers it as COG verb ""getselfcog"""
+sithCogFunction_GetSenderID,0x00477340,confirmed,semantic,"v1.2 registers it as COG verb ""getsenderid"""
+sithCogFunction_GetSenderRef,0x00477360,confirmed,semantic,"v1.2 registers it as COG verb ""getsenderref"""
+sithCogFunction_GetSenderType,0x00477380,confirmed,semantic,"v1.2 registers it as COG verb ""getsendertype"""
+sithCogFunction_GetSithMode,0x004783e0,confirmed,semantic,"v1.2 registers it as COG verb ""getsithmode"""
+sithCogFunction_GetSourceRef,0x004773a0,confirmed,semantic,"v1.2 registers it as COG verb ""getsourceref"""
+sithCogFunction_GetSourceType,0x004773c0,confirmed,semantic,"v1.2 registers it as COG verb ""getsourcetype"""
+sithCogFunction_GetSubModeFlags,0x004784a0,confirmed,semantic,"v1.2 registers it as COG verb ""getsubmodeflags"""
+sithCogFunction_GetSurfaceAnim,0x00477950,confirmed,semantic,"v1.2 registers it as COG verb ""getsurfaceanim"""
+sithCogFunction_GetSysDate,0x004773e0,confirmed,semantic,"v1.2 registers it as COG verb ""getsysdate"""
+sithCogFunction_GetSysTime,0x00477450,confirmed,semantic,"v1.2 registers it as COG verb ""getsystime"""
+sithCogFunction_GetThingCount,0x004785f0,confirmed,semantic,"v1.2 registers it as COG verb ""getthingcount"""
+sithCogFunction_GetThingTemplateCount,0x00478610,confirmed,semantic,"v1.2 registers it as COG verb ""getthingtemplatecount"""
+sithCogFunction_HeapFree,0x00478f70,confirmed,semantic,"v1.2 registers it as COG verb ""heapfree"""
+sithCogFunction_HeapGet,0x00478eb0,confirmed,semantic,"v1.2 registers it as COG verb ""heapget"""
+sithCogFunction_HeapNew,0x00478dd0,confirmed,semantic,"v1.2 registers it as COG verb ""heapnew"""
+sithCogFunction_HeapSet,0x00478e50,confirmed,semantic,"v1.2 registers it as COG verb ""heapset"""
+sithCogFunction_InEditor,0x0047a430,confirmed,semantic,"v1.2 registers it as COG verb ""ineditor"""
+sithCogFunction_IsLevelName,0x0047a590,confirmed,semantic,"v1.2 registers it as COG verb ""islevelname"""
+sithCogFunction_IsMulti,0x00479960,confirmed,semantic,"v1.2 registers it as COG verb ""ismulti"""
+sithCogFunction_IsServer,0x00479990,confirmed,semantic,"v1.2 registers it as COG verb ""isserver"""
+sithCogFunction_KillTimerEx,0x00477c70,confirmed,semantic,"v1.2 registers it as COG verb ""killtimerex"""
+sithCogFunction_LoadHolsterModel,0x0047a100,confirmed,semantic,"v1.2 registers it as COG verb ""loadholstermodel"""
+sithCogFunction_LoadKeyframe,0x00477a00,confirmed,semantic,"v1.2 registers it as COG verb ""loadkeyframe"""
+sithCogFunction_LoadModel,0x00477a40,confirmed,semantic,"v1.2 registers it as COG verb ""loadmodel"""
+sithCogFunction_LoadTemplate,0x004779c0,confirmed,semantic,"v1.2 registers it as COG verb ""loadtemplate"""
+sithCogFunction_MaterialAnim,0x00477710,confirmed,semantic,"v1.2 registers it as COG verb ""materialanim"""
+sithCogFunction_Pow,0x00479e10,confirmed,semantic,unique string shared with upstream: 'Cog %s: 0 to the 0 power is undefined\n'
+sithCogFunction_PrintFlex,0x00477610,fixed,semantic,"v1.2 registers it as COG verb ""printflex"""
+sithCogFunction_PrintInt,0x00477590,fixed,semantic,"v1.2 registers it as COG verb ""printint"""
+sithCogFunction_PrintVector,0x004775a0,fixed,semantic,"v1.2 registers it as COG verb ""printvector"""
+sithCogFunction_RandBetween,0x00479bf0,confirmed,semantic,"v1.2 registers it as COG verb ""randbetween"""
+sithCogFunction_RandVec,0x00479c60,confirmed,semantic,"v1.2 registers it as COG verb ""randvec"""
+sithCogFunction_RegisterFunctions,0x00476520,confirmed,semantic,unique string shared with upstream: 'getsenderref'
+sithCogFunction_ResetHolsterModel,0x0047a2b0,confirmed,semantic,"v1.2 registers it as COG verb ""resetholstermodel"""
+sithCogFunction_ResetWeaponModel,0x0047a070,confirmed,semantic,"v1.2 registers it as COG verb ""resetweaponmodel"""
+sithCogFunction_ReturnEx,0x004786e0,confirmed,semantic,"v1.2 registers it as COG verb ""returnex"""
+sithCogFunction_SelectWeapon,0x00479520,confirmed,semantic,"v1.2 registers it as COG verb ""selectweapon"""
+sithCogFunction_SelectWeaponWait,0x00479610,confirmed,semantic,"v1.2 registers it as COG verb ""selectweaponwait"""
+sithCogFunction_SendMessage,0x004781a0,confirmed,semantic,"v1.2 registers it as COG verb ""sendmessage"""
+sithCogFunction_SendMessageEx,0x00478230,confirmed,semantic,"v1.2 registers it as COG verb ""sendmessageex"""
+sithCogFunction_SendTrigger,0x00479130,confirmed,semantic,"v1.2 registers it as COG verb ""sendtrigger"""
+sithCogFunction_SetAimWait,0x00479480,confirmed,semantic,"v1.2 registers it as COG verb ""setaimwait"""
+sithCogFunction_SetCameraFocus,0x004789d0,confirmed,semantic,"v1.2 registers it as COG verb ""setcamerafocus"""
+sithCogFunction_SetCameraMode,0x00478c30,confirmed,semantic,"v1.2 registers it as COG verb ""setcurrentcamera"""
+sithCogFunction_SetCameraSecondaryFocus,0x00478a90,confirmed,semantic,"v1.2 registers it as COG verb ""setcamerasecondaryfocus"""
+sithCogFunction_SetCameraStateFlags,0x00479940,confirmed,semantic,"v1.2 registers it as COG verb ""setcamerastateflags"""
+sithCogFunction_SetCurWeapon,0x00479840,confirmed,semantic,"v1.2 registers it as COG verb ""setcurweapon"""
+sithCogFunction_SetDebugModeFlags,0x004784c0,confirmed,semantic,"v1.2 registers it as COG verb ""setdebugmodeflags"""
+sithCogFunction_SetFireWait,0x00479360,confirmed,semantic,"v1.2 registers it as COG verb ""setfirewait"""
+sithCogFunction_SetFog,0x0047a610,confirmed,semantic,"v1.2 registers it as COG verb ""setfog"""
+sithCogFunction_SetGravity,0x004786c0,confirmed,semantic,"v1.2 registers it as COG verb ""setgravity"""
+sithCogFunction_SetHintSolved,0x00479aa0,confirmed,semantic,"v1.2 registers it as COG verb ""sethintsolved"""
+sithCogFunction_SetHintUnsolved,0x00479b30,confirmed,semantic,"v1.2 registers it as COG verb ""sethintunsolved"""
+sithCogFunction_SetHolsterModel,0x0047a1a0,confirmed,semantic,"v1.2 registers it as COG verb ""setholstermodel"""
+sithCogFunction_SetInvFlags,0x004788b0,confirmed,semantic,"v1.2 registers it as COG verb ""setinvflags"""
+sithCogFunction_SetMapModeFlags,0x00478970,confirmed,semantic,"v1.2 registers it as COG verb ""setmapmodeflags"""
+sithCogFunction_SetMasterCog,0x00478ff0,confirmed,semantic,"v1.2 registers it as COG verb ""setmastercog"""
+sithCogFunction_SetMaterialCel,0x00478840,confirmed,semantic,"v1.2 registers it as COG verb ""setmaterialcel"""
+sithCogFunction_SetMountWait,0x004793e0,confirmed,semantic,"v1.2 registers it as COG verb ""setmountwait"""
+sithCogFunction_SetPOVShake,0x00478d00,confirmed,semantic,"v1.2 registers it as COG verb ""setpovshake"""
+sithCogFunction_SetParam,0x00478740,confirmed,semantic,"v1.2 registers it as COG verb ""setparam"""
+sithCogFunction_SetPulse,0x00477a80,confirmed,semantic,"v1.2 registers it as COG verb ""setpulse"""
+sithCogFunction_SetSubModeFlags,0x00478460,confirmed,semantic,"v1.2 registers it as COG verb ""setsubmodeflags"""
+sithCogFunction_SetTimer,0x00477b40,confirmed,semantic,"v1.2 registers it as COG verb ""settimer"""
+sithCogFunction_SetTimerEx,0x00477bf0,confirmed,semantic,"v1.2 registers it as COG verb ""settimerex"""
+sithCogFunction_SetWeaponModel,0x00479f80,confirmed,semantic,"v1.2 registers it as COG verb ""setweaponmodel"""
+sithCogFunction_Sleep,0x004774c0,confirmed,semantic,unique string shared with upstream: 'Cog %s: Wait time less than 0 in Sleep()'
+sithCogFunction_StopAnim,0x00477860,confirmed,semantic,"v1.2 registers it as COG verb ""stopanim"""
+sithCogFunction_StopMaterialAnim,0x00477800,confirmed,semantic,"v1.2 registers it as COG verb ""stopmaterialanim"""
+sithCogFunction_StopSurfaceAnim,0x004778b0,confirmed,semantic,"v1.2 registers it as COG verb ""stopsurfaceanim"""
+sithCogFunction_SurfaceAnim,0x00477620,confirmed,semantic,"v1.2 registers it as COG verb ""surfaceanim"""
+sithCogFunction_Truncate,0x00479d60,confirmed,semantic,"v1.2 registers it as COG verb ""truncate"""
+sithCogFunction_VectorAdd,0x00477d50,confirmed,semantic,"v1.2 registers it as COG verb ""vectoradd"""
+sithCogFunction_VectorCross,0x00477e70,confirmed,semantic,"v1.2 registers it as COG verb ""vectorcross"""
+sithCogFunction_VectorDist,0x00477fc0,confirmed,semantic,"v1.2 registers it as COG verb ""vectordist"""
+sithCogFunction_VectorDot,0x00477e10,confirmed,semantic,"v1.2 registers it as COG verb ""vectordot"""
+sithCogFunction_VectorEqual,0x00478030,confirmed,semantic,"v1.2 registers it as COG verb ""vectorequal"""
+sithCogFunction_VectorLen,0x00477f00,confirmed,semantic,"v1.2 registers it as COG verb ""vectorlen"""
+sithCogFunction_VectorNorm,0x00478800,confirmed,semantic,"v1.2 registers it as COG verb ""vectornorm"""
+sithCogFunction_VectorRotate,0x004780b0,confirmed,semantic,"v1.2 registers it as COG verb ""vectorrotate"""
+sithCogFunction_VectorScale,0x00477f50,confirmed,semantic,"v1.2 registers it as COG verb ""vectorscale"""
+sithCogFunction_VectorSet,0x00477cf0,confirmed,semantic,"v1.2 registers it as COG verb ""vectorset"""
+sithCogFunction_VectorSub,0x00477db0,confirmed,semantic,"v1.2 registers it as COG verb ""vectorsub"""
+sithCogFunction_VectorTransformToOrient,0x00478100,confirmed,semantic,"v1.2 registers it as COG verb ""vectortransformtoorient"""
+sithCogFunction_VectorX,0x00478770,confirmed,semantic,"v1.2 registers it as COG verb ""vectorx"""
+sithCogFunction_VectorY,0x004787a0,confirmed,semantic,"v1.2 registers it as COG verb ""vectory"""
+sithCogFunction_VectorZ,0x004787d0,confirmed,semantic,"v1.2 registers it as COG verb ""vectorz"""
+sithCogParse_AddSymbol,0x00452f50,confirmed,semantic,unique string shared with upstream: 'No space for COG symbol %s.\n'
+sithCogParse_AllocSymbolTable,0x00452d50,confirmed,semantic,unique string shared with upstream: 'Failed to create memory for symbol table'
+sithCogParse_DuplicateSymbolTable,0x00452c80,confirmed,semantic,unique string shared with upstream: 'Error while duplicating symbol table.\n'
+sithCogParse_GetNextNode,0x00453540,confirmed,semantic,"unique string shared with upstream: 'Max # of nodes %d exceeded, expanding si'"
+sithCogParse_LexerSetSymbol,0x004532a0,confirmed,semantic,"unique string shared with upstream: 'symbol %s not defined, cannot add new sy'"
+sithCogParse_LexerSetVector,0x00453490,confirmed,semantic,"unique string shared with upstream: ""'%f %f %f'"""
+sithCogParse_Load,0x00452890,confirmed,semantic,unique string shared with upstream: 'Open failed for file %s.\n'
+sithCogParse_ParseMessage,0x004545a0,confirmed,semantic,unique string shared with upstream: 'Too many message handlers in script %s.\n'
+sithCogParse_ParseSectionCode,0x00452b10,confirmed,semantic,unique string shared with upstream: 'COG parse returned %d.\n'
+sithCogParse_ParseSymbolRef,0x00453cb0,confirmed,semantic,unique string shared with upstream: 'Script %s: Max references exceeded.\n'
+sithCogParse_ParseSymbols,0x004537f0,confirmed,semantic,unique string shared with upstream: 'Tried to define too many symbols (%d all'
 sithCogParse_aLabelTable,0x0056e680,confirmed,auto,"exact refs from own module (sithCogParse_GenerateCode, sithCogParse_GenerateLabelTable)"
 sithCogParse_bSkipYYRestart,0x0052d02c,confirmed,auto,exact refs from own module (sithCogParse_ParseSectionCode)
 sithCogParse_codepos,0x0056f690,confirmed,auto,"exact refs from own module (sithCogParse_GenerateCode, sithCogParse_GenerateLabelTable)"
@@ -294,7 +975,22 @@ sithCogYacc_yytext,0x017f0118,confirmed,auto,"exact refs from own module (sithCo
 sithCogYacc_yyval,0x017f11b0,confirmed,auto,exact refs from own module (sithCogYacc_yyparse)
 sithCogYacc_yyvs,0x017f03a0,confirmed,auto,exact refs from own module (sithCogYacc_yyparse)
 sithCogYacc_yyvsp,0x017f11c4,confirmed,auto,exact refs from own module (sithCogYacc_yyparse)
+sithCog_AllocWorldCogScripts,0x00422870,confirmed,semantic,unique string shared with upstream: 'Memory alloc failure initializing COG sc'
+sithCog_AllocWorldCogs,0x00422950,confirmed,semantic,unique string shared with upstream: 'Memory alloc failure initializing COGs.\n'
 sithCog_GetCog,0x00423c50,confirmed,auto,called by jonesInventory_Load
+sithCog_GetSymbolRefInitializer,0x00422a30,confirmed,semantic,"unique string shared with upstream: ""Invalid templates initializer '%s' in CO"""
+sithCog_Initialize,0x00425030,confirmed,semantic,unique string shared with upstream: 'activate'
+sithCog_LinkCog,0x00423910,confirmed,semantic,"unique string shared with upstream: 'Could not link Cog %s to thing %d, out o'"
+sithCog_Load,0x00423ab0,confirmed,semantic,unique string shared with upstream: 'No space to load Cog %s.\n'
+sithCog_LoadScript,0x004247a0,confirmed,semantic,unique string shared with upstream: 'No space left to load script %s.\n'
+sithCog_Open,0x00421c90,confirmed,semantic,"unique string shared with upstream: 'Global symbol space %d, used %d.\n'"
+sithCog_ParseSymbolRef,0x004235a0,confirmed,semantic,"unique string shared with upstream: ""Ref '%s' could not be read as a vector, """
+sithCog_ProcessCog,0x00424900,confirmed,semantic,unique string shared with upstream: 'Cog %s: Waking up due to timer elapse.\n'
+sithCog_ReadCogScriptsListText,0x00424480,confirmed,semantic,unique string shared with upstream: 'scripts'
+sithCog_ReadCogsListText,0x00422e60,confirmed,semantic,unique string shared with upstream: 'Placement of Cog %s failed.\n'
+sithCog_SendMessage,0x004223f0,confirmed,semantic,"unique string shared with upstream: 'Cog %s: Message %d delivered, senderType'"
+sithCog_SendMessageEx,0x00422610,confirmed,semantic,"unique string shared with upstream: 'Cog %s: Disabled, MessageEx ignored.\n'"
+sithCog_Startup,0x00421b70,confirmed,semantic,unique string shared with upstream: 'Could not allocate COG symboltable\n'
 sithCog_WriteCogScriptsListBinary,0x004246b0,confirmed,auto,signature matches (2 params)
 sithCog_aCogLinkSectors,0x00555918,confirmed,auto,"exact refs from own module (sithCog_LinkCogToSector, sithCog_SectorSendMessageEx)"
 sithCog_aCogLinkSurfaces,0x0055c918,confirmed,auto,"exact refs from own module (sithCog_LinkCogToSurface, sithCog_SurfaceSendMessageEx)"
@@ -302,17 +998,28 @@ sithCog_aThingLinks,0x00557918,confirmed,auto,"exact refs from own module (sithC
 sithCog_numSectorLinks,0x0055e928,confirmed,auto,"exact refs from own module (sithCog_Close, sithCog_LinkCogToSector)"
 sithCog_numSurfLinks,0x0055e924,confirmed,auto,"exact refs from own module (sithCog_Close, sithCog_LinkCogToSurface)"
 sithCog_numThingLinks,0x0055e920,confirmed,auto,"exact refs from own module (sithCog_Close, sithCog_FixupLinksToThings)"
-sithCollision_AddCollisionHandler,0x004a6460,confirmed,auto,signature matches (4 params)
-sithCollision_AddSurfaceCollisionHandler,0x004a6580,confirmed,auto,signature matches (2 params)
+sithCollision_AddCollisionHandler,0x004a6460,confirmed,semantic,unique string shared with upstream: 'Warning- overriding previous collision h'
+sithCollision_AddSurfaceCollisionHandler,0x004a6580,confirmed,semantic,unique string shared with upstream: 'Warning- overriding previous collision h'
+sithCollision_MoveThing,0x004a6fc0,confirmed,semantic,unique string shared with upstream: 'MoveThing called for %s with distance %f'
+sithCollision_Shutdown,0x004a6420,confirmed,semantic,unique string shared with upstream: 'Collide system not started.\n'
+sithCollision_ThingCollisionHandler,0x004a8cc0,confirmed,semantic,unique string shared with upstream: 'elevpltfrm'
 sithCollision_aCollideResults,0x00586400,confirmed,auto,"exact refs from own module (sithCollision_AddCollisionHandler, sithCollision_MoveThing)"
 sithCollision_bCollideStartup,0x0059bee0,confirmed,auto,"exact refs from own module (sithCollision_MoveThing, sithCollision_Shutdown)"
 sithCollision_stackLevel,0x0053b308,confirmed,auto,"exact refs from own module (sithCollision_DecreaseStackLevel, sithCollision_PopStack)"
 sithCollision_sub_4AAF30,0x004aae60,confirmed,auto,signature matches (2 params)
 sithCommand_CipherText,0x004b4cc0,confirmed,auto,signature matches (1 params)
+sithCommand_Coords,0x004b48b0,confirmed,semantic,unique string shared with upstream: 'Thing is not in world'
 sithCommand_DebugMode,0x004b4600,confirmed,auto,signature matches (2 params)
-sithCommand_DynamicMemory,0x004b4be0,confirmed,auto,"between verified sithCommand_Memory and sithCommand_MemoryDump, same shift -0xe0"
+sithCommand_DynamicMemory,0x004b4be0,confirmed,semantic,unique string shared with upstream: 'NumAllocs: %d TotalMemAlloc: %d bytes Ma'
+sithCommand_Memory,0x004b4990,confirmed,semantic,unique string shared with upstream: '%5d Materials        %8d bytes.'
+sithCommand_MemoryDump,0x004b4c20,confirmed,semantic,unique string shared with upstream: 'memdump.txt'
 sithCommand_aBuf,0x0059c320,confirmed,auto,exact refs from own module (sithCommand_CipherText)
+sithConsole_Close,0x004461d0,confirmed,semantic,unique string shared with upstream: 'sithConsole closed when not opened.\n'
+sithConsole_ExeCommand,0x00446330,confirmed,semantic,unique string shared with upstream: 'Console command %s not recognized.'
 sithConsole_Flush,0x00446410,confirmed,auto,signature matches (0 params)
+sithConsole_Open,0x00446110,confirmed,semantic,unique string shared with upstream: 'Failed to create console.\n'
+sithConsole_PrintString,0x00446220,confirmed,semantic,unique string shared with upstream: 'Console string too long (%d).  Truncated'
+sithConsole_RegisterCommand,0x00446480,confirmed,semantic,unique string shared with upstream: 'Tried to register > %d console funcs.\n'
 sithConsole_aBuffers,0x0056a810,confirmed,auto,"exact refs from own module (sithConsole_Flush, sithConsole_Open)"
 sithConsole_apCommands,0x0056a804,confirmed,auto,"exact refs from own module (sithConsole_CreateCommandTable, sithConsole_FreeCommandTable)"
 sithConsole_bOpen,0x0056b814,confirmed,auto,"exact refs from own module (sithConsole_Close, sithConsole_ExeCommand)"
@@ -327,8 +1034,12 @@ sithConsole_pTable,0x0056b810,confirmed,auto,"exact refs from own module (sithCo
 sithConsole_pfFlush,0x0056b834,confirmed,auto,"exact refs from own module (sithConsole_Flush, sithConsole_RegisterPrintFunctions)"
 sithConsole_pfPrintString,0x0056b82c,confirmed,auto,"exact refs from own module (sithConsole_PrintString, sithConsole_RegisterPrintFunctions)"
 sithConsole_pfPrintWString,0x0056b830,confirmed,auto,"exact refs from own module (sithConsole_PrintWString, sithConsole_RegisterPrintFunctions)"
+sithControl_BindAxis,0x0043f710,confirmed,semantic,unique string shared with upstream: 'Tried to bind unavailable axis %d to fun'
+sithControl_Close,0x0043f530,confirmed,semantic,unique string shared with upstream: 'Control system illegal close.\n'
 sithControl_RegisterAxisFunction,0x0043f580,confirmed,auto,signature matches (2 params)
-sithControl_RegisterControlCallback,0x0043fa10,confirmed,auto,signature matches (1 params)
+sithControl_RegisterControlCallback,0x0043fa10,confirmed,semantic,unique string shared with upstream: 'Tried to register too many control callb'
+sithControl_Startup,0x0043f410,confirmed,semantic,unique string shared with upstream: 'MAXFUNCTIONS'
+sithControl_Update,0x0043fa60,confirmed,semantic,unique string shared with upstream: 'Switch to idle camera.\n'
 sithControl_aControlBindings,0x00562780,confirmed,auto,"exact refs from own module (sithControl_BindAxis, sithControl_BindControl)"
 sithControl_aControlCallbacks,0x00562618,confirmed,auto,"exact refs from own module (sithControl_RegisterControlCallback, sithControl_Update)"
 sithControl_aControlFlags,0x00562698,confirmed,auto,"exact refs from own module (sithControl_BindAxis, sithControl_BindControl)"
@@ -337,17 +1048,44 @@ sithControl_bControlStartup,0x00563e2c,confirmed,auto,"exact refs from own modul
 sithControl_msecIdleTime,0x00563e28,confirmed,auto,"exact refs from own module (sithControl_Open, sithControl_UnbindControl)"
 sithControl_numControlCallbacks,0x00562610,confirmed,auto,"exact refs from own module (sithControl_RegisterControlCallback, sithControl_Update)"
 sithDSSThing_MoveToPos,0x0047e2a0,confirmed,auto,signature matches (3 params)
+sithDSSThing_ProcessAttachment,0x0047dc50,confirmed,semantic,unique string shared with upstream: 'sithDSSThing_ProcessAttachment: Cannot f'
+sithDSSThing_ProcessThingFullDescription,0x0047ccc0,confirmed,semantic,unique string shared with upstream: 'Received DSS::ThingFullDesc message when'
+sithDSS_ProcessPuppetStatus,0x004b2940,confirmed,semantic,unique string shared with upstream: 'Error in DSS::PuppetStatus message forma'
+sithEvent_Create,0x004527b0,confirmed,semantic,unique string shared with upstream: 'Out of event buffer space.\n'
+sithEvent_CreateEvent,0x004524c0,confirmed,semantic,unique string shared with upstream: 'Out of space in event buffer array.  Eve'
 sithEvent_aEventBuffer,0x0056c600,confirmed,auto,"exact refs from own module (sithEvent_Create, sithEvent_FreeEvent)"
 sithEvent_aFreeEventBufferIdxs,0x0056e200,confirmed,auto,"exact refs from own module (sithEvent_Create, sithEvent_FreeEvent)"
 sithEvent_aTasks,0x0056e600,confirmed,auto,"exact refs from own module (sithEvent_Process, sithEvent_RegisterTask)"
 sithEvent_bEventStartup,0x0056e66c,confirmed,auto,"exact refs from own module (sithEvent_RegisterTask, sithEvent_Shutdown)"
 sithEvent_bOpen,0x0056e670,confirmed,auto,"exact refs from own module (sithEvent_Close, sithEvent_Open)"
 sithEvent_numFreeEventBuffers,0x0056e664,confirmed,auto,"exact refs from own module (sithEvent_Create, sithEvent_FreeEvent)"
+sithExplosion_CreateSpriteThing,0x004acf50,confirmed,semantic,unique string shared with upstream: 'could not create thingsprite for explosi'
+sithFX_CreateBubble,0x0048d0c0,confirmed,semantic,unique string shared with upstream: '+bubbles'
+sithFX_CreateFairyDust,0x0048cd70,confirmed,semantic,unique string shared with upstream: '+imp2_trail'
+sithFX_CreateFairyDustDeluxDusts,0x0048cf90,confirmed,semantic,unique string shared with upstream: '+imp2_dust'
+sithFX_CreateLaserThing,0x0048e790,confirmed,semantic,unique string shared with upstream: 'Could not create sithThing for Laser\n'
+sithFX_CreateLightningThing,0x0048e990,confirmed,semantic,unique string shared with upstream: 'Could not create sithThing for Lightning'
+sithFX_CreateMineCarSparks,0x0048e0d0,confirmed,semantic,unique string shared with upstream: 'minecarsparks'
+sithFX_CreatePaddleWaterSplash,0x0048db80,confirmed,semantic,unique string shared with upstream: 'paddlesplash'
+sithFX_CreatePolylineThing,0x0048ebb0,confirmed,semantic,unique string shared with upstream: 'Could not create sithThing for CreatePol'
+sithFX_CreateRaftSplatterFX,0x0048d570,confirmed,semantic,unique string shared with upstream: '+raft_splash'
+sithFX_CreateRaftWakeFX,0x0048d9e0,confirmed,semantic,unique string shared with upstream: '+raft_wake'
+sithFX_UpdateFairyDustUserBlock,0x0048ce10,confirmed,semantic,unique string shared with upstream: 'aet_4sprite_glow_fairy_dust.mat'
 sithFX_rowRippleLastPos,0x00585570,confirmed,auto,exact refs from own module (sithFX_CreateRaftPaddleWaterFX)
 sithFX_secLastCreatedRowRipple,0x005855a0,confirmed,auto,exact refs from own module (sithFX_CreateRaftPaddleWaterFX)
 sithGamesave_GetPreviousLevelFilename,0x00442bd0,confirmed,auto,signature matches (0 params)
+sithGamesave_Restore,0x00441700,confirmed,semantic,unique string shared with upstream: 'Could not open savegame file %s.\n'
+sithGamesave_RestoreFile,0x00441d40,confirmed,semantic,unique string shared with upstream: 'RESTORE: could not open restore file!\n'
+sithGamesave_Save,0x00441610,confirmed,semantic,unique string shared with upstream: 'Cannot overwrite existing file without b'
+sithGamesave_SaveFile,0x004422e0,confirmed,semantic,unique string shared with upstream: 'Error opening file %s for writing.\n'
 sithGamesave_wszPlayerName,0x0052b9bc,confirmed,auto,exact refs from own module (sithGamesave_RestoreFile)
+sithGetAutoSaveFilePrefix,0x004412d0,confirmed,semantic,unique string shared with upstream: 'SITHSTRING_AUTO'
+sithGetQuickSaveFilePrefix,0x00441410,confirmed,semantic,unique string shared with upstream: 'SITHSTRING_QUICK'
+sithGetSaveGamesDir,0x004413f0,confirmed,semantic,unique string shared with upstream: 'SITHSTRING_SAVEGAMES'
+sithGetScreenShotFileTemplate,0x00441450,confirmed,semantic,unique string shared with upstream: 'SITHSTRING_JONES_SHOTS'
+sithGetScreenShotsDir,0x00441430,confirmed,semantic,unique string shared with upstream: 'SITHSTRING_SHOTS'
 sithIntersect_aSphereHitIndices,0x0053c560,confirmed,auto,exact refs from own module (sithIntersect_TestSphereFaceHit)
+sithInventory_CreateBackpack,0x0044ba50,confirmed,semantic,unique string shared with upstream: '+backpack'
 sithInventory_RegisterType,0x0044aa40,confirmed,auto,called by jonesInventory_Load
 sithInventory_g_aUnknown,0x017f1e60,confirmed,auto,"between verified sithMulti_g_message and sithInventory_g_aTypes, same shift +0x140"
 sithItem_PlayerCollisionHandler,0x004aed40,confirmed,auto,"between verified sithParticle_CacheRemove and sithItem_Initialize, same shift -0xd0"
@@ -369,9 +1107,18 @@ sithMain_performanceLevel,0x005644d0,confirmed,auto,"between verified sith_g_pHS
 sithMain_pfOpenCallback,0x005644d4,confirmed,auto,"between verified sith_g_pHS and sithGamesave_state, same shift +0x140"
 sithMain_somePos,0x017fd2e0,confirmed,auto,"between verified sithVoice_aSubtitleInfos and sithMain_g_frameNumber, same shift +0x140"
 sithMain_somePos2,0x017fd2d0,confirmed,auto,"between verified sithVoice_aSubtitleInfos and sithMain_g_frameNumber, same shift +0x140"
+sithMaterial_ReadMaterialsListText,0x0045d540,confirmed,semantic,unique string shared with upstream: ' world materials %d'
 sithMessage_GetSenderID,0x00451c00,confirmed,auto,signature matches (0 params)
+sithMessage_Process,0x00452010,confirmed,semantic,unique string shared with upstream: 'Message contained illegal type field %d.'
+sithMessage_ProcessCheckMembershipList,0x00451eb0,confirmed,semantic,unique string shared with upstream: 'Ignoring MembershipList check from %x.\n'
+sithMessage_ProcessMessages,0x00451ad0,confirmed,semantic,unique string shared with upstream: 'Called ProcessMessages without any input'
+sithMessage_Shutdown,0x004519b0,confirmed,semantic,unique string shared with upstream: 'Shutdown of message system w/o startup.\n'
+sithMessage_Startup,0x00451940,confirmed,semantic,unique string shared with upstream: 'Multiple startup on message system.\n'
 sithMessage_StopProcessMessages,0x00451bf0,confirmed,auto,signature matches (0 params)
 sithMessage_someMsg,0x0056b9d0,confirmed,auto,exact refs from own module (sithMessage_CheckMembershipList)
+sithModel_AllocWorldModels,0x0044c7a0,confirmed,semantic,unique string shared with upstream: 'Failed to allocate models array.\n'
+sithModel_Load,0x0044c4e0,confirmed,semantic,"unique string shared with upstream: ""No space to load new model '%s'.\n"""
+sithModel_ReadStaticModelsListText,0x0044c000,confirmed,semantic,unique string shared with upstream: 'Parse error reading static models list l'
 sithModel_WriteStaticModelsListBinary,0x0044c2d0,confirmed,auto,signature matches (2 params)
 sithMulti_CheckPlayers,0x00454c20,confirmed,auto,"between verified sithMulti_CloseGame and sithMulti_ProcessPlayerLost, same shift -0x110"
 sithMulti_FinishJoining,0x004558f0,confirmed,auto,signature matches (3 params)
@@ -408,9 +1155,20 @@ sithMulti_pfNewPlayerJoinedCallback,0x0056fad0,confirmed,auto,exact refs from ow
 sithMulti_playerWelcomeState,0x0056f6a8,confirmed,auto,"exact refs from own module (sithMulti_StartWelcomingPlayer, sithMulti_StopWelcomingPlayer)"
 sithMulti_quitGameState,0x0056fab8,confirmed,auto,"exact refs from own module (sithMulti_ProcessJoinRequest, sithMulti_ProcessQuit)"
 sithMulti_tickRate,0x0052d5b8,confirmed,auto,exact refs from own module (sithMulti_ProcessWelcome)
+sithOpenNormal,0x00440aa0,confirmed,semantic,unique string shared with upstream: 'Error opening world: %s.\n'
+sithOpenStatic,0x00440980,confirmed,semantic,unique string shared with upstream: '\\Jones3D\\Resource\\Ndy'
 sithPVS_ReadPVSBinary,0x004b0760,confirmed,auto,signature matches (2 params)
+sithPVS_ReadPVSText,0x004b0510,confirmed,semantic,unique string shared with upstream: 'pvs size: %d'
 sithPVS_WritePVSBinary,0x004b06f0,confirmed,auto,signature matches (2 params)
+sithParticle_AllocWorldParticles,0x004ae1b0,confirmed,semantic,unique string shared with upstream: 'Failed to allocate particles array.\n'
+sithParticle_Load,0x004ae050,confirmed,semantic,"unique string shared with upstream: ""No space to define new particle '%s'.\n"""
+sithPathMove_FollowNextPath,0x004abf90,confirmed,semantic,unique string shared with upstream: 'Thing %s (index %d) reached goal frame %'
+sithPathMove_MoveToFrame,0x004abd40,confirmed,semantic,unique string shared with upstream: 'MoveToFrame: illegal frame #%d.\n'
+sithPathMove_ParseArg,0x004ac960,confirmed,semantic,unique string shared with upstream: 'Too many frames for thing %d.\n'
+sithPhysics_CheckForPointOnTrack,0x00487bf0,confirmed,semantic,unique string shared with upstream: 'Holy Smokes! CheckForPointOnTrack found '
 sithPhysics_CreateJeepUserBlock,0x0048b250,confirmed,auto,signature matches (1 params)
+sithPhysics_CreateMineCarUserBlock,0x004823a0,confirmed,semantic,unique string shared with upstream: '_CreateMineCarUserBlock failed to alloca'
+sithPhysics_FindFloor,0x0047e3e0,confirmed,semantic,unique string shared with upstream: 'NULL thing pointer in FindFloor()'
 sithPhysics_Jeep_sub_4892E0,0x004891d0,confirmed,auto,signature matches (3 params)
 sithPhysics_Jeep_sub_48B4D0,0x0048b3c0,confirmed,auto,signature matches (2 params)
 sithPhysics_ProcessTrackFace,0x00486730,confirmed,auto,signature matches (6 params)
@@ -427,8 +1185,13 @@ sithPhysics_sub_48A970,0x0048a860,confirmed,auto,signature matches (3 params)
 sithPhysics_sub_48AD20,0x0048ac10,confirmed,auto,signature matches (4 params)
 sithPhysics_vecMineCarSparkPosLeft,0x00538d6c,confirmed,auto,exact refs from own module (sithPhysics_UpdateMineCarFx)
 sithPhysics_vecMineCarSparkPosRight,0x00538d5c,confirmed,auto,exact refs from own module (sithPhysics_UpdateMineCarFx)
+sithPlayerActions_Activate,0x0044d1d0,confirmed,semantic,unique string shared with upstream: 'Activate: eyepoint outside of sector?\n'
+sithPlayerActions_CenterOnClimbSurface,0x004515f0,confirmed,semantic,"unique string shared with upstream: ""can't move to valid sector centering on """
+sithPlayerActions_StartJewelFlying,0x004513f0,confirmed,semantic,unique string shared with upstream: 'in_imp3_float.key'
 sithPlayerActions_climbPupTrackNum,0x0055ef14,confirmed,auto,"between verified sithAI_numRegisteredInstincts and sithPlayerControls_bActionKeyActive, same shift +0x140"
+sithPlayerControls_BoardVehicle,0x004319e0,confirmed,semantic,unique string shared with upstream: 'gascan_%s'
 sithPlayerControls_GetVehicleBoardedThing,0x00432e20,confirmed,auto,signature matches (0 params)
+sithPlayerControls_ProcessFallingMove,0x0042f830,confirmed,semantic,unique string shared with upstream: 'in_jump_up_grab.key'
 sithPlayerControls_RotateAimJoints,0x004329f0,confirmed,auto,signature matches (3 params)
 sithPlayerControls_SetVehicleBoardedThing,0x00432e30,confirmed,auto,signature matches (1 params)
 sithPlayerControls_bJumpActivated,0x0055ef2c,confirmed,auto,"exact refs from own module (sithPlayerControls_FindClimbSurface, sithPlayerControls_Process)"
@@ -436,8 +1199,23 @@ sithPlayerControls_cameraDistance,0x00528e04,confirmed,auto,exact refs from own 
 sithPlayerControls_pCurActivatedThing,0x0055ef28,confirmed,auto,"exact refs from own module (sithPlayerControls_ProcessGeneralMove, sithPlayerControls_ProcessSwimMove)"
 sithPlayerControls_pMovableThing,0x0055ef20,confirmed,auto,exact refs from own module (sithPlayerControls_ProcessGeneralMove)
 sithPlayerControls_vecDebugCamDir,0x00528de8,confirmed,auto,exact refs from own module (sithPlayerControls_ProcessEditorDebugControls)
+sithPlayer_PlacePlayers,0x004270b0,confirmed,semantic,unique string shared with upstream: 'Too many player objects placed.\n'
+sithPlayer_Reset,0x00427440,confirmed,semantic,unique string shared with upstream: 'Invalid playerNum %d in sithPlayer_Reset'
+sithPuppet_AllocWorldKeyframes,0x0045bed0,confirmed,semantic,unique string shared with upstream: 'No memory to allocate %d keyframe buffer'
+sithPuppet_AllocWorldPuppets,0x0045af40,confirmed,semantic,unique string shared with upstream: 'No memory to allocate %d anim classes.\n'
 sithPuppet_ClearTrackList,0x0045c940,confirmed,auto,signature matches (1 params)
-sithPuppet_FindActiveTrack,0x00457f60,confirmed,auto,called by sithAIMove_SetSubMode
+sithPuppet_FindActiveTrack,0x00457f60,confirmed,semantic,unique string shared with upstream: 'FindActiveTrack(): NULL track to search '
+sithPuppet_LoadPuppetClass,0x0045a990,confirmed,semantic,"unique string shared with upstream: 'Too many puppet classes loaded, line %d.'"
+sithPuppet_LoadPuppetClassEntry,0x0045aaf0,confirmed,semantic,unique string shared with upstream: 'Bad line encountered line %d.\n'
+sithPuppet_PlayForceMoveMode,0x004591b0,confirmed,semantic,unique string shared with upstream: 'No valid track for force-move anim.\n'
+sithPuppet_PlayKey,0x00459370,confirmed,semantic,unique string shared with upstream: 'Could not get free track to play in.\n'
+sithPuppet_PlayMode,0x00458fe0,confirmed,semantic,"unique string shared with upstream: ""PlayMode(): Invalid data for THING '%s' """
+sithPuppet_ReadStaticKeyframesListText,0x0045b0f0,confirmed,semantic,unique string shared with upstream: 'Parse error reading keyframe list line %'
+sithPuppet_ReadStaticPuppetsListText,0x0045a700,confirmed,semantic,unique string shared with upstream: 'puppets'
+sithPuppet_RemoveAllTracks,0x004575c0,confirmed,semantic,"unique string shared with upstream: 'Pup track list is messed up, pointer to '"
+sithPuppet_Startup,0x004573b0,confirmed,semantic,unique string shared with upstream: 'Could not allocate memory of puppets.\n'
+sithPuppet_SynchMode,0x0045c440,confirmed,semantic,unique string shared with upstream: 'SynchMode(): Old mode (%d) out of range.'
+sithPuppet_UpdatePuppet,0x004576d0,confirmed,semantic,"unique string shared with upstream: 'Removed submode %d from pup list, no KFT'"
 sithPuppet_WriteStaticKeyframesListBinary,0x0045b420,confirmed,auto,signature matches (2 params)
 sithPuppet_WriteStaticPuppetsListBinary,0x0045a880,confirmed,auto,signature matches (2 params)
 sithRenderSky_Update,0x004b3770,confirmed,auto,signature matches (0 params)
@@ -452,29 +1230,76 @@ sithRenderSky_lookPitch,0x0059c28c,confirmed,auto,"exact refs from own module (s
 sithRenderSky_lookRollCos,0x0059c290,confirmed,auto,"exact refs from own module (sithRenderSky_HorizonFaceToPlane, sithRenderSky_Update)"
 sithRenderSky_lookRollSin,0x0059c2b8,confirmed,auto,"exact refs from own module (sithRenderSky_HorizonFaceToPlane, sithRenderSky_Update)"
 sithRenderSky_lookYaw,0x0059c280,confirmed,auto,"exact refs from own module (sithRenderSky_HorizonFaceToPlane, sithRenderSky_Update)"
+sithRender_BuildVisibleSector,0x00444a20,confirmed,semantic,unique string shared with upstream: 'Max visible sectors exceeded!\n'
+sithRender_Draw,0x00444050,confirmed,semantic,unique string shared with upstream: 'Too many sectors with things in view %d '
+sithRender_Open,0x00443e50,confirmed,semantic,unique string shared with upstream: 'Unable to Open sithRenderSky.\n'
 sithRender_aFaceVerts,0x00564ed8,confirmed,auto,"exact refs from own module (sithRender_BuildVisibleSectorList, sithRender_BuildVisibleSectorListPVS)"
 sithRender_aView,0x005658d8,confirmed,auto,"exact refs from own module (sithRender_BuildVisibleSectorList, sithRender_BuildVisibleSectorListPVS)"
 sithRender_bPVSClipEnabled,0x0052bc68,confirmed,auto,exact refs from own module (sithRender_Draw)
 sithRender_curSectorIdx,0x0056a304,confirmed,auto,exact refs from own module (sithRender_Draw)
 sithRender_pfUnknownFunc,0x0056a7f0,confirmed,auto,"exact refs from own module (sithRender_RenderThing, sithRender_Shutdown)"
+sithSector_AllocWorldSectors,0x00460860,confirmed,semantic,unique string shared with upstream: 'Failed to allocate mem for %d sectors.\n'
 sithSector_GetSectorIndexEx,0x00461070,confirmed,auto,signature matches (2 params)
+sithSector_ReadSectorsListText,0x0045fb20,confirmed,semantic,unique string shared with upstream: ' world sectors %d'
+sithSector_SyncSector,0x00460f20,confirmed,semantic,unique string shared with upstream: 'Too many modified sectors.\n'
+sithSoundClass_AllocSoundClasses,0x004a1670,confirmed,semantic,unique string shared with upstream: 'Memory failure allocating %d soundclasse'
+sithSoundClass_Load,0x004a1200,confirmed,semantic,unique string shared with upstream: 'Soundclasses array not allocated for thi'
+sithSoundClass_LoadEntry,0x004a13e0,confirmed,semantic,"unique string shared with upstream: 'Short line in file %s, line %d.\n'"
+sithSoundClass_PlayPlayerVoiceModeRandom,0x004a1b90,confirmed,semantic,unique string shared with upstream: '%d %d\n'
+sithSoundClass_ReadSoundClassesListText,0x004a0ef0,confirmed,semantic,unique string shared with upstream: 'soundclasses'
 sithSoundClass_WriteSoundClassesListBinary,0x004a1120,confirmed,auto,signature matches (2 params)
 sithSoundClass_lastStartEntry,0x0053a79c,confirmed,auto,"exact refs from own module (sithSoundClass_PlayPlayerVoiceModeRandom, sithSoundClass_Startup)"
+sithSound_Load,0x0044d040,confirmed,semantic,"unique string shared with upstream: ""Could not open sound file '%s'.\n"""
+sithSound_ReadSoundsListText,0x0044cd20,confirmed,semantic,unique string shared with upstream: '%d sounds loaded.\n'
+sithSound_Startup,0x0044cc20,confirmed,semantic,unique string shared with upstream: 'stdSound_Startup failed (no hardware?).\n'
 sithSound_bSkipRestoringSounds,0x0056b8a4,confirmed,auto,"exact refs from own module (sithSound_FreeWorldSounds, sithSound_ReadSoundsListBinary)"
 sithSound_bStartup,0x0056b8a0,confirmed,auto,"exact refs from own module (sithSound_Load, sithSound_Shutdown)"
+sithSprite_AllocWorldSprites,0x004ab990,confirmed,semantic,unique string shared with upstream: 'Failed to allocate sprites array.\n'
+sithSprite_Load,0x004ab570,confirmed,semantic,"unique string shared with upstream: ""No space to define new sprite '%s'.\n"""
+sithSprite_ReadStaticSpritesListText,0x004ab0e0,confirmed,semantic,unique string shared with upstream: 'Parse error reading static sprites list '
 sithSprite_WriteStaticSpritesListBinary,0x004ab3a0,confirmed,auto,signature matches (2 params)
+sithStartup,0x00440750,confirmed,semantic,unique string shared with upstream: 'Sith startup failed.\n'
+sithString_Startup,0x0043f270,confirmed,semantic,unique string shared with upstream: 'sithString startup -- already started!\n'
 sithString_bStartup,0x00562608,confirmed,auto,"exact refs from own module (sithString_GetString, sithString_Shutdown)"
 sithString_sithStringsTbl,0x005625e8,confirmed,auto,"exact refs from own module (sithString_GetString, sithString_Shutdown)"
 sithString_voiceStringsTbl,0x005625f8,confirmed,auto,"exact refs from own module (sithString_GetString, sithString_Shutdown)"
+sithSurface_AllocWorldAdjoins,0x0045e8e0,confirmed,semantic,unique string shared with upstream: 'Failed to allocate mem for %d adjoins.\n'
+sithSurface_AllocWorldSurfaces,0x0045e530,confirmed,semantic,unique string shared with upstream: 'Failed to allocate mem for %d surfaces.\n'
+sithSurface_GetCenterPoint,0x0045f8a0,confirmed,semantic,unique string shared with upstream: 'Cannot place surface centerpoint in pare'
+sithSurface_ReadSurfacesListText,0x0045f040,confirmed,semantic,unique string shared with upstream: ' world adjoins %d'
+sithSurface_WriteSurfacesListBinary,0x0045e9c0,confirmed,semantic,unique string shared with upstream: 'Surface Material %s not in world.\n'
+sithTemplate_GetTemplate,0x0045ce30,confirmed,semantic,unique string shared with upstream: 'Template %s could not be found.\n'
+sithTemplate_Parse,0x0045cfc0,confirmed,semantic,"unique string shared with upstream: 'Based-on template %s not found, using bl'"
+sithTemplate_ParseTemplateList,0x0045d370,confirmed,semantic,unique string shared with upstream: 'Template parse failed for template on li'
+sithTemplate_ReadThingTemplatesListText,0x0045cb80,confirmed,semantic,unique string shared with upstream: 'Memory allocation failure reading thing '
 sithTemplate_bMasterFileInitialized,0x0056fb04,confirmed,auto,exact refs from own module (sithTemplate_GetTemplate)
 sithTemplate_g_pHashtable,0x0056fb00,confirmed,auto,"exact refs from own module (sithTemplate_AllocWorldTemplates, sithTemplate_CacheAdd)"
 sithTemplate_pMasterFile,0x0056fb08,confirmed,auto,exact refs from own module (sithTemplate_GetTemplate)
+sithThing_AddSwapEntry,0x004335a0,confirmed,semantic,unique string shared with upstream: '-1 mesh num passed to sithThing_AddSwapE'
+sithThing_AllocWorldThings,0x00434800,confirmed,semantic,unique string shared with upstream: 'Failed to allocated mem for %d things.\n'
+sithThing_AttachThingToThingMesh,0x00436d10,confirmed,semantic,unique string shared with upstream: 'Trying to attach a invalid thing type to'
+sithThing_Create,0x004354d0,confirmed,semantic,unique string shared with upstream: 'Call to sithThing_Create could not be sa'
+sithThing_CreateQuetzUserBlock,0x0043a550,confirmed,semantic,unique string shared with upstream: 'sithThing_CreateQuetzUserBlock failed to'
+sithThing_CreateThingAtPos,0x004358a0,confirmed,semantic,unique string shared with upstream: 'Failed to create thing from template %s.'
+sithThing_Draw,0x00433390,confirmed,semantic,"unique string shared with upstream: 'WARNING: Polyline thing ""%s"" has no poly'"
+sithThing_ParseArg,0x004392e0,confirmed,semantic,"unique string shared with upstream: 'Bad argument thing %s, %s=%s line %d.\n'"
+sithThing_ParseThingArg,0x00439470,confirmed,semantic,unique string shared with upstream: 'physics'
+sithThing_ParseThingPlacement,0x0043a1e0,confirmed,semantic,"unique string shared with upstream: 'Template %s not found, line %d.\n'"
+sithThing_PurgeGarbageThings,0x004370d0,confirmed,semantic,unique string shared with upstream: 'Garbage purging thing %d.\n'
+sithThing_ReadStaticThingsListText,0x00437180,confirmed,semantic,unique string shared with upstream: 'Allocation failure while allocating thin'
+sithThing_RemoveSwapEntry,0x004336e0,confirmed,semantic,"unique string shared with upstream: ""Please don't pass -1 as a refnum to sith"""
+sithThing_ScaleCombatDamage,0x00434450,confirmed,semantic,unique string shared with upstream: 'Bad params passed to sithThing_ScaleComb'
+sithThing_Shutdown,0x00433300,confirmed,semantic,unique string shared with upstream: 'Thing system not started.\n'
+sithThing_Startup,0x00433240,confirmed,semantic,unique string shared with upstream: 'Multiple startup on sithThing_startup().'
+sithThing_SyncThing,0x00439e20,confirmed,semantic,unique string shared with upstream: 'Too many modified things in a single fra'
 sithThing_curQuetzAttachInfo,0x005613a0,confirmed,auto,exact refs from own module (sithThing_UpdateQuetzUserBlock)
 sithThing_dword_5612B8,0x005613f8,confirmed,auto,exact refs from own module (sithThing_UpdateQuetzUserBlock)
 sithThing_jeepHitMinVelocityZ,0x005291d4,confirmed,auto,exact refs from own module (sithThing_AttachThingToSurface)
 sithThing_prevQuetzAttachInfo,0x0055ef9c,confirmed,auto,exact refs from own module (sithThing_UpdateQuetzUserBlock)
+sithTime_Advance,0x0044a820,confirmed,semantic,unique string shared with upstream: 'Clock looped around.  Handling it.\n'
 sithVehicleControls_GetMineCarState,0x004a21e0,confirmed,auto,signature matches (0 params)
 sithVehicleControls_GetRaftState,0x004a2210,confirmed,auto,signature matches (0 params)
+sithVehicleControls_ProcessJeepMove,0x004a3370,confirmed,semantic,unique string shared with upstream: 'Jeep wheel node missing.\n'
 sithVehicleControls_SetMineCarState,0x004a21f0,confirmed,auto,signature matches (1 params)
 sithVehicleControls_SetRaftState,0x004a2220,confirmed,auto,signature matches (1 params)
 sithVehicleControls_dword_53B188,0x0053b2a8,confirmed,auto,exact refs from own module (sithVehicleControls_UpdateRaftPaddleSoundFx)
@@ -482,21 +1307,45 @@ sithVehicleControls_flt_586294,0x005863d4,confirmed,auto,exact refs from own mod
 sithVehicleControls_g_bJeepAccMoveSndFxPlayed,0x005863dc,confirmed,auto,exact refs from own module (sithVehicleControls_ProcessJeepMove)
 sithVehicleControls_g_bJeepForceStopped,0x005863d8,confirmed,auto,exact refs from own module (sithVehicleControls_ProcessJeepMove)
 sithVehicleControls_raftRotThrust,0x0053b27c,confirmed,auto,exact refs from own module (sithVehicleControls_ProcessRaftMove)
+sithVoice_PlayVoice,0x00443120,confirmed,semantic,"v1.2 registers it as COG verb ""playvoice"""
+sithVoice_RegisterCogFunctions,0x00442d70,confirmed,semantic,unique string shared with upstream: 'playvoice'
+sithVoice_SetThingVoiceColor,0x004433b0,confirmed,semantic,"v1.2 registers it as COG verb ""setthingvoicecolor"""
+sithVoice_SetThingVoiceHeads,0x00443290,confirmed,semantic,"v1.2 registers it as COG verb ""setthingvoiceheads"""
+sithVoice_SetVoiceHeadHeight,0x00443340,confirmed,semantic,"v1.2 registers it as COG verb ""setvoiceheadheight"""
+sithVoice_SetVoiceParams,0x00443450,confirmed,semantic,"v1.2 registers it as COG verb ""setvoiceparams"""
 sithVoice_bThingHasSwapHeadRdModel,0x005648fc,confirmed,auto,"exact refs from own module (sithVoice_PlayThingVoice, sithVoice_UpdateLipSync)"
 sithVoice_dword_5647A0,0x005648e0,confirmed,auto,"exact refs from own module (sithVoice_AddSubtitle, sithVoice_Close)"
 sithVoice_dword_5647AC,0x005648ec,confirmed,auto,"exact refs from own module (sithVoice_PlayThingVoice, sithVoice_UpdateLipSync)"
 sithVoice_headHeight,0x00564900,confirmed,auto,exact refs from own module (sithVoice_UpdateLipSync)
 sithVoice_nextSubtitleNum,0x005648c8,confirmed,auto,"exact refs from own module (sithVoice_Close, sithVoice_Draw)"
+sithWeapon_CreateWeaponExplosion,0x004481d0,confirmed,semantic,unique string shared with upstream: '+uw_blast'
+sithWeapon_FireProjectile,0x00448fe0,confirmed,semantic,unique string shared with upstream: 'Bad thing in sithWeapon_FireProjectile.\n'
+sithWeapon_FireProjectileEx,0x0044a240,confirmed,semantic,unique string shared with upstream: 'Bad thing in sithWeapon_FireProjectileEx'
 sithWeapon_GenBloodsplort,0x00449b40,confirmed,auto,signature matches (1 params)
 sithWeapon_GetWeaponCollideSize,0x00449e50,confirmed,auto,signature matches (1 params)
 sithWeapon_HasWeaponSelected,0x00448c20,confirmed,auto,signature matches (1 params)
+sithWeapon_ProcessWeaponControls,0x00448600,confirmed,semantic,unique string shared with upstream: 'Processed buffered weapon key %d.\n'
+sithWeapon_SurfaceCollisionHandler,0x00447f40,confirmed,semantic,unique string shared with upstream: 'Non-physics weapon %s hit a wall.\n'
+sithWeapon_ThingCollisionHandler,0x004476d0,confirmed,semantic,unique string shared with upstream: '+mardukhit'
+sithWeapon_WeaponFireProjectile,0x004471f0,confirmed,semantic,unique string shared with upstream: 'Bad arguments passed.\n'
+sithWhip_CreatePlayerWhip,0x004a0cf0,confirmed,semantic,unique string shared with upstream: '+whip_actor'
 sithWhip_SearchWhipClimbThing,0x004a0bf0,confirmed,auto,signature matches (1 params)
+sithWhip_WhipClimbPuppetCallback,0x004a08c0,confirmed,semantic,unique string shared with upstream: '+whipc_actor'
 sithWhip_bFoundWhipClimbThing,0x005863c8,confirmed,auto,used by sithWhip_SearchWhipClimbThing
 sithWhip_vecCameraLookOffsetWhipClimbAim,0x0053a480,confirmed,auto,exact refs from own module (sithWhip_UpdateWhipAim)
 sithWhip_vecCameraLookOffsetWhipSwingAim,0x0053a4a0,confirmed,auto,exact refs from own module (sithWhip_UpdateWhipAim)
 sithWhip_vecCameraOffsetWhipClimbAim,0x0053a470,confirmed,auto,exact refs from own module (sithWhip_UpdateWhipAim)
 sithWhip_vecCameraOffsetWhipSwingAim,0x0053a490,confirmed,auto,exact refs from own module (sithWhip_UpdateWhipAim)
+sithWorld_Load,0x0043d900,confirmed,semantic,"unique string shared with upstream: ""Parse problem in file '%s'.\n"""
+sithWorld_LoadEntryText,0x0043dd00,confirmed,semantic,"unique string shared with upstream: ""Warning: Section '%s' contained errors.\n"""
+sithWorld_LoadPostProcess,0x0043da70,confirmed,semantic,unique string shared with upstream: 'Some required sections not found or load'
+sithWorld_ReadCopyrightText,0x0043e3e0,confirmed,semantic,unique string shared with upstream: 'Error: Invalid copyright symbol.\n'
 sithWorld_ReadGeoresourceBinary,0x0043ef30,confirmed,auto,signature matches (2 params)
+sithWorld_ReadGeoresourceText,0x0043ec70,confirmed,semantic,unique string shared with upstream: ' world vertices %d'
+sithWorld_ReadHeaderText,0x0043e160,confirmed,semantic,unique string shared with upstream: 'version %d'
+sithWorld_ReadTextSection,0x0043eb50,confirmed,semantic,"unique string shared with upstream: ""Warning: Unknown Section '%s'.\n"""
+sithWorld_Startup,0x0043d680,confirmed,semantic,unique string shared with upstream: 'copyright'
+sithWorld_ValidateWorld,0x0043e9d0,confirmed,semantic,"unique string shared with upstream: 'Problem with things array, should not be'"
 sithWorld_WriteGeoresourceBinary,0x0043eec0,confirmed,auto,signature matches (2 params)
 sithWorld_aBinarySectionParsers,0x0052a47c,confirmed,auto,exact refs from own module (sithWorld_LoadEntryBinary)
 sithWorld_aCopyrightBuf,0x00561488,confirmed,auto,exact refs from own module (sithWorld_ReadCopyrightText)
@@ -507,10 +1356,17 @@ sithWorld_bValidCopyright,0x005625e4,confirmed,auto,"exact refs from own module 
 sithWorld_bWorldStartup,0x005625e0,confirmed,auto,"exact refs from own module (sithWorld_Close, sithWorld_Load)"
 sithWorld_numTextSectionParseHandlers,0x005625dc,confirmed,auto,"exact refs from own module (sithWorld_GetTextSectionParserIndex, sithWorld_RegisterTextSectionParser)"
 sithWorld_pfLoadProgressCallback,0x00561480,confirmed,auto,"exact refs from own module (sithWorld_SetLoadProgressCallback, sithWorld_UpdateLoadProgress)"
-std3D_EnumTextureFormatsCallback,0x004bf320,confirmed,auto,"between verified std3D_D3DEnumDevicesCallback and std3D_AddTextureToCacheList, same shift -0xe0"
+std3D_AddToTextureCache,0x004bdf40,confirmed,semantic,unique string shared with upstream: 'No Source texture.\n'
+std3D_AllocSystemTexture,0x004bd870,confirmed,semantic,"unique string shared with upstream: ""Can't use paletized textures.\n"""
+std3D_BuildDisplayEnvironment,0x004bf9f0,confirmed,semantic,unique string shared with upstream: 'Error starting stdDisplay system.\n'
+std3D_ClearZBuffer,0x004beca0,confirmed,semantic,unique string shared with upstream: 'Error %s when clearing Z.\n'
+std3D_D3DEnumDevicesCallback,0x004befc0,confirmed,semantic,unique string shared with upstream: 'Found |%s|%s|%s|%s| D3D Device\n'
+std3D_EndScene,0x004bd360,confirmed,semantic,unique string shared with upstream: 'Error %s ending scene.\n'
+std3D_EnumTextureFormatsCallback,0x004bf320,confirmed,semantic,unique string shared with upstream: 'Found 8 bpp palettized tex format.\n'
 std3D_EnumZBufferFormatsCallback,0x004bef80,confirmed,auto,"signature matches (2 params, stdcall)"
 std3D_FindClosestFormat,0x004be3d0,confirmed,auto,signature matches (1 params)
 std3D_GetZBufferFormat,0x004bef30,confirmed,auto,signature matches (1 params)
+std3D_StartScene,0x004bd300,confirmed,semantic,unique string shared with upstream: 'Error %s beginning scene.\n'
 std3D_bStartup,0x005dc4f0,confirmed,auto,"exact refs from own module (std3D_Open, std3D_Shutdown)"
 std3D_cfRGB4444,0x005088c8,confirmed,auto,exact refs from own module (std3D_Open)
 std3D_cfRGB5551,0x00508890,confirmed,auto,exact refs from own module (std3D_Open)
@@ -518,13 +1374,23 @@ std3D_cfRGB565,0x00508858,confirmed,auto,exact refs from own module (std3D_Open)
 std3D_lpD3DViewPort,0x005dc4ec,confirmed,auto,"exact refs from own module (std3D_ClearZBuffer, std3D_Close)"
 std3D_lpDD,0x005dc4dc,confirmed,auto,"exact refs from own module (std3D_AddToTextureCache, std3D_AllocSystemTexture)"
 std3D_pDDPalette,0x005dc4e0,confirmed,auto,"exact refs from own module (std3D_Close, std3D_Open)"
-stdBmp_Load,0x004b6740,confirmed,auto,signature matches (1 params)
+stdBmp_Load,0x004b6740,confirmed,semantic,"unique string shared with upstream: ""Error: Invalid filename '%s'.\n"""
 stdCalcBitPos,0x004b63d0,confirmed,auto,signature matches (1 params)
+stdComm_CreatePlayer,0x004c2fb0,confirmed,semantic,unique string shared with upstream: 'CreatePlayer returned %s.\n'
+stdComm_DestroyPlayer,0x004c3080,confirmed,semantic,unique string shared with upstream: 'Player %d destroyed.\n'
+stdComm_EnumPlayersCallback,0x004c31a0,confirmed,semantic,unique string shared with upstream: 'Too many players.  Player %d not enumera'
+stdComm_GetSessionSettings,0x004c2d80,confirmed,semantic,unique string shared with upstream: 'DirectPlay::GetSessionDesc size query re'
+stdComm_Receive,0x004c2a70,confirmed,semantic,unique string shared with upstream: 'DirectPlay->Receive from id %x returned '
+stdComm_RejoinSession,0x004c2bc0,confirmed,semantic,unique string shared with upstream: 'DirectPlay->Close returned %s.\n'
+stdComm_UpdatePlayers,0x004c2ed0,confirmed,semantic,unique string shared with upstream: 'UpdatePlayers returned %s.\n'
 stdComm_aDPStatusTbl,0x005097a0,confirmed,auto,exact refs from own module (stdComm_DPGetStatus)
 stdComm_aPlayerInfos,0x005dcea0,confirmed,auto,"exact refs from own module (stdComm_EnumPlayersCallback, stdComm_UpdatePlayers)"
 stdComm_bGameActive,0x005e10d4,confirmed,auto,"exact refs from own module (stdComm_CloseGame, stdComm_CreatePlayer)"
 stdComm_bGameHost,0x005dd2c8,confirmed,auto,"exact refs from own module (stdComm_CloseGame, stdComm_IsGameHost)"
 stdComm_pDirectPlay,0x005dd2c4,confirmed,auto,"exact refs from own module (stdComm_CloseGame, stdComm_CreatePlayer)"
+stdConffile_CloseWrite,0x004b95c0,confirmed,semantic,unique string shared with upstream: 'NOT_OPEN'
+stdConffile_ReadArgsFromStr,0x004b96a0,confirmed,semantic,unique string shared with upstream: 'conffile  %s line %d too many args.\n'
+stdConffile_ReadLine,0x004b9850,confirmed,semantic,unique string shared with upstream: 'conffile line %d too long.  Truncated.\n'
 stdConffile_aEntryStack,0x005c2320,confirmed,auto,"exact refs from own module (stdConffile_PopStack, stdConffile_PushStack)"
 stdConffile_aFilenameStack,0x005c1800,confirmed,auto,"exact refs from own module (stdConffile_PopStack, stdConffile_PushStack)"
 stdConffile_apBufferStack,0x005c2200,confirmed,auto,"exact refs from own module (stdConffile_PopStack, stdConffile_PushStack)"
@@ -540,29 +1406,55 @@ stdConsole_dword_5DCCDC,0x005dce1c,confirmed,auto,exact refs from own module (st
 stdConsole_hInput,0x005dce10,confirmed,auto,exact refs from own module (stdConsole_Startup)
 stdControl_DisableReadJoysticks,0x004b79e0,confirmed,auto,called by sithControl_UnbindJoystickAxes
 stdControl_EnableMouseSensitivity,0x004b92a0,confirmed,auto,signature matches (1 params)
-stdControl_EnumDevicesCallback,0x004b90a0,confirmed,auto,"between verified stdControl_DIGetStatus and stdControl_ResetMousePos, same shift -0xe0"
+stdControl_EnumDevicesCallback,0x004b90a0,confirmed,semantic,unique string shared with upstream: 'Mouse:%s:%s\n'
+stdControl_InitKeyboard,0x004b8440,confirmed,semantic,unique string shared with upstream: '%s error Acquiring Keyboard.\n'
+stdControl_InitMouse,0x004b8570,confirmed,semantic,unique string shared with upstream: '%s error Acquiring Mouse.\n'
 stdControl_IsGamePad,0x004b92f0,confirmed,auto,called by jonesConfig_BindJoystickControl
+stdControl_ReadJoysticks,0x004b8810,confirmed,semantic,unique string shared with upstream: '%s error Poll Joystick.\n'
+stdControl_ReadKeyboard,0x004b86f0,confirmed,semantic,unique string shared with upstream: 'GetDeviceState from keyboard returned %s'
+stdControl_ReadMouse,0x004b8c30,confirmed,semantic,unique string shared with upstream: 'GetDeviceState(mouse) returned %s.\n'
 stdControl_aAxisPos,0x005bf308,confirmed,auto,"exact refs from own module (stdControl_ReadAxis, stdControl_ReadAxisRaw)"
 stdControl_aKeyInfos,0x005bfe18,confirmed,auto,"exact refs from own module (stdControl_ReadJoysticks, stdControl_ReadKey)"
 stdControl_aKeyPressCounter,0x005c0d28,confirmed,auto,"exact refs from own module (stdControl_ReadControls, stdControl_ReadJoysticks)"
 stdControl_msecFPS,0x0053e9a4,confirmed,auto,exact refs from own module (stdControl_ReadControls)
 stdControl_secFPS,0x0053e9a0,confirmed,auto,"exact refs from own module (stdControl_ReadControls, stdControl_ReadKeyAsAxis)"
-stdDisplay_CreateZBuffer,0x004bace0,confirmed,auto,signature matches (2 params)
+stdDisplay_ColorFillSurface,0x004bc3d0,confirmed,semantic,unique string shared with upstream: 'Error %s when color filling the surface.'
+stdDisplay_CreateZBuffer,0x004bace0,confirmed,semantic,unique string shared with upstream: 'Error %s when getting zbuffer surface de'
+stdDisplay_DDEnumCallback,0x004bb050,confirmed,semantic,unique string shared with upstream: 'Error %s when creating scratch DirectDra'
+stdDisplay_EnumVideoModesCallback,0x004bb290,confirmed,semantic,unique string shared with upstream: 'Not enough video RAM for mode %d by %d b'
 stdDisplay_FlipToGDISurface,0x004bc7a0,confirmed,auto,called by JonesDialog_SetGameState
 stdDisplay_GetBackBufferDC,0x004bc6d0,confirmed,auto,signature matches (0 params)
 stdDisplay_GetSystemDevice,0x004bb620,confirmed,auto,signature matches (0 params)
+stdDisplay_InitDirectDraw,0x004bae20,confirmed,semantic,unique string shared with upstream: 'Error %s when creating DirectDraw object'
 stdDisplay_IsFullscreen,0x004bc9f0,confirmed,auto,called by JonesDialog_SetGameState
+stdDisplay_LockBackBuffer,0x004bca00,confirmed,semantic,unique string shared with upstream: 'Error %s when locking back buffer.\n'
 stdDisplay_ReleaseBackBufferDC,0x004bc740,confirmed,auto,signature matches (1 params)
 stdDisplay_ReleaseBuffers,0x004bc0d0,confirmed,auto,signature matches (0 params)
+stdDisplay_ReleaseDirectDraw,0x004baf90,confirmed,semantic,unique string shared with upstream: 'Error %s when setting coop level.\n'
 stdDisplay_SetBufferClipper,0x004bc850,confirmed,auto,called by JonesDialog_SetGameState
 stdDisplay_SetDefaultResolution,0x004bc540,confirmed,auto,signature matches (2 params)
+stdDisplay_Startup,0x004b9b50,confirmed,semantic,unique string shared with upstream: 'Found %d Display Devices.\n'
+stdDisplay_UnlockBackBuffer,0x004bcac0,confirmed,semantic,unique string shared with upstream: 'Error %s when unlocking back buffer.\n'
+stdDisplay_VBufferConvertColorFormat,0x004ba7d0,confirmed,semantic,unique string shared with upstream: 'Unable to allocate memory for new tVBuff'
+stdDisplay_VBufferNew,0x004ba1c0,confirmed,semantic,unique string shared with upstream: 'Error allocating vbuffer.\n'
 stdEffect_Reset,0x004c1ee0,confirmed,auto,called by stdEffect_Startup
 stdEffect_SetFadeFactor,0x004c1f00,confirmed,auto,signature matches (2 params)
-stdFilePrintf,0x004c0590,confirmed,auto,"between verified stdFileSize and stdGob_Startup, same shift -0x130"
-stdFileRead,0x004c04f0,confirmed,auto,signature matches (3 params)
-stdFileSeek,0x004e9fa0,confirmed,auto,signature matches (3 params)
-stdFileWrite,0x004c0510,confirmed,auto,signature matches (3 params)
+stdFileClose,0x004c04e0,fixed,manual,v1.2 stdPlatform_InitServices stores it in tHostServices slot +0x34 (pFileClose)
+stdFileEof,0x004c0530,fixed,manual,v1.2 stdPlatform_InitServices stores it in tHostServices slot +0x44 (pFileEOF); returns fp->_flag & _IOEOF
+stdFileGets,0x004c04f0,fixed,manual,"v1.2 stdPlatform_InitServices stores it in tHostServices slot +0x3C (pFileGets); calls fgets(buf,n,fp)"
+stdFileGetws,0x004c0510,fixed,manual,"v1.2 stdPlatform_InitServices stores it in tHostServices slot +0x58 (pFileGetws); calls fgetws(buf,n,fp)"
+stdFileOpen,0x004c04c0,fixed,manual,v1.2 stdPlatform_InitServices stores it in tHostServices slot +0x30 (pFileOpen)
+stdFilePrintf,0x004c0590,fixed,manual,v1.2 stdPlatform_InitServices stores it in tHostServices slot +0x54 (pFilePrintf)
+stdFileRead,0x004e9fa0,fixed,manual,"v1.2 stdPlatform_InitServices stores it in tHostServices slot +0x38 (pFileRead); fread(buf,1,n,fp) wrapper, moved to the stdio block in 1.2"
+stdFileSeek,0x004e9ff0,fixed,manual,"v1.2 stdPlatform_InitServices stores it in tHostServices slot +0x4C (pFileSeek); fseek(fp,off,whence) wrapper"
+stdFileSize,0x004c0540,fixed,manual,v1.2 stdPlatform_InitServices stores it in tHostServices slot +0x50 (pFileSize)
+stdFileTell,0x004e9fe0,fixed,manual,v1.2 stdPlatform_InitServices stores it in tHostServices slot +0x48 (pFileTell); called by stdFileSize after seeking to the end
+stdFileWrite,0x004e9fc0,fixed,manual,"v1.2 stdPlatform_InitServices stores it in tHostServices slot +0x40 (pFileWrite); fwrite wrapper, called by stdFilePrintf"
 stdFnames_ChangeExt,0x004b6a10,confirmed,auto,signature matches (2 params)
+stdGob_Free,0x004c0ae0,confirmed,semantic,unique string shared with upstream: 'Warning: attempt to free NULL Gob file p'
+stdGob_Load,0x004c0670,confirmed,semantic,unique string shared with upstream: 'Error allocating memory for Gob file.\n'
+stdGob_LoadEntry,0x004c0710,confirmed,semantic,unique string shared with upstream: 'Error opening Gob file.\n'
+stdGob_Shutdown,0x004c0620,confirmed,semantic,unique string shared with upstream: 'System shutdown.\n'
 stdGob_Startup,0x004c05d0,confirmed,auto,signature matches (1 params)
 stdGob_aEntryNameBuff,0x005dcd00,confirmed,auto,used by stdGob_FileOpen
 stdGob_bStartup,0x005dcdf0,confirmed,auto,"exact refs from own module (stdGob_Shutdown, stdGob_Startup)"
@@ -573,14 +1465,20 @@ stdMath_Dist2D1,0x004c1d00,confirmed,auto,signature matches (2 params)
 stdMath_FlexPower,0x004c1110,confirmed,auto,signature matches (2 params)
 stdMath_aSinTable,0x005418c8,confirmed,auto,exact refs from own module (stdMath_SinCos)
 stdMath_aTanTable,0x005458c8,confirmed,auto,exact refs from own module (stdMath_Tan)
+stdMemory_Close,0x004b6bf0,confirmed,semantic,unique string shared with upstream: 'Maximum dynamic memory used: %d bytes.\n'
 stdMemory_bOpen,0x005bddd8,confirmed,auto,"exact refs from own module (stdMemory_Close, stdMemory_Open)"
 stdMemory_bStartup,0x005bddd4,confirmed,auto,"exact refs from own module (stdMemory_Open, stdMemory_Shutdown)"
-stdPlatform_AllocHandle,0x004c0470,confirmed,auto,signature matches (1 params)
-stdPlatform_FreeHandle,0x004c0480,confirmed,auto,"between verified stdPlatform_AllocHandle and stdFileOpen, same shift -0xe0"
-stdPlatform_GetTimeMsec,0x004c0360,confirmed,auto,"between verified stdPlatform_ClearServices and stdPlatform_AllocHandle, same shift -0xe0"
-stdPlatform_LockHandle,0x004c04b0,confirmed,auto,"between verified stdPlatform_AllocHandle and stdFileOpen, same shift -0xe0"
+stdPlatform_AllocHandle,0x004c0460,fixed,manual,v1.2 stdPlatform_InitServices stores it in tHostServices slot +0x5C (pAllocHandle)
+stdPlatform_Assert,0x004c0360,fixed,manual,v1.2 stdPlatform_InitServices stores it in tHostServices slot +0x18 (pAssert)
+stdPlatform_FreeHandle,0x004c0470,fixed,manual,v1.2 stdPlatform_InitServices stores it in tHostServices slot +0x60 (pFreeHandle)
+stdPlatform_GetTimeMsec,0x00000000,fixed,manual,absent in v1.2: slot +0x2C (pGetTimeMsec) holds an import thunk to timeGetTime (0x4DF350); hook disabled
+stdPlatform_LockHandle,0x004c04a0,fixed,manual,v1.2 stdPlatform_InitServices stores it in tHostServices slot +0x68 (pLockHandle)
+stdPlatform_Printf,0x004c0430,fixed,manual,v1.2 stdPlatform_InitServices stores it in tHostServices slot +0x04..+0x14 (all print slots)
+stdPlatform_ReallocHandle,0x004c0480,fixed,manual,v1.2 stdPlatform_InitServices stores it in tHostServices slot +0x64 (pReallocHandle)
+stdPlatform_UnlockHandle,0x004c04b0,fixed,manual,v1.2 stdPlatform_InitServices stores it in tHostServices slot +0x6C (pUnlockHandle)
 stdPlatform_bAssert,0x005dccf8,confirmed,auto,exact refs from own module (stdPlatform_GetTimeMsec)
 stdPrintf,0x004b62d0,confirmed,auto,"between verified stdShutdown and stdConsolePrintf, same shift -0xe0"
+stdStrTable_Load,0x004c2310,confirmed,semantic,unique string shared with upstream: 'MSGS %d'
 stdUtil_Format,0x004b7310,confirmed,auto,"between verified stdMemory_BlockAlloc and stdUtil_StringSplit, same shift -0xe0"
 stdWin95_GetInstance,0x004b9350,confirmed,auto,signature matches (0 params)
 stdWin95_SetGuid,0x004b9360,confirmed,auto,signature matches (1 params)
@@ -589,8 +1487,10 @@ stdWin95_SetWindow,0x004b9320,confirmed,auto,signature matches (1 params)
 std_bStdStartup,0x0059cd48,confirmed,auto,"between verified sithCogYacc_yy_start and stdMemory_aZoneData, same shift +0x140"
 std_g_aEmptyString,0x00551f50,confirmed,auto,"between verified jonesConfig_hFontDialogInsertCD and JonesConsole_aCmdLine, same shift +0x120"
 std_printBuffer,0x0059c548,confirmed,auto,"between verified sithCogYacc_yy_start and stdMemory_aZoneData, same shift +0x140"
-stdio_close,0x004e9f90,confirmed,auto,"between verified stdio_open and stdFileSeek, same shift -0x120"
-stdio_open,0x004e9f60,confirmed,auto,signature matches (2 params)
+stdio_close,0x004e9f90,fixed,manual,INSANE stdio services table (0x54D824) entry 1: fclose wrapper
+stdio_flush,0x004ea010,fixed,manual,INSANE stdio services table (0x54D838) entry 6: the remaining 1-arg wrapper (tell is 0x4E9FE0)
+stdio_open,0x004e9f60,fixed,manual,INSANE stdio services table (0x54D820) entry 0: fopen wrapper
+wkernel_CreateWindow,0x004c4310,confirmed,semantic,unique string shared with upstream: 'APPICON'
 wkernel_ProcessEvents,0x004c4210,confirmed,auto,"between verified wkernel_PeekProcessEvents and wkernel_SetWindowStyle, same shift -0x130"
 wkernel_SetWindowStyle,0x004c4280,confirmed,auto,signature matches (1 params)
 wkernel_guid,0x005099a8,confirmed,auto,exact refs from own module (wkernel_Run)

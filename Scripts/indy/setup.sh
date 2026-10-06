@@ -41,7 +41,8 @@ fi
 # OpenJones3D's settings file (Docs/Jones.cfg.md): start the game directly (not the developer dialog) and log
 # to JonesLog.txt. The engine fills in every other key with its defaults on first start.
 if [[ ! -f "$RUN/Resource/Jones.cfg" ]]; then
-    printf '{\n  "version": "1.0.0",\n  "startMode": 0,\n  "log": { "mode": 2, "level": 1 }\n}\n' > "$RUN/Resource/Jones.cfg"
+    # MSAA off for now: with MSAA, the intro video stays black under Wine (PROJECT.md §12)
+    printf '{\n  "version": "1.0.0",\n  "startMode": 0,\n  "log": { "mode": 2, "level": 1 },\n  "graphics": { "msaa": { "enabled": false, "samples": 0 } }\n}\n' > "$RUN/Resource/Jones.cfg"
 fi
 
 regfile="$(mktemp --suffix=.reg)"

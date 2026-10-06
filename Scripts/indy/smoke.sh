@@ -7,6 +7,7 @@
 # Safety net: while the test runs, any audio stream opened by a process of the test prefix is muted.
 #
 # INDY_SMOKE_PROC=<name> checks another process (e.g. Indy3D.exe when starting the Jones3D.exe launcher).
+# INDY_SMOKE_INTERVAL=<s> screenshot interval (default 15); INDY_SMOKE_NOKEYS=1 sends no Escape key presses.
 # Usage: Scripts/indy/smoke.sh [seconds=45] [exe relative to game/run=Resource/Indy3D.exe] [game args...]
 # Output: game/screens/smoke-<timestamp>-<t>s.png and smoke-<timestamp>.log
 set -euo pipefail
@@ -51,9 +52,9 @@ wine explorer /desktop=Indy,800x600 "$(winepath -w "$run/$exe")" "$@" >"$log" 2>
 proc="${INDY_SMOKE_PROC:-$(basename "$exe")}"   # process to check, e.g. Indy3D.exe when starting the launcher
 for ((t = 1; t <= secs; t++)); do
     sleep 1
-    if (( t % 15 == 0 )); then
+    if (( t % ${INDY_SMOKE_INTERVAL:-15} == 0 )); then
         import -window root "$shot-${t}s.png"
-        xdotool key Escape 2>/dev/null || true   # skip intro videos / splash screens
+        [[ "${INDY_SMOKE_NOKEYS:-0}" == 1 ]] || xdotool key Escape 2>/dev/null || true   # skip intro videos / splash screens
     fi
 done
 import -window root "$shot-end.png"
