@@ -20,6 +20,7 @@ typedef enum eIndyEnh
     INDY_FIX_TIME_CYCLES       = 3, // FIX-0003: "every N-th frame" events (idle anims, breathing, ...) on game time
     INDY_FIX_JEWEL_FLY_THRUST  = 4, // FIX-0004: jewel-flight up/down acceleration independent of the frame rate
     INDY_ENH_RIGHT_STICK_CAMERA = 5, // ENH-0002: right stick swings the third-person camera around Indy
+    INDY_ENH_QUICK_DIRECTION    = 6, // ENH-0003: reversing doesn't wait for the stop animation (input grace period)
     INDY_ENH_COUNT
 } IndyEnh;
 

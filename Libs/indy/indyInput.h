@@ -20,6 +20,12 @@ float J3DAPI indyInput_GetTurnScale(SithControlFunction function);
 // True when the forward stick is pushed far enough to run (classic controls walk unless the run key is held).
 bool indyInput_IsStickRun(void);
 
+// ENH-0003: whether walking/running should turn into the stop animation (which locks the controls until it ends).
+// Original: on the first frame without forward/back/turn input. With ENH-0003: only after INDY_STOP_GRACE seconds
+// without input, so flipping the stick from forward to back (it passes the centre) or pressing Down just after
+// releasing Up reverses directly instead of waiting for the stop animation.
+bool indyInput_ShouldStopMoving(bool bMoving, float secDeltaTime);
+
 // Frame rate used for key/stick turning (sithPlayerControls_CalculateTurnVelocity): the current one like the
 // original, or the fixed rate from Jones.cfg with FIX-0001 (fpsIndependentTurning).
 float indyInput_GetTurnFps(void);

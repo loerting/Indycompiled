@@ -65,7 +65,8 @@ you reached for the right stick to look around. Modern third-person games: left 
 to the camera, right stick orbits the camera. Tomb Raider I-III Remastered (2024) offers exactly that as a setting
 ("modern controls") next to the original tank controls, which is the model here:
 1. ENH-0002 right stick camera (done).
-2. Faster direction changes (reverse without waiting for the stop animation), as a toggle.
+2. ENH-0003 faster direction changes (done): the delay came from the walk-to-stand animation, which starts on the
+   first frame without input and locks the controls until it ends; a stick flip passes the centre for a few frames.
 3. Modern movement: camera-relative, as a toggle next to the classic controls.
 
 ## Open questions for you

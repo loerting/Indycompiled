@@ -4824,7 +4824,7 @@ void J3DAPI sithPlayerControls_ProcessWalkMove(SithThing* pThing, float secDelta
     // Transition to standing if not moving anymore
     //
     if ( !pThing->thingInfo.actorInfo.bForceMovePlay
-        && !bMoving
+        && indyInput_ShouldStopMoving(bMoving, secDeltaTime) // INDY(ENH-0003): was !bMoving
         && !pThing->thingInfo.actorInfo.bControlsDisabled )
     {
         rdKeyframe* pKfTrack = sithPuppet_GetKeyframe("in_walk_bd_stand.key");
@@ -5007,7 +5007,7 @@ void J3DAPI sithPlayerControls_ProcessRunMove(SithThing* pThing, float secDeltaT
     //
     // Transition to standing if not running anymore
     //
-    if ( !bMoving && !pThing->thingInfo.actorInfo.bControlsDisabled )
+    if ( indyInput_ShouldStopMoving(bMoving, secDeltaTime) && !pThing->thingInfo.actorInfo.bControlsDisabled ) // INDY(ENH-0003): was !bMoving
     {
         rdKeyframe* pKfTrack = sithPuppet_GetKeyframe("in_walk_bd_stand.key");
         if ( pKfTrack )

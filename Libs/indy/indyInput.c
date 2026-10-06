@@ -217,3 +217,28 @@ float indyInput_GetTurnFps(void)
 {
     return indyEnh_IsEnabled(INDY_FIX_TURN_RATE) ? indyEnh_GetTurnRateFps() : sithTime_g_fps;
 }
+
+#define INDY_STOP_GRACE 0.15f // seconds without movement input before Indy starts stopping (ENH-0003)
+
+bool indyInput_ShouldStopMoving(bool bMoving, float secDeltaTime)
+{
+    static float secNoInput;
+    if ( bMoving )
+    {
+        secNoInput = 0.0f;
+        return false;
+    }
+
+    if ( !indyEnh_IsEnabled(INDY_ENH_QUICK_DIRECTION) )
+    {
+        return true;
+    }
+
+    secNoInput += secDeltaTime;
+    if ( secNoInput >= INDY_STOP_GRACE )
+    {
+        secNoInput = 0.0f;
+        return true;
+    }
+    return false;
+}
