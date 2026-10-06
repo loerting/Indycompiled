@@ -4,7 +4,7 @@
 #   Scripts/indy/ghidra.sh init        create the project, import + analyze the exe, apply the address map
 #   Scripts/indy/ghidra.sh apply-map   re-apply Scripts/indy/rti_v12.csv after the map changed
 #   Scripts/indy/ghidra.sh gui         open Ghidra (with the i3 fix for grey Java windows)
-#   Scripts/indy/ghidra.sh decompile <name or 0xaddress>...
+#   Scripts/indy/ghidra.sh decompile <name or 0xaddress or range:0xstart-0xend>...
 #                                      decompile into game/review/decomp/<name>.c (git-ignored: never commit it)
 set -euo pipefail
 

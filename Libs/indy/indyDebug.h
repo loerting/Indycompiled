@@ -12,8 +12,9 @@ void indyDebug_Startup(HMODULE hDll);
 // per frame. No effect without the variable.
 void indyDebug_FrameCap(void);
 
-// World snapshot for A/B tests (INDY_DUMP_WORLD=<file>): writes the current world's thing templates and things as raw
-// bytes, one line each. Called at the end of sithOpen (level loaded, nothing simulated yet).
+// World snapshot for A/B tests (INDY_DUMP_WORLD=<file>): writes the current world's thing templates and things, one
+// line each, with heap pointers replaced by what they point to (runs can be compared even when heap addresses differ).
+// Called at the end of sithOpen (level loaded, nothing simulated yet).
 void indyDebug_DumpWorld(void);
 
 J3D_EXTERN_C_END

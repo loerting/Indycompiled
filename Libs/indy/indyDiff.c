@@ -2,6 +2,10 @@
 
 #include <sound/AudioLib.h>
 #include <sound/RTI/symbols.h>
+#include <sith/Main/sithMain.h>
+#include <sith/RTI/symbols.h>
+#include <sith/World/sithThing.h>
+#include <sith/World/sithWorld.h>
 #include <std/General/std.h>
 #include <std/General/stdUtil.h>
 
@@ -834,6 +838,95 @@ static void indyDiff_SuiteAudioLibLipSync(void)
     indyDiff_Report(&mouth);
 }
 
+// ---------------------------------------------------------------- sithThing (CND writer, on the loaded level)
+
+// In-memory files for the CND writer: the suite swaps the host's file write function for this one
+typedef struct sIndyDiffMemFile
+{
+    uint8_t* pData;
+    size_t size;
+    size_t capacity;
+} IndyDiffMemFile;
+
+static IndyDiffMemFile indyDiff_aMemFiles[2]; // file handle 1: original, 2: ours
+
+static size_t J3DAPI indyDiff_MemWrite(tFileHandle fh, const void* pData, size_t size)
+{
+    if ( fh < 1 || fh > STD_ARRAYLEN(indyDiff_aMemFiles) )
+    {
+        return 0;
+    }
+
+    IndyDiffMemFile* pFile = &indyDiff_aMemFiles[fh - 1];
+    if ( pFile->size + size > pFile->capacity )
+    {
+        size_t capacity = (pFile->size + size) * 2;
+        uint8_t* pNew   = (uint8_t*)realloc(pFile->pData, capacity);
+        if ( !pNew )
+        {
+            return 0;
+        }
+        pFile->pData    = pNew;
+        pFile->capacity = capacity;
+    }
+    memcpy(pFile->pData + pFile->size, pData, size);
+    pFile->size += size;
+    return size;
+}
+
+static void indyDiff_CompareWrite(IndyDiffStats* pStats, const char* pCase, SithWorld* pWorld, size_t num, SithThing* aThings)
+{
+    for ( size_t i = 0; i < STD_ARRAYLEN(indyDiff_aMemFiles); i++ )
+    {
+        indyDiff_aMemFiles[i].size = 0;
+    }
+
+    int resultOrig = -1;
+    INDY_DIFF_CALL_ORIGINAL_RET(resultOrig, sithThing_WriteThingsListBinary, 1, pWorld, num, aThings);
+    int resultOurs = sithThing_WriteThingsListBinary(2, pWorld, num, aThings);
+
+    const IndyDiffMemFile* pOrig = &indyDiff_aMemFiles[0];
+    const IndyDiffMemFile* pOurs = &indyDiff_aMemFiles[1];
+    indyDiff_Log("  %s: %u records, original wrote %u bytes (result %d), ours %u bytes (result %d)\n", pCase, (unsigned)num,
+        (unsigned)pOrig->size, resultOrig, (unsigned)pOurs->size, resultOurs);
+    indyDiff_Compare(pStats, pCase, &resultOrig, &resultOurs, sizeof(int));
+    size_t sizes[2] = { pOrig->size, pOurs->size };
+    indyDiff_Compare(pStats, pCase, &sizes[0], &sizes[1], sizeof(size_t));
+    if ( pOrig->size == pOurs->size && pOrig->size )
+    {
+        indyDiff_Compare(pStats, pCase, pOrig->pData, pOurs->pData, pOrig->size);
+    }
+}
+
+static void indyDiff_SuiteSithThing(void)
+{
+    SithWorld* pWorld = sithWorld_g_pCurrentWorld;
+    if ( !pWorld )
+    {
+        indyDiff_Log("indyDiff: no world loaded\n");
+        indyDiff_numFailed++;
+        return;
+    }
+    indyDiff_Log("world %s: %u templates, %u thing slots (last used %d)\n", pWorld->aName, (unsigned)pWorld->numThingTemplates,
+        (unsigned)pWorld->numThings, pWorld->lastThingIdx);
+
+    tFileWriteFunc pfWrite = sith_g_pHS->pFileWrite;
+    sith_g_pHS->pFileWrite = indyDiff_MemWrite;
+
+    IndyDiffStats write = { .pName = "sithThing_WriteThingsListBinary" };
+    indyDiff_CompareWrite(&write, "templates", pWorld, pWorld->numThingTemplates, pWorld->aThingTemplates);
+    indyDiff_CompareWrite(&write, "things", pWorld, pWorld->numThings, pWorld->aThings);
+
+    sith_g_pHS->pFileWrite = pfWrite;
+    indyDiff_Report(&write);
+
+    for ( size_t i = 0; i < STD_ARRAYLEN(indyDiff_aMemFiles); i++ )
+    {
+        free(indyDiff_aMemFiles[i].pData);
+        indyDiff_aMemFiles[i] = (IndyDiffMemFile){ 0 };
+    }
+}
+
 // ---------------------------------------------------------------- entry
 
 void indyDiff_RunOnce(void)
@@ -855,6 +948,10 @@ void indyDiff_RunOnce(void)
         indyDiff_SuiteAudioLibHeaders();
         indyDiff_SuiteAudioLibLipSync();
         indyDiff_SuiteAudioLib();
+    }
+    else if ( strcmp(pSuite, "sithThing") == 0 )
+    {
+        indyDiff_SuiteSithThing();
     }
     else
     {
