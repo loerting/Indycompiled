@@ -19,10 +19,10 @@ void AudioLib_InstallHooks(void)
     J3D_HOOKFUNC(AudioLib_Uncompress); // INDY: reimplemented
     // J3D_HOOKFUNC(AudioLib_GetMouthPosition);
     // J3D_HOOKFUNC(AudioLib_GenerateLipSyncBlock);
-    // J3D_HOOKFUNC(AudioLib_CompressBlock);
+    J3D_HOOKFUNC(AudioLib_CompressBlock); // INDY: reimplemented
     J3D_HOOKFUNC(AudioLib_UncompressBlock); // INDY: reimplemented
     J3D_HOOKFUNC(AudioLib_WVSMCompressBlock);
-    // J3D_HOOKFUNC(AudioLib_WVSMUncompressBlock);
+    J3D_HOOKFUNC(AudioLib_WVSMUncompressBlock); // INDY: reimplemented
 }
 
 void AudioLib_ResetGlobals(void)
@@ -336,10 +336,110 @@ int J3DAPI AudioLib_GenerateLipSyncBlock(uint8_t* pOutData, const uint8_t* pSndD
     return J3D_TRAMPOLINE_CALL(AudioLib_GenerateLipSyncBlock, pOutData, pSndData, a3, a4, a5, sampleRate, bitsPerSample, numChannels, a9, sndDataSize);
 }
 
-// ADPCM compression
-int J3DAPI AudioLib_CompressBlock(tAudioCompressorState* pCompressorState, uint8_t* pOutBuffer, int16_t* a3, int a4, unsigned int numChannels, int a6, int bStateInitialized)
+// ADPCM compression (INDY: reimplemented from v1.2, verified with Scripts/indy/test_diff.sh AudioLib); the inverse of
+// AudioLib_UncompressBlock. numSamples per channel, interleaved 16-bit input; bNativeOrder 1: little-endian samples,
+// 0: big-endian samples, which the original reads as unsigned values (kept as is; AudioLib_Compress always passes 1).
+int J3DAPI AudioLib_CompressBlock(tAudioCompressorState* pCompressorState, uint8_t* pOutBuffer, int16_t* pSamples, int numSamples, unsigned int numChannels, int bNativeOrder, int bStateInitialized)
 {
-    return J3D_TRAMPOLINE_CALL(AudioLib_CompressBlock, pCompressorState, pOutBuffer, a3, a4, numChannels, a6, bStateInitialized);
+    if ( !bStateInitialized )
+    {
+        AudioLib_ResetCompressor(pCompressorState);
+    }
+
+    uint8_t* pOut          = pOutBuffer;
+    unsigned int bitBuffer = 0; // pending output bits in the low bits
+    unsigned int numBits   = 0; // bits written so far
+
+    for ( unsigned int channel = 0; channel < numChannels; channel++ )
+    {
+        int stepIndex       = (int8_t)pCompressorState->aStepIndex[channel];
+        int prediction      = pCompressorState->aPrediction[channel];
+        const uint16_t* pIn = (const uint16_t*)pSamples + channel;
+
+        for ( int n = numSamples; n != 0; n--, pIn += numChannels )
+        {
+            int sample = bNativeOrder ? (int16_t)*pIn : (int)(uint16_t)((*pIn >> 8) | (*pIn << 8));
+
+            unsigned int codeBits = AudioLib_aStepBits[stepIndex];
+            unsigned int signBit  = 1u << (codeBits - 1);
+            int step              = (uint16_t)AudioLib_aStepTable[stepIndex];
+
+            int diff          = sample - prediction;
+            unsigned int sign = 0;
+            if ( diff < 0 )
+            {
+                diff = -diff;
+                sign = signBit;
+            }
+
+            // magnitude: binary search over halving step sizes; delta is what the decoder will add
+            unsigned int code = 0;
+            int delta         = 0;
+            for ( unsigned int bit = signBit >> 1; bit; bit >>= 1, step >>= 1 )
+            {
+                if ( step <= diff )
+                {
+                    diff  -= step;
+                    code  |= bit;
+                    delta += step;
+                }
+            }
+            if ( code != 0 )
+            {
+                delta += step;
+            }
+
+            unsigned int freeBits = 8 - (numBits & 7);
+            bitBuffer = (bitBuffer << codeBits) | sign | code;
+            numBits  += codeBits;
+            if ( freeBits <= codeBits )
+            {
+                *pOut++ = (uint8_t)((bitBuffer & 0xFFFF) >> (codeBits - freeBits));
+            }
+
+            if ( code == (uint8_t)(signBit - 1) )
+            {
+                // escape: the sample itself follows as 16 bits
+                prediction = bNativeOrder ? (int16_t)*pIn : (int)(uint16_t)((*pIn >> 8) | (*pIn << 8));
+                unsigned int bitPos = numBits & 7;
+                pOut[0]   = (uint8_t)((((bitBuffer & 0xFF) << 8) | ((prediction >> 8) & 0xFF)) >> bitPos);
+                bitBuffer = (unsigned int)prediction & 0xFFFF;
+                pOut[1]   = (uint8_t)((uint16_t)prediction >> bitPos);
+                pOut     += 2;
+            }
+            else
+            {
+                prediction += sign ? -delta : delta;
+                if ( prediction < -0x8000 )
+                {
+                    prediction = -0x8000;
+                }
+                else if ( prediction > 0x7FFF )
+                {
+                    prediction = 0x7FFF;
+                }
+            }
+
+            stepIndex += AudioLib_aIndexTableTable[codeBits][code];
+            if ( stepIndex < 0 )
+            {
+                stepIndex = 0;
+            }
+            if ( stepIndex > 88 )
+            {
+                stepIndex = 88;
+            }
+        }
+
+        pCompressorState->aStepIndex[channel]  = (uint8_t)stepIndex;
+        pCompressorState->aPrediction[channel] = (int16_t)prediction;
+    }
+
+    if ( (numBits & 7) != 0 )
+    {
+        *pOut++ = (uint8_t)(bitBuffer << (8 - (numBits & 7)));
+    }
+    return (int)(pOut - pOutBuffer);
 }
 
 // ADPCM delta table: aDeltas[step][code] is the change encoded by a 6-bit magnitude code at a step size,
@@ -474,9 +574,32 @@ void J3DAPI AudioLib_UncompressBlock(tAudioCompressorState* pCompressorState, ui
 //    return J3D_TRAMPOLINE_CALL(AudioLib_WVSMCompressBlock, pOutBuffer, pInBuffer, blockSize, pFile);
 //}
 
+// WVSM block decompress (INDY: reimplemented from v1.2, verified with Scripts/indy/test_diff.sh AudioLib).
+// Byte 2 of a block holds the shifts: high nibble for even (left) samples, low nibble for odd (right) ones. Each
+// sample is a signed byte shifted left by its shift; 0x80 is an escape followed by the sample as big-endian 16 bits.
+// Returns the number of input bytes used.
 int J3DAPI AudioLib_WVSMUncompressBlock(uint8_t* pOutBuffer, const uint8_t* pInBuffer, int blockSize)
 {
-    return J3D_TRAMPOLINE_CALL(AudioLib_WVSMUncompressBlock, pOutBuffer, pInBuffer, blockSize);
+    int16_t* pOut      = (int16_t*)pOutBuffer;
+    uint8_t shifts     = pInBuffer[2];
+    const uint8_t* pIn = pInBuffer + 3;
+    int numSamples     = blockSize >> 1;
+
+    for ( int i = 0; i < numSamples; i++ )
+    {
+        uint8_t code = *pIn++;
+        if ( code == 0x80 )
+        {
+            pOut[i] = (int16_t)((pIn[0] << 8) + pIn[1]);
+            pIn    += 2;
+        }
+        else
+        {
+            unsigned int shift = (i & 1) ? (shifts & 0x0F) : (shifts >> 4);
+            pOut[i] = (int16_t)(uint16_t)((uint32_t)(int32_t)(int8_t)code << shift); // shifted as unsigned: well defined
+        }
+    }
+    return (int)(pIn - pInBuffer);
 }
 
 int J3DAPI AudioLib_WVSMCompressBlock(uint8_t* pOutBuffer, const uint8_t* pInBuffer, int blockSize, FILE* pFile)

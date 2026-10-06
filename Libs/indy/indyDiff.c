@@ -359,8 +359,8 @@ static void indyDiff_SuiteAudioLibAdpcm(void)
     static uint8_t aPcmOrig[MAXBYTES + 64], aPcmNew[MAXBYTES + 64];
     static const int aAmplitudes[] = { 100, 3000, 20000, 32767 };
     static const int aSizes[]      = { 64, 1000, 4096, 0x8000 };
-    const uintptr_t aUncompressChain[] = { AudioLib_Uncompress_ADDR, AudioLib_UncompressBlock_ADDR, AudioLib_ResetCompressor_ADDR };
-    const uintptr_t aCompressChain[]   = { AudioLib_Compress_ADDR, AudioLib_ResetCompressor_ADDR };
+    const uintptr_t aUncompressChain[] = { AudioLib_Uncompress_ADDR, AudioLib_UncompressBlock_ADDR, AudioLib_ResetCompressor_ADDR, AudioLib_WVSMUncompressBlock_ADDR };
+    const uintptr_t aCompressChain[]   = { AudioLib_Compress_ADDR, AudioLib_ResetCompressor_ADDR, AudioLib_CompressBlock_ADDR };
 
     IndyDiffStats reset = { "AudioLib_ResetCompressor" };
     for ( int i = 0; i < 4; i++ )
@@ -396,7 +396,7 @@ static void indyDiff_SuiteAudioLibAdpcm(void)
                     tAudioCompressorState stateOrig, stateOurs;
                     memset(aPacked, 0xCD, sizeof(aPacked));
                     IndyDiffPatchSet set;
-                    indyDiff_BeginOriginals(&set, aCompressChain, 2);
+                    indyDiff_BeginOriginals(&set, aCompressChain, 3);
                     ((AudioLib_ResetCompressor_TYPE)AudioLib_ResetCompressor_ADDR)(&stateOrig);
                     int packedSize = ((AudioLib_Compress_TYPE)AudioLib_Compress_ADDR)(&stateOrig, aPacked, (const uint8_t*)aPcm, size, channels);
                     indyDiff_EndOriginals(&set);
@@ -417,7 +417,7 @@ static void indyDiff_SuiteAudioLibAdpcm(void)
                     memset(aPcmNew, 0xCD, sizeof(aPcmNew));
                     memset(&stateOrig, 0x77, sizeof(stateOrig));
                     memset(&stateOurs, 0x77, sizeof(stateOurs));
-                    indyDiff_BeginOriginals(&set, aUncompressChain, 3);
+                    indyDiff_BeginOriginals(&set, aUncompressChain, 4);
                     ((AudioLib_Uncompress_TYPE)AudioLib_Uncompress_ADDR)(&stateOrig, aPcmOrig, aPacked, (unsigned)size);
                     indyDiff_EndOriginals(&set);
                     AudioLib_Uncompress(&stateOurs, aPcmNew, aPacked, (unsigned)size);
@@ -435,6 +435,66 @@ static void indyDiff_SuiteAudioLibAdpcm(void)
     indyDiff_Report(&compress);
     indyDiff_Report(&uncompress);
     indyDiff_Report(&wvsmWrap);
+
+    // AudioLib_CompressBlock directly: byte order, inherited state, odd sizes
+    IndyDiffStats block = { "AudioLib_CompressBlock" };
+    for ( int kind = 0; kind <= 6; kind++ )
+    {
+        for ( size_t a = 0; a < STD_ARRAYLEN(aAmplitudes); a++ )
+        {
+            for ( unsigned int channels = 1; channels <= 2; channels++ )
+            {
+                for ( int variant = 0; variant < 4; variant++ ) // bit 0: native byte order, bit 1: inherited state
+                {
+                    int numSamples = (int[]){ 1, 7, 333, 4000 }[(kind + variant) & 3];
+                    indyDiff_MakePcm16(aPcm, MAXBYTES / 2, kind, aAmplitudes[a]);
+                    tAudioCompressorState stateOrig = { { (uint8_t)(indyDiff_Rand() % 89), (uint8_t)(indyDiff_Rand() % 89) },
+                                                        { (int16_t)indyDiff_Rand(), (int16_t)indyDiff_Rand() }, 0 };
+                    tAudioCompressorState stateOurs = stateOrig;
+                    memset(aPacked, 0xCD, sizeof(aPacked));
+                    memset(aPackedNew, 0xCD, sizeof(aPackedNew));
+                    int sizeOrig = -1;
+                    INDY_DIFF_CALL_ORIGINAL_RET(sizeOrig, AudioLib_CompressBlock, &stateOrig, aPacked, aPcm, numSamples, channels, variant & 1, (variant >> 1) & 1);
+                    int sizeNew = AudioLib_CompressBlock(&stateOurs, aPackedNew, aPcm, numSamples, channels, variant & 1, (variant >> 1) & 1);
+                    char aCase[80];
+                    snprintf(aCase, sizeof(aCase), "signal %d amp %d samples %d channels %u variant %d", kind, aAmplitudes[a], numSamples, channels, variant);
+                    indyDiff_pCaseInput    = aPcm;
+                    indyDiff_caseInputSize = numSamples * channels * 2;
+                    indyDiff_Compare(&block, aCase, &sizeOrig, &sizeNew, sizeof(int));
+                    indyDiff_Compare(&block, aCase, aPacked, aPackedNew, sizeof(aPacked));
+                    indyDiff_Compare(&block, aCase, &stateOrig, &stateOurs, sizeof(stateOrig));
+                }
+            }
+        }
+    }
+    indyDiff_Report(&block);
+
+    // AudioLib_WVSMUncompressBlock on random bytes (every byte sequence is a valid block)
+    IndyDiffStats wvsmDecode = { "AudioLib_WVSMUncompressBlock" };
+    for ( int i = 0; i < 200; i++ )
+    {
+        int blockSize = (int)(indyDiff_Rand() % 0x1001);
+        for ( size_t k = 0; k < sizeof(aPacked); k++ )
+        {
+            aPacked[k] = (uint8_t)indyDiff_Rand();
+            if ( indyDiff_Rand() % 16 == 0 )
+            {
+                aPacked[k] = 0x80; // more escapes
+            }
+        }
+        memset(aPcmOrig, 0xCD, sizeof(aPcmOrig));
+        memset(aPcmNew, 0xCD, sizeof(aPcmNew));
+        int usedOrig = -1;
+        INDY_DIFF_CALL_ORIGINAL_RET(usedOrig, AudioLib_WVSMUncompressBlock, aPcmOrig, aPacked, blockSize);
+        int usedNew = AudioLib_WVSMUncompressBlock(aPcmNew, aPacked, blockSize);
+        char aCase[48];
+        snprintf(aCase, sizeof(aCase), "random block %d size %d", i, blockSize);
+        indyDiff_pCaseInput    = aPacked;
+        indyDiff_caseInputSize = blockSize + 3;
+        indyDiff_Compare(&wvsmDecode, aCase, &usedOrig, &usedNew, sizeof(int));
+        indyDiff_Compare(&wvsmDecode, aCase, aPcmOrig, aPcmNew, sizeof(aPcmOrig));
+    }
+    indyDiff_Report(&wvsmDecode);
 }
 
 // ---------------------------------------------------------------- entry
