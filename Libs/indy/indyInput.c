@@ -4,6 +4,7 @@
 #include <sith/Devices/sithControl.h>
 #include <sith/Gameplay/sithPlayer.h>
 #include <sith/Gameplay/sithTime.h>
+#include "indyFrame.h"
 #include <std/General/std.h>
 #include <std/General/stdUtil.h>
 #include <std/Win95/stdControl.h>
@@ -161,9 +162,9 @@ static void indyInput_Trace(void)
     {
         // heading: angle of the look vector in the horizontal plane (degrees, counter-clockwise)
         float heading = atan2f(pPlayer->orient.lvec.y, pPlayer->orient.lvec.x) * (180.0f / 3.14159265f);
-        STDLOG_STATUS("indyInput trace: t %lu player pos %.3f %.3f %.3f heading %.2f moveStatus %d fps %.1f\n",
+        STDLOG_STATUS("indyInput trace: t %lu player pos %.3f %.3f %.3f heading %.2f moveStatus %d fps %.1f health %.1f cyc16 %u\n",
             (unsigned long)msecNow, pPlayer->pos.x, pPlayer->pos.y, pPlayer->pos.z, heading, (int)pPlayer->moveStatus,
-            sithTime_g_fps);
+            sithTime_g_fps, pPlayer->thingInfo.actorInfo.health, indyFrame_GetTestCount());
     }
 
     static const struct { SithControlFunction fn; const char* pName; } aFunctions[] = {

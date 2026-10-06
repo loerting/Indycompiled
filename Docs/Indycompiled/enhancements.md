@@ -20,6 +20,9 @@ IDs are permanent. New entries go at the end of the `IndyEnh` enum.
 
 | FIX-0001 | `fpsIndependentTurning` | fix | measured headless (standing turn, 4 s): without the fix 70.8 / 91.5 / 133.0 °/s at 30 / 60 / 120 FPS; with it 92.2 / 91.5 / 90.2 °/s | Turning with keys or a stick no longer depends on the frame rate. The original multiplies the turn direction by the current frame rate (right for mouse deltas, wrong for keys), so Indy turned faster at higher frame rates (upstream issue #10). Turning is calibrated to `indycompiled.turnRateFps` (default 60, i.e. how it felt on 60 Hz screens; 15–240). Mouse turning is unchanged. Test: `Scripts/indy/test_turnrate.sh`. |
 
+| FIX-0002 | `fpsIndependentDamage` | fix | measured headless (100 damage/s for 3 s): without the fix 270 / 180 / 279 lost at 30 / 60 / ~100 FPS; with it 300 / 300 / 300 | Damage dealt a little every frame (drowning, raft leak, IMP blast) no longer depends on the frame rate. `sithThing_DamageThing` passes damage to COG as an integer, so per-frame fractions were lost and amounts below 1 vanished (no drowning at ~250 FPS). The fraction is carried to the next frame. See `notes/timing.md`. |
+| FIX-0003 | `fpsIndependentCycles` | fix | measured headless (cycle of 16 per second): without the fix 1.84 / 6.10 at 30 / 100 FPS; with it 1.84 / 1.90 (30/16 = 1.875) | "Every N-th frame" events that are about time (random idle animations, breathing sounds, sprite flicker, AI awareness pings; 16 sites) run on game time (30 intended frames per second) instead of frame count. Per-frame upkeep (matrix normalisation, texture wrap, target search) is unchanged. See `notes/timing.md`. |
+
 Kinds: **fix** (on in `fixed` and `enhanced`), **enhancement** (on in `enhanced`), **experimental** (off in every
 profile until tested; enable it explicitly in `toggles`).
 

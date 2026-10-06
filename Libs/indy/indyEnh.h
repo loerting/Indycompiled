@@ -16,6 +16,8 @@ typedef enum eIndyEnh
     // Order and IDs are permanent: add new entries at the end, never renumber.
     INDY_ENH_ANALOG_MOVEMENT = 0, // ENH-0001: gamepad stick deflection scales walking/running and turning
     INDY_FIX_TURN_RATE       = 1, // FIX-0001: key/stick turning speed independent of the frame rate
+    INDY_FIX_CONTINUOUS_DAMAGE = 2, // FIX-0002: drowning/raft/IMP damage independent of the frame rate
+    INDY_FIX_TIME_CYCLES       = 3, // FIX-0003: "every N-th frame" events (idle anims, breathing, ...) on game time
     INDY_ENH_COUNT
 } IndyEnh;
 

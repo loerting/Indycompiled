@@ -1021,7 +1021,7 @@ float J3DAPI sithPuppet_UpdateThingMove(SithThing* pThing, rdPuppetTrackCallback
                 {
                     submode = SITHPUPPETSUBMODE_WALKBACK;
                     if ( (pThing->pPuppetState->submode != SITHPUPPETSUBMODE_WALKBACK
-                        || SITH_ISFRAMECYCLE(pThing->idx, 8) && SITH_RAND() < 0.40000001f) // On every 8th frame and at random
+                        || SITH_ISTIMECYCLE(pThing->idx, 8) && SITH_RAND() < 0.40000001f) // On every 8th frame and at random INDY(FIX-0003)
                         && !bFloating )
                     {
                         // Create ripples in water
@@ -1035,7 +1035,7 @@ float J3DAPI sithPuppet_UpdateThingMove(SithThing* pThing, rdPuppetTrackCallback
                     {
                         submode = SITHPUPPETSUBMODE_RISING; // underwater float
                         if ( (pThing->pPuppetState->submode != SITHPUPPETSUBMODE_RISING
-                            || SITH_ISFRAMECYCLE(pThing->idx, 4) && SITH_RAND() < 0.30000001f) // On every 4th frame and at random
+                            || SITH_ISTIMECYCLE(pThing->idx, 4) && SITH_RAND() < 0.30000001f) // On every 4th frame and at random INDY(FIX-0003)
                             && !bFloating )
                         {
                             // Create ripples in water
@@ -1066,7 +1066,7 @@ float J3DAPI sithPuppet_UpdateThingMove(SithThing* pThing, rdPuppetTrackCallback
                         // Added: Added simulated soundfx play since turn animations don't have any keymarkers
                         if ( (submode == SITHPUPPETSUBMODE_TURNLEFT
                             || submode == SITHPUPPETSUBMODE_TURNRIGHT)
-                            && SITH_ISFRAMECYCLE(pThing->idx, 16) && SITH_RAND() < 0.25000001f )
+                            && SITH_ISTIMECYCLE(pThing->idx, 16) && SITH_RAND() < 0.25000001f ) // INDY(FIX-0003)
                         {
                             sithSoundClass_PlayModeFirst(pThing, SITH_RAND() >= 0.5 ? SITHSOUNDCLASS_RSWIMSURFACE : SITHSOUNDCLASS_LSWIMSURFACE);
                         }
@@ -1074,7 +1074,7 @@ float J3DAPI sithPuppet_UpdateThingMove(SithThing* pThing, rdPuppetTrackCallback
                         if ( ((pThing->pPuppetState->submode != SITHPUPPETSUBMODE_STAND
                             && pThing->pPuppetState->submode != SITHPUPPETSUBMODE_TURNLEFT
                             && pThing->pPuppetState->submode != SITHPUPPETSUBMODE_TURNRIGHT) // Altered: Added check for turn submodes
-                            || SITH_ISFRAMECYCLE(pThing->idx, 16) && SITH_RAND() < 0.30000001f) // Altered: on every 16th frame, was every 8th frame
+                            || SITH_ISTIMECYCLE(pThing->idx, 16) && SITH_RAND() < 0.30000001f) // Altered: on every 16th frame, was every 8th frame INDY(FIX-0003)
                             && !bFloating )
                         {
                             sithFX_CreateWaterRipple(pThing);
@@ -1087,7 +1087,7 @@ float J3DAPI sithPuppet_UpdateThingMove(SithThing* pThing, rdPuppetTrackCallback
 
                     submode = SITHPUPPETSUBMODE_RUN;
                     if ( (pThing->pPuppetState->submode != SITHPUPPETSUBMODE_RUN
-                        || SITH_ISFRAMECYCLE(pThing->idx, 4) && SITH_RAND() < 0.30000001f) // On every 4th frame and at random
+                        || SITH_ISTIMECYCLE(pThing->idx, 4) && SITH_RAND() < 0.30000001f) // On every 4th frame and at random INDY(FIX-0003)
                         && !bFloating )
                     {
                         // Create breath bubbles
@@ -1098,7 +1098,7 @@ float J3DAPI sithPuppet_UpdateThingMove(SithThing* pThing, rdPuppetTrackCallback
                 {
                     submode = SITHPUPPETSUBMODE_WALK;
                     if ( (pThing->pPuppetState->submode != SITHPUPPETSUBMODE_WALK
-                        || SITH_ISFRAMECYCLE(pThing->idx, 8) && SITH_RAND() < 0.30000001f) // On every 8th frame and at random
+                        || SITH_ISTIMECYCLE(pThing->idx, 8) && SITH_RAND() < 0.30000001f) // On every 8th frame and at random INDY(FIX-0003)
                         && !bFloating )
                     {
                         // Create ripples in water
@@ -1113,7 +1113,7 @@ float J3DAPI sithPuppet_UpdateThingMove(SithThing* pThing, rdPuppetTrackCallback
 
                 submode = SITHPUPPETSUBMODE_RISING; // underwater still
                 if ( (pThing->pPuppetState->submode != SITHPUPPETSUBMODE_RISING
-                    || SITH_ISFRAMECYCLE(pThing->idx, 8) && SITH_RAND() < 0.30000001f) // On every 8th frame and at random
+                    || SITH_ISTIMECYCLE(pThing->idx, 8) && SITH_RAND() < 0.30000001f) // On every 8th frame and at random INDY(FIX-0003)
                     && !bFloating )
                 {
                     sithFX_CreateBubble(pThing);
@@ -1144,7 +1144,7 @@ float J3DAPI sithPuppet_UpdateThingMove(SithThing* pThing, rdPuppetTrackCallback
                 // Added: Added simulated soundfx play since turn animations don't have any keymarkers
                 if ( (submode == SITHPUPPETSUBMODE_TURNLEFT
                     || submode == SITHPUPPETSUBMODE_TURNRIGHT)
-                    && SITH_ISFRAMECYCLE(pThing->idx, 16) && SITH_RAND() < 0.25000001f )
+                    && SITH_ISTIMECYCLE(pThing->idx, 16) && SITH_RAND() < 0.25000001f ) // INDY(FIX-0003)
                 {
                     sithSoundClass_PlayModeFirst(pThing, SITH_RAND() >= 0.5 ? SITHSOUNDCLASS_RSWIMSURFACE : SITHSOUNDCLASS_LSWIMSURFACE);
                 }
@@ -1152,7 +1152,7 @@ float J3DAPI sithPuppet_UpdateThingMove(SithThing* pThing, rdPuppetTrackCallback
                 if ( ((pThing->pPuppetState->submode != SITHPUPPETSUBMODE_STAND
                     && pThing->pPuppetState->submode != SITHPUPPETSUBMODE_TURNLEFT
                     && pThing->pPuppetState->submode != SITHPUPPETSUBMODE_TURNRIGHT) // Altered: Added check for turn submodes
-                    || SITH_ISFRAMECYCLE(pThing->idx, 16) && SITH_RAND() < 0.30000001f) // Altered: on every 16th frame, was eveeveryrty 8th frame
+                    || SITH_ISTIMECYCLE(pThing->idx, 16) && SITH_RAND() < 0.30000001f) // Altered: on every 16th frame, was eveeveryrty 8th frame INDY(FIX-0003)
                     && !bFloating )
                 {
                     // Create ripples in water

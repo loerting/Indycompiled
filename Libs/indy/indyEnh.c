@@ -22,6 +22,8 @@ typedef struct sIndyEnhInfo
 static const IndyEnhInfo indyEnh_aInfos[INDY_ENH_COUNT] = {
     [INDY_ENH_ANALOG_MOVEMENT] = { "ENH-0001", "analogMovement", INDY_KIND_EXP }, // until tested with a gamepad
     [INDY_FIX_TURN_RATE]       = { "FIX-0001", "fpsIndependentTurning", INDY_KIND_FIX },
+    [INDY_FIX_CONTINUOUS_DAMAGE] = { "FIX-0002", "fpsIndependentDamage", INDY_KIND_FIX },
+    [INDY_FIX_TIME_CYCLES]       = { "FIX-0003", "fpsIndependentCycles", INDY_KIND_FIX },
 };
 
 static bool indyEnh_bLoaded;

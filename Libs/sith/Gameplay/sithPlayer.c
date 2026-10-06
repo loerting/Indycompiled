@@ -1,4 +1,6 @@
 #include "sithPlayer.h"
+#include <indy/indyDamage.h> // INDY
+#include <indy/indyEnh.h> // INDY
 #include <j3dcore/j3dhook.h>
 
 #include <rdroid/Math/rdMatrix.h>
@@ -304,11 +306,20 @@ void J3DAPI sithPlayer_Update(SithPlayer* pPlayer, float secDetaTime)
                 {
                     sithPlayer_g_impState = 180.0f;
                     float damage = sithGetIMPDamageScalar() * secDetaTime * 40.0f;
-                    // Fixed: Set min damage to 1.0f as sithThing_DamageThing cuts off damages lower than 1.0f. ( >40 fps)
-                #ifndef J3D_SPEEDRUN_BUILD
-                    damage = J3DMAX(damage, 1.0f);
-                #endif
-                    sithThing_DamageThing(pThing, pThing, damage, SITH_DAMAGE_IMP_BLAST);
+                    if ( indyEnh_IsEnabled(INDY_FIX_CONTINUOUS_DAMAGE) )
+                    {
+                        // INDY(FIX-0002): carry the fraction to the next frame (exact at any frame rate) instead of
+                        // upstream's minimum of 1 per frame below, which deals too much damage above ~40 FPS
+                        indyDamage_ApplyContinuous(pThing, damage, SITH_DAMAGE_IMP_BLAST);
+                    }
+                    else
+                    {
+                        // Fixed: Set min damage to 1.0f as sithThing_DamageThing cuts off damages lower than 1.0f. ( >40 fps)
+                    #ifndef J3D_SPEEDRUN_BUILD
+                        damage = J3DMAX(damage, 1.0f);
+                    #endif
+                        sithThing_DamageThing(pThing, pThing, damage, SITH_DAMAGE_IMP_BLAST);
+                    }
                 }
 
             } break;

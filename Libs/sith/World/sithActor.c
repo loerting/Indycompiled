@@ -1,4 +1,5 @@
 #include "sithActor.h"
+#include <indy/indyDamage.h> // INDY
 #include <j3dcore/j3dhook.h>
 
 #include <sith/AI/sithAI.h>
@@ -112,6 +113,8 @@ void J3DAPI sithActor_SetDifficulty(SithThing* pActor)
 
 void J3DAPI sithActor_Update(SithThing* pThing, unsigned int msecDeltaTime)
 {
+    indyDamage_TestTick(pThing, msecDeltaTime); // INDY: test aid (INDY_TEST_DPS), no effect without it
+
     if ( (pThing->thingInfo.actorInfo.flags & SITH_AF_BREATHEUNDERWATER) == 0 && (pThing->flags & (SITH_TF_DYING | SITH_TF_DESTROYED)) == 0 )
     {
         if ( (pThing->moveInfo.physics.flags & SITH_PF_ONWATERSURFACE) == 0 && (pThing->pInSector->flags & SITH_SECTOR_UNDERWATER) != 0 )
@@ -128,7 +131,7 @@ void J3DAPI sithActor_Update(SithThing* pThing, unsigned int msecDeltaTime)
             if ( pThing->thingInfo.actorInfo.endurance.msecUnderwater >= SITHACTOR_MAX_UNDERWATER_MSEC )
             {
                 float damage = (float)msecDeltaTime / 5.0f;
-                sithThing_DamageThing(pThing, pThing, damage, SITH_DAMAGE_DROWN);
+                indyDamage_ApplyContinuous(pThing, damage, SITH_DAMAGE_DROWN); // INDY(FIX-0002)
                 pThing->thingInfo.actorInfo.endurance.msecUnderwater = SITHACTOR_MAX_UNDERWATER_MSEC;
             }
         }
@@ -138,10 +141,10 @@ void J3DAPI sithActor_Update(SithThing* pThing, unsigned int msecDeltaTime)
 
             if ( pThing->thingInfo.actorInfo.endurance.msecUnderwater > (SITHACTOR_MAX_UNDERWATER_MSEC - 10000) )
             {
-                if ( !SITH_ISFRAMECYCLE(pThing->idx, 16) ) // Not on every 16th frame
+                if ( !SITH_ISTIMECYCLE(pThing->idx, 16) ) // Not on every 16th frame INDY(FIX-0003)
                 {
                     if ( pThing->thingInfo.actorInfo.endurance.msecUnderwater > (SITHACTOR_MAX_UNDERWATER_MSEC / 2) // TODO: ???, verify this if statement
-                        && SITH_ISFRAMECYCLE(pThing->idx, 8) ) // On every 8th frame
+                        && SITH_ISTIMECYCLE(pThing->idx, 8) ) // On every 8th frame INDY(FIX-0003)
                     {
                         sithSoundClass_PlayModeRandom(pThing, SITHSOUNDCLASS_BREATH);
                     }
@@ -169,7 +172,7 @@ void J3DAPI sithActor_Update(SithThing* pThing, unsigned int msecDeltaTime)
 
             float damage = (float)sithGetGameDifficulty() * (0.60000002f - 1.2f) / 5.0f + 1.2f;
             damage = (float)msecDeltaTime / damage;
-            sithThing_DamageThing(pThing, pThing, damage, SITH_DAMAGE_RAFT_LEAK);
+            indyDamage_ApplyContinuous(pThing, damage, SITH_DAMAGE_RAFT_LEAK); // INDY(FIX-0002)
         }
 
         if ( pThing->thingInfo.actorInfo.pThingMeshAttached )
@@ -442,7 +445,7 @@ void J3DAPI sithActor_PlayDamageSoundFx(SithThing* pThing, SithDamageType damage
     }
     else if ( damageType == SITH_DAMAGE_DROWN )
     {
-        if ( SITH_ISFRAMECYCLE(pThing->idx, 16) ) // On every 16th frame make drawning sound fx
+        if ( SITH_ISTIMECYCLE(pThing->idx, 16) ) // On every 16th frame make drawning sound fx INDY(FIX-0003)
         {
             sithSoundClass_PlayModeRandom(pThing, SITHSOUNDCLASS_DROWNING);
         }

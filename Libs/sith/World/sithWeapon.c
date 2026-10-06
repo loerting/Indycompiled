@@ -358,7 +358,7 @@ void J3DAPI sithWeapon_Update(SithThing* pThing, float secDeltaTime)
         }
     }
 
-    if ( (pThing->thingInfo.weaponInfo.flags & SITH_WF_DECAYEMITSOUNDAWARENESSEVENT) != 0 && SITH_ISFRAMECYCLE(pThing->idx, 8) ) // on every 8th frame
+    if ( (pThing->thingInfo.weaponInfo.flags & SITH_WF_DECAYEMITSOUNDAWARENESSEVENT) != 0 && SITH_ISTIMECYCLE(pThing->idx, 8) ) // on every 8th frame INDY(FIX-0003)
     {
         sithAIAwareness_CreateTransmittingEvent(pThing->pInSector, &pThing->pos, 2, 0.5f, pThing);
     }

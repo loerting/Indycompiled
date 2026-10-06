@@ -449,6 +449,7 @@ int J3DAPI sithOpen(const wchar_t* pwPlayerName)
     }
 
     sithMain_g_frameNumber   = 0;
+    indyFrame_Reset(); // INDY(FIX-0003)
     sithMain_g_curRenderTick = 1;
     sithWorld_ResetRenderState(sithWorld_g_pCurrentWorld);
 
@@ -568,6 +569,7 @@ void sithUpdate(void)
 
             sithAdvanceRenderTick();
             sithTime_Advance();
+            indyFrame_Advance(sithTime_g_frameTimeFlex); // INDY(FIX-0003): intended frames on game time
             sithEvent_Process();
 
             if ( sithMessage_g_inputstream )

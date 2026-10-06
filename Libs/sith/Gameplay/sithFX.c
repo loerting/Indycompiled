@@ -1155,7 +1155,7 @@ void J3DAPI sithFX_UpdatePolyline(SithThing* pThing)
             rdPolyline* pPolyline = pThing->renderData.data.pPolyline;
             pPolyline->face.texVertOffset.y = (SITH_RANDF() - 0.69999999f) * 0.079999998f + pPolyline->face.texVertOffset.y;
             size_t numCels = pThing->renderData.data.pPolyline->face.pMaterial->numCels;
-            if ( numCels > 1 && SITH_ISFRAMECYCLE(pThing->idx, 4) ) // On every 4th frame random select new cel
+            if ( numCels > 1 && SITH_ISTIMECYCLE(pThing->idx, 4) ) // On every 4th frame random select new cel INDY(FIX-0003)
             {
                 pThing->renderData.data.pPolyline->face.matCelNum = (int32_t)(SITH_RAND() * (double)numCels);
             }

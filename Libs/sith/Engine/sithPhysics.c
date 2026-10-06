@@ -598,7 +598,7 @@ void J3DAPI sithPhysics_UpdateThing(SithThing* pThing, float secDeltaTime)
     else if ( (pPhysics->flags & SITH_PF_JEEP) != 0 )
     {
         sithPhysics_UpdateJeepPhysics(pThing, secDeltaTime);
-        if ( SITH_ISFRAMECYCLE(pThing->idx, 4) ) // every 4th frames
+        if ( SITH_ISTIMECYCLE(pThing->idx, 4) ) // every 4th frames INDY(FIX-0003)
         {
             sithAIAwareness_CreateTransmittingEvent(pThing->pInSector, &pThing->pos, 2, 4.0f, pThing);
         }
@@ -607,7 +607,7 @@ void J3DAPI sithPhysics_UpdateThing(SithThing* pThing, float secDeltaTime)
     else if ( (pPhysics->flags & SITH_PF_MINECAR) != 0 && (pThing->attach.flags & SITH_ATTACH_SURFACE) != 0 )
     {
         sithPhysics_UpdateMineCarPhysics(pThing, secDeltaTime);
-        if ( SITH_ISFRAMECYCLE(pThing->idx, 8) ) // every 8th frames
+        if ( SITH_ISTIMECYCLE(pThing->idx, 8) ) // every 8th frames INDY(FIX-0003)
         {
             sithAIAwareness_CreateTransmittingEvent(pThing->pInSector, &pThing->pos, 2, 2.0f, pThing);
         }

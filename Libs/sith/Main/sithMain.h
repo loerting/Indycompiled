@@ -1,6 +1,7 @@
 #ifndef SITH_SITHMAIN_H
 #define SITH_SITHMAIN_H
 #include <j3dcore/j3d.h>
+#include <indy/indyFrame.h> // INDY(FIX-0003)
 #include <j3dcore/j3dhook.h>
 
 #include <rdroid/types.h>
@@ -49,6 +50,9 @@ J3D_EXTERN_C_START
  * @return       True on every N-th frame
  */
 #define SITH_ISFRAMECYCLE(offset, n) (((uint8_t)sithMain_g_frameNumber + (uint8_t)(offset)) & ((n)-1)) == 0
+
+// INDY(FIX-0003): the same on game time (30 intended frames per second) for events that are about time
+#define SITH_ISTIMECYCLE(offset, n) (indyFrame_IsTimeCycle((size_t)(offset), (size_t)(n)) != 0)
 
 
 #define SITH_CFG_INSTALLPATH          "installPath"
