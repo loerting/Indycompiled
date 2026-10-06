@@ -2875,7 +2875,7 @@ typedef struct sSithAIWaypoint
     int numUsedLinks;
     int aWpntLinks[8];
     SithAIWaypointLayerFlag flags;
-    int unknown11;
+    int goalProximity;
 } SithAIWaypoint;
 
 struct sSithEvent
