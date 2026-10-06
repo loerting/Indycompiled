@@ -105,6 +105,10 @@ function(_indy_fixup_targets)
 
     target_sources(Jones3D_DLL PRIVATE "${INDY_GEN}/indy_inline_externals.c")
 
+    # our own module (PROJECT.md §7.2): enhancement toggles and other Indycompiled code
+    file(GLOB indy_sources "${INDY_ROOT}/Libs/indy/*.c")
+    target_sources(Jones3D_DLL PRIVATE ${indy_sources})
+
     # debug aid: compile the listed targets without optimisation (e.g. to bisect optimisation-only bugs)
     foreach(t IN LISTS INDY_O0_TARGETS)
         set_property(TARGET ${t} APPEND PROPERTY COMPILE_OPTIONS -O0)

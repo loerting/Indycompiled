@@ -1,0 +1,38 @@
+#ifndef INDY_INDYENH_H
+#define INDY_INDYENH_H
+// Indycompiled enhancement and fix toggles (PROJECT.md §8.3, registry: Docs/Indycompiled/enhancements.md).
+//
+// Every deviation from the original game's behaviour has an ID and a toggle. Jones.cfg selects a profile and
+// may override single toggles:
+//   "indycompiled": { "profile": "enhanced", "toggles": { "analogMovement": true } }
+// Profiles: "vanilla" (everything off), "fixed" (bug fixes only), "enhanced" (everything on, default).
+#include <j3dcore/j3d.h>
+#include <stdbool.h>
+
+J3D_EXTERN_C_START
+
+typedef enum eIndyEnh
+{
+    // Order and IDs are permanent: add new entries at the end, never renumber.
+    INDY_ENH_ANALOG_MOVEMENT = 0, // ENH-0001: gamepad stick deflection scales walking/running and turning
+    INDY_ENH_COUNT
+} IndyEnh;
+
+typedef enum eIndyProfile
+{
+    INDY_PROFILE_VANILLA  = 0,
+    INDY_PROFILE_FIXED    = 1,
+    INDY_PROFILE_ENHANCED = 2,
+} IndyProfile;
+
+// True if the toggle is on. Settings are read from Jones.cfg on first use after the config system started.
+// "indycompiled.toggles" only holds explicit overrides; toggles not listed there follow the profile.
+bool J3DAPI indyEnh_IsEnabled(IndyEnh id);
+
+IndyProfile indyEnh_GetProfile(void);
+
+// Re-read Jones.cfg (e.g. after the settings changed).
+void indyEnh_Reload(void);
+
+J3D_EXTERN_C_END
+#endif // INDY_INDYENH_H
