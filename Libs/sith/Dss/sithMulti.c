@@ -5,7 +5,13 @@
 #include <sith/Devices/sithComm.h>
 #include <sith/Dss/sithDSS.h>
 #include <sith/Gameplay/sithPlayer.h>
+#include <sith/Gameplay/sithEvent.h>
 #include <sith/Gameplay/sithTime.h>
+#include <sith/World/sithSector.h>
+#include <sith/World/sithSurface.h>
+#include <sith/World/sithThing.h>
+
+#include <std/Win95/stdComm.h>
 
 #define sithMulti_tickRate J3D_DECL_FAR_VAR(sithMulti_tickRate, size_t)
 #define sithMulti_numUpdatedSurfaces J3D_DECL_FAR_VAR(sithMulti_numUpdatedSurfaces, int)
@@ -28,39 +34,51 @@
 #define sithMulti_msecWelcomeUpdateInterval J3D_DECL_FAR_VAR(sithMulti_msecWelcomeUpdateInterval, unsigned int)
 #define sithMulti_dword_17F10EC J3D_DECL_FAR_VAR(sithMulti_dword_17F10EC, int)
 
+// Player welcome (join sync) phases, see sithMulti_Update
+#define SITHMULTI_WELCOME_SECTORS  1
+#define SITHMULTI_WELCOME_SURFACES 2
+#define SITHMULTI_WELCOME_THINGS   3
+#define SITHMULTI_WELCOME_REMOVALS 4
+
+#define SITHMULTI_WELCOMESTEP_MSEC 60u
+
+// sithMulti_quitGameState values
+#define SITHMULTI_QUIT_STATE1  1
+#define SITHMULTI_QUIT_EJECTED 2
+
 void sithMulti_InstallHooks(void)
 {
     // Uncomment only lines for functions that have full definition and doesn't call original function (non-thunk functions)
 
-    // J3D_HOOKFUNC(sithMulti_CloseGame);
-    // J3D_HOOKFUNC(sithMulti_CheckPlayers);
-    // J3D_HOOKFUNC(sithMulti_ProcessPlayerLost);
-    // J3D_HOOKFUNC(sithMulti_RemovePlayer);
-    // J3D_HOOKFUNC(sithMulti_SendWelcome);
-    // J3D_HOOKFUNC(sithMulti_ProcessWelcome);
-    // J3D_HOOKFUNC(sithMulti_ProcessPlayerJoin);
-    // J3D_HOOKFUNC(sithMulti_SyncPlayers);
-    // J3D_HOOKFUNC(sithMulti_ProcessSyncPlayers);
-    // J3D_HOOKFUNC(sithMulti_ProcessJoinRequest);
-    // J3D_HOOKFUNC(sithMulti_FinishJoining);
-    // J3D_HOOKFUNC(sithMulti_ProcessChat);
-    // J3D_HOOKFUNC(sithMulti_ProcessPing);
-    // J3D_HOOKFUNC(sithMulti_ProcessPong);
-    // J3D_HOOKFUNC(sithMulti_QuitPlayer);
-    // J3D_HOOKFUNC(sithMulti_ProcessQuit);
-    // J3D_HOOKFUNC(sithMulti_Update);
-    // J3D_HOOKFUNC(sithMulti_SyncScores);
+    J3D_HOOKFUNC(sithMulti_CloseGame);
+    J3D_HOOKFUNC(sithMulti_CheckPlayers);
+    J3D_HOOKFUNC(sithMulti_ProcessPlayerLost);
+    J3D_HOOKFUNC(sithMulti_RemovePlayer);
+    J3D_HOOKFUNC(sithMulti_SendWelcome);
+    J3D_HOOKFUNC(sithMulti_ProcessWelcome);
+    J3D_HOOKFUNC(sithMulti_ProcessPlayerJoin);
+    J3D_HOOKFUNC(sithMulti_SyncPlayers);
+    J3D_HOOKFUNC(sithMulti_ProcessSyncPlayers);
+    J3D_HOOKFUNC(sithMulti_ProcessJoinRequest);
+    J3D_HOOKFUNC(sithMulti_FinishJoining);
+    J3D_HOOKFUNC(sithMulti_ProcessChat);
+    J3D_HOOKFUNC(sithMulti_ProcessPing);
+    J3D_HOOKFUNC(sithMulti_ProcessPong);
+    J3D_HOOKFUNC(sithMulti_QuitPlayer);
+    J3D_HOOKFUNC(sithMulti_ProcessQuit);
+    J3D_HOOKFUNC(sithMulti_Update);
+    J3D_HOOKFUNC(sithMulti_SyncScores);
     J3D_HOOKFUNC(sithMulti_GetPlayerIndexByID);
-    // J3D_HOOKFUNC(sithMulti_ProcessKilledPlayer);
-    // J3D_HOOKFUNC(sithMulti_QuitGame);
-    // J3D_HOOKFUNC(sithMulti_Respawn);
-    // J3D_HOOKFUNC(sithMulti_RemoveStaticThing);
-    // J3D_HOOKFUNC(sithMulti_UpdateSurfaces);
-    // J3D_HOOKFUNC(sithMulti_UpdateSectors);
-    // J3D_HOOKFUNC(sithMulti_UpdateThings);
-    // J3D_HOOKFUNC(sithMulti_UpdateRemovals);
-    // J3D_HOOKFUNC(sithMulti_StartWelcomingPlayer);
-    // J3D_HOOKFUNC(sithMulti_StopWelcomingPlayer);
+    J3D_HOOKFUNC(sithMulti_ProcessKilledPlayer);
+    J3D_HOOKFUNC(sithMulti_QuitGame);
+    J3D_HOOKFUNC(sithMulti_Respawn);
+    J3D_HOOKFUNC(sithMulti_RemoveStaticThing);
+    J3D_HOOKFUNC(sithMulti_UpdateSurfaces);
+    J3D_HOOKFUNC(sithMulti_UpdateSectors);
+    J3D_HOOKFUNC(sithMulti_UpdateThings);
+    J3D_HOOKFUNC(sithMulti_UpdateRemovals);
+    J3D_HOOKFUNC(sithMulti_StartWelcomingPlayer);
+    J3D_HOOKFUNC(sithMulti_StopWelcomingPlayer);
 }
 
 void sithMulti_ResetGlobals(void)
@@ -93,92 +111,214 @@ void sithMulti_ResetGlobals(void)
 
 void sithMulti_CloseGame()
 {
-    J3D_TRAMPOLINE_CALL(sithMulti_CloseGame);
+    INDY_AB_ORIGINAL_VOID(sithMulti_CloseGame);
+
+    if ( stdComm_IsGameHost() && sithMulti_bWelcomingPlayer )
+    {
+        sithMulti_StopWelcomingPlayer(1);
+    }
+
+    sithMessage_g_outputstream &= ~SITHMESSAGE_STREAM_NET;
+    sithMessage_g_inputstream &= ~SITHMESSAGE_STREAM_NET;
+    sithEvent_RegisterTask(SITHMULTI_CHECKPLAYER_TASKID, NULL, 0, SITHEVENT_TASKDISABLED);
+
+    sithMessage_CloseGame();
+    sithMulti_g_serverId    = 0;
+    sithMulti_dword_17F10EC = 0;
 }
 
 int J3DAPI sithMulti_CheckPlayers(int msecTime, SithEventParams* pParam)
 {
-    return J3D_TRAMPOLINE_CALL(sithMulti_CheckPlayers, msecTime, pParam);
+    // INDY: multiplayer stub (single-player never gets here)
+    (void)msecTime;
+    (void)pParam;
+    return 1;
 }
 
 void J3DAPI sithMulti_ProcessPlayerLost(DPID idPlayer)
 {
-    J3D_TRAMPOLINE_CALL(sithMulti_ProcessPlayerLost, idPlayer);
+    // INDY: multiplayer stub (single-player never gets here)
+    (void)idPlayer;
 }
 
 void J3DAPI sithMulti_RemovePlayer(unsigned int playerNum)
 {
-    J3D_TRAMPOLINE_CALL(sithMulti_RemovePlayer, playerNum);
+    // INDY: multiplayer stub (single-player never gets here)
+    (void)playerNum;
 }
 
 signed int J3DAPI sithMulti_SendWelcome(DPID idPlayer, int playerNum, DPID idTo)
 {
-    return J3D_TRAMPOLINE_CALL(sithMulti_SendWelcome, idPlayer, playerNum, idTo);
+    // INDY: multiplayer stub (single-player never gets here)
+    (void)idPlayer;
+    (void)playerNum;
+    (void)idTo;
+    return 0;
 }
 
 int J3DAPI sithMulti_ProcessWelcome(const SithMessage* pMsg)
 {
-    return J3D_TRAMPOLINE_CALL(sithMulti_ProcessWelcome, pMsg);
+    // INDY: multiplayer stub (single-player never gets here)
+    (void)pMsg;
+    return 1;
 }
 
 int J3DAPI sithMulti_ProcessPlayerJoin(int playerNum)
 {
-    return J3D_TRAMPOLINE_CALL(sithMulti_ProcessPlayerJoin, playerNum);
+    // INDY: multiplayer stub (single-player never gets here)
+    (void)playerNum;
+    return 0;
 }
 
 void J3DAPI sithMulti_SyncPlayers(DPID idTo, uint32_t dpFlags)
 {
-    J3D_TRAMPOLINE_CALL(sithMulti_SyncPlayers, idTo, dpFlags);
+    // INDY: multiplayer stub (single-player never gets here)
+    (void)idTo;
+    (void)dpFlags;
 }
 
 signed int J3DAPI sithMulti_ProcessSyncPlayers(const SithMessage* pMsg)
 {
-    return J3D_TRAMPOLINE_CALL(sithMulti_ProcessSyncPlayers, pMsg);
+    // INDY: multiplayer stub (single-player never gets here)
+    (void)pMsg;
+    return 1;
 }
 
 int J3DAPI sithMulti_ProcessJoinRequest(const SithMessage* pMsg)
 {
-    return J3D_TRAMPOLINE_CALL(sithMulti_ProcessJoinRequest, pMsg);
+    // INDY: multiplayer stub (single-player never gets here)
+    (void)pMsg;
+    return 1;
 }
 
 signed int J3DAPI sithMulti_FinishJoining(SithMultiJoinStatus code, float arg4, int playerId)
 {
-    return J3D_TRAMPOLINE_CALL(sithMulti_FinishJoining, code, arg4, playerId);
+    // INDY: multiplayer stub (single-player never gets here)
+    (void)code;
+    (void)arg4;
+    (void)playerId;
+    return 0;
 }
 
 int J3DAPI sithMulti_ProcessChat(const SithMessage* pMsg)
 {
-    return J3D_TRAMPOLINE_CALL(sithMulti_ProcessChat, pMsg);
+    // INDY: multiplayer stub (single-player never gets here)
+    (void)pMsg;
+    return 1;
 }
 
 int J3DAPI sithMulti_ProcessPing(const SithMessage* pMsg)
 {
-    return J3D_TRAMPOLINE_CALL(sithMulti_ProcessPing, pMsg);
+    // INDY: multiplayer stub (single-player never gets here)
+    (void)pMsg;
+    return 1;
 }
 
 int J3DAPI sithMulti_ProcessPong(const SithMessage* pMsg)
 {
-    return J3D_TRAMPOLINE_CALL(sithMulti_ProcessPong, pMsg);
+    // INDY: multiplayer stub (single-player never gets here)
+    (void)pMsg;
+    return 1;
 }
 
 int J3DAPI sithMulti_QuitPlayer(DPID id)
 {
-    return J3D_TRAMPOLINE_CALL(sithMulti_QuitPlayer, id);
+    // INDY: multiplayer stub (single-player never gets here)
+    (void)id;
+    return 0;
 }
 
 int J3DAPI sithMulti_ProcessQuit(const SithMessage* pMsg)
 {
-    return J3D_TRAMPOLINE_CALL(sithMulti_ProcessQuit, pMsg);
+    // INDY: multiplayer stub (single-player never gets here)
+    (void)pMsg;
+    return 1;
 }
 
 void J3DAPI sithMulti_Update(int msecDeltaTime)
 {
-    J3D_TRAMPOLINE_CALL(sithMulti_Update, msecDeltaTime);
+    INDY_AB_ORIGINAL_VOID(sithMulti_Update, msecDeltaTime);
+
+    if ( !stdComm_IsGameActive() )
+    {
+        return;
+    }
+
+    sithThing_SyncThings();
+    sithSurface_SyncSurfaces();
+    sithSector_SyncSectors();
+
+    if ( sithMulti_quitGameState && sithTime_g_msecGameTime > sithMulti_msecQuitGameTime )
+    {
+        // Note: Both quit states only reset the state when the quit time is reached; nothing else is done here
+        if ( sithMulti_quitGameState == SITHMULTI_QUIT_STATE1 || sithMulti_quitGameState == SITHMULTI_QUIT_EJECTED )
+        {
+            sithMulti_quitGameState = 0;
+        }
+
+        return;
+    }
+
+    if ( !stdComm_IsGameHost() )
+    {
+        return;
+    }
+
+    if ( sithMulti_bSyncScores )
+    {
+        sithMulti_bSyncScores = 0;
+        sithMulti_SyncPlayers(SITHMESSAGE_SENDTOJOINEDPLAYERS, 0);
+    }
+
+    if ( !sithMulti_bWelcomingPlayer )
+    {
+        return;
+    }
+
+    if ( sithMulti_quitGameState )
+    {
+        sithMulti_StopWelcomingPlayer(1);
+        return;
+    }
+
+    // The new player is synced one update step per SITHMULTI_WELCOMESTEP_MSEC of game time
+    unsigned int msecElapsed = (unsigned int)msecDeltaTime + sithMulti_msecWelcomeUpdateInterval;
+    unsigned int numSteps    = msecElapsed / SITHMULTI_WELCOMESTEP_MSEC;
+    sithMulti_msecWelcomeUpdateInterval = msecElapsed % SITHMULTI_WELCOMESTEP_MSEC;
+
+    for ( unsigned int i = 0; i < numSteps; ++i )
+    {
+        switch ( sithMulti_playerWelcomeState )
+        {
+            case SITHMULTI_WELCOME_SECTORS:
+                sithMulti_UpdateSectors();
+                ++sithMulti_numUpdatedSectors;
+                break;
+
+            case SITHMULTI_WELCOME_SURFACES:
+                sithMulti_UpdateSurfaces();
+                ++sithMulti_numUpdatedSurfaces;
+                break;
+
+            case SITHMULTI_WELCOME_THINGS:
+                sithMulti_UpdateThings();
+                ++sithMulti_numUpdatedThings;
+                break;
+
+            case SITHMULTI_WELCOME_REMOVALS:
+                sithMulti_UpdateRemovals();
+                break;
+
+            default:
+                return;
+        }
+    }
 }
 
 void J3DAPI sithMulti_SyncScores()
 {
-    J3D_TRAMPOLINE_CALL(sithMulti_SyncScores);
+    INDY_AB_ORIGINAL_VOID(sithMulti_SyncScores);
+    sithMulti_bSyncScores = 1;
 }
 
 //int J3DAPI sithMulti_GetPlayerIndexByID(DPID idPlayer)
@@ -188,52 +328,63 @@ void J3DAPI sithMulti_SyncScores()
 
 void J3DAPI sithMulti_ProcessKilledPlayer(const SithPlayer* pPlayer, const SithThing* pPlayerThing, const SithThing* pKiller)
 {
-    J3D_TRAMPOLINE_CALL(sithMulti_ProcessKilledPlayer, pPlayer, pPlayerThing, pKiller);
+    // INDY: multiplayer stub (single-player never gets here)
+    (void)pPlayer;
+    (void)pPlayerThing;
+    (void)pKiller;
 }
 
 int J3DAPI sithMulti_QuitGame(unsigned int msecTime, int state)
 {
-    return J3D_TRAMPOLINE_CALL(sithMulti_QuitGame, msecTime, state);
+    // INDY: multiplayer stub (single-player never gets here)
+    (void)msecTime;
+    (void)state;
+    return 0;
 }
 
 size_t J3DAPI sithMulti_Respawn(SithThing* pPlayer)
 {
-    return J3D_TRAMPOLINE_CALL(sithMulti_Respawn, pPlayer);
+    // INDY: multiplayer stub (single-player never gets here)
+    (void)pPlayer;
+    return 0;
 }
 
 void J3DAPI sithMulti_RemoveStaticThing(int guid)
 {
-    J3D_TRAMPOLINE_CALL(sithMulti_RemoveStaticThing, guid);
+    // INDY: multiplayer stub (single-player never gets here)
+    (void)guid;
 }
 
 void J3DAPI sithMulti_UpdateSurfaces()
 {
-    J3D_TRAMPOLINE_CALL(sithMulti_UpdateSurfaces);
+    // INDY: multiplayer stub (single-player never gets here)
 }
 
 void J3DAPI sithMulti_UpdateSectors()
 {
-    J3D_TRAMPOLINE_CALL(sithMulti_UpdateSectors);
+    // INDY: multiplayer stub (single-player never gets here)
 }
 
 void J3DAPI sithMulti_UpdateThings()
 {
-    J3D_TRAMPOLINE_CALL(sithMulti_UpdateThings);
+    // INDY: multiplayer stub (single-player never gets here)
 }
 
 void J3DAPI sithMulti_UpdateRemovals()
 {
-    J3D_TRAMPOLINE_CALL(sithMulti_UpdateRemovals);
+    // INDY: multiplayer stub (single-player never gets here)
 }
 
 void J3DAPI sithMulti_StartWelcomingPlayer(DPID playerId)
 {
-    J3D_TRAMPOLINE_CALL(sithMulti_StartWelcomingPlayer, playerId);
+    // INDY: multiplayer stub (single-player never gets here)
+    (void)playerId;
 }
 
 void J3DAPI sithMulti_StopWelcomingPlayer(int bError)
 {
-    J3D_TRAMPOLINE_CALL(sithMulti_StopWelcomingPlayer, bError);
+    // INDY: multiplayer stub (single-player never gets here)
+    (void)bError;
 }
 
 void sithMulti_OpenGame(void)
