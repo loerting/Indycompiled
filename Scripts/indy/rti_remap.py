@@ -488,6 +488,24 @@ def main():
                 stale += 1
         print(f"review file: {applied} entries applied, {stale} stale (map changed since review)")
 
+        # reviewed fixes may land on an address the mapper gave to another function: the reviewed one wins
+        reviewed_fixed = {syms[r["name"]][0] for r in csv.DictReader(reviewed_path.open())
+                          if r["verdict"] == "fixed" and r["name"] in syms and syms[r["name"]][1] == "func"}
+        owners = collections.defaultdict(list)
+        for a, b in fmap.items():
+            if b:
+                owners[b].append(a)
+        demoted = []
+        for b, claim in owners.items():
+            if len(claim) > 1 and any(a in reviewed_fixed for a in claim):
+                for a in claim:
+                    if a not in reviewed_fixed:
+                        del fmap[a]
+                        fver[a], method[a] = "unmapped", "displaced by a reviewed fix"
+                        demoted.append(fname[a])
+        if demoted:
+            print(f"displaced by reviewed fixes (now unmapped, hooks disabled): {', '.join(demoted)}")
+
     with out_csv.open("w", newline="") as f:
         w = csv.writer(f, lineterminator="\n")
         w.writerow(["name", "kind", "module", "v10", "v12", "method", "confidence", "size_delta", "usage"])

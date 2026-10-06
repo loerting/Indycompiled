@@ -11,7 +11,10 @@ AudioLib_bDeltaTableInitialized,0x014e7668,confirmed,auto,exact refs from own mo
 AudioLib_word_14E4928,0x014e4a68,confirmed,auto,exact refs from own module (AudioLib_UncompressBlock)
 Indy3D_WinMain,0x0041c9e0,confirmed,semantic,unique string shared with upstream: 'INDY3D'
 JonesConsole_Open,0x0040f110,confirmed,semantic,unique string shared with upstream: 'version'
-JonesConsole_PrintPolys,0x0040f9b0,confirmed,semantic,unique string shared with upstream: 'Arch polys: %d'
+JonesConsole_PrintFramerate,0x0040f990,fixed,semantic,v1.2 registers it as console command 'framerate'
+JonesConsole_PrintPolys,0x0040f9b0,fixed,semantic,v1.2 registers it as console command 'polys'
+JonesConsole_PrintVersion,0x0040f970,fixed,semantic,v1.2 registers it as console command 'version'
+JonesConsole_ShowEndCredits,0x0040fa50,fixed,semantic,v1.2 registers it as console command 'endcredit'
 JonesConsole_pFuncHashtbl,0x005531a8,confirmed,auto,"exact refs from own module (JonesConsole_Close, JonesConsole_ExeCommand)"
 JonesDialog_AllocOffScreenDIBSection,0x00411d50,confirmed,semantic,unique string shared with upstream: 'JonesDialog_AllocOffScreenDIBSection: Bi'
 JonesDialog_AllocOffScreenGDISection,0x00411b60,confirmed,semantic,unique string shared with upstream: 'JonesDialog_AllocOffScreenGDISection: Cr'
@@ -87,6 +90,7 @@ JonesMain_ProcessGame,0x0041dca0,confirmed,semantic,unique string shared with up
 JonesMain_ProcessGamesaveState,0x0041e500,confirmed,semantic,unique string shared with upstream: 'JONES_STR_SAVEERROR'
 JonesMain_ProcessStartGame,0x0041e790,confirmed,semantic,unique string shared with upstream: 'JONES_STR_CLOSEERROR'
 JonesMain_Restore,0x0041e390,confirmed,semantic,unique string shared with upstream: 'mat\\cyb_amap'
+JonesMain_RestoreHUD,0x0041f970,fixed,semantic,v1.2 registers it as message id 47
 JonesMain_Startup,0x0041ca40,confirmed,semantic,unique string shared with upstream: 'Software\\LucasArts Entertainment Company'
 JonesMain_bDisplayError,0x00555680,confirmed,auto,exact refs from own module (JonesMain_ProcessMenu)
 JonesMain_bEndCredits,0x00555670,confirmed,auto,field used by JonesMain_ProcessCredits
@@ -122,16 +126,16 @@ Sound_StopThing,0x004dc460,confirmed,semantic,"unique string shared with upstrea
 Sound_Uninitialize,0x004da150,confirmed,auto,called by sithSound_Uninitialize
 Sound_Update,0x004dcb80,confirmed,semantic,unique string shared with upstream: 'Sound_Update: Error restarting distant s'
 Sound_nextHandle,0x014e1ce0,confirmed,auto,"exact refs from own module (Sound_ExportBank, Sound_GenerateChannelHandle)"
-jonesCog_EnableInterfaceFunc,0x00401480,confirmed,semantic,"v1.2 registers it as COG verb ""enableinterface"""
-jonesCog_EndCutscene,0x004013c0,confirmed,semantic,"v1.2 registers it as COG verb ""endcutscene"""
-jonesCog_EndLevelFunc,0x004011b0,confirmed,semantic,"v1.2 registers it as COG verb ""jonesendlevel"""
-jonesCog_ExitToShell,0x00401250,confirmed,semantic,"v1.2 registers it as COG verb ""exittoshell"""
-jonesCog_HideHealthDisplay,0x00401150,confirmed,semantic,"v1.2 registers it as COG verb ""healthdisplayoff"""
-jonesCog_InventoryItemChanged,0x00401190,confirmed,semantic,"v1.2 registers it as COG verb ""jonesinvitemchanged"""
+jonesCog_EnableInterfaceFunc,0x00401480,fixed,semantic,v1.2 registers it as COG verb 'enableinterface'
+jonesCog_EndCutscene,0x004013c0,fixed,semantic,v1.2 registers it as COG verb 'endcutscene'
+jonesCog_EndLevelFunc,0x004011b0,fixed,semantic,v1.2 registers it as COG verb 'jonesendlevel'
+jonesCog_ExitToShell,0x00401250,fixed,semantic,v1.2 registers it as COG verb 'exittoshell'
+jonesCog_HideHealthDisplay,0x00401150,fixed,semantic,v1.2 registers it as COG verb 'healthdisplayoff'
+jonesCog_InventoryItemChanged,0x00401190,fixed,semantic,v1.2 registers it as COG verb 'jonesinvitemchanged'
 jonesCog_RegisterFunctions,0x00401060,confirmed,semantic,unique string shared with upstream: 'healthdisplayoff'
-jonesCog_ShowHealthDisplay,0x00401170,confirmed,semantic,"v1.2 registers it as COG verb ""healthdisplayon"""
-jonesCog_StartCutsceneFunc,0x00401260,confirmed,semantic,"v1.2 registers it as COG verb ""startcutscene"""
-jonesCog_UpdateDifficulty,0x00401450,confirmed,semantic,"v1.2 registers it as COG verb ""updatedifficulty"""
+jonesCog_ShowHealthDisplay,0x00401170,fixed,semantic,v1.2 registers it as COG verb 'healthdisplayon'
+jonesCog_StartCutsceneFunc,0x00401260,fixed,semantic,v1.2 registers it as COG verb 'startcutscene'
+jonesCog_UpdateDifficulty,0x00401450,fixed,semantic,v1.2 registers it as COG verb 'updatedifficulty'
 jonesConfig_AddStoreCartItem,0x0040e5e0,confirmed,semantic,unique string shared with upstream: 'JONES_STR_PERU'
 jonesConfig_AdvanceDisplaySettings_HandleWM_COMMAND,0x0040be50,confirmed,semantic,unique string shared with upstream: 'JONES_STR_PERFORMANCE'
 jonesConfig_AssignControlKey_ReadKey,0x00409ff0,confirmed,semantic,unique string shared with upstream: 'JONES_STR_KEYONLY'
@@ -221,32 +225,32 @@ sithAIClass_Load,0x00456ad0,confirmed,semantic,unique string shared with upstrea
 sithAIClass_LoadEntry,0x00456cd0,confirmed,semantic,unique string shared with upstream: 'Syntax error reading AI info.  File %s l'
 sithAIClass_ReadStaticAIClassesListText,0x00456620,confirmed,semantic,unique string shared with upstream: 'aiclasses'
 sithAIClass_WriteStaticAIClassesListBinary,0x00456870,confirmed,auto,signature matches (2 params)
-sithAIInstinct_AlternateFire,0x00490f40,confirmed,auto,"same-module refs (sithAIInstinct_InitInstincts), 3/5 params used"
+sithAIInstinct_AlternateFire,0x00490f40,fixed,semantic,"v1.2 registers it as AI instinct ""alternatefire"""
 sithAIInstinct_BasicFallow,0x004934f0,confirmed,auto,signature matches (5 params)
-sithAIInstinct_CircleStrafe,0x004911f0,confirmed,auto,signature matches (5 params)
+sithAIInstinct_CircleStrafe,0x004911f0,fixed,semantic,"v1.2 registers it as AI instinct ""circlestrafe"""
 sithAIInstinct_Dodge,0x00491720,confirmed,auto,signature matches (5 params)
-sithAIInstinct_FearGunshot,0x0048fd80,confirmed,auto,"same-module refs (sithAIInstinct_InitInstincts), 4/5 params used"
+sithAIInstinct_FearGunshot,0x0048fd80,fixed,semantic,"v1.2 registers it as AI instinct ""feargunshot"""
 sithAIInstinct_Flee,0x00493160,confirmed,auto,signature matches (5 params)
-sithAIInstinct_HitAndRun,0x00491da0,confirmed,auto,"same-module refs (sithAIInstinct_InitInstincts), 4/5 params used"
+sithAIInstinct_HitAndRun,0x00491da0,fixed,semantic,"v1.2 registers it as AI instinct ""hitandrun"""
 sithAIInstinct_Hop,0x0048fef0,confirmed,auto,"same-module refs (sithAIInstinct_InitInstincts), 3/5 params used"
-sithAIInstinct_HoverDrift,0x0048ffa0,confirmed,auto,"same-module refs (sithAIInstinct_InitInstincts), 3/5 params used"
-sithAIInstinct_HumanCombatMove,0x004923f0,confirmed,auto,signature matches (5 params)
+sithAIInstinct_HoverDrift,0x0048ffa0,fixed,semantic,"v1.2 registers it as AI instinct ""hoverdrift"""
+sithAIInstinct_HumanCombatMove,0x004923f0,fixed,semantic,"v1.2 registers it as AI instinct ""humancombatmove"""
 sithAIInstinct_Jump,0x00490590,confirmed,auto,"same-module refs (sithAIInstinct_InitInstincts), 4/5 params used"
-sithAIInstinct_Listen,0x0048f140,confirmed,auto,signature matches (5 params)
-sithAIInstinct_LobFire,0x00490870,confirmed,auto,"same-module refs (sithAIInstinct_InitInstincts), 3/5 params used"
-sithAIInstinct_LookForTarget,0x0048f7d0,confirmed,auto,signature matches (5 params)
-sithAIInstinct_OpenDoors,0x00490560,confirmed,auto,"same-module refs (sithAIInstinct_InitInstincts), 3/5 params used"
-sithAIInstinct_PrimaryFire,0x00490a20,confirmed,auto,"same-module refs (sithAIInstinct_InitInstincts), 3/5 params used"
-sithAIInstinct_RandomMove,0x004920d0,confirmed,auto,"same-module refs (sithAIInstinct_InitInstincts), 4/5 params used"
-sithAIInstinct_RandomTurn,0x00490430,confirmed,auto,"same-module refs (sithAIInstinct_InitInstincts), 3/5 params used"
-sithAIInstinct_Retreat,0x00491f70,confirmed,auto,"same-module refs (sithAIInstinct_InitInstincts), 4/5 params used"
-sithAIInstinct_ReturnHome,0x004930b0,confirmed,auto,signature matches (5 params)
+sithAIInstinct_Listen,0x0048f140,fixed,semantic,"v1.2 registers it as AI instinct ""listen"""
+sithAIInstinct_LobFire,0x00490870,fixed,semantic,"v1.2 registers it as AI instinct ""lobfire"""
+sithAIInstinct_LookForTarget,0x0048f7d0,fixed,semantic,"v1.2 registers it as AI instinct ""lookfortarget"""
+sithAIInstinct_OpenDoors,0x00490560,fixed,semantic,"v1.2 registers it as AI instinct ""opendoors"""
+sithAIInstinct_PrimaryFire,0x00490a20,fixed,semantic,"v1.2 registers it as AI instinct ""primaryfire"""
+sithAIInstinct_RandomMove,0x004920d0,fixed,semantic,"v1.2 registers it as AI instinct ""randommove"""
+sithAIInstinct_RandomTurn,0x00490430,fixed,semantic,"v1.2 registers it as AI instinct ""randomturn"""
+sithAIInstinct_Retreat,0x00491f70,fixed,semantic,"v1.2 registers it as AI instinct ""retreat"""
+sithAIInstinct_ReturnHome,0x004930b0,fixed,semantic,"v1.2 registers it as AI instinct ""returnhome"""
 sithAIInstinct_Roam,0x00492d70,confirmed,auto,signature matches (5 params)
-sithAIInstinct_SenseDanger,0x0048fb60,confirmed,auto,signature matches (5 params)
-sithAIInstinct_SnakeFollow,0x004947f0,confirmed,auto,signature matches (5 params)
+sithAIInstinct_SenseDanger,0x0048fb60,fixed,semantic,"v1.2 registers it as AI instinct ""sensedanger"""
+sithAIInstinct_SnakeFollow,0x004947f0,fixed,semantic,"v1.2 registers it as AI instinct ""snakefollow"""
 sithAIInstinct_SnakeMungeTestCheck,0x00494520,confirmed,auto,signature matches (4 params)
 sithAIInstinct_Talk,0x00490110,confirmed,auto,signature matches (5 params)
-sithAIInstinct_WallCrawl,0x00493fa0,confirmed,auto,signature matches (5 params)
+sithAIInstinct_WallCrawl,0x00493fa0,fixed,semantic,"v1.2 registers it as AI instinct ""wallcrawl"""
 sithAIInstinct_flt_539AB8,0x00539bd8,confirmed,auto,exact refs from own module (sithAIInstinct_SnakeFollow)
 sithAIInstinct_sub_494360,0x00494280,confirmed,auto,signature matches (3 params)
 sithAIInstinct_sub_494FF0,0x00494f10,confirmed,auto,signature matches (2 params)
@@ -292,6 +296,7 @@ sithAIUtil_GetNextThingsInView,0x0049fba0,confirmed,auto,signature matches (3 pa
 sithAIUtil_GetXYZHeadingVector,0x0049f750,confirmed,auto,signature matches (2 params)
 sithAIUtil_IsThingMoving,0x0049f8e0,confirmed,auto,signature matches (1 params)
 sithAIUtil_MakeRandPoint,0x0049df60,confirmed,auto,signature matches (7 params)
+sithAIUtil_ProcessSyncWpnts,0x0049c290,fixed,semantic,v1.2 registers it as message id 48
 sithAIUtil_RandomRotate,0x0049fa20,confirmed,auto,signature matches (2 params)
 sithAIUtil_RetryMakeRandPoint,0x0049e510,confirmed,auto,signature matches (5 params)
 sithAIUtil_SetWeaponFireFlags,0x0049f490,confirmed,auto,signature matches (2 params)
@@ -389,517 +394,517 @@ sithCogExec_PopVector,0x00425aa0,confirmed,semantic,"unique string shared with u
 sithCogExec_PushCallstack,0x004265f0,confirmed,semantic,unique string shared with upstream: 'Cog %s: tried to exceed max execution de'
 sithCogExec_PushStack,0x00426370,confirmed,semantic,unique string shared with upstream: 'Stack overflow in script %s.  Bottom ele'
 sithCogExec_RetOp,0x00426890,confirmed,semantic,unique string shared with upstream: 'Cog %s: Returned from depth %d.\n'
-sithCogFunctionAI_AIClearAllowedSurfaceType,0x0046add0,confirmed,semantic,"v1.2 registers it as COG verb ""aiclearallowedsurfacetype"""
-sithCogFunctionAI_AIClearCutsceneMode,0x0046a2e0,confirmed,semantic,"v1.2 registers it as COG verb ""aiclearcutscenemode"""
-sithCogFunctionAI_AIClearInstinctWpntMode,0x0046b320,confirmed,semantic,"v1.2 registers it as COG verb ""aiclearinstinctwpntmode"""
-sithCogFunctionAI_AIClearMode,0x00469b50,confirmed,semantic,"v1.2 registers it as COG verb ""aiclearmode"""
-sithCogFunctionAI_AIClearSubMode,0x00469d20,confirmed,semantic,"v1.2 registers it as COG verb ""aiclearsubmode"""
-sithCogFunctionAI_AIClearTraverseWpnts,0x0046b080,confirmed,semantic,"v1.2 registers it as COG verb ""aicleartraversewpnts"""
-sithCogFunctionAI_AIClearWpntFlags,0x0046af10,confirmed,semantic,"v1.2 registers it as COG verb ""aiclearwpntflags"""
-sithCogFunctionAI_AIConnectWpnts,0x0046af60,confirmed,semantic,"v1.2 registers it as COG verb ""aiconnectwpnts"""
-sithCogFunctionAI_AIConnectWpntsOneWay,0x0046af90,confirmed,semantic,"v1.2 registers it as COG verb ""aiconnectwpntsoneway"""
-sithCogFunctionAI_AIDisableBodyTracking,0x00469720,confirmed,semantic,"v1.2 registers it as COG verb ""aidisablebodytracking"""
-sithCogFunctionAI_AIDisableHeadTracking,0x00469600,confirmed,semantic,"v1.2 registers it as COG verb ""aidisableheadtracking"""
-sithCogFunctionAI_AIEnableBodyTracking,0x00469680,confirmed,semantic,"v1.2 registers it as COG verb ""aienablebodytracking"""
-sithCogFunctionAI_AIEnableHeadTracking,0x00469560,confirmed,semantic,"v1.2 registers it as COG verb ""aienableheadtracking"""
-sithCogFunctionAI_AIEnableInstinct,0x0046a1b0,confirmed,semantic,"v1.2 registers it as COG verb ""aienableinstinct"""
-sithCogFunctionAI_AIFindNearestWpnt,0x0046b0e0,confirmed,semantic,"v1.2 registers it as COG verb ""aifindnearestwpnt"""
-sithCogFunctionAI_AIFlee,0x0046a400,confirmed,semantic,"v1.2 registers it as COG verb ""aiflee"""
-sithCogFunctionAI_AIFleeToWpnt,0x0046b380,confirmed,semantic,"v1.2 registers it as COG verb ""aifleetowpnt"""
-sithCogFunctionAI_AIGetArmedMode,0x0046a960,confirmed,semantic,"v1.2 registers it as COG verb ""aigetarmedmode"""
-sithCogFunctionAI_AIGetGoalLVec,0x004691b0,confirmed,semantic,"v1.2 registers it as COG verb ""aigetgoallvec"""
-sithCogFunctionAI_AIGetGoalThing,0x004690c0,confirmed,semantic,"v1.2 registers it as COG verb ""aigetgoalthing"""
-sithCogFunctionAI_AIGetHomePos,0x00468f20,confirmed,semantic,"v1.2 registers it as COG verb ""aigethomepos"""
-sithCogFunctionAI_AIGetMode,0x00469ac0,confirmed,semantic,"v1.2 registers it as COG verb ""aigetmode"""
-sithCogFunctionAI_AIGetMovePos,0x004698f0,confirmed,semantic,"v1.2 registers it as COG verb ""aigetmovepos"""
-sithCogFunctionAI_AIGetSubMode,0x00469c00,confirmed,semantic,"v1.2 registers it as COG verb ""aigetsubmode"""
-sithCogFunctionAI_AIJump,0x00469260,confirmed,semantic,"v1.2 registers it as COG verb ""aijump"""
-sithCogFunctionAI_AIKnockout,0x0046aa00,confirmed,semantic,"v1.2 registers it as COG verb ""aiknockout"""
-sithCogFunctionAI_AIPauseMove,0x00469980,confirmed,semantic,"v1.2 registers it as COG verb ""aipausemove"""
-sithCogFunctionAI_AIRunOver,0x0046aba0,confirmed,semantic,"v1.2 registers it as COG verb ""airunover"""
-sithCogFunctionAI_AISetActiveWpntLayer,0x0046af40,confirmed,semantic,"v1.2 registers it as COG verb ""aisetactivewpntlayer"""
-sithCogFunctionAI_AISetAllowedSurfaceType,0x0046ad60,confirmed,semantic,"v1.2 registers it as COG verb ""aisetallowedsurfacetype"""
-sithCogFunctionAI_AISetClass,0x0046a590,confirmed,semantic,"v1.2 registers it as COG verb ""aisetclass"""
-sithCogFunctionAI_AISetCutsceneMode,0x0046a240,confirmed,semantic,"v1.2 registers it as COG verb ""aisetcutscenemode"""
-sithCogFunctionAI_AISetFireTarget,0x0046a0b0,confirmed,semantic,"v1.2 registers it as COG verb ""aisetfiretarget"""
-sithCogFunctionAI_AISetGoalThing,0x004694d0,confirmed,semantic,"v1.2 registers it as COG verb ""aisetgoalthing"""
-sithCogFunctionAI_AISetInstinctWpntMode,0x0046b2c0,confirmed,semantic,"v1.2 registers it as COG verb ""aisetinstinctwpntmode"""
-sithCogFunctionAI_AISetLookFrame,0x00469840,confirmed,semantic,"v1.2 registers it as COG verb ""aisetlookframe"""
-sithCogFunctionAI_AISetLookPos,0x004697a0,confirmed,semantic,"v1.2 registers it as COG verb ""aisetlookpos"""
+sithCogFunctionAI_AIClearAllowedSurfaceType,0x0046add0,fixed,semantic,v1.2 registers it as COG verb 'aiclearallowedsurfacetype'
+sithCogFunctionAI_AIClearCutsceneMode,0x0046a2e0,fixed,semantic,v1.2 registers it as COG verb 'aiclearcutscenemode'
+sithCogFunctionAI_AIClearInstinctWpntMode,0x0046b320,fixed,semantic,v1.2 registers it as COG verb 'aiclearinstinctwpntmode'
+sithCogFunctionAI_AIClearMode,0x00469b50,fixed,semantic,v1.2 registers it as COG verb 'aiclearmode'
+sithCogFunctionAI_AIClearSubMode,0x00469d20,fixed,semantic,v1.2 registers it as COG verb 'aiclearsubmode'
+sithCogFunctionAI_AIClearTraverseWpnts,0x0046b080,fixed,semantic,v1.2 registers it as COG verb 'aicleartraversewpnts'
+sithCogFunctionAI_AIClearWpntFlags,0x0046af10,fixed,semantic,v1.2 registers it as COG verb 'aiclearwpntflags'
+sithCogFunctionAI_AIConnectWpnts,0x0046af60,fixed,semantic,v1.2 registers it as COG verb 'aiconnectwpnts'
+sithCogFunctionAI_AIConnectWpntsOneWay,0x0046af90,fixed,semantic,v1.2 registers it as COG verb 'aiconnectwpntsoneway'
+sithCogFunctionAI_AIDisableBodyTracking,0x00469720,fixed,semantic,v1.2 registers it as COG verb 'aidisablebodytracking'
+sithCogFunctionAI_AIDisableHeadTracking,0x00469600,fixed,semantic,v1.2 registers it as COG verb 'aidisableheadtracking'
+sithCogFunctionAI_AIEnableBodyTracking,0x00469680,fixed,semantic,v1.2 registers it as COG verb 'aienablebodytracking'
+sithCogFunctionAI_AIEnableHeadTracking,0x00469560,fixed,semantic,v1.2 registers it as COG verb 'aienableheadtracking'
+sithCogFunctionAI_AIEnableInstinct,0x0046a1b0,fixed,semantic,v1.2 registers it as COG verb 'aienableinstinct'
+sithCogFunctionAI_AIFindNearestWpnt,0x0046b0e0,fixed,semantic,v1.2 registers it as COG verb 'aifindnearestwpnt'
+sithCogFunctionAI_AIFlee,0x0046a400,fixed,semantic,v1.2 registers it as COG verb 'aiflee'
+sithCogFunctionAI_AIFleeToWpnt,0x0046b380,fixed,semantic,v1.2 registers it as COG verb 'aifleetowpnt'
+sithCogFunctionAI_AIGetArmedMode,0x0046a960,fixed,semantic,v1.2 registers it as COG verb 'aigetarmedmode'
+sithCogFunctionAI_AIGetGoalLVec,0x004691b0,fixed,semantic,v1.2 registers it as COG verb 'aigetgoallvec'
+sithCogFunctionAI_AIGetGoalThing,0x004690c0,fixed,semantic,v1.2 registers it as COG verb 'aigetgoalthing'
+sithCogFunctionAI_AIGetHomePos,0x00468f20,fixed,semantic,v1.2 registers it as COG verb 'aigethomepos'
+sithCogFunctionAI_AIGetMode,0x00469ac0,fixed,semantic,v1.2 registers it as COG verb 'aigetmode'
+sithCogFunctionAI_AIGetMovePos,0x004698f0,fixed,semantic,v1.2 registers it as COG verb 'aigetmovepos'
+sithCogFunctionAI_AIGetSubMode,0x00469c00,fixed,semantic,v1.2 registers it as COG verb 'aigetsubmode'
+sithCogFunctionAI_AIJump,0x00469260,fixed,semantic,v1.2 registers it as COG verb 'aijump'
+sithCogFunctionAI_AIKnockout,0x0046aa00,fixed,semantic,v1.2 registers it as COG verb 'aiknockout'
+sithCogFunctionAI_AIPauseMove,0x00469980,fixed,semantic,v1.2 registers it as COG verb 'aipausemove'
+sithCogFunctionAI_AIRunOver,0x0046aba0,fixed,semantic,v1.2 registers it as COG verb 'airunover'
+sithCogFunctionAI_AISetActiveWpntLayer,0x0046af40,fixed,semantic,v1.2 registers it as COG verb 'aisetactivewpntlayer'
+sithCogFunctionAI_AISetAllowedSurfaceType,0x0046ad60,fixed,semantic,v1.2 registers it as COG verb 'aisetallowedsurfacetype'
+sithCogFunctionAI_AISetClass,0x0046a590,fixed,semantic,v1.2 registers it as COG verb 'aisetclass'
+sithCogFunctionAI_AISetCutsceneMode,0x0046a240,fixed,semantic,v1.2 registers it as COG verb 'aisetcutscenemode'
+sithCogFunctionAI_AISetFireTarget,0x0046a0b0,fixed,semantic,v1.2 registers it as COG verb 'aisetfiretarget'
+sithCogFunctionAI_AISetGoalThing,0x004694d0,fixed,semantic,v1.2 registers it as COG verb 'aisetgoalthing'
+sithCogFunctionAI_AISetInstinctWpntMode,0x0046b2c0,fixed,semantic,v1.2 registers it as COG verb 'aisetinstinctwpntmode'
+sithCogFunctionAI_AISetLookFrame,0x00469840,fixed,semantic,v1.2 registers it as COG verb 'aisetlookframe'
+sithCogFunctionAI_AISetLookPos,0x004697a0,fixed,semantic,v1.2 registers it as COG verb 'aisetlookpos'
 sithCogFunctionAI_AISetLookThing,0x0046a610,confirmed,semantic,unique string shared with upstream: 'Cog %s: Bad thing in AISetLookThing()\n'
-sithCogFunctionAI_AISetLookThingEyeLevel,0x0046a700,confirmed,semantic,"v1.2 registers it as COG verb ""aisetlookthingeyelevel"""
-sithCogFunctionAI_AISetMaxHomeDist,0x00469030,confirmed,semantic,"v1.2 registers it as COG verb ""aisetmaxhomedist"""
-sithCogFunctionAI_AISetMode,0x00469a10,confirmed,semantic,"v1.2 registers it as COG verb ""aisetmode"""
-sithCogFunctionAI_AISetMoveFrame,0x00469320,confirmed,semantic,"v1.2 registers it as COG verb ""aisetmoveframe"""
-sithCogFunctionAI_AISetMovePos,0x00468e20,confirmed,semantic,"v1.2 registers it as COG verb ""aisetmovepos"""
-sithCogFunctionAI_AISetMoveSpeed,0x00468cf0,confirmed,semantic,"v1.2 registers it as COG verb ""aisetmovespeed"""
-sithCogFunctionAI_AISetMoveThing,0x00469400,confirmed,semantic,"v1.2 registers it as COG verb ""aisetmovething"""
-sithCogFunctionAI_AISetSubMode,0x00469c90,confirmed,semantic,"v1.2 registers it as COG verb ""aisetsubmode"""
-sithCogFunctionAI_AISetWpnt,0x0046ae50,confirmed,semantic,"v1.2 registers it as COG verb ""aisetwpnt"""
-sithCogFunctionAI_AISetWpntFlags,0x0046aee0,confirmed,semantic,"v1.2 registers it as COG verb ""aisetwpntflags"""
-sithCogFunctionAI_AISetWpntRank,0x0046aeb0,confirmed,semantic,"v1.2 registers it as COG verb ""aisetwpntrank"""
-sithCogFunctionAI_AISpat,0x0046b430,confirmed,semantic,"v1.2 registers it as COG verb ""aispat"""
-sithCogFunctionAI_AIStopFlee,0x0046a4b0,confirmed,semantic,"v1.2 registers it as COG verb ""aistopflee"""
-sithCogFunctionAI_AITraverseWpnts,0x0046afc0,confirmed,semantic,"v1.2 registers it as COG verb ""aitraversewpnts"""
-sithCogFunctionAI_AIWaitForHeadTracking,0x0046a8b0,confirmed,semantic,"v1.2 registers it as COG verb ""aiwaitforheadtracking"""
-sithCogFunctionAI_AIWaitForStop,0x0046a800,confirmed,semantic,"v1.2 registers it as COG verb ""aiwaitforstop"""
-sithCogFunctionAI_AIWpntHuntTarget,0x0046b160,confirmed,semantic,"v1.2 registers it as COG verb ""aiwpnthunttarget"""
-sithCogFunctionAI_FirstThingInView,0x00469db0,confirmed,semantic,"v1.2 registers it as COG verb ""firstthinginview"""
-sithCogFunctionAI_IsAITargetInSight,0x0046a370,confirmed,semantic,"v1.2 registers it as COG verb ""isaitargetinsight"""
-sithCogFunctionAI_NextThingInView,0x00469f10,confirmed,semantic,"v1.2 registers it as COG verb ""nextthinginview"""
-sithCogFunctionAI_ThingViewDot,0x00469f60,confirmed,semantic,"v1.2 registers it as COG verb ""thingviewdot"""
-sithCogFunctionPlayer_ClearGoalFlags,0x00464d20,confirmed,semantic,"v1.2 registers it as COG verb ""cleargoalflags"""
-sithCogFunctionPlayer_CreateBackpack,0x004651c0,confirmed,semantic,"v1.2 registers it as COG verb ""createbackpack"""
-sithCogFunctionPlayer_GetAbsoluteMaxPlayers,0x00464e50,confirmed,semantic,"v1.2 registers it as COG verb ""getabsolutemaxplayers"""
-sithCogFunctionPlayer_GetCurItem,0x00465360,confirmed,semantic,"v1.2 registers it as COG verb ""getcuritem"""
-sithCogFunctionPlayer_GetCutsceneMode,0x00465640,confirmed,semantic,"v1.2 registers it as COG verb ""getcutscenemode"""
-sithCogFunctionPlayer_GetLastWeapon,0x00465670,confirmed,semantic,"v1.2 registers it as COG verb ""getlastweapon"""
-sithCogFunctionPlayer_GetLocalPlayerThing,0x00464e60,confirmed,semantic,"v1.2 registers it as COG verb ""getlocalplayerthing"""
-sithCogFunctionPlayer_GetMaxPlayers,0x00464e30,confirmed,semantic,"v1.2 registers it as COG verb ""getmaxplayers"""
-sithCogFunctionPlayer_GetNumBackbackItems,0x00465150,confirmed,semantic,"v1.2 registers it as COG verb ""numbackpackitems"""
-sithCogFunctionPlayer_GetNumPlayers,0x00464e00,confirmed,semantic,"v1.2 registers it as COG verb ""getnumplayers"""
-sithCogFunctionPlayer_GetPlayerNum,0x00464f10,confirmed,semantic,"v1.2 registers it as COG verb ""getplayernum"""
-sithCogFunctionPlayer_GetPlayerThing,0x00464e90,confirmed,semantic,"v1.2 registers it as COG verb ""getplayerthing"""
-sithCogFunctionPlayer_GetRespawnMask,0x00465270,confirmed,semantic,"v1.2 registers it as COG verb ""getrespawnmask"""
-sithCogFunctionPlayer_IMPEndFiring,0x004646a0,confirmed,semantic,"v1.2 registers it as COG verb ""impendfiring"""
-sithCogFunctionPlayer_IMPStartFiring,0x00464680,confirmed,semantic,"v1.2 registers it as COG verb ""impstartfiring"""
-sithCogFunctionPlayer_IsAming,0x004653e0,confirmed,semantic,"v1.2 registers it as COG verb ""isaiming"""
-sithCogFunctionPlayer_IsInvActivated,0x00464aa0,confirmed,semantic,"v1.2 registers it as COG verb ""isinvactivated"""
-sithCogFunctionPlayer_IsInvAvailable,0x00464b70,confirmed,semantic,"v1.2 registers it as COG verb ""isinvavailable"""
-sithCogFunctionPlayer_IsInvisible,0x004654e0,confirmed,semantic,"v1.2 registers it as COG verb ""isinvisible"""
-sithCogFunctionPlayer_IsItemFound,0x004655a0,confirmed,semantic,"v1.2 registers it as COG verb ""isitemfound"""
-sithCogFunctionPlayer_JewelFlyingStatus,0x00464700,confirmed,semantic,"v1.2 registers it as COG verb ""jewelflyingstatus"""
-sithCogFunctionPlayer_MakeMeStop,0x00464770,confirmed,semantic,"v1.2 registers it as COG verb ""makemestop"""
-sithCogFunctionPlayer_NthBackpackBin,0x00465050,confirmed,semantic,"v1.2 registers it as COG verb ""nthbackpackbin"""
-sithCogFunctionPlayer_NthBackpackValue,0x004650d0,confirmed,semantic,"v1.2 registers it as COG verb ""nthbackpackvalue"""
-sithCogFunctionPlayer_PickupBackpack,0x00464fa0,confirmed,semantic,"v1.2 registers it as COG verb ""pickupbackpack"""
-sithCogFunctionPlayer_ResetInventory,0x00465510,confirmed,semantic,"v1.2 registers it as COG verb ""resetinventory"""
-sithCogFunctionPlayer_SetElectricWhip,0x004655f0,confirmed,semantic,"v1.2 registers it as COG verb ""setwhipelectric"""
-sithCogFunctionPlayer_SetGoalFlags,0x00464c40,confirmed,semantic,"v1.2 registers it as COG verb ""setgoalflags"""
-sithCogFunctionPlayer_SetInvActivated,0x00464850,confirmed,semantic,"v1.2 registers it as COG verb ""setinvactivated"""
-sithCogFunctionPlayer_SetInvAvailable,0x00464920,confirmed,semantic,"v1.2 registers it as COG verb ""setinvavailable"""
-sithCogFunctionPlayer_SetInvDisabled,0x004649f0,confirmed,semantic,"v1.2 registers it as COG verb ""setinvdisabled"""
-sithCogFunctionPlayer_SetPlayerInPor,0x004646c0,confirmed,semantic,"v1.2 registers it as COG verb ""playerinpor"""
-sithCogFunctionPlayer_SetRespawnMask,0x004652e0,confirmed,semantic,"v1.2 registers it as COG verb ""setrespawnmask"""
-sithCogFunctionPlayer_SetSwimmingInventory,0x00465460,confirmed,semantic,"v1.2 registers it as COG verb ""setswimminginventory"""
-sithCogFunctionPlayer_StartJewelFlying,0x00464750,confirmed,semantic,"v1.2 registers it as COG verb ""startjewelflying"""
-sithCogFunctionPlayer_SyncScores,0x00465350,confirmed,semantic,"v1.2 registers it as COG verb ""syncscores"""
-sithCogFunctionSector_ClearSectorFlags,0x004660b0,confirmed,semantic,"v1.2 registers it as COG verb ""clearsectorflags"""
-sithCogFunctionSector_ClearSectorSurfflags,0x00465de0,confirmed,semantic,"v1.2 registers it as COG verb ""clearsectorsurfflags"""
-sithCogFunctionSector_FindSectorAtPos,0x004664d0,confirmed,semantic,"v1.2 registers it as COG verb ""findsectoratpos"""
-sithCogFunctionSector_GetNumSectorSurfaces,0x004662b0,confirmed,semantic,"v1.2 registers it as COG verb ""getnumsectorsurfaces"""
-sithCogFunctionSector_GetNumSectorVertices,0x00466250,confirmed,semantic,"v1.2 registers it as COG verb ""getnumsectorvertices"""
-sithCogFunctionSector_GetSectorCenter,0x004661f0,confirmed,semantic,"v1.2 registers it as COG verb ""getsectorcenter"""
-sithCogFunctionSector_GetSectorColormap,0x00465e70,confirmed,semantic,"v1.2 registers it as COG verb ""getsectorcolormap"""
-sithCogFunctionSector_GetSectorCount,0x004661d0,confirmed,semantic,"v1.2 registers it as COG verb ""getsectorcount"""
-sithCogFunctionSector_GetSectorFlags,0x00466120,confirmed,semantic,"v1.2 registers it as COG verb ""getsectorflags"""
-sithCogFunctionSector_GetSectorLight,0x00465b70,confirmed,semantic,"v1.2 registers it as COG verb ""getsectorlight"""
-sithCogFunctionSector_GetSectorPlayerCount,0x00466190,confirmed,semantic,"v1.2 registers it as COG verb ""sectorplayercount"""
-sithCogFunctionSector_GetSectorSurfaceRef,0x004663d0,confirmed,semantic,"v1.2 registers it as COG verb ""getsectorsurfaceref"""
-sithCogFunctionSector_GetSectorThingCount,0x00466150,confirmed,semantic,"v1.2 registers it as COG verb ""sectorthingcount"""
-sithCogFunctionSector_GetSectorThrust,0x00465f00,confirmed,semantic,"v1.2 registers it as COG verb ""getsectorthrust"""
-sithCogFunctionSector_GetSectorTint,0x004659e0,confirmed,semantic,"v1.2 registers it as COG verb ""getsectortint"""
-sithCogFunctionSector_GetSectorVertexPos,0x00466310,confirmed,semantic,"v1.2 registers it as COG verb ""getsectorvertexpos"""
+sithCogFunctionAI_AISetLookThingEyeLevel,0x0046a700,fixed,semantic,v1.2 registers it as COG verb 'aisetlookthingeyelevel'
+sithCogFunctionAI_AISetMaxHomeDist,0x00469030,fixed,semantic,v1.2 registers it as COG verb 'aisetmaxhomedist'
+sithCogFunctionAI_AISetMode,0x00469a10,fixed,semantic,v1.2 registers it as COG verb 'aisetmode'
+sithCogFunctionAI_AISetMoveFrame,0x00469320,fixed,semantic,v1.2 registers it as COG verb 'aisetmoveframe'
+sithCogFunctionAI_AISetMovePos,0x00468e20,fixed,semantic,v1.2 registers it as COG verb 'aisetmovepos'
+sithCogFunctionAI_AISetMoveSpeed,0x00468cf0,fixed,semantic,v1.2 registers it as COG verb 'aisetmovespeed'
+sithCogFunctionAI_AISetMoveThing,0x00469400,fixed,semantic,v1.2 registers it as COG verb 'aisetmovething'
+sithCogFunctionAI_AISetSubMode,0x00469c90,fixed,semantic,v1.2 registers it as COG verb 'aisetsubmode'
+sithCogFunctionAI_AISetWpnt,0x0046ae50,fixed,semantic,v1.2 registers it as COG verb 'aisetwpnt'
+sithCogFunctionAI_AISetWpntFlags,0x0046aee0,fixed,semantic,v1.2 registers it as COG verb 'aisetwpntflags'
+sithCogFunctionAI_AISetWpntRank,0x0046aeb0,fixed,semantic,v1.2 registers it as COG verb 'aisetwpntrank'
+sithCogFunctionAI_AISpat,0x0046b430,fixed,semantic,v1.2 registers it as COG verb 'aispat'
+sithCogFunctionAI_AIStopFlee,0x0046a4b0,fixed,semantic,v1.2 registers it as COG verb 'aistopflee'
+sithCogFunctionAI_AITraverseWpnts,0x0046afc0,fixed,semantic,v1.2 registers it as COG verb 'aitraversewpnts'
+sithCogFunctionAI_AIWaitForHeadTracking,0x0046a8b0,fixed,semantic,v1.2 registers it as COG verb 'aiwaitforheadtracking'
+sithCogFunctionAI_AIWaitForStop,0x0046a800,fixed,semantic,v1.2 registers it as COG verb 'aiwaitforstop'
+sithCogFunctionAI_AIWpntHuntTarget,0x0046b160,fixed,semantic,v1.2 registers it as COG verb 'aiwpnthunttarget'
+sithCogFunctionAI_FirstThingInView,0x00469db0,fixed,semantic,v1.2 registers it as COG verb 'firstthinginview'
+sithCogFunctionAI_IsAITargetInSight,0x0046a370,fixed,semantic,v1.2 registers it as COG verb 'isaitargetinsight'
+sithCogFunctionAI_NextThingInView,0x00469f10,fixed,semantic,v1.2 registers it as COG verb 'nextthinginview'
+sithCogFunctionAI_ThingViewDot,0x00469f60,fixed,semantic,v1.2 registers it as COG verb 'thingviewdot'
+sithCogFunctionPlayer_ClearGoalFlags,0x00464d20,fixed,semantic,v1.2 registers it as COG verb 'cleargoalflags'
+sithCogFunctionPlayer_CreateBackpack,0x004651c0,fixed,semantic,v1.2 registers it as COG verb 'createbackpack'
+sithCogFunctionPlayer_GetAbsoluteMaxPlayers,0x00464e50,fixed,semantic,v1.2 registers it as COG verb 'getabsolutemaxplayers'
+sithCogFunctionPlayer_GetCurItem,0x00465360,fixed,semantic,v1.2 registers it as COG verb 'getcuritem'
+sithCogFunctionPlayer_GetCutsceneMode,0x00465640,fixed,semantic,v1.2 registers it as COG verb 'getcutscenemode'
+sithCogFunctionPlayer_GetLastWeapon,0x00465670,fixed,semantic,v1.2 registers it as COG verb 'getlastweapon'
+sithCogFunctionPlayer_GetLocalPlayerThing,0x00464e60,fixed,semantic,v1.2 registers it as COG verb 'getlocalplayerthing'
+sithCogFunctionPlayer_GetMaxPlayers,0x00464e30,fixed,semantic,v1.2 registers it as COG verb 'getmaxplayers'
+sithCogFunctionPlayer_GetNumBackbackItems,0x00465150,fixed,semantic,v1.2 registers it as COG verb 'numbackpackitems'
+sithCogFunctionPlayer_GetNumPlayers,0x00464e00,fixed,semantic,v1.2 registers it as COG verb 'getnumplayers'
+sithCogFunctionPlayer_GetPlayerNum,0x00464f10,fixed,semantic,v1.2 registers it as COG verb 'getplayernum'
+sithCogFunctionPlayer_GetPlayerThing,0x00464e90,fixed,semantic,v1.2 registers it as COG verb 'getplayerthing'
+sithCogFunctionPlayer_GetRespawnMask,0x00465270,fixed,semantic,v1.2 registers it as COG verb 'getrespawnmask'
+sithCogFunctionPlayer_IMPEndFiring,0x004646a0,fixed,semantic,v1.2 registers it as COG verb 'impendfiring'
+sithCogFunctionPlayer_IMPStartFiring,0x00464680,fixed,semantic,v1.2 registers it as COG verb 'impstartfiring'
+sithCogFunctionPlayer_IsAming,0x004653e0,fixed,semantic,v1.2 registers it as COG verb 'isaiming'
+sithCogFunctionPlayer_IsInvActivated,0x00464aa0,fixed,semantic,v1.2 registers it as COG verb 'isinvactivated'
+sithCogFunctionPlayer_IsInvAvailable,0x00464b70,fixed,semantic,v1.2 registers it as COG verb 'isinvavailable'
+sithCogFunctionPlayer_IsInvisible,0x004654e0,fixed,semantic,v1.2 registers it as COG verb 'isinvisible'
+sithCogFunctionPlayer_IsItemFound,0x004655a0,fixed,semantic,v1.2 registers it as COG verb 'isitemfound'
+sithCogFunctionPlayer_JewelFlyingStatus,0x00464700,fixed,semantic,v1.2 registers it as COG verb 'jewelflyingstatus'
+sithCogFunctionPlayer_MakeMeStop,0x00464770,fixed,semantic,v1.2 registers it as COG verb 'makemestop'
+sithCogFunctionPlayer_NthBackpackBin,0x00465050,fixed,semantic,v1.2 registers it as COG verb 'nthbackpackbin'
+sithCogFunctionPlayer_NthBackpackValue,0x004650d0,fixed,semantic,v1.2 registers it as COG verb 'nthbackpackvalue'
+sithCogFunctionPlayer_PickupBackpack,0x00464fa0,fixed,semantic,v1.2 registers it as COG verb 'pickupbackpack'
+sithCogFunctionPlayer_ResetInventory,0x00465510,fixed,semantic,v1.2 registers it as COG verb 'resetinventory'
+sithCogFunctionPlayer_SetElectricWhip,0x004655f0,fixed,semantic,v1.2 registers it as COG verb 'setwhipelectric'
+sithCogFunctionPlayer_SetGoalFlags,0x00464c40,fixed,semantic,v1.2 registers it as COG verb 'setgoalflags'
+sithCogFunctionPlayer_SetInvActivated,0x00464850,fixed,semantic,v1.2 registers it as COG verb 'setinvactivated'
+sithCogFunctionPlayer_SetInvAvailable,0x00464920,fixed,semantic,v1.2 registers it as COG verb 'setinvavailable'
+sithCogFunctionPlayer_SetInvDisabled,0x004649f0,fixed,semantic,v1.2 registers it as COG verb 'setinvdisabled'
+sithCogFunctionPlayer_SetPlayerInPor,0x004646c0,fixed,semantic,v1.2 registers it as COG verb 'playerinpor'
+sithCogFunctionPlayer_SetRespawnMask,0x004652e0,fixed,semantic,v1.2 registers it as COG verb 'setrespawnmask'
+sithCogFunctionPlayer_SetSwimmingInventory,0x00465460,fixed,semantic,v1.2 registers it as COG verb 'setswimminginventory'
+sithCogFunctionPlayer_StartJewelFlying,0x00464750,fixed,semantic,v1.2 registers it as COG verb 'startjewelflying'
+sithCogFunctionPlayer_SyncScores,0x00465350,fixed,semantic,v1.2 registers it as COG verb 'syncscores'
+sithCogFunctionSector_ClearSectorFlags,0x004660b0,fixed,semantic,v1.2 registers it as COG verb 'clearsectorflags'
+sithCogFunctionSector_ClearSectorSurfflags,0x00465de0,fixed,semantic,v1.2 registers it as COG verb 'clearsectorsurfflags'
+sithCogFunctionSector_FindSectorAtPos,0x004664d0,fixed,semantic,v1.2 registers it as COG verb 'findsectoratpos'
+sithCogFunctionSector_GetNumSectorSurfaces,0x004662b0,fixed,semantic,v1.2 registers it as COG verb 'getnumsectorsurfaces'
+sithCogFunctionSector_GetNumSectorVertices,0x00466250,fixed,semantic,v1.2 registers it as COG verb 'getnumsectorvertices'
+sithCogFunctionSector_GetSectorCenter,0x004661f0,fixed,semantic,v1.2 registers it as COG verb 'getsectorcenter'
+sithCogFunctionSector_GetSectorColormap,0x00465e70,fixed,semantic,v1.2 registers it as COG verb 'getsectorcolormap'
+sithCogFunctionSector_GetSectorCount,0x004661d0,fixed,semantic,v1.2 registers it as COG verb 'getsectorcount'
+sithCogFunctionSector_GetSectorFlags,0x00466120,fixed,semantic,v1.2 registers it as COG verb 'getsectorflags'
+sithCogFunctionSector_GetSectorLight,0x00465b70,fixed,semantic,v1.2 registers it as COG verb 'getsectorlight'
+sithCogFunctionSector_GetSectorPlayerCount,0x00466190,fixed,semantic,v1.2 registers it as COG verb 'sectorplayercount'
+sithCogFunctionSector_GetSectorSurfaceRef,0x004663d0,fixed,semantic,v1.2 registers it as COG verb 'getsectorsurfaceref'
+sithCogFunctionSector_GetSectorThingCount,0x00466150,fixed,semantic,v1.2 registers it as COG verb 'sectorthingcount'
+sithCogFunctionSector_GetSectorThrust,0x00465f00,fixed,semantic,v1.2 registers it as COG verb 'getsectorthrust'
+sithCogFunctionSector_GetSectorTint,0x004659e0,fixed,semantic,v1.2 registers it as COG verb 'getsectortint'
+sithCogFunctionSector_GetSectorVertexPos,0x00466310,fixed,semantic,v1.2 registers it as COG verb 'getsectorvertexpos'
 sithCogFunctionSector_RegisterFunctions,0x004656a0,confirmed,semantic,unique string shared with upstream: 'getsectortint'
-sithCogFunctionSector_SetSectorAdjoins,0x00465cb0,confirmed,semantic,"v1.2 registers it as COG verb ""sectoradjoins"""
-sithCogFunctionSector_SetSectorColormap,0x00465ec0,confirmed,semantic,"v1.2 registers it as COG verb ""setsectorcolormap"""
-sithCogFunctionSector_SetSectorFlags,0x00466040,confirmed,semantic,"v1.2 registers it as COG verb ""setsectorflags"""
-sithCogFunctionSector_SetSectorLight,0x00465bf0,confirmed,semantic,"v1.2 registers it as COG verb ""sectorlight"""
-sithCogFunctionSector_SetSectorSurfflags,0x00465d50,confirmed,semantic,"v1.2 registers it as COG verb ""setsectorsurfflags"""
-sithCogFunctionSector_SetSectorThrust,0x00465f60,confirmed,semantic,"v1.2 registers it as COG verb ""sectorthrust"""
-sithCogFunctionSector_SetSectorTint,0x00465a40,confirmed,semantic,"v1.2 registers it as COG verb ""setsectortint"""
-sithCogFunctionSector_SyncSector,0x00466480,confirmed,semantic,"v1.2 registers it as COG verb ""syncsector"""
-sithCogFunctionSound_ChangePitch,0x00467120,confirmed,semantic,"v1.2 registers it as COG verb ""changesoundpitch"""
-sithCogFunctionSound_ChangeVolume,0x00467050,confirmed,semantic,"v1.2 registers it as COG verb ""changesoundvol"""
-sithCogFunctionSound_GetSoundLen,0x00467260,confirmed,semantic,"v1.2 registers it as COG verb ""getsoundlen"""
-sithCogFunctionSound_LoadSound,0x00466ee0,confirmed,semantic,"v1.2 registers it as COG verb ""loadsound"""
-sithCogFunctionSound_PlaySoundClass,0x00466f30,confirmed,semantic,"v1.2 registers it as COG verb ""playsoundclass"""
-sithCogFunctionSound_PlaySoundGlobal,0x00466c90,confirmed,semantic,"v1.2 registers it as COG verb ""playsoundglobal"""
-sithCogFunctionSound_PlaySoundLocal,0x00466b70,confirmed,semantic,"v1.2 registers it as COG verb ""playsoundlocal"""
-sithCogFunctionSound_PlaySoundPos,0x004669a0,confirmed,semantic,"v1.2 registers it as COG verb ""playsoundpos"""
-sithCogFunctionSound_PlaySoundThing,0x004666e0,confirmed,semantic,"v1.2 registers it as COG verb ""playsoundthing"""
-sithCogFunctionSound_PlayVoiceMode,0x00467020,confirmed,semantic,"v1.2 registers it as COG verb ""playvoicemode"""
+sithCogFunctionSector_SetSectorAdjoins,0x00465cb0,fixed,semantic,v1.2 registers it as COG verb 'sectoradjoins'
+sithCogFunctionSector_SetSectorColormap,0x00465ec0,fixed,semantic,v1.2 registers it as COG verb 'setsectorcolormap'
+sithCogFunctionSector_SetSectorFlags,0x00466040,fixed,semantic,v1.2 registers it as COG verb 'setsectorflags'
+sithCogFunctionSector_SetSectorLight,0x00465bf0,fixed,semantic,v1.2 registers it as COG verb 'sectorlight'
+sithCogFunctionSector_SetSectorSurfflags,0x00465d50,fixed,semantic,v1.2 registers it as COG verb 'setsectorsurfflags'
+sithCogFunctionSector_SetSectorThrust,0x00465f60,fixed,semantic,v1.2 registers it as COG verb 'sectorthrust'
+sithCogFunctionSector_SetSectorTint,0x00465a40,fixed,semantic,v1.2 registers it as COG verb 'setsectortint'
+sithCogFunctionSector_SyncSector,0x00466480,fixed,semantic,v1.2 registers it as COG verb 'syncsector'
+sithCogFunctionSound_ChangePitch,0x00467120,fixed,semantic,v1.2 registers it as COG verb 'changesoundpitch'
+sithCogFunctionSound_ChangeVolume,0x00467050,fixed,semantic,v1.2 registers it as COG verb 'changesoundvol'
+sithCogFunctionSound_GetSoundLen,0x00467260,fixed,semantic,v1.2 registers it as COG verb 'getsoundlen'
+sithCogFunctionSound_LoadSound,0x00466ee0,fixed,semantic,v1.2 registers it as COG verb 'loadsound'
+sithCogFunctionSound_PlaySoundClass,0x00466f30,fixed,semantic,v1.2 registers it as COG verb 'playsoundclass'
+sithCogFunctionSound_PlaySoundGlobal,0x00466c90,fixed,semantic,v1.2 registers it as COG verb 'playsoundglobal'
+sithCogFunctionSound_PlaySoundLocal,0x00466b70,fixed,semantic,v1.2 registers it as COG verb 'playsoundlocal'
+sithCogFunctionSound_PlaySoundPos,0x004669a0,fixed,semantic,v1.2 registers it as COG verb 'playsoundpos'
+sithCogFunctionSound_PlaySoundThing,0x004666e0,fixed,semantic,v1.2 registers it as COG verb 'playsoundthing'
+sithCogFunctionSound_PlayVoiceMode,0x00467020,fixed,semantic,v1.2 registers it as COG verb 'playvoicemode'
 sithCogFunctionSound_RegisterFunctions,0x00466530,confirmed,semantic,unique string shared with upstream: 'playsoundthing'
-sithCogFunctionSound_SectorSound,0x004671f0,confirmed,semantic,"v1.2 registers it as COG verb ""sectorsound"""
-sithCogFunctionSound_StopAllSoundsThing,0x00466950,confirmed,semantic,"v1.2 registers it as COG verb ""stopallsoundsthing"""
-sithCogFunctionSound_StopSound,0x00466e20,confirmed,semantic,"v1.2 registers it as COG verb ""stopsound"""
-sithCogFunctionSound_StopSoundClass,0x00466fc0,confirmed,semantic,"v1.2 registers it as COG verb ""stopsoundclass"""
-sithCogFunctionSound_StopSoundThing,0x004668f0,confirmed,semantic,"v1.2 registers it as COG verb ""stopsoundthing"""
-sithCogFunctionSound_WaitForSound,0x004672b0,confirmed,semantic,"v1.2 registers it as COG verb ""waitforsound"""
-sithCogFunctionSurface_ClearAdjoinFlags,0x00468130,confirmed,semantic,"v1.2 registers it as COG verb ""clearadjoinflags"""
-sithCogFunctionSurface_ClearFaceType,0x00468250,confirmed,semantic,"v1.2 registers it as COG verb ""clearfacetype"""
-sithCogFunctionSurface_ClearSurfaceFlags,0x00468020,confirmed,semantic,"v1.2 registers it as COG verb ""clearsurfaceflags"""
-sithCogFunctionSurface_GetAdjoinAlpha,0x00467610,confirmed,semantic,"v1.2 registers it as COG verb ""getadjoinalpha"""
-sithCogFunctionSurface_GetAdjoinFlags,0x004681a0,confirmed,semantic,"v1.2 registers it as COG verb ""getadjoinflags"""
-sithCogFunctionSurface_GetCeilingSkyOffset,0x00467a40,confirmed,semantic,"v1.2 registers it as COG verb ""getceilingskyoffset"""
-sithCogFunctionSurface_GetFaceGeoMode,0x00468380,confirmed,semantic,"v1.2 registers it as COG verb ""getfacegeomode"""
-sithCogFunctionSurface_GetFaceLightMode,0x00468410,confirmed,semantic,"v1.2 registers it as COG verb ""getfacelightmode"""
-sithCogFunctionSurface_GetHorizonSkyOffset,0x004679c0,confirmed,semantic,"v1.2 registers it as COG verb ""gethorizonskyoffset"""
-sithCogFunctionSurface_GetNumSurfaceVertices,0x00467860,confirmed,semantic,"v1.2 registers it as COG verb ""getnumsurfacevertices"""
-sithCogFunctionSurface_GetSurfaceAdjoin,0x00467750,confirmed,semantic,"v1.2 registers it as COG verb ""getsurfaceadjoin"""
-sithCogFunctionSurface_GetSurfaceCenter,0x00468580,confirmed,semantic,"v1.2 registers it as COG verb ""getsurfacecenter"""
-sithCogFunctionSurface_GetSurfaceCount,0x004685d0,confirmed,semantic,"v1.2 registers it as COG verb ""getsurfacecount"""
-sithCogFunctionSurface_GetSurfaceFlags,0x00468090,confirmed,semantic,"v1.2 registers it as COG verb ""getsurfaceflags"""
-sithCogFunctionSurface_GetSurfaceLight,0x00468520,confirmed,semantic,"v1.2 registers it as COG verb ""getsurfacelight"""
-sithCogFunctionSurface_GetSurfaceMaterial,0x00467ed0,confirmed,semantic,"v1.2 registers it as COG verb ""getsurfacemat"""
-sithCogFunctionSurface_GetSurfaceNormal,0x00468600,confirmed,semantic,"v1.2 registers it as COG verb ""getsurfacenormal"""
-sithCogFunctionSurface_GetSurfaceSector,0x004677e0,confirmed,semantic,"v1.2 registers it as COG verb ""getsurfacesector"""
-sithCogFunctionSurface_GetSurfaceVertexPos,0x004678c0,confirmed,semantic,"v1.2 registers it as COG verb ""getsurfacevertexpos"""
-sithCogFunctionSurface_GetWallCel,0x00467d90,confirmed,semantic,"v1.2 registers it as COG verb ""getsurfacecel"""
+sithCogFunctionSound_SectorSound,0x004671f0,fixed,semantic,v1.2 registers it as COG verb 'sectorsound'
+sithCogFunctionSound_StopAllSoundsThing,0x00466950,fixed,semantic,v1.2 registers it as COG verb 'stopallsoundsthing'
+sithCogFunctionSound_StopSound,0x00466e20,fixed,semantic,v1.2 registers it as COG verb 'stopsound'
+sithCogFunctionSound_StopSoundClass,0x00466fc0,fixed,semantic,v1.2 registers it as COG verb 'stopsoundclass'
+sithCogFunctionSound_StopSoundThing,0x004668f0,fixed,semantic,v1.2 registers it as COG verb 'stopsoundthing'
+sithCogFunctionSound_WaitForSound,0x004672b0,fixed,semantic,v1.2 registers it as COG verb 'waitforsound'
+sithCogFunctionSurface_ClearAdjoinFlags,0x00468130,fixed,semantic,v1.2 registers it as COG verb 'clearadjoinflags'
+sithCogFunctionSurface_ClearFaceType,0x00468250,fixed,semantic,v1.2 registers it as COG verb 'clearfacetype'
+sithCogFunctionSurface_ClearSurfaceFlags,0x00468020,fixed,semantic,v1.2 registers it as COG verb 'clearsurfaceflags'
+sithCogFunctionSurface_GetAdjoinAlpha,0x00467610,fixed,semantic,v1.2 registers it as COG verb 'getadjoinalpha'
+sithCogFunctionSurface_GetAdjoinFlags,0x004681a0,fixed,semantic,v1.2 registers it as COG verb 'getadjoinflags'
+sithCogFunctionSurface_GetCeilingSkyOffset,0x00467a40,fixed,semantic,v1.2 registers it as COG verb 'getceilingskyoffset'
+sithCogFunctionSurface_GetFaceGeoMode,0x00468380,fixed,semantic,v1.2 registers it as COG verb 'getfacegeomode'
+sithCogFunctionSurface_GetFaceLightMode,0x00468410,fixed,semantic,v1.2 registers it as COG verb 'getfacelightmode'
+sithCogFunctionSurface_GetHorizonSkyOffset,0x004679c0,fixed,semantic,v1.2 registers it as COG verb 'gethorizonskyoffset'
+sithCogFunctionSurface_GetNumSurfaceVertices,0x00467860,fixed,semantic,v1.2 registers it as COG verb 'getnumsurfacevertices'
+sithCogFunctionSurface_GetSurfaceAdjoin,0x00467750,fixed,semantic,v1.2 registers it as COG verb 'getsurfaceadjoin'
+sithCogFunctionSurface_GetSurfaceCenter,0x00468580,fixed,semantic,v1.2 registers it as COG verb 'getsurfacecenter'
+sithCogFunctionSurface_GetSurfaceCount,0x004685d0,fixed,semantic,v1.2 registers it as COG verb 'getsurfacecount'
+sithCogFunctionSurface_GetSurfaceFlags,0x00468090,fixed,semantic,v1.2 registers it as COG verb 'getsurfaceflags'
+sithCogFunctionSurface_GetSurfaceLight,0x00468520,fixed,semantic,v1.2 registers it as COG verb 'getsurfacelight'
+sithCogFunctionSurface_GetSurfaceMaterial,0x00467ed0,fixed,semantic,v1.2 registers it as COG verb 'getsurfacemat'
+sithCogFunctionSurface_GetSurfaceNormal,0x00468600,fixed,semantic,v1.2 registers it as COG verb 'getsurfacenormal'
+sithCogFunctionSurface_GetSurfaceSector,0x004677e0,fixed,semantic,v1.2 registers it as COG verb 'getsurfacesector'
+sithCogFunctionSurface_GetSurfaceVertexPos,0x004678c0,fixed,semantic,v1.2 registers it as COG verb 'getsurfacevertexpos'
+sithCogFunctionSurface_GetWallCel,0x00467d90,fixed,semantic,v1.2 registers it as COG verb 'getsurfacecel'
 sithCogFunctionSurface_RegisterFunctions,0x00467310,confirmed,semantic,unique string shared with upstream: 'getsurfaceadjoin'
-sithCogFunctionSurface_SetAdjoinAlpha,0x00467680,confirmed,semantic,"v1.2 registers it as COG verb ""setadjoinalpha"""
-sithCogFunctionSurface_SetAdjoinFlags,0x004680c0,confirmed,semantic,"v1.2 registers it as COG verb ""setadjoinflags"""
-sithCogFunctionSurface_SetCeilingSkyOffset,0x00467a00,confirmed,semantic,"v1.2 registers it as COG verb ""setceilingskyoffset"""
-sithCogFunctionSurface_SetFaceGeoMode,0x004682f0,confirmed,semantic,"v1.2 registers it as COG verb ""setfacegeomode"""
-sithCogFunctionSurface_SetFaceLightMode,0x004683b0,confirmed,semantic,"v1.2 registers it as COG verb ""setfacelightmode"""
-sithCogFunctionSurface_SetFaceType,0x004681e0,confirmed,semantic,"v1.2 registers it as COG verb ""setfacetype"""
-sithCogFunctionSurface_SetHorizonSkyOffset,0x00467980,confirmed,semantic,"v1.2 registers it as COG verb ""sethorizonskyoffset"""
-sithCogFunctionSurface_SetSurfaceFlags,0x00467fb0,confirmed,semantic,"v1.2 registers it as COG verb ""setsurfaceflags"""
-sithCogFunctionSurface_SetSurfaceLight,0x00468440,confirmed,semantic,"v1.2 registers it as COG verb ""setsurfacelight"""
-sithCogFunctionSurface_SetSurfaceMaterial,0x00467f30,confirmed,semantic,"v1.2 registers it as COG verb ""setsurfacemat"""
-sithCogFunctionSurface_SetWallCel,0x00467e10,confirmed,semantic,"v1.2 registers it as COG verb ""setsurfacecel"""
-sithCogFunctionSurface_SlideCeilingSky,0x00467af0,confirmed,semantic,"v1.2 registers it as COG verb ""slideceilingsky"""
-sithCogFunctionSurface_SlideHorizonSky,0x00467a80,confirmed,semantic,"v1.2 registers it as COG verb ""slidehorizonsky"""
-sithCogFunctionSurface_SlideWall,0x00467c70,confirmed,semantic,"v1.2 registers it as COG verb ""slidesurface"""
-sithCogFunctionSurface_SurfaceLightAnim,0x00467b60,confirmed,semantic,"v1.2 registers it as COG verb ""surfacelightanim"""
-sithCogFunctionSurface_SyncSurface,0x00468660,confirmed,semantic,"v1.2 registers it as COG verb ""syncsurface"""
-sithCogFunctionThing_AddThingVel,0x00470700,confirmed,semantic,"v1.2 registers it as COG verb ""addthingvel"""
-sithCogFunctionThing_AmputateJoint,0x00472a30,confirmed,semantic,"v1.2 registers it as COG verb ""amputatejoint"""
-sithCogFunctionThing_AnimateSpriteSize,0x0046d790,confirmed,semantic,"v1.2 registers it as COG verb ""animatespritesize"""
-sithCogFunctionThing_ApplyForce,0x004706a0,confirmed,semantic,"v1.2 registers it as COG verb ""applyforce"""
-sithCogFunctionThing_AttachThingToSurf,0x00470940,confirmed,semantic,"v1.2 registers it as COG verb ""attachthingtosurf"""
+sithCogFunctionSurface_SetAdjoinAlpha,0x00467680,fixed,semantic,v1.2 registers it as COG verb 'setadjoinalpha'
+sithCogFunctionSurface_SetAdjoinFlags,0x004680c0,fixed,semantic,v1.2 registers it as COG verb 'setadjoinflags'
+sithCogFunctionSurface_SetCeilingSkyOffset,0x00467a00,fixed,semantic,v1.2 registers it as COG verb 'setceilingskyoffset'
+sithCogFunctionSurface_SetFaceGeoMode,0x004682f0,fixed,semantic,v1.2 registers it as COG verb 'setfacegeomode'
+sithCogFunctionSurface_SetFaceLightMode,0x004683b0,fixed,semantic,v1.2 registers it as COG verb 'setfacelightmode'
+sithCogFunctionSurface_SetFaceType,0x004681e0,fixed,semantic,v1.2 registers it as COG verb 'setfacetype'
+sithCogFunctionSurface_SetHorizonSkyOffset,0x00467980,fixed,semantic,v1.2 registers it as COG verb 'sethorizonskyoffset'
+sithCogFunctionSurface_SetSurfaceFlags,0x00467fb0,fixed,semantic,v1.2 registers it as COG verb 'setsurfaceflags'
+sithCogFunctionSurface_SetSurfaceLight,0x00468440,fixed,semantic,v1.2 registers it as COG verb 'setsurfacelight'
+sithCogFunctionSurface_SetSurfaceMaterial,0x00467f30,fixed,semantic,v1.2 registers it as COG verb 'setsurfacemat'
+sithCogFunctionSurface_SetWallCel,0x00467e10,fixed,semantic,v1.2 registers it as COG verb 'setsurfacecel'
+sithCogFunctionSurface_SlideCeilingSky,0x00467af0,fixed,semantic,v1.2 registers it as COG verb 'slideceilingsky'
+sithCogFunctionSurface_SlideHorizonSky,0x00467a80,fixed,semantic,v1.2 registers it as COG verb 'slidehorizonsky'
+sithCogFunctionSurface_SlideWall,0x00467c70,fixed,semantic,v1.2 registers it as COG verb 'slidesurface'
+sithCogFunctionSurface_SurfaceLightAnim,0x00467b60,fixed,semantic,v1.2 registers it as COG verb 'surfacelightanim'
+sithCogFunctionSurface_SyncSurface,0x00468660,fixed,semantic,v1.2 registers it as COG verb 'syncsurface'
+sithCogFunctionThing_AddThingVel,0x00470700,fixed,semantic,v1.2 registers it as COG verb 'addthingvel'
+sithCogFunctionThing_AmputateJoint,0x00472a30,fixed,semantic,v1.2 registers it as COG verb 'amputatejoint'
+sithCogFunctionThing_AnimateSpriteSize,0x0046d790,fixed,semantic,v1.2 registers it as COG verb 'animatespritesize'
+sithCogFunctionThing_ApplyForce,0x004706a0,fixed,semantic,v1.2 registers it as COG verb 'applyforce'
+sithCogFunctionThing_AttachThingToSurf,0x00470940,fixed,semantic,v1.2 registers it as COG verb 'attachthingtosurf'
 sithCogFunctionThing_AttachThingToThing,0x00470a00,confirmed,semantic,unique string shared with upstream: 'Cog %s: Bad thing in AttachThingToThing('
-sithCogFunctionThing_AttachThingToThingEx,0x00470ac0,confirmed,semantic,"v1.2 registers it as COG verb ""attachthingtothingex"""
-sithCogFunctionThing_AttachThingToThingMesh,0x004754d0,confirmed,semantic,"v1.2 registers it as COG verb ""attachthingtothingmesh"""
-sithCogFunctionThing_BoardVehicle,0x004762b0,confirmed,semantic,"v1.2 registers it as COG verb ""boardvehicle"""
-sithCogFunctionThing_CaptureThing,0x004700f0,confirmed,semantic,"v1.2 registers it as COG verb ""capturething"""
-sithCogFunctionThing_ChangeInventory,0x004703c0,confirmed,semantic,"v1.2 registers it as COG verb ""changeinv"""
-sithCogFunctionThing_CheckFloorDistance,0x00475cf0,confirmed,semantic,"v1.2 registers it as COG verb ""checkfloordistance"""
-sithCogFunctionThing_CheckPathToPoint,0x00475d80,confirmed,semantic,"v1.2 registers it as COG verb ""checkpathtopoint"""
-sithCogFunctionThing_ClearPhysicsFlags,0x00472cc0,confirmed,semantic,"v1.2 registers it as COG verb ""clearphysicsflags"""
-sithCogFunctionThing_ClearThingAttachFlags,0x00473860,confirmed,semantic,"v1.2 registers it as COG verb ""clearthingattachflags"""
-sithCogFunctionThing_ClearThingFlags,0x00471ea0,confirmed,semantic,"v1.2 registers it as COG verb ""clearthingflags"""
-sithCogFunctionThing_ClearTypeFlags,0x00473e50,confirmed,semantic,"v1.2 registers it as COG verb ""clearparticleflags"""
-sithCogFunctionThing_CopyOrient,0x0046d2d0,confirmed,semantic,"v1.2 registers it as COG verb ""copyorient"""
-sithCogFunctionThing_CopyOrientAndPos,0x0046d370,confirmed,semantic,"v1.2 registers it as COG verb ""copyorientandpos"""
-sithCogFunctionThing_CreateLaser,0x0046d490,confirmed,semantic,"v1.2 registers it as COG verb ""createlaser"""
-sithCogFunctionThing_CreateLightning,0x0046d610,confirmed,semantic,"v1.2 registers it as COG verb ""createlightning"""
-sithCogFunctionThing_CreatePolylineThing,0x0046d150,confirmed,semantic,"v1.2 registers it as COG verb ""createpolylinething"""
-sithCogFunctionThing_CreateThing,0x0046dc40,confirmed,semantic,"v1.2 registers it as COG verb ""creatething"""
-sithCogFunctionThing_CreateThingAtPos,0x0046ddc0,confirmed,semantic,"v1.2 registers it as COG verb ""createthingatpos"""
-sithCogFunctionThing_DamageThing,0x0046dfc0,confirmed,semantic,"v1.2 registers it as COG verb ""damagething"""
-sithCogFunctionThing_DestroyThing,0x0046e260,confirmed,semantic,"v1.2 registers it as COG verb ""destroything"""
-sithCogFunctionThing_DetachThing,0x004708c0,confirmed,semantic,"v1.2 registers it as COG verb ""detachthing"""
-sithCogFunctionThing_DetachThingMesh,0x00475650,confirmed,semantic,"v1.2 registers it as COG verb ""detachthingmesh"""
-sithCogFunctionThing_FadeInTrack,0x00476350,confirmed,semantic,"v1.2 registers it as COG verb ""fadeintrack"""
-sithCogFunctionThing_FirstThingInSector,0x00472110,confirmed,semantic,"v1.2 registers it as COG verb ""firstthinginsector"""
-sithCogFunctionThing_GetActorHeadPYR,0x00470880,confirmed,semantic,"v1.2 registers it as COG verb ""getactorheadpyr"""
-sithCogFunctionThing_GetActorWeapon,0x00472b70,confirmed,semantic,"v1.2 registers it as COG verb ""getactorweapon"""
-sithCogFunctionThing_GetCameraFOV,0x0046f100,confirmed,semantic,"v1.2 registers it as COG verb ""getcamerafov"""
-sithCogFunctionThing_GetCameraPosition,0x0046f120,confirmed,semantic,"v1.2 registers it as COG verb ""getcameraposition"""
-sithCogFunctionThing_GetCollideType,0x00472060,confirmed,semantic,"v1.2 registers it as COG verb ""getcollidetype"""
-sithCogFunctionThing_GetCurFrame,0x0046fc50,confirmed,semantic,"v1.2 registers it as COG verb ""getcurframe"""
-sithCogFunctionThing_GetFireOffset,0x00474020,confirmed,semantic,"v1.2 registers it as COG verb ""getthingfireoffset"""
-sithCogFunctionThing_GetGoalFrame,0x0046fd00,confirmed,semantic,"v1.2 registers it as COG verb ""getgoalframe"""
-sithCogFunctionThing_GetGuidThing,0x004746f0,confirmed,semantic,"v1.2 registers it as COG verb ""getguidthing"""
-sithCogFunctionThing_GetHealth,0x0046e100,confirmed,semantic,"v1.2 registers it as COG verb ""gethealth"""
-sithCogFunctionThing_GetInventory,0x00470270,confirmed,semantic,"v1.2 registers it as COG verb ""getinv"""
-sithCogFunctionThing_GetInventoryCog,0x00470490,confirmed,semantic,"v1.2 registers it as COG verb ""getinvcog"""
-sithCogFunctionThing_GetInventoryMaximum,0x00472300,confirmed,semantic,"v1.2 registers it as COG verb ""getinvmax"""
-sithCogFunctionThing_GetInventoryMinimum,0x00472270,confirmed,semantic,"v1.2 registers it as COG verb ""getinvmin"""
-sithCogFunctionThing_GetJointAngle,0x004749e0,confirmed,semantic,"v1.2 registers it as COG verb ""getthingjointangle"""
-sithCogFunctionThing_GetLifeleft,0x004728a0,confirmed,semantic,"v1.2 registers it as COG verb ""getlifeleft"""
-sithCogFunctionThing_GetMajorMode,0x00474530,confirmed,semantic,"v1.2 registers it as COG verb ""getmajormode"""
-sithCogFunctionThing_GetMaxHealth,0x0046e190,confirmed,semantic,"v1.2 registers it as COG verb ""getthingmaxhealth"""
-sithCogFunctionThing_GetMeshByName,0x004753f0,confirmed,semantic,"v1.2 registers it as COG verb ""getmeshbyname"""
-sithCogFunctionThing_GetMoveStatus,0x0046d270,confirmed,semantic,"v1.2 registers it as COG verb ""getmovestatus"""
-sithCogFunctionThing_GetNodeByName,0x00475460,confirmed,semantic,"v1.2 registers it as COG verb ""getnodebyname"""
-sithCogFunctionThing_GetParticleGrowthSpeed,0x00473a20,confirmed,semantic,"v1.2 registers it as COG verb ""getparticlegrowthspeed"""
-sithCogFunctionThing_GetParticleSize,0x004738f0,confirmed,semantic,"v1.2 registers it as COG verb ""getparticlesize"""
-sithCogFunctionThing_GetParticleTimeoutRate,0x00473b50,confirmed,semantic,"v1.2 registers it as COG verb ""getparticletimeoutrate"""
-sithCogFunctionThing_GetPhysicsFlags,0x00472bf0,confirmed,semantic,"v1.2 registers it as COG verb ""getphysicsflags"""
-sithCogFunctionThing_GetRotThrust,0x00472fe0,confirmed,semantic,"v1.2 registers it as COG verb ""getthingrotthrust"""
-sithCogFunctionThing_GetThingAlpha,0x0046d0e0,confirmed,semantic,"v1.2 registers it as COG verb ""getthingalpha"""
-sithCogFunctionThing_GetThingAttachFlags,0x00470910,confirmed,semantic,"v1.2 registers it as COG verb ""getthingattachflags"""
-sithCogFunctionThing_GetThingAttachedThing,0x00470b90,confirmed,semantic,"v1.2 registers it as COG verb ""getthingattachedthing"""
-sithCogFunctionThing_GetThingCaptureCog,0x00473660,confirmed,semantic,"v1.2 registers it as COG verb ""getthingcapturecog"""
-sithCogFunctionThing_GetThingClassCog,0x00473590,confirmed,semantic,"v1.2 registers it as COG verb ""getthingclasscog"""
-sithCogFunctionThing_GetThingCollideSize,0x004741c0,confirmed,semantic,"v1.2 registers it as COG verb ""getthingcollidesize"""
-sithCogFunctionThing_GetThingCurLightMode,0x00472690,confirmed,semantic,"v1.2 registers it as COG verb ""getthingcurlightmode"""
-sithCogFunctionThing_GetThingEyeOffset,0x00475c80,confirmed,semantic,"v1.2 registers it as COG verb ""getthingeyeoffset"""
-sithCogFunctionThing_GetThingFlags,0x00471df0,confirmed,semantic,"v1.2 registers it as COG verb ""getthingflags"""
-sithCogFunctionThing_GetThingGuid,0x004746c0,confirmed,semantic,"v1.2 registers it as COG verb ""getthingguid"""
-sithCogFunctionThing_GetThingInsertOffset,0x00475af0,confirmed,semantic,"v1.2 registers it as COG verb ""getthinginsertoffset"""
-sithCogFunctionThing_GetThingJointPos,0x00475280,confirmed,semantic,"v1.2 registers it as COG verb ""getthingjointpos"""
-sithCogFunctionThing_GetThingLVec,0x004707c0,confirmed,semantic,"v1.2 registers it as COG verb ""getthinglvec"""
-sithCogFunctionThing_GetThingLVecPYR,0x00474f70,confirmed,semantic,"v1.2 registers it as COG verb ""getthinglvecpyr"""
-sithCogFunctionThing_GetThingLight,0x0046ead0,confirmed,semantic,"v1.2 registers it as COG verb ""getthinglight"""
-sithCogFunctionThing_GetThingMass,0x00474340,confirmed,semantic,"v1.2 registers it as COG verb ""getthingmass"""
-sithCogFunctionThing_GetThingMaxAngVel,0x00474830,confirmed,semantic,"v1.2 registers it as COG verb ""getthingmaxangvel"""
-sithCogFunctionThing_GetThingMaxHeadPitch,0x00474bb0,confirmed,semantic,"v1.2 registers it as COG verb ""getthingmaxheadpitch"""
-sithCogFunctionThing_GetThingMaxHeadVel,0x004757f0,confirmed,semantic,"v1.2 registers it as COG verb ""getthingmaxheadvel"""
-sithCogFunctionThing_GetThingMaxHeadYaw,0x00474d80,confirmed,semantic,"v1.2 registers it as COG verb ""getthingmaxheadyaw"""
-sithCogFunctionThing_GetThingMaxRotVel,0x004756a0,confirmed,semantic,"v1.2 registers it as COG verb ""getthingmaxrotvel"""
-sithCogFunctionThing_GetThingMaxVel,0x00474760,confirmed,semantic,"v1.2 registers it as COG verb ""getthingmaxvel"""
-sithCogFunctionThing_GetThingMinHeadPitch,0x00474c60,confirmed,semantic,"v1.2 registers it as COG verb ""getthingminheadpitch"""
-sithCogFunctionThing_GetThingMoveSize,0x00474280,confirmed,semantic,"v1.2 registers it as COG verb ""getthingmovesize"""
-sithCogFunctionThing_GetThingParent,0x00470160,confirmed,semantic,"v1.2 registers it as COG verb ""getthingparent"""
-sithCogFunctionThing_GetThingPos,0x004701a0,confirmed,semantic,"v1.2 registers it as COG verb ""getthingpos"""
-sithCogFunctionThing_GetThingRVec,0x00470840,confirmed,semantic,"v1.2 registers it as COG verb ""getthingrvec"""
-sithCogFunctionThing_GetThingRespawn,0x00473730,confirmed,semantic,"v1.2 registers it as COG verb ""getthingrespawn"""
-sithCogFunctionThing_GetThingRotVel,0x00472ed0,confirmed,semantic,"v1.2 registers it as COG verb ""getthingrotvel"""
-sithCogFunctionThing_GetThingSector,0x0046fbc0,confirmed,semantic,"v1.2 registers it as COG verb ""getthingsector"""
-sithCogFunctionThing_GetThingSignature,0x00473790,confirmed,semantic,"v1.2 registers it as COG verb ""getthingsignature"""
-sithCogFunctionThing_GetThingTemplate,0x00472750,confirmed,semantic,"v1.2 registers it as COG verb ""getthingtemplate"""
-sithCogFunctionThing_GetThingThrust,0x004729d0,confirmed,semantic,"v1.2 registers it as COG verb ""getthingthrust"""
-sithCogFunctionThing_GetThingType,0x0046d8b0,confirmed,semantic,"v1.2 registers it as COG verb ""getthingtype"""
-sithCogFunctionThing_GetThingUVec,0x00470800,confirmed,semantic,"v1.2 registers it as COG verb ""getthinguvec"""
-sithCogFunctionThing_GetThingUserData,0x00474100,confirmed,semantic,"v1.2 registers it as COG verb ""getthinguserdata"""
-sithCogFunctionThing_GetThingVelocity,0x00470550,confirmed,semantic,"v1.2 registers it as COG verb ""getthingvel"""
-sithCogFunctionThing_GetTypeFlags,0x00473c80,confirmed,semantic,"v1.2 registers it as COG verb ""getparticleflags"""
-sithCogFunctionThing_HasLOS,0x00473f90,confirmed,semantic,"v1.2 registers it as COG verb ""haslos"""
-sithCogFunctionThing_HealThing,0x0046e090,confirmed,semantic,"v1.2 registers it as COG verb ""healthing"""
-sithCogFunctionThing_InterpolatePYR,0x00474e30,confirmed,semantic,"v1.2 registers it as COG verb ""interpolatepyr"""
-sithCogFunctionThing_IsGhostVisible,0x0046ce70,confirmed,semantic,"v1.2 registers it as COG verb ""isghostvisible"""
-sithCogFunctionThing_IsModePlaying,0x00470f50,confirmed,semantic,"v1.2 registers it as COG verb ""ismodeplaying"""
-sithCogFunctionThing_IsThingCrouching,0x00473540,confirmed,semantic,"v1.2 registers it as COG verb ""iscrouching"""
-sithCogFunctionThing_IsThingModelName,0x00475350,confirmed,semantic,"v1.2 registers it as COG verb ""isthingmodelname"""
-sithCogFunctionThing_IsThingMoving,0x0046fe10,confirmed,semantic,"v1.2 registers it as COG verb ""ismoving"""
-sithCogFunctionThing_IsThingVisible,0x00472540,confirmed,semantic,"v1.2 registers it as COG verb ""isthingvisible"""
-sithCogFunctionThing_JumpToFrame,0x0046e2b0,confirmed,semantic,"v1.2 registers it as COG verb ""jumptoframe"""
-sithCogFunctionThing_MakeCamera2LikeCamera1,0x0046ed70,confirmed,semantic,"v1.2 registers it as COG verb ""makecamera2likecamera1"""
-sithCogFunctionThing_MakeFairyDust,0x004763e0,confirmed,semantic,"v1.2 registers it as COG verb ""makefairydust"""
-sithCogFunctionThing_MakeFairyDustDeluxe,0x00476460,confirmed,semantic,"v1.2 registers it as COG verb ""makefairydustdeluxe"""
-sithCogFunctionThing_MoveThing,0x00475e60,confirmed,semantic,"v1.2 registers it as COG verb ""movething"""
-sithCogFunctionThing_MoveThingToPos,0x00475fd0,confirmed,semantic,"v1.2 registers it as COG verb ""movethingtopos"""
-sithCogFunctionThing_MoveToFrame,0x0046e3b0,confirmed,semantic,"v1.2 registers it as COG verb ""movetoframe"""
-sithCogFunctionThing_NextThingInSector,0x00472190,confirmed,semantic,"v1.2 registers it as COG verb ""nextthinginsector"""
-sithCogFunctionThing_ParseArg,0x00472d30,confirmed,semantic,"v1.2 registers it as COG verb ""parsearg"""
-sithCogFunctionThing_PathMovePause,0x00472390,confirmed,semantic,"v1.2 registers it as COG verb ""pathmovepause"""
-sithCogFunctionThing_PathMoveResume,0x004725b0,confirmed,semantic,"v1.2 registers it as COG verb ""pathmoveresume"""
-sithCogFunctionThing_PauseKey,0x004716a0,confirmed,semantic,"v1.2 registers it as COG verb ""pausekey"""
-sithCogFunctionThing_PauseMode,0x00471040,confirmed,semantic,"v1.2 registers it as COG verb ""pausemode"""
-sithCogFunctionThing_PlayForceMoveMode,0x0046d8e0,fixed,semantic,"v1.2 registers it as COG verb ""playforcemovemode"""
-sithCogFunctionThing_PlayKey,0x004712f0,confirmed,semantic,"v1.2 registers it as COG verb ""playkey"""
-sithCogFunctionThing_PlayKeyEx,0x004714e0,confirmed,semantic,"v1.2 registers it as COG verb ""playkeyex"""
-sithCogFunctionThing_PlayMode,0x00470cf0,confirmed,semantic,"v1.2 registers it as COG verb ""playmode"""
-sithCogFunctionThing_PrevThingInSector,0x00472200,confirmed,semantic,"v1.2 registers it as COG verb ""prevthinginsector"""
-sithCogFunctionThing_ReleaseThing,0x00470120,confirmed,semantic,"v1.2 registers it as COG verb ""releasething"""
-sithCogFunctionThing_ResetCameraFOV,0x0046f2f0,confirmed,semantic,"v1.2 registers it as COG verb ""resetcamerafov"""
-sithCogFunctionThing_ResetThing,0x00475a80,confirmed,semantic,"v1.2 registers it as COG verb ""resetthing"""
-sithCogFunctionThing_RestoreThingMesh,0x00471ae0,confirmed,semantic,"v1.2 registers it as COG verb ""restorethingmesh"""
-sithCogFunctionThing_ResumeKey,0x00471790,confirmed,semantic,"v1.2 registers it as COG verb ""resumekey"""
-sithCogFunctionThing_ResumeMode,0x00471130,confirmed,semantic,"v1.2 registers it as COG verb ""resumemode"""
-sithCogFunctionThing_Rotate,0x0046e730,confirmed,semantic,"v1.2 registers it as COG verb ""rotate"""
-sithCogFunctionThing_RotatePivot,0x0046e630,confirmed,semantic,"v1.2 registers it as COG verb ""rotatepivot"""
-sithCogFunctionThing_RotateToPYR,0x0046e980,confirmed,semantic,"v1.2 registers it as COG verb ""rotatetopyr"""
-sithCogFunctionThing_SetActorExtraSpeed,0x004726f0,confirmed,semantic,"v1.2 registers it as COG verb ""setactorextraspeed"""
-sithCogFunctionThing_SetActorWeapon,0x00472b00,confirmed,semantic,"v1.2 registers it as COG verb ""setactorweapon"""
-sithCogFunctionThing_SetArmedMode,0x00471d20,confirmed,semantic,"v1.2 registers it as COG verb ""setarmedmode"""
-sithCogFunctionThing_SetCameraFOV,0x0046f230,confirmed,semantic,"v1.2 registers it as COG verb ""setcamerafov"""
-sithCogFunctionThing_SetCameraFadeThing,0x0046f3a0,confirmed,semantic,"v1.2 registers it as COG verb ""setcamerafadething"""
-sithCogFunctionThing_SetCameraInterpSpeed,0x0046f1c0,confirmed,semantic,"v1.2 registers it as COG verb ""setcamerainterpspeed"""
+sithCogFunctionThing_AttachThingToThingEx,0x00470ac0,fixed,semantic,v1.2 registers it as COG verb 'attachthingtothingex'
+sithCogFunctionThing_AttachThingToThingMesh,0x004754d0,fixed,semantic,v1.2 registers it as COG verb 'attachthingtothingmesh'
+sithCogFunctionThing_BoardVehicle,0x004762b0,fixed,semantic,v1.2 registers it as COG verb 'boardvehicle'
+sithCogFunctionThing_CaptureThing,0x004700f0,fixed,semantic,v1.2 registers it as COG verb 'capturething'
+sithCogFunctionThing_ChangeInventory,0x004703c0,fixed,semantic,v1.2 registers it as COG verb 'changeinv'
+sithCogFunctionThing_CheckFloorDistance,0x00475cf0,fixed,semantic,v1.2 registers it as COG verb 'checkfloordistance'
+sithCogFunctionThing_CheckPathToPoint,0x00475d80,fixed,semantic,v1.2 registers it as COG verb 'checkpathtopoint'
+sithCogFunctionThing_ClearPhysicsFlags,0x00472cc0,fixed,semantic,v1.2 registers it as COG verb 'clearphysicsflags'
+sithCogFunctionThing_ClearThingAttachFlags,0x00473860,fixed,semantic,v1.2 registers it as COG verb 'clearthingattachflags'
+sithCogFunctionThing_ClearThingFlags,0x00471ea0,fixed,semantic,v1.2 registers it as COG verb 'clearthingflags'
+sithCogFunctionThing_ClearTypeFlags,0x00473e50,fixed,semantic,v1.2 registers it as COG verb 'clearparticleflags'
+sithCogFunctionThing_CopyOrient,0x0046d2d0,fixed,semantic,v1.2 registers it as COG verb 'copyorient'
+sithCogFunctionThing_CopyOrientAndPos,0x0046d370,fixed,semantic,v1.2 registers it as COG verb 'copyorientandpos'
+sithCogFunctionThing_CreateLaser,0x0046d490,fixed,semantic,v1.2 registers it as COG verb 'createlaser'
+sithCogFunctionThing_CreateLightning,0x0046d610,fixed,semantic,v1.2 registers it as COG verb 'createlightning'
+sithCogFunctionThing_CreatePolylineThing,0x0046d150,fixed,semantic,v1.2 registers it as COG verb 'createpolylinething'
+sithCogFunctionThing_CreateThing,0x0046dc40,fixed,semantic,v1.2 registers it as COG verb 'creatething'
+sithCogFunctionThing_CreateThingAtPos,0x0046ddc0,fixed,semantic,v1.2 registers it as COG verb 'createthingatpos'
+sithCogFunctionThing_DamageThing,0x0046dfc0,fixed,semantic,v1.2 registers it as COG verb 'damagething'
+sithCogFunctionThing_DestroyThing,0x0046e260,fixed,semantic,v1.2 registers it as COG verb 'destroything'
+sithCogFunctionThing_DetachThing,0x004708c0,fixed,semantic,v1.2 registers it as COG verb 'detachthing'
+sithCogFunctionThing_DetachThingMesh,0x00475650,fixed,semantic,v1.2 registers it as COG verb 'detachthingmesh'
+sithCogFunctionThing_FadeInTrack,0x00476350,fixed,semantic,v1.2 registers it as COG verb 'fadeintrack'
+sithCogFunctionThing_FirstThingInSector,0x00472110,fixed,semantic,v1.2 registers it as COG verb 'firstthinginsector'
+sithCogFunctionThing_GetActorHeadPYR,0x00470880,fixed,semantic,v1.2 registers it as COG verb 'getactorheadpyr'
+sithCogFunctionThing_GetActorWeapon,0x00472b70,fixed,semantic,v1.2 registers it as COG verb 'getactorweapon'
+sithCogFunctionThing_GetCameraFOV,0x0046f100,fixed,semantic,v1.2 registers it as COG verb 'getcamerafov'
+sithCogFunctionThing_GetCameraPosition,0x0046f120,fixed,semantic,v1.2 registers it as COG verb 'getcameraposition'
+sithCogFunctionThing_GetCollideType,0x00472060,fixed,semantic,v1.2 registers it as COG verb 'getcollidetype'
+sithCogFunctionThing_GetCurFrame,0x0046fc50,fixed,semantic,v1.2 registers it as COG verb 'getcurframe'
+sithCogFunctionThing_GetFireOffset,0x00474020,fixed,semantic,v1.2 registers it as COG verb 'getthingfireoffset'
+sithCogFunctionThing_GetGoalFrame,0x0046fd00,fixed,semantic,v1.2 registers it as COG verb 'getgoalframe'
+sithCogFunctionThing_GetGuidThing,0x004746f0,fixed,semantic,v1.2 registers it as COG verb 'getguidthing'
+sithCogFunctionThing_GetHealth,0x0046e100,fixed,semantic,v1.2 registers it as COG verb 'gethealth'
+sithCogFunctionThing_GetInventory,0x00470270,fixed,semantic,v1.2 registers it as COG verb 'getinv'
+sithCogFunctionThing_GetInventoryCog,0x00470490,fixed,semantic,v1.2 registers it as COG verb 'getinvcog'
+sithCogFunctionThing_GetInventoryMaximum,0x00472300,fixed,semantic,v1.2 registers it as COG verb 'getinvmax'
+sithCogFunctionThing_GetInventoryMinimum,0x00472270,fixed,semantic,v1.2 registers it as COG verb 'getinvmin'
+sithCogFunctionThing_GetJointAngle,0x004749e0,fixed,semantic,v1.2 registers it as COG verb 'getthingjointangle'
+sithCogFunctionThing_GetLifeleft,0x004728a0,fixed,semantic,v1.2 registers it as COG verb 'getlifeleft'
+sithCogFunctionThing_GetMajorMode,0x00474530,fixed,semantic,v1.2 registers it as COG verb 'getmajormode'
+sithCogFunctionThing_GetMaxHealth,0x0046e190,fixed,semantic,v1.2 registers it as COG verb 'getthingmaxhealth'
+sithCogFunctionThing_GetMeshByName,0x004753f0,fixed,semantic,v1.2 registers it as COG verb 'getmeshbyname'
+sithCogFunctionThing_GetMoveStatus,0x0046d270,fixed,semantic,v1.2 registers it as COG verb 'getmovestatus'
+sithCogFunctionThing_GetNodeByName,0x00475460,fixed,semantic,v1.2 registers it as COG verb 'getnodebyname'
+sithCogFunctionThing_GetParticleGrowthSpeed,0x00473a20,fixed,semantic,v1.2 registers it as COG verb 'getparticlegrowthspeed'
+sithCogFunctionThing_GetParticleSize,0x004738f0,fixed,semantic,v1.2 registers it as COG verb 'getparticlesize'
+sithCogFunctionThing_GetParticleTimeoutRate,0x00473b50,fixed,semantic,v1.2 registers it as COG verb 'getparticletimeoutrate'
+sithCogFunctionThing_GetPhysicsFlags,0x00472bf0,fixed,semantic,v1.2 registers it as COG verb 'getphysicsflags'
+sithCogFunctionThing_GetRotThrust,0x00472fe0,fixed,semantic,v1.2 registers it as COG verb 'getthingrotthrust'
+sithCogFunctionThing_GetThingAlpha,0x0046d0e0,fixed,semantic,v1.2 registers it as COG verb 'getthingalpha'
+sithCogFunctionThing_GetThingAttachFlags,0x00470910,fixed,semantic,v1.2 registers it as COG verb 'getthingattachflags'
+sithCogFunctionThing_GetThingAttachedThing,0x00470b90,fixed,semantic,v1.2 registers it as COG verb 'getthingattachedthing'
+sithCogFunctionThing_GetThingCaptureCog,0x00473660,fixed,semantic,v1.2 registers it as COG verb 'getthingcapturecog'
+sithCogFunctionThing_GetThingClassCog,0x00473590,fixed,semantic,v1.2 registers it as COG verb 'getthingclasscog'
+sithCogFunctionThing_GetThingCollideSize,0x004741c0,fixed,semantic,v1.2 registers it as COG verb 'getthingcollidesize'
+sithCogFunctionThing_GetThingCurLightMode,0x00472690,fixed,semantic,v1.2 registers it as COG verb 'getthingcurlightmode'
+sithCogFunctionThing_GetThingEyeOffset,0x00475c80,fixed,semantic,v1.2 registers it as COG verb 'getthingeyeoffset'
+sithCogFunctionThing_GetThingFlags,0x00471df0,fixed,semantic,v1.2 registers it as COG verb 'getthingflags'
+sithCogFunctionThing_GetThingGuid,0x004746c0,fixed,semantic,v1.2 registers it as COG verb 'getthingguid'
+sithCogFunctionThing_GetThingInsertOffset,0x00475af0,fixed,semantic,v1.2 registers it as COG verb 'getthinginsertoffset'
+sithCogFunctionThing_GetThingJointPos,0x00475280,fixed,semantic,v1.2 registers it as COG verb 'getthingjointpos'
+sithCogFunctionThing_GetThingLVec,0x004707c0,fixed,semantic,v1.2 registers it as COG verb 'getthinglvec'
+sithCogFunctionThing_GetThingLVecPYR,0x00474f70,fixed,semantic,v1.2 registers it as COG verb 'getthinglvecpyr'
+sithCogFunctionThing_GetThingLight,0x0046ead0,fixed,semantic,v1.2 registers it as COG verb 'getthinglight'
+sithCogFunctionThing_GetThingMass,0x00474340,fixed,semantic,v1.2 registers it as COG verb 'getthingmass'
+sithCogFunctionThing_GetThingMaxAngVel,0x00474830,fixed,semantic,v1.2 registers it as COG verb 'getthingmaxangvel'
+sithCogFunctionThing_GetThingMaxHeadPitch,0x00474bb0,fixed,semantic,v1.2 registers it as COG verb 'getthingmaxheadpitch'
+sithCogFunctionThing_GetThingMaxHeadVel,0x004757f0,fixed,semantic,v1.2 registers it as COG verb 'getthingmaxheadvel'
+sithCogFunctionThing_GetThingMaxHeadYaw,0x00474d80,fixed,semantic,v1.2 registers it as COG verb 'getthingmaxheadyaw'
+sithCogFunctionThing_GetThingMaxRotVel,0x004756a0,fixed,semantic,v1.2 registers it as COG verb 'getthingmaxrotvel'
+sithCogFunctionThing_GetThingMaxVel,0x00474760,fixed,semantic,v1.2 registers it as COG verb 'getthingmaxvel'
+sithCogFunctionThing_GetThingMinHeadPitch,0x00474c60,fixed,semantic,v1.2 registers it as COG verb 'getthingminheadpitch'
+sithCogFunctionThing_GetThingMoveSize,0x00474280,fixed,semantic,v1.2 registers it as COG verb 'getthingmovesize'
+sithCogFunctionThing_GetThingParent,0x00470160,fixed,semantic,v1.2 registers it as COG verb 'getthingparent'
+sithCogFunctionThing_GetThingPos,0x004701a0,fixed,semantic,v1.2 registers it as COG verb 'getthingpos'
+sithCogFunctionThing_GetThingRVec,0x00470840,fixed,semantic,v1.2 registers it as COG verb 'getthingrvec'
+sithCogFunctionThing_GetThingRespawn,0x00473730,fixed,semantic,v1.2 registers it as COG verb 'getthingrespawn'
+sithCogFunctionThing_GetThingRotVel,0x00472ed0,fixed,semantic,v1.2 registers it as COG verb 'getthingrotvel'
+sithCogFunctionThing_GetThingSector,0x0046fbc0,fixed,semantic,v1.2 registers it as COG verb 'getthingsector'
+sithCogFunctionThing_GetThingSignature,0x00473790,fixed,semantic,v1.2 registers it as COG verb 'getthingsignature'
+sithCogFunctionThing_GetThingTemplate,0x00472750,fixed,semantic,v1.2 registers it as COG verb 'getthingtemplate'
+sithCogFunctionThing_GetThingThrust,0x004729d0,fixed,semantic,v1.2 registers it as COG verb 'getthingthrust'
+sithCogFunctionThing_GetThingType,0x0046d8b0,fixed,semantic,v1.2 registers it as COG verb 'getthingtype'
+sithCogFunctionThing_GetThingUVec,0x00470800,fixed,semantic,v1.2 registers it as COG verb 'getthinguvec'
+sithCogFunctionThing_GetThingUserData,0x00474100,fixed,semantic,v1.2 registers it as COG verb 'getthinguserdata'
+sithCogFunctionThing_GetThingVelocity,0x00470550,fixed,semantic,v1.2 registers it as COG verb 'getthingvel'
+sithCogFunctionThing_GetTypeFlags,0x00473c80,fixed,semantic,v1.2 registers it as COG verb 'getparticleflags'
+sithCogFunctionThing_HasLOS,0x00473f90,fixed,semantic,v1.2 registers it as COG verb 'haslos'
+sithCogFunctionThing_HealThing,0x0046e090,fixed,semantic,v1.2 registers it as COG verb 'healthing'
+sithCogFunctionThing_InterpolatePYR,0x00474e30,fixed,semantic,v1.2 registers it as COG verb 'interpolatepyr'
+sithCogFunctionThing_IsGhostVisible,0x0046ce70,fixed,semantic,v1.2 registers it as COG verb 'isghostvisible'
+sithCogFunctionThing_IsModePlaying,0x00470f50,fixed,semantic,v1.2 registers it as COG verb 'ismodeplaying'
+sithCogFunctionThing_IsThingCrouching,0x00473540,fixed,semantic,v1.2 registers it as COG verb 'iscrouching'
+sithCogFunctionThing_IsThingModelName,0x00475350,fixed,semantic,v1.2 registers it as COG verb 'isthingmodelname'
+sithCogFunctionThing_IsThingMoving,0x0046fe10,fixed,semantic,v1.2 registers it as COG verb 'ismoving'
+sithCogFunctionThing_IsThingVisible,0x00472540,fixed,semantic,v1.2 registers it as COG verb 'isthingvisible'
+sithCogFunctionThing_JumpToFrame,0x0046e2b0,fixed,semantic,v1.2 registers it as COG verb 'jumptoframe'
+sithCogFunctionThing_MakeCamera2LikeCamera1,0x0046ed70,fixed,semantic,v1.2 registers it as COG verb 'makecamera2likecamera1'
+sithCogFunctionThing_MakeFairyDust,0x004763e0,fixed,semantic,v1.2 registers it as COG verb 'makefairydust'
+sithCogFunctionThing_MakeFairyDustDeluxe,0x00476460,fixed,semantic,v1.2 registers it as COG verb 'makefairydustdeluxe'
+sithCogFunctionThing_MoveThing,0x00475e60,fixed,semantic,v1.2 registers it as COG verb 'movething'
+sithCogFunctionThing_MoveThingToPos,0x00475fd0,fixed,semantic,v1.2 registers it as COG verb 'movethingtopos'
+sithCogFunctionThing_MoveToFrame,0x0046e3b0,fixed,semantic,v1.2 registers it as COG verb 'movetoframe'
+sithCogFunctionThing_NextThingInSector,0x00472190,fixed,semantic,v1.2 registers it as COG verb 'nextthinginsector'
+sithCogFunctionThing_ParseArg,0x00472d30,fixed,semantic,v1.2 registers it as COG verb 'parsearg'
+sithCogFunctionThing_PathMovePause,0x00472390,fixed,semantic,v1.2 registers it as COG verb 'pathmovepause'
+sithCogFunctionThing_PathMoveResume,0x004725b0,fixed,semantic,v1.2 registers it as COG verb 'pathmoveresume'
+sithCogFunctionThing_PauseKey,0x004716a0,fixed,semantic,v1.2 registers it as COG verb 'pausekey'
+sithCogFunctionThing_PauseMode,0x00471040,fixed,semantic,v1.2 registers it as COG verb 'pausemode'
+sithCogFunctionThing_PlayForceMoveMode,0x0046d8e0,fixed,semantic,v1.2 registers it as COG verb 'playforcemovemode'
+sithCogFunctionThing_PlayKey,0x004712f0,fixed,semantic,v1.2 registers it as COG verb 'playkey'
+sithCogFunctionThing_PlayKeyEx,0x004714e0,fixed,semantic,v1.2 registers it as COG verb 'playkeyex'
+sithCogFunctionThing_PlayMode,0x00470cf0,fixed,semantic,v1.2 registers it as COG verb 'playmode'
+sithCogFunctionThing_PrevThingInSector,0x00472200,fixed,semantic,v1.2 registers it as COG verb 'prevthinginsector'
+sithCogFunctionThing_ReleaseThing,0x00470120,fixed,semantic,v1.2 registers it as COG verb 'releasething'
+sithCogFunctionThing_ResetCameraFOV,0x0046f2f0,fixed,semantic,v1.2 registers it as COG verb 'resetcamerafov'
+sithCogFunctionThing_ResetThing,0x00475a80,fixed,semantic,v1.2 registers it as COG verb 'resetthing'
+sithCogFunctionThing_RestoreThingMesh,0x00471ae0,fixed,semantic,v1.2 registers it as COG verb 'restorethingmesh'
+sithCogFunctionThing_ResumeKey,0x00471790,fixed,semantic,v1.2 registers it as COG verb 'resumekey'
+sithCogFunctionThing_ResumeMode,0x00471130,fixed,semantic,v1.2 registers it as COG verb 'resumemode'
+sithCogFunctionThing_Rotate,0x0046e730,fixed,semantic,v1.2 registers it as COG verb 'rotate'
+sithCogFunctionThing_RotatePivot,0x0046e630,fixed,semantic,v1.2 registers it as COG verb 'rotatepivot'
+sithCogFunctionThing_RotateToPYR,0x0046e980,fixed,semantic,v1.2 registers it as COG verb 'rotatetopyr'
+sithCogFunctionThing_SetActorExtraSpeed,0x004726f0,fixed,semantic,v1.2 registers it as COG verb 'setactorextraspeed'
+sithCogFunctionThing_SetActorWeapon,0x00472b00,fixed,semantic,v1.2 registers it as COG verb 'setactorweapon'
+sithCogFunctionThing_SetArmedMode,0x00471d20,fixed,semantic,v1.2 registers it as COG verb 'setarmedmode'
+sithCogFunctionThing_SetCameraFOV,0x0046f230,fixed,semantic,v1.2 registers it as COG verb 'setcamerafov'
+sithCogFunctionThing_SetCameraFadeThing,0x0046f3a0,fixed,semantic,v1.2 registers it as COG verb 'setcamerafadething'
+sithCogFunctionThing_SetCameraInterpSpeed,0x0046f1c0,fixed,semantic,v1.2 registers it as COG verb 'setcamerainterpspeed'
 sithCogFunctionThing_SetCameraLookInterp,0x0046efe0,confirmed,semantic,unique string shared with upstream: 'Cog %s: Invalid camera in SetCameraLookI'
-sithCogFunctionThing_SetCameraPosInterp,0x0046f070,confirmed,semantic,"v1.2 registers it as COG verb ""setcameraposinterp"""
-sithCogFunctionThing_SetCameraPosition,0x0046ef90,confirmed,semantic,"v1.2 registers it as COG verb ""setcameraposition"""
-sithCogFunctionThing_SetCollideType,0x00472090,confirmed,semantic,"v1.2 registers it as COG verb ""setcollidetype"""
-sithCogFunctionThing_SetExtCamLookOffset,0x0046ec70,confirmed,semantic,"v1.2 registers it as COG verb ""setextcamlookoffset"""
-sithCogFunctionThing_SetExtCamLookOffsetToThing,0x0046eca0,confirmed,semantic,"v1.2 registers it as COG verb ""setextcamlookoffsettothing"""
-sithCogFunctionThing_SetExtCamOffset,0x0046eb70,confirmed,semantic,"v1.2 registers it as COG verb ""setextcamoffset"""
-sithCogFunctionThing_SetExtCamOffsetToThing,0x0046eba0,confirmed,semantic,"v1.2 registers it as COG verb ""setextcamoffsettothing"""
-sithCogFunctionThing_SetFireOffset,0x00474080,confirmed,semantic,"v1.2 registers it as COG verb ""setthingfireoffset"""
-sithCogFunctionThing_SetHeadLightIntensity,0x00472410,confirmed,semantic,"v1.2 registers it as COG verb ""setheadlightintensity"""
-sithCogFunctionThing_SetHeadPYR,0x004750a0,confirmed,semantic,"v1.2 registers it as COG verb ""setactorheadpyr"""
-sithCogFunctionThing_SetHealth,0x0046e220,confirmed,semantic,"v1.2 registers it as COG verb ""sethealth"""
-sithCogFunctionThing_SetInventory,0x00470320,confirmed,semantic,"v1.2 registers it as COG verb ""setinv"""
-sithCogFunctionThing_SetJointAngle,0x00474900,confirmed,semantic,"v1.2 registers it as COG verb ""setthingjointangle"""
-sithCogFunctionThing_SetLifeleft,0x004727d0,confirmed,semantic,"v1.2 registers it as COG verb ""setlifeleft"""
-sithCogFunctionThing_SetMaxHeadPitch,0x00474ad0,confirmed,semantic,"v1.2 registers it as COG verb ""setthingmaxheadpitch"""
-sithCogFunctionThing_SetMaxHeadYaw,0x00474d10,confirmed,semantic,"v1.2 registers it as COG verb ""setthingmaxheadyaw"""
-sithCogFunctionThing_SetMinHeadPitch,0x00474b40,confirmed,semantic,"v1.2 registers it as COG verb ""setthingminheadpitch"""
-sithCogFunctionThing_SetMoveMode,0x0046dba0,confirmed,semantic,"v1.2 registers it as COG verb ""setmovemode"""
-sithCogFunctionThing_SetParticleGrowthSpeed,0x00473ab0,confirmed,semantic,"v1.2 registers it as COG verb ""setparticlegrowthspeed"""
-sithCogFunctionThing_SetParticleSize,0x00473980,confirmed,semantic,"v1.2 registers it as COG verb ""setparticlesize"""
-sithCogFunctionThing_SetParticleTimeoutRate,0x00473be0,confirmed,semantic,"v1.2 registers it as COG verb ""setparticletimeoutrate"""
-sithCogFunctionThing_SetPhysicsFlags,0x00472c30,confirmed,semantic,"v1.2 registers it as COG verb ""setphysicsflags"""
-sithCogFunctionThing_SetPuppetModeFPS,0x00475940,confirmed,semantic,"v1.2 registers it as COG verb ""setpuppetmodefps"""
-sithCogFunctionThing_SetRotThrust,0x00472f40,confirmed,semantic,"v1.2 registers it as COG verb ""setthingrotthrust"""
-sithCogFunctionThing_SetThingAirDrag,0x00475210,confirmed,semantic,"v1.2 registers it as COG verb ""setthingairdrag"""
-sithCogFunctionThing_SetThingAlpha,0x0046cff0,confirmed,semantic,"v1.2 registers it as COG verb ""setthingalpha"""
-sithCogFunctionThing_SetThingAttachFlags,0x004737d0,confirmed,semantic,"v1.2 registers it as COG verb ""setthingattachflags"""
-sithCogFunctionThing_SetThingCaptureCog,0x004736a0,confirmed,semantic,"v1.2 registers it as COG verb ""setthingcapturecog"""
-sithCogFunctionThing_SetThingClassCog,0x004735d0,confirmed,semantic,"v1.2 registers it as COG verb ""setthingclasscog"""
-sithCogFunctionThing_SetThingCollideSize,0x00474220,confirmed,semantic,"v1.2 registers it as COG verb ""setthingcollidesize"""
-sithCogFunctionThing_SetThingCurLightMode,0x00472630,confirmed,semantic,"v1.2 registers it as COG verb ""setthingcurlightmode"""
-sithCogFunctionThing_SetThingFlags,0x00471e20,confirmed,semantic,"v1.2 registers it as COG verb ""setthingflags"""
-sithCogFunctionThing_SetThingHeadLookPos,0x00473310,confirmed,semantic,"v1.2 registers it as COG verb ""setthingheadlookpos"""
-sithCogFunctionThing_SetThingHeadLookThing,0x00473430,confirmed,semantic,"v1.2 registers it as COG verb ""setthingheadlookthing"""
-sithCogFunctionThing_SetThingInsertOffset,0x00475b80,confirmed,semantic,"v1.2 registers it as COG verb ""setthinginsertoffset"""
-sithCogFunctionThing_SetThingLVec,0x00474fe0,confirmed,semantic,"v1.2 registers it as COG verb ""setthinglvecpyr"""
-sithCogFunctionThing_SetThingLook,0x00473050,confirmed,semantic,"v1.2 registers it as COG verb ""setthinglook"""
-sithCogFunctionThing_SetThingMass,0x004743b0,confirmed,semantic,"v1.2 registers it as COG verb ""setthingmass"""
-sithCogFunctionThing_SetThingMaxAngVel,0x004748a0,confirmed,semantic,"v1.2 registers it as COG verb ""setthingmaxangvel"""
-sithCogFunctionThing_SetThingMaxHeadVel,0x004758a0,confirmed,semantic,"v1.2 registers it as COG verb ""setthingmaxheadvel"""
-sithCogFunctionThing_SetThingMaxRotVel,0x00475750,confirmed,semantic,"v1.2 registers it as COG verb ""setthingmaxrotvel"""
-sithCogFunctionThing_SetThingMaxVel,0x004747d0,confirmed,semantic,"v1.2 registers it as COG verb ""setthingmaxvel"""
-sithCogFunctionThing_SetThingMesh,0x00471a00,confirmed,semantic,"v1.2 registers it as COG verb ""setthingmesh"""
-sithCogFunctionThing_SetThingModel,0x00471b70,confirmed,semantic,"v1.2 registers it as COG verb ""setthingmodel"""
-sithCogFunctionThing_SetThingMoveSize,0x004742e0,confirmed,semantic,"v1.2 registers it as COG verb ""setthingmovesize"""
-sithCogFunctionThing_SetThingPos,0x004701e0,confirmed,semantic,"v1.2 registers it as COG verb ""setthingpos"""
-sithCogFunctionThing_SetThingPosEx,0x004745d0,confirmed,semantic,"v1.2 registers it as COG verb ""setthingposex"""
-sithCogFunctionThing_SetThingPulse,0x0046ffb0,confirmed,semantic,"v1.2 registers it as COG verb ""setthingpulse"""
-sithCogFunctionThing_SetThingRotVel,0x00472e30,confirmed,semantic,"v1.2 registers it as COG verb ""setthingrotvel"""
-sithCogFunctionThing_SetThingStateChange,0x00476120,confirmed,semantic,"v1.2 registers it as COG verb ""setthingstatechange"""
-sithCogFunctionThing_SetThingThrust,0x00472910,confirmed,semantic,"v1.2 registers it as COG verb ""setthingthrust"""
-sithCogFunctionThing_SetThingTimer,0x00470050,confirmed,semantic,"v1.2 registers it as COG verb ""setthingtimer"""
-sithCogFunctionThing_SetThingType,0x00472030,confirmed,semantic,"v1.2 registers it as COG verb ""setthingtype"""
-sithCogFunctionThing_SetThingUserData,0x00474160,confirmed,semantic,"v1.2 registers it as COG verb ""setthinguserdata"""
-sithCogFunctionThing_SetThingVel,0x00470600,confirmed,semantic,"v1.2 registers it as COG verb ""setthingvel"""
-sithCogFunctionThing_SetTypeFlags,0x00473d60,confirmed,semantic,"v1.2 registers it as COG verb ""setparticleflags"""
-sithCogFunctionThing_SkipToFrame,0x0046e520,confirmed,semantic,"v1.2 registers it as COG verb ""skiptoframe"""
-sithCogFunctionThing_StartQuetzAnim,0x004761d0,confirmed,semantic,"v1.2 registers it as COG verb ""startquetzanim"""
-sithCogFunctionThing_StopKey,0x00471880,confirmed,semantic,"v1.2 registers it as COG verb ""stopkey"""
-sithCogFunctionThing_StopMode,0x00470e40,confirmed,semantic,"v1.2 registers it as COG verb ""stopmode"""
-sithCogFunctionThing_StopThing,0x0046fd90,confirmed,semantic,"v1.2 registers it as COG verb ""stopthing"""
-sithCogFunctionThing_SyncThingAttachment,0x00474480,confirmed,semantic,"v1.2 registers it as COG verb ""syncthingattachment"""
-sithCogFunctionThing_SyncThingPos,0x00474430,confirmed,semantic,"v1.2 registers it as COG verb ""syncthingpos"""
+sithCogFunctionThing_SetCameraPosInterp,0x0046f070,fixed,semantic,v1.2 registers it as COG verb 'setcameraposinterp'
+sithCogFunctionThing_SetCameraPosition,0x0046ef90,fixed,semantic,v1.2 registers it as COG verb 'setcameraposition'
+sithCogFunctionThing_SetCollideType,0x00472090,fixed,semantic,v1.2 registers it as COG verb 'setcollidetype'
+sithCogFunctionThing_SetExtCamLookOffset,0x0046ec70,fixed,semantic,v1.2 registers it as COG verb 'setextcamlookoffset'
+sithCogFunctionThing_SetExtCamLookOffsetToThing,0x0046eca0,fixed,semantic,v1.2 registers it as COG verb 'setextcamlookoffsettothing'
+sithCogFunctionThing_SetExtCamOffset,0x0046eb70,fixed,semantic,v1.2 registers it as COG verb 'setextcamoffset'
+sithCogFunctionThing_SetExtCamOffsetToThing,0x0046eba0,fixed,semantic,v1.2 registers it as COG verb 'setextcamoffsettothing'
+sithCogFunctionThing_SetFireOffset,0x00474080,fixed,semantic,v1.2 registers it as COG verb 'setthingfireoffset'
+sithCogFunctionThing_SetHeadLightIntensity,0x00472410,fixed,semantic,v1.2 registers it as COG verb 'setheadlightintensity'
+sithCogFunctionThing_SetHeadPYR,0x004750a0,fixed,semantic,v1.2 registers it as COG verb 'setactorheadpyr'
+sithCogFunctionThing_SetHealth,0x0046e220,fixed,semantic,v1.2 registers it as COG verb 'sethealth'
+sithCogFunctionThing_SetInventory,0x00470320,fixed,semantic,v1.2 registers it as COG verb 'setinv'
+sithCogFunctionThing_SetJointAngle,0x00474900,fixed,semantic,v1.2 registers it as COG verb 'setthingjointangle'
+sithCogFunctionThing_SetLifeleft,0x004727d0,fixed,semantic,v1.2 registers it as COG verb 'setlifeleft'
+sithCogFunctionThing_SetMaxHeadPitch,0x00474ad0,fixed,semantic,v1.2 registers it as COG verb 'setthingmaxheadpitch'
+sithCogFunctionThing_SetMaxHeadYaw,0x00474d10,fixed,semantic,v1.2 registers it as COG verb 'setthingmaxheadyaw'
+sithCogFunctionThing_SetMinHeadPitch,0x00474b40,fixed,semantic,v1.2 registers it as COG verb 'setthingminheadpitch'
+sithCogFunctionThing_SetMoveMode,0x0046dba0,fixed,semantic,v1.2 registers it as COG verb 'setmovemode'
+sithCogFunctionThing_SetParticleGrowthSpeed,0x00473ab0,fixed,semantic,v1.2 registers it as COG verb 'setparticlegrowthspeed'
+sithCogFunctionThing_SetParticleSize,0x00473980,fixed,semantic,v1.2 registers it as COG verb 'setparticlesize'
+sithCogFunctionThing_SetParticleTimeoutRate,0x00473be0,fixed,semantic,v1.2 registers it as COG verb 'setparticletimeoutrate'
+sithCogFunctionThing_SetPhysicsFlags,0x00472c30,fixed,semantic,v1.2 registers it as COG verb 'setphysicsflags'
+sithCogFunctionThing_SetPuppetModeFPS,0x00475940,fixed,semantic,v1.2 registers it as COG verb 'setpuppetmodefps'
+sithCogFunctionThing_SetRotThrust,0x00472f40,fixed,semantic,v1.2 registers it as COG verb 'setthingrotthrust'
+sithCogFunctionThing_SetThingAirDrag,0x00475210,fixed,semantic,v1.2 registers it as COG verb 'setthingairdrag'
+sithCogFunctionThing_SetThingAlpha,0x0046cff0,fixed,semantic,v1.2 registers it as COG verb 'setthingalpha'
+sithCogFunctionThing_SetThingAttachFlags,0x004737d0,fixed,semantic,v1.2 registers it as COG verb 'setthingattachflags'
+sithCogFunctionThing_SetThingCaptureCog,0x004736a0,fixed,semantic,v1.2 registers it as COG verb 'setthingcapturecog'
+sithCogFunctionThing_SetThingClassCog,0x004735d0,fixed,semantic,v1.2 registers it as COG verb 'setthingclasscog'
+sithCogFunctionThing_SetThingCollideSize,0x00474220,fixed,semantic,v1.2 registers it as COG verb 'setthingcollidesize'
+sithCogFunctionThing_SetThingCurLightMode,0x00472630,fixed,semantic,v1.2 registers it as COG verb 'setthingcurlightmode'
+sithCogFunctionThing_SetThingFlags,0x00471e20,fixed,semantic,v1.2 registers it as COG verb 'setthingflags'
+sithCogFunctionThing_SetThingHeadLookPos,0x00473310,fixed,semantic,v1.2 registers it as COG verb 'setthingheadlookpos'
+sithCogFunctionThing_SetThingHeadLookThing,0x00473430,fixed,semantic,v1.2 registers it as COG verb 'setthingheadlookthing'
+sithCogFunctionThing_SetThingInsertOffset,0x00475b80,fixed,semantic,v1.2 registers it as COG verb 'setthinginsertoffset'
+sithCogFunctionThing_SetThingLVec,0x00474fe0,fixed,semantic,v1.2 registers it as COG verb 'setthinglvecpyr'
+sithCogFunctionThing_SetThingLook,0x00473050,fixed,semantic,v1.2 registers it as COG verb 'setthinglook'
+sithCogFunctionThing_SetThingMass,0x004743b0,fixed,semantic,v1.2 registers it as COG verb 'setthingmass'
+sithCogFunctionThing_SetThingMaxAngVel,0x004748a0,fixed,semantic,v1.2 registers it as COG verb 'setthingmaxangvel'
+sithCogFunctionThing_SetThingMaxHeadVel,0x004758a0,fixed,semantic,v1.2 registers it as COG verb 'setthingmaxheadvel'
+sithCogFunctionThing_SetThingMaxRotVel,0x00475750,fixed,semantic,v1.2 registers it as COG verb 'setthingmaxrotvel'
+sithCogFunctionThing_SetThingMaxVel,0x004747d0,fixed,semantic,v1.2 registers it as COG verb 'setthingmaxvel'
+sithCogFunctionThing_SetThingMesh,0x00471a00,fixed,semantic,v1.2 registers it as COG verb 'setthingmesh'
+sithCogFunctionThing_SetThingModel,0x00471b70,fixed,semantic,v1.2 registers it as COG verb 'setthingmodel'
+sithCogFunctionThing_SetThingMoveSize,0x004742e0,fixed,semantic,v1.2 registers it as COG verb 'setthingmovesize'
+sithCogFunctionThing_SetThingPos,0x004701e0,fixed,semantic,v1.2 registers it as COG verb 'setthingpos'
+sithCogFunctionThing_SetThingPosEx,0x004745d0,fixed,semantic,v1.2 registers it as COG verb 'setthingposex'
+sithCogFunctionThing_SetThingPulse,0x0046ffb0,fixed,semantic,v1.2 registers it as COG verb 'setthingpulse'
+sithCogFunctionThing_SetThingRotVel,0x00472e30,fixed,semantic,v1.2 registers it as COG verb 'setthingrotvel'
+sithCogFunctionThing_SetThingStateChange,0x00476120,fixed,semantic,v1.2 registers it as COG verb 'setthingstatechange'
+sithCogFunctionThing_SetThingThrust,0x00472910,fixed,semantic,v1.2 registers it as COG verb 'setthingthrust'
+sithCogFunctionThing_SetThingTimer,0x00470050,fixed,semantic,v1.2 registers it as COG verb 'setthingtimer'
+sithCogFunctionThing_SetThingType,0x00472030,fixed,semantic,v1.2 registers it as COG verb 'setthingtype'
+sithCogFunctionThing_SetThingUserData,0x00474160,fixed,semantic,v1.2 registers it as COG verb 'setthinguserdata'
+sithCogFunctionThing_SetThingVel,0x00470600,fixed,semantic,v1.2 registers it as COG verb 'setthingvel'
+sithCogFunctionThing_SetTypeFlags,0x00473d60,fixed,semantic,v1.2 registers it as COG verb 'setparticleflags'
+sithCogFunctionThing_SkipToFrame,0x0046e520,fixed,semantic,v1.2 registers it as COG verb 'skiptoframe'
+sithCogFunctionThing_StartQuetzAnim,0x004761d0,fixed,semantic,v1.2 registers it as COG verb 'startquetzanim'
+sithCogFunctionThing_StopKey,0x00471880,fixed,semantic,v1.2 registers it as COG verb 'stopkey'
+sithCogFunctionThing_StopMode,0x00470e40,fixed,semantic,v1.2 registers it as COG verb 'stopmode'
+sithCogFunctionThing_StopThing,0x0046fd90,fixed,semantic,v1.2 registers it as COG verb 'stopthing'
+sithCogFunctionThing_SyncThingAttachment,0x00474480,fixed,semantic,v1.2 registers it as COG verb 'syncthingattachment'
+sithCogFunctionThing_SyncThingPos,0x00474430,fixed,semantic,v1.2 registers it as COG verb 'syncthingpos'
 sithCogFunctionThing_SyncThingState,0x004744e0,confirmed,semantic,unique string shared with upstream: 'Cog %s: Bad thing in SyncThingState().\n'
-sithCogFunctionThing_SynchMode,0x00470eb0,confirmed,semantic,"v1.2 registers it as COG verb ""synchmode"""
-sithCogFunctionThing_TakeItem,0x00473f50,confirmed,semantic,"v1.2 registers it as COG verb ""takeitem"""
-sithCogFunctionThing_TeleportThing,0x00471f20,confirmed,semantic,"v1.2 registers it as COG verb ""teleportthing"""
-sithCogFunctionThing_ThingFadeAnim,0x0046f870,confirmed,semantic,"v1.2 registers it as COG verb ""thingfadeanim"""
-sithCogFunctionThing_ThingLight,0x0046f5e0,confirmed,semantic,"v1.2 registers it as COG verb ""thinglight"""
-sithCogFunctionThing_ThingLightAnim,0x0046f710,confirmed,semantic,"v1.2 registers it as COG verb ""thinglightanim"""
-sithCogFunctionThing_TrackToMode,0x00471220,confirmed,semantic,"v1.2 registers it as COG verb ""tracktomode"""
-sithCogFunctionThing_WaitForAnimStop,0x0046fb30,confirmed,semantic,"v1.2 registers it as COG verb ""waitforanimstop"""
-sithCogFunctionThing_WaitForStop,0x0046fa60,confirmed,semantic,"v1.2 registers it as COG verb ""waitforstop"""
-sithCogFunctionThing_WaitMode,0x00470c40,confirmed,semantic,"v1.2 registers it as COG verb ""waitmode"""
-sithCogFunction_ActivateWeapon,0x00479250,confirmed,semantic,"v1.2 registers it as COG verb ""activateweapon"""
-sithCogFunction_ArcTan,0x00479f30,confirmed,semantic,"v1.2 registers it as COG verb ""arctan"""
-sithCogFunction_AutoSavegame,0x004799c0,confirmed,semantic,"v1.2 registers it as COG verb ""autosavegame"""
-sithCogFunction_BitClear,0x00478580,confirmed,semantic,"v1.2 registers it as COG verb ""bitclear"""
-sithCogFunction_BitSet,0x00478520,confirmed,semantic,"v1.2 registers it as COG verb ""bitset"""
-sithCogFunction_BitTest,0x00478550,confirmed,semantic,"v1.2 registers it as COG verb ""bittest"""
-sithCogFunction_ClearDebugModeFlags,0x004784e0,confirmed,semantic,"v1.2 registers it as COG verb ""cleardebugmodeflags"""
-sithCogFunction_ClearMapModeFlags,0x004789b0,confirmed,semantic,"v1.2 registers it as COG verb ""clearmapmodeflags"""
-sithCogFunction_ClearSubModeFlags,0x00478480,confirmed,semantic,"v1.2 registers it as COG verb ""clearsubmodeflags"""
-sithCogFunction_CopyPlayerHolsters,0x0047a460,confirmed,semantic,"v1.2 registers it as COG verb ""copyplayerholsters"""
-sithCogFunction_DeactivateCurrentWeapon,0x00479340,confirmed,semantic,"v1.2 registers it as COG verb ""deactivatecurweapon"""
-sithCogFunction_DeactivateWeapon,0x004792d0,confirmed,semantic,"v1.2 registers it as COG verb ""deactivateweapon"""
-sithCogFunction_DeselectWeapon,0x004796f0,confirmed,semantic,"v1.2 registers it as COG verb ""deselectweapon"""
-sithCogFunction_DeselectWeaponWait,0x00479760,confirmed,semantic,"v1.2 registers it as COG verb ""deselectweaponwait"""
-sithCogFunction_FindNewSector,0x0047a6f0,confirmed,semantic,"v1.2 registers it as COG verb ""findnewsector"""
-sithCogFunction_FindNewSectorFromThing,0x0047a770,confirmed,semantic,"v1.2 registers it as COG verb ""findnewsectorfromthing"""
-sithCogFunction_FireProjectile,0x00479050,confirmed,semantic,"v1.2 registers it as COG verb ""fireprojectile"""
-sithCogFunction_GetCameraMode,0x00478ca0,confirmed,semantic,"v1.2 registers it as COG verb ""getcurrentcamera"""
-sithCogFunction_GetCameraStateFlags,0x00479920,confirmed,semantic,"v1.2 registers it as COG verb ""getcamerastateflags"""
-sithCogFunction_GetCogByIndex,0x00479010,confirmed,semantic,"v1.2 registers it as COG verb ""getcogbyindex"""
-sithCogFunction_GetCurWeapon,0x004798b0,confirmed,semantic,"v1.2 registers it as COG verb ""getcurweapon"""
-sithCogFunction_GetDebugModeFlags,0x00478500,confirmed,semantic,"v1.2 registers it as COG verb ""getdebugmodeflags"""
-sithCogFunction_GetDifficulty,0x00478440,confirmed,semantic,"v1.2 registers it as COG verb ""getdifficulty"""
-sithCogFunction_GetFlexGameTime,0x00478420,confirmed,semantic,"v1.2 registers it as COG verb ""getflexgametime"""
-sithCogFunction_GetGameTime,0x00478400,confirmed,semantic,"v1.2 registers it as COG verb ""getgametime"""
-sithCogFunction_GetGravity,0x004786a0,confirmed,semantic,"v1.2 registers it as COG verb ""getgravity"""
-sithCogFunction_GetHintSolved,0x00479a20,confirmed,semantic,"v1.2 registers it as COG verb ""gethintsolved"""
-sithCogFunction_GetKeyLen,0x00478310,confirmed,semantic,"v1.2 registers it as COG verb ""getkeylen"""
-sithCogFunction_GetLastPistol,0x0047a370,confirmed,semantic,"v1.2 registers it as COG verb ""getlastpistol"""
-sithCogFunction_GetLastRifle,0x0047a3d0,confirmed,semantic,"v1.2 registers it as COG verb ""getlastrifle"""
-sithCogFunction_GetLevelTime,0x004785b0,confirmed,semantic,"v1.2 registers it as COG verb ""getleveltime"""
-sithCogFunction_GetMapModelFlags,0x00478990,confirmed,semantic,"v1.2 registers it as COG verb ""getmapmodeflags"""
-sithCogFunction_GetMasterCog,0x00478fc0,confirmed,semantic,"v1.2 registers it as COG verb ""getmastercog"""
-sithCogFunction_GetMaterialCel,0x00478890,confirmed,semantic,"v1.2 registers it as COG verb ""getmaterialcel"""
-sithCogFunction_GetParam,0x00478700,confirmed,semantic,"v1.2 registers it as COG verb ""getparam"""
-sithCogFunction_GetPerformanceLevel,0x0047a570,confirmed,semantic,"v1.2 registers it as COG verb ""getperformancelevel"""
-sithCogFunction_GetPrimaryFocus,0x00478b10,confirmed,semantic,"v1.2 registers it as COG verb ""getprimaryfocus"""
-sithCogFunction_GetSecondaryFocus,0x00478ba0,confirmed,semantic,"v1.2 registers it as COG verb ""getsecondaryfocus"""
-sithCogFunction_GetSelfCog,0x00478fa0,confirmed,semantic,"v1.2 registers it as COG verb ""getselfcog"""
-sithCogFunction_GetSenderID,0x00477340,confirmed,semantic,"v1.2 registers it as COG verb ""getsenderid"""
-sithCogFunction_GetSenderRef,0x00477360,confirmed,semantic,"v1.2 registers it as COG verb ""getsenderref"""
-sithCogFunction_GetSenderType,0x00477380,confirmed,semantic,"v1.2 registers it as COG verb ""getsendertype"""
-sithCogFunction_GetSithMode,0x004783e0,confirmed,semantic,"v1.2 registers it as COG verb ""getsithmode"""
-sithCogFunction_GetSourceRef,0x004773a0,confirmed,semantic,"v1.2 registers it as COG verb ""getsourceref"""
-sithCogFunction_GetSourceType,0x004773c0,confirmed,semantic,"v1.2 registers it as COG verb ""getsourcetype"""
-sithCogFunction_GetSubModeFlags,0x004784a0,confirmed,semantic,"v1.2 registers it as COG verb ""getsubmodeflags"""
-sithCogFunction_GetSurfaceAnim,0x00477950,confirmed,semantic,"v1.2 registers it as COG verb ""getsurfaceanim"""
-sithCogFunction_GetSysDate,0x004773e0,confirmed,semantic,"v1.2 registers it as COG verb ""getsysdate"""
-sithCogFunction_GetSysTime,0x00477450,confirmed,semantic,"v1.2 registers it as COG verb ""getsystime"""
-sithCogFunction_GetThingCount,0x004785f0,confirmed,semantic,"v1.2 registers it as COG verb ""getthingcount"""
-sithCogFunction_GetThingTemplateCount,0x00478610,confirmed,semantic,"v1.2 registers it as COG verb ""getthingtemplatecount"""
-sithCogFunction_HeapFree,0x00478f70,confirmed,semantic,"v1.2 registers it as COG verb ""heapfree"""
-sithCogFunction_HeapGet,0x00478eb0,confirmed,semantic,"v1.2 registers it as COG verb ""heapget"""
-sithCogFunction_HeapNew,0x00478dd0,confirmed,semantic,"v1.2 registers it as COG verb ""heapnew"""
-sithCogFunction_HeapSet,0x00478e50,confirmed,semantic,"v1.2 registers it as COG verb ""heapset"""
-sithCogFunction_InEditor,0x0047a430,confirmed,semantic,"v1.2 registers it as COG verb ""ineditor"""
-sithCogFunction_IsLevelName,0x0047a590,confirmed,semantic,"v1.2 registers it as COG verb ""islevelname"""
-sithCogFunction_IsMulti,0x00479960,confirmed,semantic,"v1.2 registers it as COG verb ""ismulti"""
-sithCogFunction_IsServer,0x00479990,confirmed,semantic,"v1.2 registers it as COG verb ""isserver"""
-sithCogFunction_KillTimerEx,0x00477c70,confirmed,semantic,"v1.2 registers it as COG verb ""killtimerex"""
-sithCogFunction_LoadHolsterModel,0x0047a100,confirmed,semantic,"v1.2 registers it as COG verb ""loadholstermodel"""
-sithCogFunction_LoadKeyframe,0x00477a00,confirmed,semantic,"v1.2 registers it as COG verb ""loadkeyframe"""
-sithCogFunction_LoadModel,0x00477a40,confirmed,semantic,"v1.2 registers it as COG verb ""loadmodel"""
-sithCogFunction_LoadTemplate,0x004779c0,confirmed,semantic,"v1.2 registers it as COG verb ""loadtemplate"""
-sithCogFunction_MaterialAnim,0x00477710,confirmed,semantic,"v1.2 registers it as COG verb ""materialanim"""
+sithCogFunctionThing_SynchMode,0x00470eb0,fixed,semantic,v1.2 registers it as COG verb 'synchmode'
+sithCogFunctionThing_TakeItem,0x00473f50,fixed,semantic,v1.2 registers it as COG verb 'takeitem'
+sithCogFunctionThing_TeleportThing,0x00471f20,fixed,semantic,v1.2 registers it as COG verb 'teleportthing'
+sithCogFunctionThing_ThingFadeAnim,0x0046f870,fixed,semantic,v1.2 registers it as COG verb 'thingfadeanim'
+sithCogFunctionThing_ThingLight,0x0046f5e0,fixed,semantic,v1.2 registers it as COG verb 'thinglight'
+sithCogFunctionThing_ThingLightAnim,0x0046f710,fixed,semantic,v1.2 registers it as COG verb 'thinglightanim'
+sithCogFunctionThing_TrackToMode,0x00471220,fixed,semantic,v1.2 registers it as COG verb 'tracktomode'
+sithCogFunctionThing_WaitForAnimStop,0x0046fb30,fixed,semantic,v1.2 registers it as COG verb 'waitforanimstop'
+sithCogFunctionThing_WaitForStop,0x0046fa60,fixed,semantic,v1.2 registers it as COG verb 'waitforstop'
+sithCogFunctionThing_WaitMode,0x00470c40,fixed,semantic,v1.2 registers it as COG verb 'waitmode'
+sithCogFunction_ActivateWeapon,0x00479250,fixed,semantic,v1.2 registers it as COG verb 'activateweapon'
+sithCogFunction_ArcTan,0x00479f30,fixed,semantic,v1.2 registers it as COG verb 'arctan'
+sithCogFunction_AutoSavegame,0x004799c0,fixed,semantic,v1.2 registers it as COG verb 'autosavegame'
+sithCogFunction_BitClear,0x00478580,fixed,semantic,v1.2 registers it as COG verb 'bitclear'
+sithCogFunction_BitSet,0x00478520,fixed,semantic,v1.2 registers it as COG verb 'bitset'
+sithCogFunction_BitTest,0x00478550,fixed,semantic,v1.2 registers it as COG verb 'bittest'
+sithCogFunction_ClearDebugModeFlags,0x004784e0,fixed,semantic,v1.2 registers it as COG verb 'cleardebugmodeflags'
+sithCogFunction_ClearMapModeFlags,0x004789b0,fixed,semantic,v1.2 registers it as COG verb 'clearmapmodeflags'
+sithCogFunction_ClearSubModeFlags,0x00478480,fixed,semantic,v1.2 registers it as COG verb 'clearsubmodeflags'
+sithCogFunction_CopyPlayerHolsters,0x0047a460,fixed,semantic,v1.2 registers it as COG verb 'copyplayerholsters'
+sithCogFunction_DeactivateCurrentWeapon,0x00479340,fixed,semantic,v1.2 registers it as COG verb 'deactivatecurweapon'
+sithCogFunction_DeactivateWeapon,0x004792d0,fixed,semantic,v1.2 registers it as COG verb 'deactivateweapon'
+sithCogFunction_DeselectWeapon,0x004796f0,fixed,semantic,v1.2 registers it as COG verb 'deselectweapon'
+sithCogFunction_DeselectWeaponWait,0x00479760,fixed,semantic,v1.2 registers it as COG verb 'deselectweaponwait'
+sithCogFunction_FindNewSector,0x0047a6f0,fixed,semantic,v1.2 registers it as COG verb 'findnewsector'
+sithCogFunction_FindNewSectorFromThing,0x0047a770,fixed,semantic,v1.2 registers it as COG verb 'findnewsectorfromthing'
+sithCogFunction_FireProjectile,0x00479050,fixed,semantic,v1.2 registers it as COG verb 'fireprojectile'
+sithCogFunction_GetCameraMode,0x00478ca0,fixed,semantic,v1.2 registers it as COG verb 'getcurrentcamera'
+sithCogFunction_GetCameraStateFlags,0x00479920,fixed,semantic,v1.2 registers it as COG verb 'getcamerastateflags'
+sithCogFunction_GetCogByIndex,0x00479010,fixed,semantic,v1.2 registers it as COG verb 'getcogbyindex'
+sithCogFunction_GetCurWeapon,0x004798b0,fixed,semantic,v1.2 registers it as COG verb 'getcurweapon'
+sithCogFunction_GetDebugModeFlags,0x00478500,fixed,semantic,v1.2 registers it as COG verb 'getdebugmodeflags'
+sithCogFunction_GetDifficulty,0x00478440,fixed,semantic,v1.2 registers it as COG verb 'getdifficulty'
+sithCogFunction_GetFlexGameTime,0x00478420,fixed,semantic,v1.2 registers it as COG verb 'getflexgametime'
+sithCogFunction_GetGameTime,0x00478400,fixed,semantic,v1.2 registers it as COG verb 'getgametime'
+sithCogFunction_GetGravity,0x004786a0,fixed,semantic,v1.2 registers it as COG verb 'getgravity'
+sithCogFunction_GetHintSolved,0x00479a20,fixed,semantic,v1.2 registers it as COG verb 'gethintsolved'
+sithCogFunction_GetKeyLen,0x00478310,fixed,semantic,v1.2 registers it as COG verb 'getkeylen'
+sithCogFunction_GetLastPistol,0x0047a370,fixed,semantic,v1.2 registers it as COG verb 'getlastpistol'
+sithCogFunction_GetLastRifle,0x0047a3d0,fixed,semantic,v1.2 registers it as COG verb 'getlastrifle'
+sithCogFunction_GetLevelTime,0x004785b0,fixed,semantic,v1.2 registers it as COG verb 'getleveltime'
+sithCogFunction_GetMapModelFlags,0x00478990,fixed,semantic,v1.2 registers it as COG verb 'getmapmodeflags'
+sithCogFunction_GetMasterCog,0x00478fc0,fixed,semantic,v1.2 registers it as COG verb 'getmastercog'
+sithCogFunction_GetMaterialCel,0x00478890,fixed,semantic,v1.2 registers it as COG verb 'getmaterialcel'
+sithCogFunction_GetParam,0x00478700,fixed,semantic,v1.2 registers it as COG verb 'getparam'
+sithCogFunction_GetPerformanceLevel,0x0047a570,fixed,semantic,v1.2 registers it as COG verb 'getperformancelevel'
+sithCogFunction_GetPrimaryFocus,0x00478b10,fixed,semantic,v1.2 registers it as COG verb 'getprimaryfocus'
+sithCogFunction_GetSecondaryFocus,0x00478ba0,fixed,semantic,v1.2 registers it as COG verb 'getsecondaryfocus'
+sithCogFunction_GetSelfCog,0x00478fa0,fixed,semantic,v1.2 registers it as COG verb 'getselfcog'
+sithCogFunction_GetSenderID,0x00477340,fixed,semantic,v1.2 registers it as COG verb 'getsenderid'
+sithCogFunction_GetSenderRef,0x00477360,fixed,semantic,v1.2 registers it as COG verb 'getsenderref'
+sithCogFunction_GetSenderType,0x00477380,fixed,semantic,v1.2 registers it as COG verb 'getsendertype'
+sithCogFunction_GetSithMode,0x004783e0,fixed,semantic,v1.2 registers it as COG verb 'getsithmode'
+sithCogFunction_GetSourceRef,0x004773a0,fixed,semantic,v1.2 registers it as COG verb 'getsourceref'
+sithCogFunction_GetSourceType,0x004773c0,fixed,semantic,v1.2 registers it as COG verb 'getsourcetype'
+sithCogFunction_GetSubModeFlags,0x004784a0,fixed,semantic,v1.2 registers it as COG verb 'getsubmodeflags'
+sithCogFunction_GetSurfaceAnim,0x00477950,fixed,semantic,v1.2 registers it as COG verb 'getsurfaceanim'
+sithCogFunction_GetSysDate,0x004773e0,fixed,semantic,v1.2 registers it as COG verb 'getsysdate'
+sithCogFunction_GetSysTime,0x00477450,fixed,semantic,v1.2 registers it as COG verb 'getsystime'
+sithCogFunction_GetThingCount,0x004785f0,fixed,semantic,v1.2 registers it as COG verb 'getthingcount'
+sithCogFunction_GetThingTemplateCount,0x00478610,fixed,semantic,v1.2 registers it as COG verb 'getthingtemplatecount'
+sithCogFunction_HeapFree,0x00478f70,fixed,semantic,v1.2 registers it as COG verb 'heapfree'
+sithCogFunction_HeapGet,0x00478eb0,fixed,semantic,v1.2 registers it as COG verb 'heapget'
+sithCogFunction_HeapNew,0x00478dd0,fixed,semantic,v1.2 registers it as COG verb 'heapnew'
+sithCogFunction_HeapSet,0x00478e50,fixed,semantic,v1.2 registers it as COG verb 'heapset'
+sithCogFunction_InEditor,0x0047a430,fixed,semantic,v1.2 registers it as COG verb 'ineditor'
+sithCogFunction_IsLevelName,0x0047a590,fixed,semantic,v1.2 registers it as COG verb 'islevelname'
+sithCogFunction_IsMulti,0x00479960,fixed,semantic,v1.2 registers it as COG verb 'ismulti'
+sithCogFunction_IsServer,0x00479990,fixed,semantic,v1.2 registers it as COG verb 'isserver'
+sithCogFunction_KillTimerEx,0x00477c70,fixed,semantic,v1.2 registers it as COG verb 'killtimerex'
+sithCogFunction_LoadHolsterModel,0x0047a100,fixed,semantic,v1.2 registers it as COG verb 'loadholstermodel'
+sithCogFunction_LoadKeyframe,0x00477a00,fixed,semantic,v1.2 registers it as COG verb 'loadkeyframe'
+sithCogFunction_LoadModel,0x00477a40,fixed,semantic,v1.2 registers it as COG verb 'loadmodel'
+sithCogFunction_LoadTemplate,0x004779c0,fixed,semantic,v1.2 registers it as COG verb 'loadtemplate'
+sithCogFunction_MaterialAnim,0x00477710,fixed,semantic,v1.2 registers it as COG verb 'materialanim'
 sithCogFunction_Pow,0x00479e10,confirmed,semantic,unique string shared with upstream: 'Cog %s: 0 to the 0 power is undefined\n'
-sithCogFunction_PrintFlex,0x00477610,fixed,semantic,"v1.2 registers it as COG verb ""printflex"""
-sithCogFunction_PrintInt,0x00477590,fixed,semantic,"v1.2 registers it as COG verb ""printint"""
-sithCogFunction_PrintVector,0x004775a0,fixed,semantic,"v1.2 registers it as COG verb ""printvector"""
-sithCogFunction_RandBetween,0x00479bf0,confirmed,semantic,"v1.2 registers it as COG verb ""randbetween"""
-sithCogFunction_RandVec,0x00479c60,confirmed,semantic,"v1.2 registers it as COG verb ""randvec"""
+sithCogFunction_PrintFlex,0x00477610,fixed,semantic,v1.2 registers it as COG verb 'printflex'
+sithCogFunction_PrintInt,0x00477590,fixed,semantic,v1.2 registers it as COG verb 'printint'
+sithCogFunction_PrintVector,0x004775a0,fixed,semantic,v1.2 registers it as COG verb 'printvector'
+sithCogFunction_RandBetween,0x00479bf0,fixed,semantic,v1.2 registers it as COG verb 'randbetween'
+sithCogFunction_RandVec,0x00479c60,fixed,semantic,v1.2 registers it as COG verb 'randvec'
 sithCogFunction_RegisterFunctions,0x00476520,confirmed,semantic,unique string shared with upstream: 'getsenderref'
-sithCogFunction_ResetHolsterModel,0x0047a2b0,confirmed,semantic,"v1.2 registers it as COG verb ""resetholstermodel"""
-sithCogFunction_ResetWeaponModel,0x0047a070,confirmed,semantic,"v1.2 registers it as COG verb ""resetweaponmodel"""
-sithCogFunction_ReturnEx,0x004786e0,confirmed,semantic,"v1.2 registers it as COG verb ""returnex"""
-sithCogFunction_SelectWeapon,0x00479520,confirmed,semantic,"v1.2 registers it as COG verb ""selectweapon"""
-sithCogFunction_SelectWeaponWait,0x00479610,confirmed,semantic,"v1.2 registers it as COG verb ""selectweaponwait"""
-sithCogFunction_SendMessage,0x004781a0,confirmed,semantic,"v1.2 registers it as COG verb ""sendmessage"""
-sithCogFunction_SendMessageEx,0x00478230,confirmed,semantic,"v1.2 registers it as COG verb ""sendmessageex"""
-sithCogFunction_SendTrigger,0x00479130,confirmed,semantic,"v1.2 registers it as COG verb ""sendtrigger"""
-sithCogFunction_SetAimWait,0x00479480,confirmed,semantic,"v1.2 registers it as COG verb ""setaimwait"""
-sithCogFunction_SetCameraFocus,0x004789d0,confirmed,semantic,"v1.2 registers it as COG verb ""setcamerafocus"""
-sithCogFunction_SetCameraMode,0x00478c30,confirmed,semantic,"v1.2 registers it as COG verb ""setcurrentcamera"""
-sithCogFunction_SetCameraSecondaryFocus,0x00478a90,confirmed,semantic,"v1.2 registers it as COG verb ""setcamerasecondaryfocus"""
-sithCogFunction_SetCameraStateFlags,0x00479940,confirmed,semantic,"v1.2 registers it as COG verb ""setcamerastateflags"""
-sithCogFunction_SetCurWeapon,0x00479840,confirmed,semantic,"v1.2 registers it as COG verb ""setcurweapon"""
-sithCogFunction_SetDebugModeFlags,0x004784c0,confirmed,semantic,"v1.2 registers it as COG verb ""setdebugmodeflags"""
-sithCogFunction_SetFireWait,0x00479360,confirmed,semantic,"v1.2 registers it as COG verb ""setfirewait"""
-sithCogFunction_SetFog,0x0047a610,confirmed,semantic,"v1.2 registers it as COG verb ""setfog"""
-sithCogFunction_SetGravity,0x004786c0,confirmed,semantic,"v1.2 registers it as COG verb ""setgravity"""
-sithCogFunction_SetHintSolved,0x00479aa0,confirmed,semantic,"v1.2 registers it as COG verb ""sethintsolved"""
-sithCogFunction_SetHintUnsolved,0x00479b30,confirmed,semantic,"v1.2 registers it as COG verb ""sethintunsolved"""
-sithCogFunction_SetHolsterModel,0x0047a1a0,confirmed,semantic,"v1.2 registers it as COG verb ""setholstermodel"""
-sithCogFunction_SetInvFlags,0x004788b0,confirmed,semantic,"v1.2 registers it as COG verb ""setinvflags"""
-sithCogFunction_SetMapModeFlags,0x00478970,confirmed,semantic,"v1.2 registers it as COG verb ""setmapmodeflags"""
-sithCogFunction_SetMasterCog,0x00478ff0,confirmed,semantic,"v1.2 registers it as COG verb ""setmastercog"""
-sithCogFunction_SetMaterialCel,0x00478840,confirmed,semantic,"v1.2 registers it as COG verb ""setmaterialcel"""
-sithCogFunction_SetMountWait,0x004793e0,confirmed,semantic,"v1.2 registers it as COG verb ""setmountwait"""
-sithCogFunction_SetPOVShake,0x00478d00,confirmed,semantic,"v1.2 registers it as COG verb ""setpovshake"""
-sithCogFunction_SetParam,0x00478740,confirmed,semantic,"v1.2 registers it as COG verb ""setparam"""
-sithCogFunction_SetPulse,0x00477a80,confirmed,semantic,"v1.2 registers it as COG verb ""setpulse"""
-sithCogFunction_SetSubModeFlags,0x00478460,confirmed,semantic,"v1.2 registers it as COG verb ""setsubmodeflags"""
-sithCogFunction_SetTimer,0x00477b40,confirmed,semantic,"v1.2 registers it as COG verb ""settimer"""
-sithCogFunction_SetTimerEx,0x00477bf0,confirmed,semantic,"v1.2 registers it as COG verb ""settimerex"""
-sithCogFunction_SetWeaponModel,0x00479f80,confirmed,semantic,"v1.2 registers it as COG verb ""setweaponmodel"""
+sithCogFunction_ResetHolsterModel,0x0047a2b0,fixed,semantic,v1.2 registers it as COG verb 'resetholstermodel'
+sithCogFunction_ResetWeaponModel,0x0047a070,fixed,semantic,v1.2 registers it as COG verb 'resetweaponmodel'
+sithCogFunction_ReturnEx,0x004786e0,fixed,semantic,v1.2 registers it as COG verb 'returnex'
+sithCogFunction_SelectWeapon,0x00479520,fixed,semantic,v1.2 registers it as COG verb 'selectweapon'
+sithCogFunction_SelectWeaponWait,0x00479610,fixed,semantic,v1.2 registers it as COG verb 'selectweaponwait'
+sithCogFunction_SendMessage,0x004781a0,fixed,semantic,v1.2 registers it as COG verb 'sendmessage'
+sithCogFunction_SendMessageEx,0x00478230,fixed,semantic,v1.2 registers it as COG verb 'sendmessageex'
+sithCogFunction_SendTrigger,0x00479130,fixed,semantic,v1.2 registers it as COG verb 'sendtrigger'
+sithCogFunction_SetAimWait,0x00479480,fixed,semantic,v1.2 registers it as COG verb 'setaimwait'
+sithCogFunction_SetCameraFocus,0x004789d0,fixed,semantic,v1.2 registers it as COG verb 'setcamerafocus'
+sithCogFunction_SetCameraMode,0x00478c30,fixed,semantic,v1.2 registers it as COG verb 'setcurrentcamera'
+sithCogFunction_SetCameraSecondaryFocus,0x00478a90,fixed,semantic,v1.2 registers it as COG verb 'setcamerasecondaryfocus'
+sithCogFunction_SetCameraStateFlags,0x00479940,fixed,semantic,v1.2 registers it as COG verb 'setcamerastateflags'
+sithCogFunction_SetCurWeapon,0x00479840,fixed,semantic,v1.2 registers it as COG verb 'setcurweapon'
+sithCogFunction_SetDebugModeFlags,0x004784c0,fixed,semantic,v1.2 registers it as COG verb 'setdebugmodeflags'
+sithCogFunction_SetFireWait,0x00479360,fixed,semantic,v1.2 registers it as COG verb 'setfirewait'
+sithCogFunction_SetFog,0x0047a610,fixed,semantic,v1.2 registers it as COG verb 'setfog'
+sithCogFunction_SetGravity,0x004786c0,fixed,semantic,v1.2 registers it as COG verb 'setgravity'
+sithCogFunction_SetHintSolved,0x00479aa0,fixed,semantic,v1.2 registers it as COG verb 'sethintsolved'
+sithCogFunction_SetHintUnsolved,0x00479b30,fixed,semantic,v1.2 registers it as COG verb 'sethintunsolved'
+sithCogFunction_SetHolsterModel,0x0047a1a0,fixed,semantic,v1.2 registers it as COG verb 'setholstermodel'
+sithCogFunction_SetInvFlags,0x004788b0,fixed,semantic,v1.2 registers it as COG verb 'setinvflags'
+sithCogFunction_SetMapModeFlags,0x00478970,fixed,semantic,v1.2 registers it as COG verb 'setmapmodeflags'
+sithCogFunction_SetMasterCog,0x00478ff0,fixed,semantic,v1.2 registers it as COG verb 'setmastercog'
+sithCogFunction_SetMaterialCel,0x00478840,fixed,semantic,v1.2 registers it as COG verb 'setmaterialcel'
+sithCogFunction_SetMountWait,0x004793e0,fixed,semantic,v1.2 registers it as COG verb 'setmountwait'
+sithCogFunction_SetPOVShake,0x00478d00,fixed,semantic,v1.2 registers it as COG verb 'setpovshake'
+sithCogFunction_SetParam,0x00478740,fixed,semantic,v1.2 registers it as COG verb 'setparam'
+sithCogFunction_SetPulse,0x00477a80,fixed,semantic,v1.2 registers it as COG verb 'setpulse'
+sithCogFunction_SetSubModeFlags,0x00478460,fixed,semantic,v1.2 registers it as COG verb 'setsubmodeflags'
+sithCogFunction_SetTimer,0x00477b40,fixed,semantic,v1.2 registers it as COG verb 'settimer'
+sithCogFunction_SetTimerEx,0x00477bf0,fixed,semantic,v1.2 registers it as COG verb 'settimerex'
+sithCogFunction_SetWeaponModel,0x00479f80,fixed,semantic,v1.2 registers it as COG verb 'setweaponmodel'
 sithCogFunction_Sleep,0x004774c0,confirmed,semantic,unique string shared with upstream: 'Cog %s: Wait time less than 0 in Sleep()'
-sithCogFunction_StopAnim,0x00477860,confirmed,semantic,"v1.2 registers it as COG verb ""stopanim"""
-sithCogFunction_StopMaterialAnim,0x00477800,confirmed,semantic,"v1.2 registers it as COG verb ""stopmaterialanim"""
-sithCogFunction_StopSurfaceAnim,0x004778b0,confirmed,semantic,"v1.2 registers it as COG verb ""stopsurfaceanim"""
-sithCogFunction_SurfaceAnim,0x00477620,confirmed,semantic,"v1.2 registers it as COG verb ""surfaceanim"""
-sithCogFunction_Truncate,0x00479d60,confirmed,semantic,"v1.2 registers it as COG verb ""truncate"""
-sithCogFunction_VectorAdd,0x00477d50,confirmed,semantic,"v1.2 registers it as COG verb ""vectoradd"""
-sithCogFunction_VectorCross,0x00477e70,confirmed,semantic,"v1.2 registers it as COG verb ""vectorcross"""
-sithCogFunction_VectorDist,0x00477fc0,confirmed,semantic,"v1.2 registers it as COG verb ""vectordist"""
-sithCogFunction_VectorDot,0x00477e10,confirmed,semantic,"v1.2 registers it as COG verb ""vectordot"""
-sithCogFunction_VectorEqual,0x00478030,confirmed,semantic,"v1.2 registers it as COG verb ""vectorequal"""
-sithCogFunction_VectorLen,0x00477f00,confirmed,semantic,"v1.2 registers it as COG verb ""vectorlen"""
-sithCogFunction_VectorNorm,0x00478800,confirmed,semantic,"v1.2 registers it as COG verb ""vectornorm"""
-sithCogFunction_VectorRotate,0x004780b0,confirmed,semantic,"v1.2 registers it as COG verb ""vectorrotate"""
-sithCogFunction_VectorScale,0x00477f50,confirmed,semantic,"v1.2 registers it as COG verb ""vectorscale"""
-sithCogFunction_VectorSet,0x00477cf0,confirmed,semantic,"v1.2 registers it as COG verb ""vectorset"""
-sithCogFunction_VectorSub,0x00477db0,confirmed,semantic,"v1.2 registers it as COG verb ""vectorsub"""
-sithCogFunction_VectorTransformToOrient,0x00478100,confirmed,semantic,"v1.2 registers it as COG verb ""vectortransformtoorient"""
-sithCogFunction_VectorX,0x00478770,confirmed,semantic,"v1.2 registers it as COG verb ""vectorx"""
-sithCogFunction_VectorY,0x004787a0,confirmed,semantic,"v1.2 registers it as COG verb ""vectory"""
-sithCogFunction_VectorZ,0x004787d0,confirmed,semantic,"v1.2 registers it as COG verb ""vectorz"""
+sithCogFunction_StopAnim,0x00477860,fixed,semantic,v1.2 registers it as COG verb 'stopanim'
+sithCogFunction_StopMaterialAnim,0x00477800,fixed,semantic,v1.2 registers it as COG verb 'stopmaterialanim'
+sithCogFunction_StopSurfaceAnim,0x004778b0,fixed,semantic,v1.2 registers it as COG verb 'stopsurfaceanim'
+sithCogFunction_SurfaceAnim,0x00477620,fixed,semantic,v1.2 registers it as COG verb 'surfaceanim'
+sithCogFunction_Truncate,0x00479d60,fixed,semantic,v1.2 registers it as COG verb 'truncate'
+sithCogFunction_VectorAdd,0x00477d50,fixed,semantic,v1.2 registers it as COG verb 'vectoradd'
+sithCogFunction_VectorCross,0x00477e70,fixed,semantic,v1.2 registers it as COG verb 'vectorcross'
+sithCogFunction_VectorDist,0x00477fc0,fixed,semantic,v1.2 registers it as COG verb 'vectordist'
+sithCogFunction_VectorDot,0x00477e10,fixed,semantic,v1.2 registers it as COG verb 'vectordot'
+sithCogFunction_VectorEqual,0x00478030,fixed,semantic,v1.2 registers it as COG verb 'vectorequal'
+sithCogFunction_VectorLen,0x00477f00,fixed,semantic,v1.2 registers it as COG verb 'vectorlen'
+sithCogFunction_VectorNorm,0x00478800,fixed,semantic,v1.2 registers it as COG verb 'vectornorm'
+sithCogFunction_VectorRotate,0x004780b0,fixed,semantic,v1.2 registers it as COG verb 'vectorrotate'
+sithCogFunction_VectorScale,0x00477f50,fixed,semantic,v1.2 registers it as COG verb 'vectorscale'
+sithCogFunction_VectorSet,0x00477cf0,fixed,semantic,v1.2 registers it as COG verb 'vectorset'
+sithCogFunction_VectorSub,0x00477db0,fixed,semantic,v1.2 registers it as COG verb 'vectorsub'
+sithCogFunction_VectorTransformToOrient,0x00478100,fixed,semantic,v1.2 registers it as COG verb 'vectortransformtoorient'
+sithCogFunction_VectorX,0x00478770,fixed,semantic,v1.2 registers it as COG verb 'vectorx'
+sithCogFunction_VectorY,0x004787a0,fixed,semantic,v1.2 registers it as COG verb 'vectory'
+sithCogFunction_VectorZ,0x004787d0,fixed,semantic,v1.2 registers it as COG verb 'vectorz'
 sithCogParse_AddSymbol,0x00452f50,confirmed,semantic,unique string shared with upstream: 'No space for COG symbol %s.\n'
 sithCogParse_AllocSymbolTable,0x00452d50,confirmed,semantic,unique string shared with upstream: 'Failed to create memory for symbol table'
 sithCogParse_DuplicateSymbolTable,0x00452c80,confirmed,semantic,unique string shared with upstream: 'Error while duplicating symbol table.\n'
@@ -1008,11 +1013,14 @@ sithCollision_bCollideStartup,0x0059bee0,confirmed,auto,"exact refs from own mod
 sithCollision_stackLevel,0x0053b308,confirmed,auto,"exact refs from own module (sithCollision_DecreaseStackLevel, sithCollision_PopStack)"
 sithCollision_sub_4AAF30,0x004aae60,confirmed,auto,signature matches (2 params)
 sithCommand_CipherText,0x004b4cc0,confirmed,auto,signature matches (1 params)
-sithCommand_Coords,0x004b48b0,confirmed,semantic,unique string shared with upstream: 'Thing is not in world'
-sithCommand_DebugMode,0x004b4600,confirmed,auto,signature matches (2 params)
-sithCommand_DynamicMemory,0x004b4be0,confirmed,semantic,unique string shared with upstream: 'NumAllocs: %d TotalMemAlloc: %d bytes Ma'
-sithCommand_Memory,0x004b4990,confirmed,semantic,unique string shared with upstream: '%5d Materials        %8d bytes.'
-sithCommand_MemoryDump,0x004b4c20,confirmed,semantic,unique string shared with upstream: 'memdump.txt'
+sithCommand_Coords,0x004b48b0,fixed,semantic,v1.2 registers it as console command 'coords'
+sithCommand_DebugMode,0x004b4600,fixed,semantic,v1.2 registers it as console command 'VCINKV}OCPKML'
+sithCommand_DynamicMemory,0x004b4be0,fixed,semantic,v1.2 registers it as console command 'dynamicmem'
+sithCommand_Fixme,0x004b4820,fixed,semantic,v1.2 registers it as console command 'fixme'
+sithCommand_Memory,0x004b4990,fixed,semantic,v1.2 registers it as console command 'mem'
+sithCommand_MemoryDump,0x004b4c20,fixed,semantic,v1.2 registers it as console command 'memdump'
+sithCommand_Ouch,0x004b4870,fixed,semantic,v1.2 registers it as console command 'CXGPKO}QMRJKC'
+sithCommand_Wuss,0x004b47e0,fixed,semantic,v1.2 registers it as console command 'WPEML}GNQC'
 sithCommand_aBuf,0x0059c320,confirmed,auto,exact refs from own module (sithCommand_CipherText)
 sithConsole_Close,0x004461d0,confirmed,semantic,unique string shared with upstream: 'sithConsole closed when not opened.\n'
 sithConsole_ExeCommand,0x00446330,confirmed,semantic,unique string shared with upstream: 'Console command %s not recognized.'
@@ -1047,10 +1055,41 @@ sithControl_bControlOpen,0x00563e30,confirmed,auto,"exact refs from own module (
 sithControl_bControlStartup,0x00563e2c,confirmed,auto,"exact refs from own module (sithControl_Open, sithControl_ReadControls)"
 sithControl_msecIdleTime,0x00563e28,confirmed,auto,"exact refs from own module (sithControl_Open, sithControl_UnbindControl)"
 sithControl_numControlCallbacks,0x00562610,confirmed,auto,"exact refs from own module (sithControl_RegisterControlCallback, sithControl_Update)"
+sithDSSCog_ProcessCogState,0x00454a70,fixed,semantic,v1.2 registers it as message id 13
+sithDSSCog_ProcessMessage,0x004547b0,fixed,semantic,v1.2 registers it as message id 8
 sithDSSThing_MoveToPos,0x0047e2a0,confirmed,auto,signature matches (3 params)
-sithDSSThing_ProcessAttachment,0x0047dc50,confirmed,semantic,unique string shared with upstream: 'sithDSSThing_ProcessAttachment: Cannot f'
-sithDSSThing_ProcessThingFullDescription,0x0047ccc0,confirmed,semantic,unique string shared with upstream: 'Received DSS::ThingFullDesc message when'
-sithDSS_ProcessPuppetStatus,0x004b2940,confirmed,semantic,unique string shared with upstream: 'Error in DSS::PuppetStatus message forma'
+sithDSSThing_ProcessAttachment,0x0047dc50,fixed,semantic,v1.2 registers it as message id 22
+sithDSSThing_ProcessCreateThing,0x0047e080,fixed,semantic,v1.2 registers it as message id 29
+sithDSSThing_ProcessDamage,0x0047c270,fixed,semantic,v1.2 registers it as message id 6
+sithDSSThing_ProcessDeath,0x0047c0c0,fixed,semantic,v1.2 registers it as message id 5
+sithDSSThing_ProcessDestroyThing,0x0047e250,fixed,semantic,v1.2 registers it as message id 35
+sithDSSThing_ProcessFire,0x0047bf50,fixed,semantic,v1.2 registers it as message id 4
+sithDSSThing_ProcessMovePos,0x0047acb0,fixed,semantic,v1.2 registers it as message id 40
+sithDSSThing_ProcessPathMove,0x0047d990,fixed,semantic,v1.2 registers it as message id 20
+sithDSSThing_ProcessPlayKey,0x0047b840,fixed,semantic,v1.2 registers it as message id 9
+sithDSSThing_ProcessPlayKeyMode,0x0047b9c0,fixed,semantic,v1.2 registers it as message id 19
+sithDSSThing_ProcessPlaySound,0x0047b550,fixed,semantic,v1.2 registers it as message id 10
+sithDSSThing_ProcessPlaySoundMode,0x0047b720,fixed,semantic,v1.2 registers it as message id 37
+sithDSSThing_ProcessPos,0x0047a9a0,fixed,semantic,v1.2 registers it as message id 1
+sithDSSThing_ProcessSetModel,0x0047bb40,fixed,semantic,v1.2 registers it as message id 7
+sithDSSThing_ProcessStateUpdate,0x0047b190,fixed,semantic,v1.2 registers it as message id 11
+sithDSSThing_ProcessStopKey,0x0047bc80,fixed,semantic,v1.2 registers it as message id 27
+sithDSSThing_ProcessStopSound,0x0047bdb0,fixed,semantic,v1.2 registers it as message id 28
+sithDSSThing_ProcessTake,0x0047deb0,fixed,semantic,v1.2 registers it as message id 25
+sithDSSThing_ProcessThingFullDescription,0x0047ccc0,fixed,semantic,v1.2 registers it as message id 12
+sithDSS_ProcessAIStatus,0x004b1910,fixed,semantic,v1.2 registers it as message id 15
+sithDSS_ProcessAnimStatus,0x004b22d0,fixed,semantic,v1.2 registers it as message id 17
+sithDSS_ProcessInventory,0x004b1d80,fixed,semantic,v1.2 registers it as message id 16
+sithDSS_ProcessPuppetStatus,0x004b2940,fixed,semantic,v1.2 registers it as message id 21
+sithDSS_ProcessSectorFlags,0x004b1560,fixed,semantic,v1.2 registers it as message id 3
+sithDSS_ProcessSectorStatus,0x004b13c0,fixed,semantic,v1.2 registers it as message id 18
+sithDSS_ProcessSurfaceStatus,0x004b10d0,fixed,semantic,v1.2 registers it as message id 14
+sithDSS_ProcessSyncCameras,0x004b2d50,fixed,semantic,v1.2 registers it as message id 24
+sithDSS_ProcessSyncGameState,0x004b3150,fixed,semantic,v1.2 registers it as message id 31
+sithDSS_ProcessSyncSeenSecors,0x004b1360,fixed,semantic,v1.2 registers it as message id 49
+sithDSS_ProcessSyncTaskEvents,0x004b2bb0,fixed,semantic,v1.2 registers it as message id 23
+sithDSS_ProcessVehicleControlsState,0x004b3560,fixed,semantic,v1.2 registers it as message id 46
+sithDSS_sub_4B3790,0x004b36c0,fixed,semantic,v1.2 registers it as message id 44
 sithEvent_Create,0x004527b0,confirmed,semantic,unique string shared with upstream: 'Out of event buffer space.\n'
 sithEvent_CreateEvent,0x004524c0,confirmed,semantic,unique string shared with upstream: 'Out of space in event buffer array.  Eve'
 sithEvent_aEventBuffer,0x0056c600,confirmed,auto,"exact refs from own module (sithEvent_Create, sithEvent_FreeEvent)"
@@ -1088,6 +1127,9 @@ sithIntersect_aSphereHitIndices,0x0053c560,confirmed,auto,exact refs from own mo
 sithInventory_CreateBackpack,0x0044ba50,confirmed,semantic,unique string shared with upstream: '+backpack'
 sithInventory_RegisterType,0x0044aa40,confirmed,auto,called by jonesInventory_Load
 sithInventory_g_aUnknown,0x017f1e60,confirmed,auto,"between verified sithMulti_g_message and sithInventory_g_aTypes, same shift +0x140"
+sithInventory_g_bSendDeactivateMessage,0x0056b88c,fixed,manual,referenced by v1.2 sithInventory_ResetInventory (its only C user)
+sithInventory_g_dword_56B750,0x0056b890,fixed,manual,referenced by v1.2 sithInventory_ResetInventory (its only C user)
+sithInventory_g_dword_56B754,0x0056b894,fixed,manual,referenced by v1.2 sithInventory_ResetInventory (its only C user)
 sithItem_PlayerCollisionHandler,0x004aed40,confirmed,auto,"between verified sithParticle_CacheRemove and sithItem_Initialize, same shift -0xd0"
 sithMain_aLevelNdsFileNameBuf,0x00563e38,confirmed,auto,"between verified sithControl_bControlOpen and sith_g_pHS, same shift +0x140"
 sithMain_aNdsLevelFilenameBuf,0x005640b8,confirmed,auto,"between verified sithControl_bControlOpen and sith_g_pHS, same shift +0x140"
@@ -1110,7 +1152,7 @@ sithMain_somePos2,0x017fd2d0,confirmed,auto,"between verified sithVoice_aSubtitl
 sithMaterial_ReadMaterialsListText,0x0045d540,confirmed,semantic,unique string shared with upstream: ' world materials %d'
 sithMessage_GetSenderID,0x00451c00,confirmed,auto,signature matches (0 params)
 sithMessage_Process,0x00452010,confirmed,semantic,unique string shared with upstream: 'Message contained illegal type field %d.'
-sithMessage_ProcessCheckMembershipList,0x00451eb0,confirmed,semantic,unique string shared with upstream: 'Ignoring MembershipList check from %x.\n'
+sithMessage_ProcessCheckMembershipList,0x00451eb0,fixed,semantic,v1.2 registers it as message id 41
 sithMessage_ProcessMessages,0x00451ad0,confirmed,semantic,unique string shared with upstream: 'Called ProcessMessages without any input'
 sithMessage_Shutdown,0x004519b0,confirmed,semantic,unique string shared with upstream: 'Shutdown of message system w/o startup.\n'
 sithMessage_Startup,0x00451940,confirmed,semantic,unique string shared with upstream: 'Multiple startup on message system.\n'
@@ -1123,7 +1165,14 @@ sithModel_WriteStaticModelsListBinary,0x0044c2d0,confirmed,auto,signature matche
 sithMulti_CheckPlayers,0x00454c20,confirmed,auto,"between verified sithMulti_CloseGame and sithMulti_ProcessPlayerLost, same shift -0x110"
 sithMulti_FinishJoining,0x004558f0,confirmed,auto,signature matches (3 params)
 sithMulti_GetPlayerIndexByID,0x00455cf0,confirmed,auto,signature matches (1 params)
+sithMulti_ProcessChat,0x00455930,fixed,semantic,v1.2 registers it as message id 2
+sithMulti_ProcessJoinRequest,0x00455530,fixed,semantic,v1.2 registers it as message id 34
+sithMulti_ProcessPing,0x004559e0,fixed,semantic,v1.2 registers it as message id 38
 sithMulti_ProcessPlayerJoin,0x00455190,confirmed,auto,signature matches (1 params)
+sithMulti_ProcessPong,0x00455a10,fixed,semantic,v1.2 registers it as message id 39
+sithMulti_ProcessQuit,0x00455b10,fixed,semantic,v1.2 registers it as message id 42
+sithMulti_ProcessSyncPlayers,0x00455380,fixed,semantic,v1.2 registers it as message id 32
+sithMulti_ProcessWelcome,0x00454f90,fixed,semantic,v1.2 registers it as message id 33
 sithMulti_QuitGame,0x00455ec0,confirmed,auto,signature matches (2 params)
 sithMulti_RemovePlayer,0x00454dd0,confirmed,auto,signature matches (1 params)
 sithMulti_Respawn,0x00455ef0,confirmed,auto,called by sithPlayer_NewPlayer
@@ -1297,6 +1346,13 @@ sithThing_dword_5612B8,0x005613f8,confirmed,auto,exact refs from own module (sit
 sithThing_jeepHitMinVelocityZ,0x005291d4,confirmed,auto,exact refs from own module (sithThing_AttachThingToSurface)
 sithThing_prevQuetzAttachInfo,0x0055ef9c,confirmed,auto,exact refs from own module (sithThing_UpdateQuetzUserBlock)
 sithTime_Advance,0x0044a820,confirmed,semantic,unique string shared with upstream: 'Clock looped around.  Handling it.\n'
+sithTime_g_bPaused,0x0056b884,fixed,manual,"v1.2 sithTime_Advance references the sithTime block 0x56B86C-0x56B884 with matching usage (bPaused 1x, clockTime 4x, msecGameTime 2x, frameTime/Flex)"
+sithTime_g_clockTime,0x0056b880,fixed,manual,"v1.2 sithTime_Advance references the sithTime block 0x56B86C-0x56B884 with matching usage (bPaused 1x, clockTime 4x, msecGameTime 2x, frameTime/Flex)"
+sithTime_g_fps,0x0056b874,fixed,manual,"v1.2 sithTime_Advance references the sithTime block 0x56B86C-0x56B884 with matching usage (bPaused 1x, clockTime 4x, msecGameTime 2x, frameTime/Flex); inside the block"
+sithTime_g_frameTime,0x0056b86c,fixed,manual,"v1.2 sithTime_Advance references the sithTime block 0x56B86C-0x56B884 with matching usage (bPaused 1x, clockTime 4x, msecGameTime 2x, frameTime/Flex)"
+sithTime_g_frameTimeFlex,0x0056b870,fixed,manual,"v1.2 sithTime_Advance references the sithTime block 0x56B86C-0x56B884 with matching usage (bPaused 1x, clockTime 4x, msecGameTime 2x, frameTime/Flex)"
+sithTime_g_msecGameTime,0x0056b878,fixed,manual,"v1.2 sithTime_Advance references the sithTime block 0x56B86C-0x56B884 with matching usage (bPaused 1x, clockTime 4x, msecGameTime 2x, frameTime/Flex)"
+sithTime_g_secGameTime,0x0056b87c,fixed,manual,"v1.2 sithTime_Advance references the sithTime block 0x56B86C-0x56B884 with matching usage (bPaused 1x, clockTime 4x, msecGameTime 2x, frameTime/Flex); inside the block"
 sithVehicleControls_GetMineCarState,0x004a21e0,confirmed,auto,signature matches (0 params)
 sithVehicleControls_GetRaftState,0x004a2210,confirmed,auto,signature matches (0 params)
 sithVehicleControls_ProcessJeepMove,0x004a3370,confirmed,semantic,unique string shared with upstream: 'Jeep wheel node missing.\n'
@@ -1307,12 +1363,13 @@ sithVehicleControls_flt_586294,0x005863d4,confirmed,auto,exact refs from own mod
 sithVehicleControls_g_bJeepAccMoveSndFxPlayed,0x005863dc,confirmed,auto,exact refs from own module (sithVehicleControls_ProcessJeepMove)
 sithVehicleControls_g_bJeepForceStopped,0x005863d8,confirmed,auto,exact refs from own module (sithVehicleControls_ProcessJeepMove)
 sithVehicleControls_raftRotThrust,0x0053b27c,confirmed,auto,exact refs from own module (sithVehicleControls_ProcessRaftMove)
-sithVoice_PlayVoice,0x00443120,confirmed,semantic,"v1.2 registers it as COG verb ""playvoice"""
+sithVoice_PlayVoice,0x00443120,fixed,semantic,v1.2 registers it as COG verb 'playvoice'
+sithVoice_ProcessVoiceState,0x00443d90,fixed,semantic,v1.2 registers it as message id 45
 sithVoice_RegisterCogFunctions,0x00442d70,confirmed,semantic,unique string shared with upstream: 'playvoice'
-sithVoice_SetThingVoiceColor,0x004433b0,confirmed,semantic,"v1.2 registers it as COG verb ""setthingvoicecolor"""
-sithVoice_SetThingVoiceHeads,0x00443290,confirmed,semantic,"v1.2 registers it as COG verb ""setthingvoiceheads"""
-sithVoice_SetVoiceHeadHeight,0x00443340,confirmed,semantic,"v1.2 registers it as COG verb ""setvoiceheadheight"""
-sithVoice_SetVoiceParams,0x00443450,confirmed,semantic,"v1.2 registers it as COG verb ""setvoiceparams"""
+sithVoice_SetThingVoiceColor,0x004433b0,fixed,semantic,v1.2 registers it as COG verb 'setthingvoicecolor'
+sithVoice_SetThingVoiceHeads,0x00443290,fixed,semantic,v1.2 registers it as COG verb 'setthingvoiceheads'
+sithVoice_SetVoiceHeadHeight,0x00443340,fixed,semantic,v1.2 registers it as COG verb 'setvoiceheadheight'
+sithVoice_SetVoiceParams,0x00443450,fixed,semantic,v1.2 registers it as COG verb 'setvoiceparams'
 sithVoice_bThingHasSwapHeadRdModel,0x005648fc,confirmed,auto,"exact refs from own module (sithVoice_PlayThingVoice, sithVoice_UpdateLipSync)"
 sithVoice_dword_5647A0,0x005648e0,confirmed,auto,"exact refs from own module (sithVoice_AddSubtitle, sithVoice_Close)"
 sithVoice_dword_5647AC,0x005648ec,confirmed,auto,"exact refs from own module (sithVoice_PlayThingVoice, sithVoice_UpdateLipSync)"
@@ -1329,6 +1386,7 @@ sithWeapon_SurfaceCollisionHandler,0x00447f40,confirmed,semantic,unique string s
 sithWeapon_ThingCollisionHandler,0x004476d0,confirmed,semantic,unique string shared with upstream: '+mardukhit'
 sithWeapon_WeaponFireProjectile,0x004471f0,confirmed,semantic,unique string shared with upstream: 'Bad arguments passed.\n'
 sithWhip_CreatePlayerWhip,0x004a0cf0,confirmed,semantic,unique string shared with upstream: '+whip_actor'
+sithWhip_Restore,0x004a0a80,fixed,semantic,v1.2 registers it as message id 30
 sithWhip_SearchWhipClimbThing,0x004a0bf0,confirmed,auto,signature matches (1 params)
 sithWhip_WhipClimbPuppetCallback,0x004a08c0,confirmed,semantic,unique string shared with upstream: '+whipc_actor'
 sithWhip_bFoundWhipClimbThing,0x005863c8,confirmed,auto,used by sithWhip_SearchWhipClimbThing
@@ -1371,6 +1429,7 @@ std3D_bStartup,0x005dc4f0,confirmed,auto,"exact refs from own module (std3D_Open
 std3D_cfRGB4444,0x005088c8,confirmed,auto,exact refs from own module (std3D_Open)
 std3D_cfRGB5551,0x00508890,confirmed,auto,exact refs from own module (std3D_Open)
 std3D_cfRGB565,0x00508858,confirmed,auto,exact refs from own module (std3D_Open)
+std3D_g_maxVertices,0x005dc4c4,fixed,manual,referenced 2x by v1.2 std3D_DrawLineStrip (a C user)
 std3D_lpD3DViewPort,0x005dc4ec,confirmed,auto,"exact refs from own module (std3D_ClearZBuffer, std3D_Close)"
 std3D_lpDD,0x005dc4dc,confirmed,auto,"exact refs from own module (std3D_AddToTextureCache, std3D_AllocSystemTexture)"
 std3D_pDDPalette,0x005dc4e0,confirmed,auto,"exact refs from own module (std3D_Close, std3D_Open)"
