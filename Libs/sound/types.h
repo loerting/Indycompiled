@@ -143,12 +143,11 @@ struct sSoundThingInfo
 
 typedef struct sAudioCompressorState
 {
-    uint8_t unknown0;
-    uint8_t unknown1;
-    int16_t unknown2;
-    int16_t unknown3;
+    uint8_t aStepIndex[2];  // INDY: was unknown0/1. Per channel: index into AudioLib_aStepTable (0..88)
+    int16_t aPrediction[2]; // INDY: was unknown2/3. Per channel: last sample (the ADPCM predictor)
     int16_t unknown4;
 } tAudioCompressorState;
+static_assert(sizeof(tAudioCompressorState) == 8, "sizeof(tAudioCompressorState) == 8");
 
 typedef struct sAudioCompressedData
 {

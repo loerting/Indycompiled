@@ -147,6 +147,33 @@ static void indyDiff_EndOriginal(IndyDiffPatch* pPatch)
         }                                                                                   \
     } while ( 0 )
 
+// Several hooks removed at once, for an all-original call chain (e.g. Uncompress -> UncompressBlock)
+typedef struct sIndyDiffPatchSet
+{
+    IndyDiffPatch aPatches[4];
+    int numPatches;
+} IndyDiffPatchSet;
+
+static void indyDiff_BeginOriginals(IndyDiffPatchSet* pSet, const uintptr_t* aAddrs, int num)
+{
+    pSet->numPatches = 0;
+    for ( int i = 0; i < num && i < 4; i++ )
+    {
+        if ( indyDiff_BeginOriginal(aAddrs[i], &pSet->aPatches[pSet->numPatches]) )
+        {
+            pSet->numPatches++;
+        }
+    }
+}
+
+static void indyDiff_EndOriginals(IndyDiffPatchSet* pSet)
+{
+    while ( pSet->numPatches > 0 )
+    {
+        indyDiff_EndOriginal(&pSet->aPatches[--pSet->numPatches]);
+    }
+}
+
 // ---------------------------------------------------------------- comparison and test data
 
 typedef struct sIndyDiffStats
@@ -323,6 +350,93 @@ static void indyDiff_SuiteAudioLib(void)
     indyDiff_Log("  largest sample error vs input: original encoder %d, ours %d\n", maxErrOrig, maxErrNew);
 }
 
+// ADPCM codec (AudioLib_Compress/Uncompress/UncompressBlock/ResetCompressor): test data from the original encoder
+static void indyDiff_SuiteAudioLibAdpcm(void)
+{
+    enum { MAXBYTES = 0x8000 };
+    static int16_t aPcm[MAXBYTES / 2];
+    static uint8_t aPacked[MAXBYTES * 2 + 64], aPackedNew[MAXBYTES * 2 + 64];
+    static uint8_t aPcmOrig[MAXBYTES + 64], aPcmNew[MAXBYTES + 64];
+    static const int aAmplitudes[] = { 100, 3000, 20000, 32767 };
+    static const int aSizes[]      = { 64, 1000, 4096, 0x8000 };
+    const uintptr_t aUncompressChain[] = { AudioLib_Uncompress_ADDR, AudioLib_UncompressBlock_ADDR, AudioLib_ResetCompressor_ADDR };
+    const uintptr_t aCompressChain[]   = { AudioLib_Compress_ADDR, AudioLib_ResetCompressor_ADDR };
+
+    IndyDiffStats reset = { "AudioLib_ResetCompressor" };
+    for ( int i = 0; i < 4; i++ )
+    {
+        tAudioCompressorState orig, ours;
+        memset(&orig, 0x5A + i, sizeof(orig));
+        memset(&ours, 0x5A + i, sizeof(ours));
+        INDY_DIFF_CALL_ORIGINAL(AudioLib_ResetCompressor, &orig);
+        AudioLib_ResetCompressor(&ours);
+        indyDiff_Compare(&reset, "garbage state", &orig, &ours, sizeof(orig));
+    }
+    indyDiff_Report(&reset);
+
+    IndyDiffStats compress   = { "AudioLib_Compress (ADPCM)" };
+    IndyDiffStats uncompress = { "AudioLib_Uncompress + Block" };
+    IndyDiffStats wvsmWrap   = { "AudioLib_Uncompress (WVSM)" };
+    for ( int kind = 0; kind <= 6; kind++ )
+    {
+        for ( size_t a = 0; a < STD_ARRAYLEN(aAmplitudes); a++ )
+        {
+            for ( size_t z = 0; z < STD_ARRAYLEN(aSizes); z++ )
+            {
+                for ( unsigned int channels = 1; channels <= 4; channels++ ) // 1-2: WVSM, 3-4: ADPCM mono/stereo
+                {
+                    int size = aSizes[z];
+                    indyDiff_MakePcm16(aPcm, MAXBYTES / 2, kind, aAmplitudes[a]);
+                    char aCase[80];
+                    snprintf(aCase, sizeof(aCase), "signal %d amp %d size %d channels %u", kind, aAmplitudes[a], size, channels);
+                    indyDiff_pCaseInput    = aPcm;
+                    indyDiff_caseInputSize = size;
+
+                    // original encoder (all original)
+                    tAudioCompressorState stateOrig, stateOurs;
+                    memset(aPacked, 0xCD, sizeof(aPacked));
+                    IndyDiffPatchSet set;
+                    indyDiff_BeginOriginals(&set, aCompressChain, 2);
+                    ((AudioLib_ResetCompressor_TYPE)AudioLib_ResetCompressor_ADDR)(&stateOrig);
+                    int packedSize = ((AudioLib_Compress_TYPE)AudioLib_Compress_ADDR)(&stateOrig, aPacked, (const uint8_t*)aPcm, size, channels);
+                    indyDiff_EndOriginals(&set);
+
+                    // our wrapper (the block encoders are the same code on both sides)
+                    if ( channels > 2 )
+                    {
+                        memset(aPackedNew, 0xCD, sizeof(aPackedNew));
+                        AudioLib_ResetCompressor(&stateOurs);
+                        int packedSizeNew = AudioLib_Compress(&stateOurs, aPackedNew, (const uint8_t*)aPcm, size, channels);
+                        indyDiff_Compare(&compress, aCase, &packedSize, &packedSizeNew, sizeof(int));
+                        indyDiff_Compare(&compress, aCase, aPacked, aPackedNew, sizeof(aPacked));
+                        indyDiff_Compare(&compress, aCase, &stateOrig, &stateOurs, sizeof(stateOrig));
+                    }
+
+                    // decoder: all original vs ours, on the original encoder's data
+                    memset(aPcmOrig, 0xCD, sizeof(aPcmOrig));
+                    memset(aPcmNew, 0xCD, sizeof(aPcmNew));
+                    memset(&stateOrig, 0x77, sizeof(stateOrig));
+                    memset(&stateOurs, 0x77, sizeof(stateOurs));
+                    indyDiff_BeginOriginals(&set, aUncompressChain, 3);
+                    ((AudioLib_Uncompress_TYPE)AudioLib_Uncompress_ADDR)(&stateOrig, aPcmOrig, aPacked, (unsigned)size);
+                    indyDiff_EndOriginals(&set);
+                    AudioLib_Uncompress(&stateOurs, aPcmNew, aPacked, (unsigned)size);
+
+                    IndyDiffStats* pStats = channels > 2 ? &uncompress : &wvsmWrap;
+                    indyDiff_Compare(pStats, aCase, aPcmOrig, aPcmNew, sizeof(aPcmOrig));
+                    if ( channels > 2 )
+                    {
+                        indyDiff_Compare(pStats, aCase, &stateOrig, &stateOurs, sizeof(stateOrig));
+                    }
+                }
+            }
+        }
+    }
+    indyDiff_Report(&compress);
+    indyDiff_Report(&uncompress);
+    indyDiff_Report(&wvsmWrap);
+}
+
 // ---------------------------------------------------------------- entry
 
 void indyDiff_RunOnce(void)
@@ -340,6 +454,7 @@ void indyDiff_RunOnce(void)
 
     if ( strcmp(pSuite, "AudioLib") == 0 )
     {
+        indyDiff_SuiteAudioLibAdpcm();
         indyDiff_SuiteAudioLib();
     }
     else
