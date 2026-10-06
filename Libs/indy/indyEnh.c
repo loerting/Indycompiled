@@ -9,6 +9,7 @@ typedef enum eIndyEnhKind
 {
     INDY_KIND_FIX, // bug fix: on in the "fixed" and "enhanced" profiles
     INDY_KIND_ENH, // enhancement: on in the "enhanced" profile only
+    INDY_KIND_EXP, // experimental: off in every profile until tested; enable explicitly in "toggles"
 } IndyEnhKind;
 
 typedef struct sIndyEnhInfo
@@ -19,7 +20,7 @@ typedef struct sIndyEnhInfo
 } IndyEnhInfo;
 
 static const IndyEnhInfo indyEnh_aInfos[INDY_ENH_COUNT] = {
-    [INDY_ENH_ANALOG_MOVEMENT] = { "ENH-0001", "analogMovement", INDY_KIND_ENH },
+    [INDY_ENH_ANALOG_MOVEMENT] = { "ENH-0001", "analogMovement", INDY_KIND_EXP }, // until tested with a gamepad
 };
 
 static bool indyEnh_bLoaded;
@@ -49,7 +50,7 @@ static bool indyEnh_ProfileDefault(IndyEnhKind kind, IndyProfile profile)
         case INDY_PROFILE_FIXED:
             return kind == INDY_KIND_FIX;
         default:
-            return true;
+            return kind != INDY_KIND_EXP;
     }
 }
 

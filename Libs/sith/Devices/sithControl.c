@@ -968,3 +968,16 @@ void sithControl_EnableDevControls(bool bEnable)
         sithControl_UnbindFunctionControl(SITHCONTROL_CENTER, DIK_NUMPAD5);
     }
 }
+
+// INDY: read-only view of a control function's bindings, for Libs/indy/indyInput.c (analog movement, ENH-0001)
+const SithControlBinding* J3DAPI sithControl_GetFunctionBindings(SithControlFunction functionId, size_t* pNumBindings)
+{
+    if ( functionId < 0 || functionId >= SITHCONTROL_MAXFUNCTIONS )
+    {
+        *pNumBindings = 0;
+        return NULL;
+    }
+
+    *pNumBindings = aControlBindings[functionId].numBindings;
+    return aControlBindings[functionId].aBindings;
+}
