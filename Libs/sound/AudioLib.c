@@ -17,8 +17,8 @@ void AudioLib_InstallHooks(void)
     J3D_HOOKFUNC(AudioLib_Compress); // INDY: reimplemented
     J3D_HOOKFUNC(AudioLib_ResetCompressor); // INDY: reimplemented
     J3D_HOOKFUNC(AudioLib_Uncompress); // INDY: reimplemented
-    // J3D_HOOKFUNC(AudioLib_GetMouthPosition);
-    // J3D_HOOKFUNC(AudioLib_GenerateLipSyncBlock);
+    J3D_HOOKFUNC(AudioLib_GetMouthPosition); // INDY: reimplemented
+    J3D_HOOKFUNC(AudioLib_GenerateLipSyncBlock); // INDY: reimplemented
     J3D_HOOKFUNC(AudioLib_CompressBlock); // INDY: reimplemented
     J3D_HOOKFUNC(AudioLib_UncompressBlock); // INDY: reimplemented
     J3D_HOOKFUNC(AudioLib_WVSMCompressBlock);
@@ -563,14 +563,235 @@ void J3DAPI AudioLib_Uncompress(tAudioCompressorState* pCompressorState, uint8_t
     AudioLib_UncompressBlock(pCompressorState, pOutSndData, pData, (int)(size / (numChannels * 2)), numChannels, 1);
 }
 
-int J3DAPI AudioLib_GetMouthPosition(uint8_t* pData, int a2, uint8_t* pMouthPosX, uint8_t* pMouthPosY)
+// Lip-sync data ("SYNC" block, INDY: reimplemented from v1.2, verified with Scripts/indy/test_diff.sh AudioLib):
+//   "SYNC", uint32 number of entries, then uint32 entries sorted by time: bits 16-31 the time in units of 16 ms
+//   (milliseconds << 12, rounded down), bits 8-14 the mouth width (X), bits 0-6 the opening (Y); the last entry only
+//   holds the end time.
+static const uint8_t AudioLib_aSyncMagic[4] = { 'S', 'Y', 'N', 'C' };
+
+// Mouth position at a sound position in milliseconds (below 2^20). Returns 0 on success, 1 if the data isn't a SYNC
+// block or the position is out of range (then both outputs are 0).
+int J3DAPI AudioLib_GetMouthPosition(uint8_t* pData, int position, uint8_t* pMouthPosX, uint8_t* pMouthPosY)
 {
-    return J3D_TRAMPOLINE_CALL(AudioLib_GetMouthPosition, pData, a2, pMouthPosX, pMouthPosY);
+    uint8_t x = 0, y = 0;
+    int result = 1;
+
+    if ( memcmp(pData, AudioLib_aSyncMagic, 4) == 0 && ((uint32_t)position & 0xFFF00000) == 0 )
+    {
+        result = 0;
+        int32_t numEntries;
+        memcpy(&numEntries, pData + 4, sizeof(numEntries));
+        const uint8_t* pEntries = pData + 8;
+        #define AUDIOLIB_SYNC_ENTRY(i) AudioLib_ReadLE32(pEntries + (i) * 4)
+
+        uint32_t key = ((uint32_t)position & ~0xFu) << 12;
+        int hi       = numEntries - 1;
+        int index    = 0;
+        if ( AUDIOLIB_SYNC_ENTRY(numEntries - 1) < key )
+        {
+            key   = 0; // past the end: last entry
+            index = hi;
+        }
+
+        // binary search for the entry with this time, or the last one before it
+        int lo = 0;
+        if ( key != 0 )
+        {
+            for ( ;; )
+            {
+                index = (hi - lo) / 2 + lo;
+                if ( !(lo + 1 < hi && key != (AUDIOLIB_SYNC_ENTRY(index) & 0xFFFF0000)) )
+                {
+                    break;
+                }
+                if ( AUDIOLIB_SYNC_ENTRY(index) < key )
+                {
+                    lo = index;
+                }
+                else
+                {
+                    hi = index;
+                }
+            }
+        }
+
+        uint32_t entry = AUDIOLIB_SYNC_ENTRY(index);
+        x = (uint8_t)((entry >> 8) & 0x7F);
+        y = (uint8_t)(entry & 0x7F);
+        #undef AUDIOLIB_SYNC_ENTRY
+    }
+
+    if ( pMouthPosX )
+    {
+        *pMouthPosX = x;
+    }
+    if ( pMouthPosY )
+    {
+        *pMouthPosY = y;
+    }
+    return result;
 }
 
-int J3DAPI AudioLib_GenerateLipSyncBlock(uint8_t* pOutData, const uint8_t* pSndData, unsigned int a3, char a4, char a5, int sampleRate, int bitsPerSample, int numChannels, int a9, int sndDataSize)
+static int16_t AudioLib_ReadSample(const uint8_t* p)
 {
-    return J3D_TRAMPOLINE_CALL(AudioLib_GenerateLipSyncBlock, pOutData, pSndData, a3, a4, a5, sampleRate, bitsPerSample, numChannels, a9, sndDataSize);
+    int16_t v;
+    memcpy(&v, p, sizeof(v)); // the data may be misaligned (bByteOffset)
+    return v;
+}
+
+// Generates lip-sync data from 16-bit mono sound by amplitude analysis: per window of 1/updateRate s, the peak
+// (relative to a moving average of the last 15 windows) opens the mouth (Y) and the zero-crossing rate widens it
+// (X); quiet windows let both decay. Positions are quantised to numXPositions/numYPositions steps of the 7-bit range,
+// and an entry is written only when they change. bByteOffset reads the data shifted by one byte (Sound.c passes 1:
+// each "sample" is then the high byte of one sample and the low byte of the next). Returns the block size, 0 if the
+// sound isn't 16-bit mono. INDY: the original also formatted an unused debug string (which divided by zero for a
+// 1-byte sound); left out.
+int J3DAPI AudioLib_GenerateLipSyncBlock(uint8_t* pOutData, const uint8_t* pSndData, unsigned int updateRate, char numXPositions, char numYPositions, int sampleRate, int bitsPerSample, int numChannels, int bByteOffset, int sndDataSize)
+{
+    unsigned int dataSize = (unsigned int)sndDataSize;
+    if ( dataSize == 0 || !pSndData || bitsPerSample != 16 || numChannels != 1 )
+    {
+        return 0;
+    }
+
+    if ( bByteOffset )
+    {
+        pSndData += 1;
+    }
+
+    memcpy(pOutData, AudioLib_aSyncMagic, 4);
+    pOutData[4] = 0;
+    uint8_t* pEntry = pOutData + 8;
+
+    // quantisation masks: the top bits of the 7-bit range, as many as numPositions - 1 needs
+    unsigned int maskX = 0, maskY = 0;
+    uint8_t restX = (uint8_t)(numXPositions - 1), restY = (uint8_t)(numYPositions - 1);
+    for ( int i = 0; i < 7; i++ )
+    {
+        maskX = (maskX << 1) | (restX != 0);
+        maskY = (maskY << 1) | (restY != 0);
+        restX >>= 1;
+        restY >>= 1;
+    }
+
+    // whole sound: zero crossings (rising) and peak
+    int numCrossings = 0, peak = 0;
+    if ( (int)dataSize > 2 )
+    {
+        for ( unsigned int i = 0; i < (dataSize - 1) >> 1; i++ )
+        {
+            int16_t cur = AudioLib_ReadSample(pSndData + i * 2), next = AudioLib_ReadSample(pSndData + i * 2 + 2);
+            int amplitude = next < 0 ? -next : next;
+            if ( next >= 0 && cur < 0 )
+            {
+                numCrossings++;
+            }
+            if ( amplitude > peak )
+            {
+                peak = amplitude;
+            }
+        }
+    }
+
+    int aRecentPeaks[15];
+    for ( int i = 0; i < 15; i++ )
+    {
+        aRecentPeaks[i] = peak;
+    }
+
+    unsigned int windowSize   = (unsigned int)(sampleRate * 2) / updateRate; // bytes
+    unsigned int crossingNorm = windowSize * (unsigned int)numCrossings;
+    int recentIndex           = 0;
+    uint32_t time             = 0;
+    int processed             = 0;
+    unsigned int prevX = 0, prevY = 0;
+    unsigned int lastX = 0xFFFFFFFF, lastY = 0xFFFFFFFF;
+
+    for ( unsigned int end = windowSize; (int)end <= (int)dataSize; end = windowSize + (unsigned int)processed )
+    {
+        int windowCrossings = 0, windowPeak = 0, windowSum = 0;
+        if ( (int)windowSize > 2 )
+        {
+            for ( unsigned int i = 0; i < (windowSize - 1) >> 1; i++ )
+            {
+                int16_t cur = AudioLib_ReadSample(pSndData + i * 2), next = AudioLib_ReadSample(pSndData + i * 2 + 2);
+                int amplitude = next < 0 ? -next : next;
+                if ( next >= 0 && cur < 0 )
+                {
+                    windowCrossings++;
+                }
+                if ( amplitude > windowPeak )
+                {
+                    windowPeak = amplitude;
+                }
+                windowSum += amplitude;
+            }
+        }
+
+        int average = 0;
+        for ( int i = recentIndex; i < recentIndex + 15; i++ )
+        {
+            average += aRecentPeaks[i % 15];
+        }
+        average /= 15;
+        if ( average == 0 )
+        {
+            average = 1;
+        }
+        if ( average < peak / 4 )
+        {
+            average = peak / 4;
+        }
+        aRecentPeaks[recentIndex] = windowPeak;
+
+        int opening = (windowPeak * 60) / average;
+        int width   = (windowCrossings * 50) / (int)(crossingNorm / dataSize + 1);
+        if ( opening < 25 )
+        {
+            width = ((width - 37) * opening + 925) / 25;
+        }
+        if ( width > 99 )
+        {
+            width = 100;
+        }
+        unsigned int x = (unsigned int)((width * 127) / 100);
+        if ( opening > 99 )
+        {
+            opening = 100;
+        }
+        unsigned int y = (unsigned int)((opening * 127) / 100);
+
+        if ( windowSum / ((int)windowSize >> 1) < (windowPeak * 30) / 100 ) // quiet: close slowly
+        {
+            x = (int)prevX < 48 ? 0 : prevX - 16;
+            y = (int)prevY < 16 ? 0 : prevY - 16;
+        }
+
+        unsigned int qx = x & maskX, qy = y & maskY;
+        if ( qx != lastX || qy != lastY )
+        {
+            uint32_t entry = (time & 0xFFFF0000) | ((qx & 0x7F) << 8) | (qy & 0x7F);
+            memcpy(pEntry, &entry, 4);
+            pEntry += 4;
+            lastX = qx;
+            lastY = qy;
+        }
+
+        time        += (uint32_t)(int)(0x3E8000ull / updateRate);
+        processed   += (int)windowSize;
+        pSndData    += windowSize;
+        recentIndex  = (recentIndex + 1) % 15;
+        prevX        = x;
+        prevY        = y;
+    }
+
+    uint32_t endEntry = time & 0xFFFF0000;
+    memcpy(pEntry, &endEntry, 4);
+    pEntry += 4;
+
+    int32_t numEntries = (int32_t)((pEntry - pOutData) >> 2) - 2;
+    memcpy(pOutData + 4, &numEntries, 4);
+    return numEntries * 4 + 8;
 }
 
 // ADPCM compression (INDY: reimplemented from v1.2, verified with Scripts/indy/test_diff.sh AudioLib); the inverse of

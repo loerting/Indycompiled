@@ -726,6 +726,114 @@ static void indyDiff_SuiteAudioLibHeaders(void)
         aRecognised[3], aRecognised[4], aRecognised[5], aRecognised[6]);
 }
 
+// ---------------------------------------------------------------- suite: AudioLib lip sync
+
+// speech-like test sound: bursts of tone or noise with pauses
+static void indyDiff_MakeSpeech(int16_t* pOut, size_t numSamples, int seed)
+{
+    indyDiff_rand = 777u + (uint32_t)seed;
+    size_t i = 0;
+    while ( i < numSamples )
+    {
+        size_t burst  = 200 + indyDiff_Rand() % 3000;
+        size_t pause  = indyDiff_Rand() % 2000;
+        int amplitude = 500 + (int)(indyDiff_Rand() % 30000);
+        float freq    = 0.01f + (float)(indyDiff_Rand() % 100) / 300.0f;
+        bool bNoise   = indyDiff_Rand() % 3 == 0;
+        for ( size_t k = 0; k < burst && i < numSamples; k++, i++ )
+        {
+            float v = bNoise ? (float)(int)(indyDiff_Rand() % 2001 - 1000) / 1000.0f : sinf((float)k * freq);
+            pOut[i] = (int16_t)(v * (float)amplitude * (k < 100 ? (float)k / 100.0f : 1.0f));
+        }
+        for ( size_t k = 0; k < pause && i < numSamples; k++, i++ )
+        {
+            pOut[i] = (int16_t)((int)(indyDiff_Rand() % 41) - 20);
+        }
+    }
+}
+
+static void indyDiff_SuiteAudioLibLipSync(void)
+{
+    enum { MAXSAMPLES = 44100 * 3 };
+    static int16_t aSound[MAXSAMPLES + 2];
+    static uint8_t aSyncOrig[16384], aSyncNew[16384];
+    IndyDiffStats generate = { "AudioLib_GenerateLipSyncBlock" };
+    IndyDiffStats mouth    = { "AudioLib_GetMouthPosition" };
+    static const int aRates[] = { 11025, 22050, 44100 };
+
+    for ( int seed = 0; seed < 6; seed++ )
+    {
+        for ( size_t r = 0; r < STD_ARRAYLEN(aRates); r++ )
+        {
+            for ( int variant = 0; variant < 8; variant++ ) // bit 0: byte offset, bit 1: 30 updates/s, bit 2: 8x2 positions
+            {
+                int rate       = aRates[r];
+                int numSamples = rate * (1 + seed % 3) - (int)(indyDiff_Rand() % 997);
+                indyDiff_MakeSpeech(aSound, MAXSAMPLES + 2, seed);
+                unsigned int updateRate = (variant & 2) ? 30 : 60;
+                char numX = (variant & 4) ? 8 : 4, numY = (variant & 4) ? 2 : 4;
+                int bits = 16, channels = 1;
+                if ( seed == 5 && variant == 7 )
+                {
+                    bits = 8; // rejected
+                }
+                if ( seed == 4 && variant == 6 )
+                {
+                    channels = 2; // rejected
+                }
+
+                memset(aSyncOrig, 0xCD, sizeof(aSyncOrig));
+                memset(aSyncNew, 0xCD, sizeof(aSyncNew));
+                int sizeOrig = -1;
+                INDY_DIFF_CALL_ORIGINAL_RET(sizeOrig, AudioLib_GenerateLipSyncBlock, aSyncOrig, (const uint8_t*)aSound, updateRate, numX, numY, rate, bits, channels, variant & 1, numSamples * 2);
+                int sizeNew = AudioLib_GenerateLipSyncBlock(aSyncNew, (const uint8_t*)aSound, updateRate, numX, numY, rate, bits, channels, variant & 1, numSamples * 2);
+
+                char aCase[80];
+                snprintf(aCase, sizeof(aCase), "seed %d rate %d variant %d samples %d", seed, rate, variant, numSamples);
+                indyDiff_pCaseInput    = aSound;
+                indyDiff_caseInputSize = (size_t)numSamples * 2;
+                indyDiff_Compare(&generate, aCase, &sizeOrig, &sizeNew, sizeof(int));
+                indyDiff_Compare(&generate, aCase, aSyncOrig, aSyncNew, sizeof(aSyncOrig));
+
+                // look up mouth positions in the original's block, every 7 ms and beyond the end
+                if ( sizeOrig > 0 )
+                {
+                    int durationMs = numSamples * 1000 / rate;
+                    for ( int ms = 0; ms < durationMs + 200; ms += 7 )
+                    {
+                        uint8_t xo = 0x55, yo = 0x55, xn = 0x55, yn = 0x55;
+                        int ro = -1, rn;
+                        INDY_DIFF_CALL_ORIGINAL_RET(ro, AudioLib_GetMouthPosition, aSyncOrig, ms, &xo, &yo);
+                        rn = AudioLib_GetMouthPosition(aSyncOrig, ms, &xn, &yn);
+                        uint8_t aOrig[6] = { (uint8_t)ro, (uint8_t)(ro >> 8), xo, yo }, aNew[6] = { (uint8_t)rn, (uint8_t)(rn >> 8), xn, yn };
+                        indyDiff_Compare(&mouth, aCase, aOrig, aNew, 4);
+                    }
+                }
+            }
+        }
+    }
+
+    // out of range and not a SYNC block
+    static const int aPositions[] = { 0x100000, 0x7FFFFFFF, -1, 5 };
+    for ( size_t i = 0; i < STD_ARRAYLEN(aPositions); i++ )
+    {
+        for ( int bBadMagic = 0; bBadMagic < 2; bBadMagic++ )
+        {
+            static uint8_t aBlock[16] = { 'S', 'Y', 'N', 'C', 1, 0, 0, 0, 0x11, 0x22, 0x33, 0x44 };
+            aBlock[0] = bBadMagic ? 'X' : 'S';
+            uint8_t xo = 0x55, yo = 0x55, xn = 0x55, yn = 0x55;
+            int ro = -1, rn;
+            INDY_DIFF_CALL_ORIGINAL_RET(ro, AudioLib_GetMouthPosition, aBlock, aPositions[i], &xo, &yo);
+            rn = AudioLib_GetMouthPosition(aBlock, aPositions[i], &xn, &yn);
+            uint8_t aOrig[4] = { (uint8_t)ro, (uint8_t)(ro >> 8), xo, yo }, aNew[4] = { (uint8_t)rn, (uint8_t)(rn >> 8), xn, yn };
+            indyDiff_Compare(&mouth, "edge cases", aOrig, aNew, 4);
+        }
+    }
+
+    indyDiff_Report(&generate);
+    indyDiff_Report(&mouth);
+}
+
 // ---------------------------------------------------------------- entry
 
 void indyDiff_RunOnce(void)
@@ -745,6 +853,7 @@ void indyDiff_RunOnce(void)
     {
         indyDiff_SuiteAudioLibAdpcm();
         indyDiff_SuiteAudioLibHeaders();
+        indyDiff_SuiteAudioLibLipSync();
         indyDiff_SuiteAudioLib();
     }
     else
