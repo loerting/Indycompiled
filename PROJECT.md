@@ -467,6 +467,8 @@ Each stage gets a milestone tag: `s1-linux-build`, `s2-modded`, `s4-standalone`,
 | Level sweep: `Scripts/indy/level_sweep.sh` starts all 17 levels headless (survival, level load, engine and Wine errors) | After every change to the address map or engine code |
 | Scripted input: `smoke.sh` with `INDY_SMOKE_ACTIONS` (timed key presses) and `INDY_FAKE_STICK` (simulated stick) | When control code changes |
 | Hang analysis: `INDY_SAMPLE_THREADS=<s>` (in-process thread sampler), then `llvm-addr2line` on Jones3D.dll | When a test hangs |
+| Savegame round trip: `Scripts/indy/test_savegame.sh` (F5, move, F8, compare screenshots) | Every change to savegame/DSS code |
+| Controller: `Scripts/indy/test_gamepad.sh` (virtual Xbox 360 pad via uinput → Wine → XInput → keyset → ENH-0001) | When input code changes |
 
 ---
 
@@ -544,7 +546,8 @@ Because v1.2 is our host, these fixes stay active as long as the affected functi
 - **Struct changes in 1.2.** Did LucasArts change any struct layout in 1.2? Check the shared structs touched by size-changed functions first.
 - **Remaining map review.** How many of the 234 plausible functions does Ghidra confirm, and do any of them turn out wrong? That decides whether `plausible` hooks may be enabled in bulk.
 - ~~**Shaders.** Does `vkd3d-compiler` 1.19 compile upstream's DX9 HLSL shaders (shader model 3)?~~ Yes, since Stage 1 (`compile_shader.py`).
-- **Gamepads under Wine.** Does upstream's XInput support work with your controller under Wine? Wine maps SDL/hidraw devices to XInput.
+- ~~**Gamepads under Wine.**~~ Works: Wine's SDL backend exposes an Xbox 360 pad as XInput (tested with a virtual pad), after four fixes to upstream's XInput code (enhancements.md). Your own controller still needs a feel test.
+- **Upstream bug reports.** The XInput fixes, `sithEvent_ResetFreeBufferTable` (out-of-bounds write), the COG lexer's signed-char index and the MSAA copy-back are bugs in OpenJones3D itself. Reporting them upstream (issues or PRs) is publishing: only with your go-ahead, from your GitHub account, and with nothing but upstream's own C code in the patches.
 - **Upstream patches.** Should the Linux-host patch set be offered upstream?
 
 ---

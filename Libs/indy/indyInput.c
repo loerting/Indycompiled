@@ -2,7 +2,9 @@
 #include "indyEnh.h"
 
 #include <sith/Devices/sithControl.h>
+#include <sith/Gameplay/sithPlayer.h>
 #include <std/General/std.h>
+#include <std/General/stdUtil.h>
 #include <std/Win95/stdControl.h>
 
 #include <math.h>
@@ -124,14 +126,81 @@ float J3DAPI indyInput_GetTurnScale(SithControlFunction function)
     return INDY_TURN_SCALE_MIN + (1.0f - INDY_TURN_SCALE_MIN) * t;
 }
 
+// Diagnostics (INDY_INPUT_TRACE=1): once a second, log the movement bindings and what each reads right now.
+// Shows whether a controller's stick is bound at all and whether its values arrive.
+// INDY_INPUT_TRACE=<interval in ms> (any other value: 1000)
+static DWORD indyInput_TraceInterval(void)
+{
+    static long interval = -1;
+    if ( interval == -1 )
+    {
+        const char* pTrace = getenv("INDY_INPUT_TRACE");
+        interval = !pTrace ? 0 : atol(pTrace) > 0 ? atol(pTrace) : 1000;
+    }
+    return (DWORD)interval;
+}
+
+static bool indyInput_IsTracing(void)
+{
+    return indyInput_TraceInterval() != 0;
+}
+
+static void indyInput_Trace(void)
+{
+    static DWORD msecLast;
+    DWORD msecNow = GetTickCount();
+    if ( !indyInput_IsTracing() || msecNow - msecLast < indyInput_TraceInterval() )
+    {
+        return;
+    }
+    msecLast = msecNow;
+
+    const SithThing* pPlayer = sithPlayer_g_pLocalPlayerThing;
+    if ( pPlayer )
+    {
+        STDLOG_STATUS("indyInput trace: player pos %.3f %.3f %.3f moveStatus %d\n",
+            pPlayer->pos.x, pPlayer->pos.y, pPlayer->pos.z, (int)pPlayer->moveStatus);
+    }
+
+    static const struct { SithControlFunction fn; const char* pName; } aFunctions[] = {
+        { SITHCONTROL_FORWARD, "forward" }, { SITHCONTROL_BACK, "back" },
+        { SITHCONTROL_TURNLEFT, "left" }, { SITHCONTROL_TURNRIGHT, "right" },
+        { SITHCONTROL_RUNFWD, "runfwd" }, { SITHCONTROL_ACT1, "act1" },
+    };
+    for ( size_t f = 0; f < STD_ARRAYLEN(aFunctions); f++ )
+    {
+        char aLine[256] = { 0 };
+        size_t len = 0;
+        size_t numBindings = 0;
+        const SithControlBinding* aBindings = sithControl_GetFunctionBindings(aFunctions[f].fn, &numBindings);
+        for ( size_t i = 0; aBindings && i < numBindings && len < sizeof(aLine) - 48; i++ )
+        {
+            const SithControlBinding* pBinding = &aBindings[i];
+            if ( (pBinding->flags & SITHCONTROLBIND_AXISCONTROL) != 0 )
+            {
+                len += snprintf(aLine + len, sizeof(aLine) - len, " axis %08X=%.2f(raw %d%s)", (unsigned)pBinding->controlId,
+                    stdControl_ReadAxis(pBinding->controlId), stdControl_ReadAxisRaw(STDCONTROL_GETAID(pBinding->controlId)),
+                    stdControl_TestAxisFlag(STDCONTROL_GETAID(pBinding->controlId), STDCONTROL_AXIS_ENABLED) ? "" : " disabled");
+            }
+            else
+            {
+                len += snprintf(aLine + len, sizeof(aLine) - len, " key %X=%d", (unsigned)pBinding->controlId, stdControl_ReadKey(pBinding->controlId, NULL));
+            }
+        }
+        STDLOG_STATUS("indyInput trace: %s (%u bindings):%s\n", aFunctions[f].pName, (unsigned)numBindings, aLine);
+    }
+}
+
 bool indyInput_IsStickRun(void)
 {
+    indyInput_Trace();
+
     float deflection = 0.0f;
     bool bRun = indyInput_IsStick(SITHCONTROL_FORWARD, &deflection) && deflection >= INDY_STICK_RUN_THRESHOLD;
 
-    // headless tests (INDY_FAKE_STICK): log each change of the decision, so the wiring can be checked in JonesLog.txt
+    // tests (INDY_FAKE_STICK, INDY_INPUT_TRACE): log each change of the decision, so it can be checked in JonesLog.txt
     static int lastLogged = -1;
-    if ( indyInput_bFake && deflection > 0.0f && lastLogged != (int)bRun )
+    if ( (indyInput_bFake || indyInput_IsTracing()) && deflection > 0.0f && lastLogged != (int)bRun )
     {
         STDLOG_STATUS("indyInput: forward stick %.2f -> %s\n", deflection, bRun ? "run" : "walk");
         lastLogged = (int)bRun;

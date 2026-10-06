@@ -8,7 +8,8 @@
 #
 # INDY_SMOKE_PROC=<name> checks another process (e.g. Indy3D.exe when starting the Jones3D.exe launcher).
 # INDY_SMOKE_INTERVAL=<s> screenshot interval (default 15); INDY_SMOKE_NOKEYS=1 sends no Escape key presses.
-# INDY_SMOKE_ACTIONS="<second>:<xdotool command>;..." runs scripted input, e.g. "40:keydown Up;44:keyup Up".
+# INDY_SMOKE_ACTIONS="<second>:<xdotool command>;..." runs scripted input, e.g. "40:keydown Up;44:keyup Up";
+#   "<second>:shot <name>" takes a named screenshot (smoke-<timestamp>-<name>.png).
 # Usage: Scripts/indy/smoke.sh [seconds=45] [exe relative to game/run=Resource/Indy3D.exe] [game args...]
 # Output: game/screens/smoke-<timestamp>-<t>s.png and smoke-<timestamp>.log
 set -euo pipefail
@@ -61,7 +62,10 @@ for ((t = 1; t <= secs; t++)); do
     sleep 1
     if [[ -n "${actions[$t]:-}" ]]; then
         IFS=';' read -ra cmds <<< "${actions[$t]}"
-        for c in "${cmds[@]}"; do [[ -n "$c" ]] && xdotool $c 2>/dev/null; done
+        for c in "${cmds[@]}"; do
+            if [[ "$c" == shot\ * ]]; then import -window root "$shot-${c#shot }.png"   # "shot <name>": named screenshot
+            elif [[ -n "$c" ]]; then xdotool $c 2>/dev/null; fi
+        done
     fi
     if (( t % ${INDY_SMOKE_INTERVAL:-15} == 0 )); then
         import -window root "$shot-${t}s.png"

@@ -16,19 +16,33 @@ IDs are permanent. New entries go at the end of the `IndyEnh` enum.
 
 | ID | Key | Kind | Status | What it does |
 |---|---|---|---|---|
-| ENH-0001 | `analogMovement` | experimental | prototype; wiring tested headless (stick 1.0 → run, 0.5 → walk, toggle off → original); needs a gamepad test | With a gamepad stick: pushing it past 85% runs, less walks (no run button needed); turn rate follows stick deflection (30–100%). Keyboard input is unchanged. Walking speed itself isn't scaled yet (the walk animation would slide). See `notes/controls.md`. |
+| ENH-0001 | `analogMovement` | experimental | tested headless with a virtual Xbox 360 pad through Wine/XInput (`test_gamepad.sh`: half push walks and stops at ledges, full push runs, turning follows the push); needs a real-pad feel test | With a gamepad stick: pushing it past 85% runs, less walks (no run button needed); turn rate follows stick deflection (30–100%). Keyboard input is unchanged. Walking speed itself isn't scaled yet (the walk animation would slide). See `notes/controls.md`. |
 
 Kinds: **fix** (on in `fixed` and `enhanced`), **enhancement** (on in `enhanced`), **experimental** (off in every
 profile until tested; enable it explicitly in `toggles`).
 
 ### Testing ENH-0001 with a controller
 
-1. Deploy the build: `Scripts/indy/deploy.sh mingw-dx9-release`.
-2. In `game/run/Resource/Jones.cfg`, add `"indycompiled": { "toggles": { "analogMovement": true } }`.
-3. Run `Scripts/indy/play.sh --build`, start Canyonlands and compare a light push and a full push on the left
-   stick, for walking and turning.
-4. Headless wiring test without a controller: `INDY_FAKE_STICK="<forward>,<turn>"` (e.g. `"1.0,0.5"`) makes a held
-   keyboard key count as a stick at that deflection, and JonesLog.txt logs `indyInput: forward stick … -> run/walk`.
+1. Build and deploy: `Scripts/indy/play.sh --build` (or `Scripts/indy/deploy.sh mingw-dx9-release`).
+2. In `game/run/Resource/Jones.cfg`: `"controls": { "controller": true, "configFile": "XBOX360" }` (the XBOX360
+   keyset ships with the game; the in-game Options → Controls dialog sets the same) and
+   `"indycompiled": { "toggles": { "analogMovement": true } }`.
+3. Start Canyonlands and compare a light push and a full push on the left stick, for walking and turning.
+   `INDY_INPUT_TRACE=250` (environment) logs the stick readings and Indy's position to `JonesLog.txt`.
+4. Without a controller: `Scripts/indy/test_gamepad.sh` creates a virtual Xbox 360 pad (`virtual_pad.py`, needs
+   write access to `/dev/uinput`) and checks the whole path headless; `INDY_TEST_ANALOG=0|1` forces ENH-0001 off/on.
+   `INDY_FAKE_STICK="<forward>,<turn>"` simulates a stick with held keyboard keys.
+
+## Upstream bug fixes in OpenJones3D's own additions (no toggle: the original game has no XInput)
+
+| What | Where | Status |
+|---|---|---|
+| A stick held still read 0: `stdControl_ReadControls` clears all axes every frame, but `stdControl_ReadXInput` skipped devices whose packet number hadn't changed | `Libs/std/Win95/DX9/stdControlDX9.c` | fixed, tested with the virtual pad |
+| Stick Y inverted: XInput's up is positive, the engine's (DirectInput's) is negative, so forward on the stick walked backwards | same | fixed, tested |
+| Double dead zone on XInput sticks (XInput's, then the engine's, unscaled): the first ~42% of stick travel did nothing | same | fixed |
+| `stdControl_IsGamePad`: `>` instead of `>=`, so the first XInput pad counted as no gamepad | same | fixed |
+
+Candidates for upstream bug reports (see PROJECT.md §12).
 
 ## Port fixes (no toggle: they make our build behave like the original)
 
