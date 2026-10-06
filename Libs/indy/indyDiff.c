@@ -497,6 +497,235 @@ static void indyDiff_SuiteAudioLibAdpcm(void)
     indyDiff_Report(&wvsmDecode);
 }
 
+// ---------------------------------------------------------------- suite: AudioLib header parser
+
+typedef struct sIndyDiffBuf
+{
+    uint8_t aData[512];
+    size_t size;
+} IndyDiffBuf;
+
+static void indyDiff_Put(IndyDiffBuf* pBuf, const void* pData, size_t size)
+{
+    memcpy(pBuf->aData + pBuf->size, pData, size);
+    pBuf->size += size;
+}
+static void indyDiff_PutLE32(IndyDiffBuf* pBuf, uint32_t v) { indyDiff_Put(pBuf, &v, 4); }
+static void indyDiff_PutLE16(IndyDiffBuf* pBuf, uint16_t v) { indyDiff_Put(pBuf, &v, 2); }
+static void indyDiff_PutBE32(IndyDiffBuf* pBuf, uint32_t v)
+{
+    uint8_t a[4] = { (uint8_t)(v >> 24), (uint8_t)(v >> 16), (uint8_t)(v >> 8), (uint8_t)v };
+    indyDiff_Put(pBuf, a, 4);
+}
+static void indyDiff_PutBE16(IndyDiffBuf* pBuf, uint16_t v)
+{
+    uint8_t a[2] = { (uint8_t)(v >> 8), (uint8_t)v };
+    indyDiff_Put(pBuf, a, 2);
+}
+static void indyDiff_PutFill(IndyDiffBuf* pBuf, size_t size)
+{
+    for ( size_t i = 0; i < size; i++ )
+    {
+        pBuf->aData[pBuf->size++] = (uint8_t)indyDiff_Rand();
+    }
+}
+
+static void indyDiff_MakeHeader(IndyDiffBuf* pBuf, int variant)
+{
+    memset(pBuf, 0, sizeof(*pBuf));
+    int kind = variant % 12;
+    if ( variant >= 24 ) // MCMP container in front (3 table entries)
+    {
+        indyDiff_Put(pBuf, "MCMP", 4);
+        indyDiff_PutBE16(pBuf, 3);
+        indyDiff_PutFill(pBuf, 3 * 9);
+        indyDiff_PutBE16(pBuf, 5); // size of the variable part
+        indyDiff_PutFill(pBuf, 5);
+    }
+
+    switch ( kind )
+    {
+        case 0: case 1: // IndyWV, with / without lip-sync data
+            indyDiff_Put(pBuf, "INDYWV", 6);
+            indyDiff_PutLE32(pBuf, 22050);
+            indyDiff_PutLE32(pBuf, 16);
+            indyDiff_PutLE32(pBuf, 1 + (variant & 1));
+            indyDiff_PutLE32(pBuf, 12345);
+            indyDiff_PutLE32(pBuf, kind == 0 ? 40 : 0);
+            indyDiff_PutFill(pBuf, 64);
+            break;
+
+        case 2: case 3: case 4: case 5: // RIFF PCM: plain, with sync, with LIST and sync, with an odd fmt size
+        case 6: case 7:                 // RIFF non-PCM, RIFF without a data chunk
+        {
+            size_t riffSizeAt = pBuf->size + 4;
+            indyDiff_Put(pBuf, "RIFF", 4);
+            indyDiff_PutLE32(pBuf, 0);
+            indyDiff_Put(pBuf, "WAVEfmt ", 8);
+            indyDiff_PutLE32(pBuf, kind == 5 ? 18 : 16);
+            indyDiff_PutLE16(pBuf, kind == 6 ? 2 : 1);
+            indyDiff_PutLE16(pBuf, (uint16_t)(1 + (variant & 1)));
+            indyDiff_PutLE32(pBuf, 11025 << (variant % 3));
+            indyDiff_PutLE32(pBuf, 0);
+            indyDiff_PutLE16(pBuf, 4);
+            indyDiff_PutLE16(pBuf, (variant & 2) ? 8 : 16);
+            if ( kind == 5 )
+            {
+                indyDiff_PutLE16(pBuf, 0);
+            }
+            if ( kind == 4 )
+            {
+                indyDiff_Put(pBuf, "LIST", 4);
+                indyDiff_PutLE32(pBuf, 10);
+                indyDiff_PutFill(pBuf, 10);
+            }
+            if ( kind == 3 || kind == 4 )
+            {
+                indyDiff_Put(pBuf, "sync", 4);
+                indyDiff_PutLE32(pBuf, 24);
+                indyDiff_PutFill(pBuf, 24);
+            }
+            if ( kind != 7 )
+            {
+                indyDiff_Put(pBuf, "data", 4);
+                indyDiff_PutLE32(pBuf, 100);
+            }
+            uint32_t riffSize = (uint32_t)(pBuf->size - riffSizeAt - 4 + (kind != 7 ? 100 : 0));
+            memcpy(pBuf->aData + riffSizeAt, &riffSize, 4);
+            indyDiff_PutFill(pBuf, 64);
+            break;
+        }
+
+        case 8: case 9: // iMUSE FRMT; iMUS without FRMT
+            indyDiff_Put(pBuf, "iMUS", 4);
+            indyDiff_PutBE32(pBuf, 1000);
+            indyDiff_Put(pBuf, "MAP ", 4);
+            indyDiff_PutBE32(pBuf, 60);
+            indyDiff_Put(pBuf, kind == 8 ? "FRMT" : "FRMX", 4);
+            indyDiff_PutBE32(pBuf, 20);
+            indyDiff_PutBE32(pBuf, 0);
+            indyDiff_PutBE32(pBuf, 0);
+            indyDiff_PutBE32(pBuf, 16);
+            indyDiff_PutBE32(pBuf, 22050);
+            indyDiff_PutBE32(pBuf, 2);
+            indyDiff_PutFill(pBuf, 64);
+            break;
+
+        case 10: case 11: // AIFF: sample rate exponent 0x0C/0x0D/0x0E; with a chunk before SSND
+        {
+            indyDiff_Put(pBuf, "FORM", 4);
+            indyDiff_PutBE32(pBuf, 200);
+            indyDiff_Put(pBuf, "AIFFCOMM", 8);
+            indyDiff_PutBE32(pBuf, 18);
+            indyDiff_PutBE16(pBuf, (uint16_t)(1 + (variant & 1)));
+            indyDiff_PutBE32(pBuf, 5000);
+            indyDiff_PutBE16(pBuf, 16);
+            uint8_t aRate[10] = { 0x40, (uint8_t)(0x0C + variant % 3), 0xAC, 0x44 };
+            indyDiff_Put(pBuf, aRate, 10);
+            if ( kind == 11 )
+            {
+                indyDiff_Put(pBuf, "MARK", 4);
+                indyDiff_PutBE32(pBuf, 6);
+                indyDiff_PutFill(pBuf, 6);
+            }
+            indyDiff_Put(pBuf, "SSND", 4);
+            indyDiff_PutBE32(pBuf, 108);
+            indyDiff_PutBE32(pBuf, 0);
+            indyDiff_PutBE32(pBuf, 0);
+            indyDiff_PutFill(pBuf, 64);
+            break;
+        }
+    }
+}
+
+typedef struct sIndyDiffWaveInfo
+{
+    int32_t retOffset; // -1: NULL
+    int32_t type;
+    uint32_t sampleRate, bits, channels, extraInfo, dataSize;
+    int32_t extraOffset; // pointer output as offset, -1 if 0
+    uint32_t extraSize;
+} IndyDiffWaveInfo;
+
+static void indyDiff_SuiteAudioLibHeaders(void)
+{
+    IndyDiffStats stats = { "AudioLib_ParseWaveFileHeader" };
+    static IndyDiffBuf buf;
+    int aRecognised[8] = { 0 }; // by type, from the original
+    for ( int variant = 0; variant < 48; variant++ )
+    {
+        for ( int nulls = 0; nulls < 4; nulls++ ) // which outputs are NULL
+        {
+            indyDiff_MakeHeader(&buf, variant);
+            if ( variant >= 36 )
+            {
+                indyDiff_PutFill(&buf, 0); // garbage at the start instead of a header
+                for ( int i = 0; i < 16; i++ )
+                {
+                    buf.aData[i] = (uint8_t)indyDiff_Rand();
+                }
+            }
+
+            IndyDiffWaveInfo info[2];
+            for ( int side = 0; side < 2; side++ )
+            {
+                int type = 0x55;
+                uint32_t rate = 0x55, bits = 0x55, ch = 0x55, extra = 0x55, size = 0x55, extraPtr = 0x55, extraSize = 0x55;
+                int* pType           = nulls == 1 ? NULL : &type;
+                uint32_t* pExtraPtr  = nulls == 2 ? NULL : &extraPtr;
+                uint32_t* pExtraSize = nulls == 3 ? NULL : &extraSize;
+                const uint8_t* pRet  = (const uint8_t*)-1;
+                if ( side == 0 )
+                {
+                    INDY_DIFF_CALL_ORIGINAL_RET(pRet, AudioLib_ParseWaveFileHeader, buf.aData, pType, &rate, &bits, &ch, &extra, &size, pExtraPtr, pExtraSize);
+                }
+                else
+                {
+                    pRet = AudioLib_ParseWaveFileHeader(buf.aData, pType, &rate, &bits, &ch, &extra, &size, pExtraPtr, pExtraSize);
+                }
+                memset(&info[side], 0, sizeof(info[side]));
+                info[side].retOffset   = pRet ? (int32_t)(pRet - buf.aData) : -1;
+                info[side].type        = type;
+                info[side].sampleRate  = rate;
+                info[side].bits        = bits;
+                info[side].channels    = ch;
+                info[side].extraInfo   = extra;
+                info[side].dataSize    = size;
+                info[side].extraOffset = extraPtr && extraPtr != 0x55 ? (int32_t)((const uint8_t*)(uintptr_t)extraPtr - buf.aData) : (int32_t)extraPtr - 0x1000;
+                info[side].extraSize   = extraSize;
+            }
+            if ( info[0].retOffset >= 0 && nulls != 1 && info[0].type >= 0 && info[0].type < 8 )
+            {
+                aRecognised[info[0].type]++;
+            }
+            char aCase[48];
+            snprintf(aCase, sizeof(aCase), "header variant %d nulls %d", variant, nulls);
+            indyDiff_pCaseInput    = buf.aData;
+            indyDiff_caseInputSize = buf.size;
+            indyDiff_Compare(&stats, aCase, &info[0], &info[1], sizeof(info[0]));
+        }
+    }
+
+    // NULL data
+    for ( int side = 0; side < 2; side++ )
+    {
+        static int types[2];
+        types[side] = 0x55;
+        if ( side == 0 )
+        {
+            INDY_DIFF_CALL_ORIGINAL(AudioLib_ParseWaveFileHeader, NULL, &types[0], NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+        }
+        else
+        {
+            AudioLib_ParseWaveFileHeader(NULL, &types[1], NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+            indyDiff_Compare(&stats, "NULL data", &types[0], &types[1], sizeof(int));
+        }
+    }
+    indyDiff_Report(&stats);
+    indyDiff_Log("  recognised by the original, by type 1-6: %d %d %d %d %d %d\n", aRecognised[1], aRecognised[2],
+        aRecognised[3], aRecognised[4], aRecognised[5], aRecognised[6]);
+}
+
 // ---------------------------------------------------------------- entry
 
 void indyDiff_RunOnce(void)
@@ -515,6 +744,7 @@ void indyDiff_RunOnce(void)
     if ( strcmp(pSuite, "AudioLib") == 0 )
     {
         indyDiff_SuiteAudioLibAdpcm();
+        indyDiff_SuiteAudioLibHeaders();
         indyDiff_SuiteAudioLib();
     }
     else

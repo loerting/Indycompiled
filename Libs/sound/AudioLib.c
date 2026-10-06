@@ -13,7 +13,7 @@ void AudioLib_InstallHooks(void)
 {
     // Uncomment only lines for functions that have full definition and doesn't call original function (non-thunk functions)
 
-    // J3D_HOOKFUNC(AudioLib_ParseWaveFileHeader);
+    J3D_HOOKFUNC(AudioLib_ParseWaveFileHeader); // INDY: reimplemented
     J3D_HOOKFUNC(AudioLib_Compress); // INDY: reimplemented
     J3D_HOOKFUNC(AudioLib_ResetCompressor); // INDY: reimplemented
     J3D_HOOKFUNC(AudioLib_Uncompress); // INDY: reimplemented
@@ -231,9 +231,246 @@ void AudioLib_ResetGlobals(void)
 }
 
 // Returns pointer to snd data
+static uint32_t AudioLib_ReadLE32(const uint8_t* p)
+{
+    uint32_t v;
+    memcpy(&v, p, sizeof(v)); // x86: little endian
+    return v;
+}
+
+static uint32_t AudioLib_ReadBE32(const uint8_t* p)
+{
+    return ((uint32_t)p[0] << 24) | ((uint32_t)p[1] << 16) | ((uint32_t)p[2] << 8) | p[3];
+}
+
+static uint32_t AudioLib_ReadBE16(const uint8_t* p)
+{
+    return ((uint32_t)p[0] << 8) | p[1];
+}
+
+// Parses the header of a sound file (INDY: reimplemented from v1.2, verified with Scripts/indy/test_diff.sh AudioLib).
+// Returns the start of the sound data (NULL if the format isn't recognised) and sets *pType:
+//   1 iMUSE (iMUS/FRMT, big endian), 2 the same inside MCMP, 3 RIFF WAVE PCM, 4 the same inside MCMP,
+//   5 AIFF (FORM/AIFF), 6 IndyWV (the game's own format).
+// pExtraDataOffset receives a *pointer* to the lip-sync data (RIFF "sync" chunk, IndyWV extra data) and
+// pSoundDataOffset its size; both only when both are given. Quirks kept from the original: IndyWV fills pExtraInfo
+// and pSoundDataSize from the same field, and the AIFF sample rate comes from the exponent byte of the 80-bit float
+// (only 11025, 22050 and 44100 Hz).
 const uint8_t* J3DAPI AudioLib_ParseWaveFileHeader(const uint8_t* pData, int* pType, uint32_t* pSampleRate, uint32_t* pBitsPerSample, uint32_t* pNumChannels, uint32_t* pExtraInfo, uint32_t* pSoundDataSize, uint32_t* pExtraDataOffset, uint32_t* pSoundDataOffset)
 {
-    return J3D_TRAMPOLINE_CALL(AudioLib_ParseWaveFileHeader, pData, pType, pSampleRate, pBitsPerSample, pNumChannels, pExtraInfo, pSoundDataSize, pExtraDataOffset, pSoundDataOffset);
+    if ( pType )
+    {
+        *pType = 0;
+    }
+
+    if ( !pData )
+    {
+        return NULL;
+    }
+
+    if ( pExtraDataOffset )
+    {
+        *pExtraDataOffset = 0;
+    }
+    if ( pSoundDataOffset )
+    {
+        *pSoundDataOffset = 0;
+    }
+
+    // MCMP container: skip its header (a table of 9-byte entries, then a variable part)
+    bool bMcmp = memcmp(pData, "MCMP", 4) == 0;
+    if ( bMcmp )
+    {
+        uint32_t numEntries = AudioLib_ReadBE16(pData + 4);
+        pData += AudioLib_ReadBE16(pData + numEntries * 9 + 6) + numEntries * 9 + 8;
+    }
+
+    if ( memcmp(pData, "INDYWV", 6) == 0 )
+    {
+        if ( pType )
+        {
+            *pType = 6;
+        }
+        if ( pSampleRate )
+        {
+            *pSampleRate = AudioLib_ReadLE32(pData + 6);
+        }
+        if ( pBitsPerSample )
+        {
+            *pBitsPerSample = AudioLib_ReadLE32(pData + 10);
+        }
+        if ( pNumChannels )
+        {
+            *pNumChannels = AudioLib_ReadLE32(pData + 14);
+        }
+        if ( pExtraInfo )
+        {
+            *pExtraInfo = AudioLib_ReadLE32(pData + 18);
+        }
+        if ( pSoundDataSize )
+        {
+            *pSoundDataSize = AudioLib_ReadLE32(pData + 18);
+        }
+        if ( pExtraDataOffset && pSoundDataOffset )
+        {
+            uint32_t extraSize = AudioLib_ReadLE32(pData + 22);
+            *pSoundDataOffset  = extraSize;
+            if ( extraSize )
+            {
+                *pExtraDataOffset = (uint32_t)(uintptr_t)(pData + 26);
+                return pData + extraSize + 26;
+            }
+            *pExtraDataOffset = 0;
+        }
+        return pData + 26;
+    }
+
+    if ( memcmp(pData, "RIFF", 4) == 0 )
+    {
+        uint32_t riffSize = AudioLib_ReadLE32(pData + 4);
+        int16_t format;
+        memcpy(&format, pData + 20, sizeof(format));
+        if ( memcmp(pData + 8, "WAVEfmt ", 8) != 0 || format != 1 ) // PCM only
+        {
+            return NULL;
+        }
+
+        if ( pType )
+        {
+            *pType = bMcmp ? 4 : 3;
+        }
+        if ( pSampleRate )
+        {
+            *pSampleRate = AudioLib_ReadLE32(pData + 24);
+        }
+        if ( pBitsPerSample )
+        {
+            int16_t bits;
+            memcpy(&bits, pData + 34, sizeof(bits));
+            *pBitsPerSample = (uint32_t)(int32_t)bits;
+        }
+        if ( pNumChannels )
+        {
+            int16_t channels;
+            memcpy(&channels, pData + 22, sizeof(channels));
+            *pNumChannels = (uint32_t)(int32_t)channels;
+        }
+        if ( pExtraInfo )
+        {
+            *pExtraInfo = 1;
+        }
+
+        // walk the chunks after "fmt " up to "data"; pSize points at the size field of the current chunk
+        const uint8_t* pEnd  = pData + riffSize + 8;
+        const uint8_t* pSize = pData + 16;
+        uint32_t chunkSize   = AudioLib_ReadLE32(pSize);
+        for ( ;; )
+        {
+            pSize    += chunkSize + 8;
+            chunkSize = AudioLib_ReadLE32(pSize);
+            if ( memcmp(pSize - 4, "sync", 4) == 0 && pExtraDataOffset && pSoundDataOffset )
+            {
+                *pExtraDataOffset = (uint32_t)(uintptr_t)(pSize + 4);
+                *pSoundDataOffset = chunkSize;
+            }
+            if ( pSize >= pEnd )
+            {
+                return NULL;
+            }
+            if ( memcmp(pSize - 4, "data", 4) == 0 )
+            {
+                break;
+            }
+        }
+
+        if ( pSoundDataSize )
+        {
+            *pSoundDataSize = chunkSize;
+        }
+        return pSize + 4;
+    }
+
+    if ( memcmp(pData, "iMUS", 4) == 0 )
+    {
+        uint32_t frmtEnd = AudioLib_ReadBE32(pData + 12);
+        if ( memcmp(pData + 16, "FRMT", 4) != 0 )
+        {
+            return NULL;
+        }
+
+        if ( pType )
+        {
+            *pType = bMcmp ? 2 : 1;
+        }
+        if ( pBitsPerSample )
+        {
+            *pBitsPerSample = AudioLib_ReadBE32(pData + 32);
+        }
+        if ( pSampleRate )
+        {
+            *pSampleRate = AudioLib_ReadBE32(pData + 36);
+        }
+        if ( pNumChannels )
+        {
+            *pNumChannels = AudioLib_ReadBE32(pData + 40);
+        }
+        if ( pExtraInfo )
+        {
+            *pExtraInfo = 1;
+        }
+        if ( pSoundDataSize )
+        {
+            *pSoundDataSize = AudioLib_ReadBE32(pData + frmtEnd + 20);
+        }
+        return pData + frmtEnd + 24;
+    }
+
+    if ( !bMcmp && memcmp(pData, "FORM", 4) == 0 && memcmp(pData + 8, "AIFFCOMM", 8) == 0 )
+    {
+        const uint8_t* pEnd = pData + AudioLib_ReadBE32(pData + 4) + 8;
+        if ( pType )
+        {
+            *pType = 5;
+        }
+        if ( pSampleRate )
+        {
+            uint8_t exponent = pData[0x1D];
+            *pSampleRate = exponent == 0x0E ? 44100 : exponent == 0x0C ? 11025 : 22050;
+        }
+        if ( pBitsPerSample )
+        {
+            *pBitsPerSample = pData[0x1B];
+        }
+        if ( pNumChannels )
+        {
+            *pNumChannels = pData[0x15];
+        }
+        if ( pExtraInfo )
+        {
+            *pExtraInfo = 0;
+        }
+
+        // walk the chunks after "COMM" up to "SSND"; pSize points at the size field of the current chunk
+        const uint8_t* pSize = pData + 16;
+        uint32_t chunkSize   = AudioLib_ReadBE32(pSize);
+        do
+        {
+            pSize    += chunkSize + 8;
+            chunkSize = AudioLib_ReadBE32(pSize);
+            if ( pSize >= pEnd )
+            {
+                return NULL;
+            }
+        } while ( memcmp(pSize - 4, "SSND", 4) != 0 );
+
+        if ( pSoundDataSize )
+        {
+            *pSoundDataSize = chunkSize - 8;
+        }
+        return pSize + 12; // after the size, SSND's offset and block size fields
+    }
+
+    return NULL;
 }
 
 // Compressed sound layout (INDY: reimplemented from v1.2, verified with Scripts/indy/test_diff.sh AudioLib):
