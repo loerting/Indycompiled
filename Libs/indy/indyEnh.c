@@ -27,6 +27,7 @@ static const IndyEnhInfo indyEnh_aInfos[INDY_ENH_COUNT] = {
     [INDY_FIX_JEWEL_FLY_THRUST]  = { "FIX-0004", "fpsIndependentJewelFly", INDY_KIND_FIX },
     [INDY_ENH_RIGHT_STICK_CAMERA] = { "ENH-0002", "rightStickCamera", INDY_KIND_ENH },
     [INDY_ENH_QUICK_DIRECTION]    = { "ENH-0003", "quickDirectionChange", INDY_KIND_ENH },
+    [INDY_ENH_SKIP_INTRO]         = { "ENH-0004", "skipIntro", INDY_KIND_ENH },
 };
 
 static bool indyEnh_bLoaded;

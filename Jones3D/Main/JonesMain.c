@@ -1,6 +1,7 @@
 #include "JonesMain.h"
 #include <indy/indyDebug.h> // INDY
 #include <indy/indyDiff.h> // INDY
+#include <indy/indyEnh.h> // INDY
 #include <j3dcore/j3dhook.h>
 
 #include <Jones3D/Gui/JonesDialog.h>
@@ -616,6 +617,12 @@ int J3DAPI JonesMain_Startup(const char* lpCmdLine)
 
         JonesMain_CloseWindow();
         return 1;
+    }
+
+    // INDY(ENH-0004): no intro video at game start
+    if ( indyEnh_IsEnabled(INDY_ENH_SKIP_INTRO) )
+    {
+        bPlayIntro = false;
     }
 
     // Play intro video
