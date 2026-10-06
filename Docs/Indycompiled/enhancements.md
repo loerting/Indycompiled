@@ -36,4 +36,5 @@ profile until tested; enable it explicitly in `toggles`).
 |---|---|---|
 | Out-of-bounds write in `sithEvent_ResetFreeBufferTable` (clang -O2 turned it into an endless loop) | `Libs/sith/Gameplay/sithEvent.c` | fixed |
 | Address map: platform/file wrappers rearranged in v1.2 (the intro video hung) | `Scripts/indy/rti_v12_reviewed.csv` | fixed |
+| COG lexer read bytes ≥ 0x80 outside its 7-bit table; `10_sea_vol_frets.cog` ("Meroë" in a comment) sent it into an endless loop, so level 11 never loaded | `Libs/sith/Cog/sithCogFlex.c` | fixed (bytes folded to 7 bits; the regenerated lexer needs the same fix) |
 | Intro video black under Wine when MSAA is on | `stdDisplay_CopyBufferToSurface`: copying into a multisampled target now draws the source as a quad (`Libs/indy/indyDisplayDX9.c`). Wine's `StretchRect` reports success there but copies nothing. | fixed, tested headless with 8× MSAA |

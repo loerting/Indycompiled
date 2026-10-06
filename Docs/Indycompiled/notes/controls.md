@@ -49,10 +49,10 @@ never into git), then port the differences as FIX entries.
 
 ## 1.2 signature changes (found 2026-10-06 by comparing call-site argument counts with upstream's signatures)
 
-All callers of these functions are hooked, i.e. run upstream's C code, so there's no runtime mismatch. But they show where
-LucasArts changed code in 1.2, and those fixes are lost wherever upstream's v1.0-based C code replaces the original:
-- `sithControl_RegisterKeyFunction`: 2 arguments in v1.2 (49 call sites), 1 in upstream. Possibly part of the 1.2 fix
-  to the control configuration dialog.
+All callers of these functions are hooked, i.e. run upstream's C code, so there's no runtime mismatch. They were leads
+for code LucasArts changed in 1.2, but the two biggest turned out to be dead arguments (the callee never reads them):
+- `sithControl_RegisterKeyFunction`: callers push 2 arguments in v1.2 (49 call sites), 1 in upstream. **Checked: not a
+  behaviour change.** The v1.2 function reads only the function id and stores `KEY | REGISTERED`, like upstream's C.
 - `sithThing_AttachThingToClimbSurface`: callers push 3 arguments in v1.2, 2 in upstream. **Checked: not a behaviour change.**
   The v1.2 function only reads two parameters; the third (always 1) is a dead argument.
 - Smaller ones (one argument more): `sithAnimate_StartSurfaceLightAnim`, `sithCogParse_ResetTreeNodes`, `Sound_Update`,

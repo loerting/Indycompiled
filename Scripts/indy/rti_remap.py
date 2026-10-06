@@ -67,6 +67,10 @@ def read_usage(root):
         if "external" in src.parts or src.name == "j3dhook.h":
             continue
         text = src.read_text("latin1")
+        # upstream disables many hooks by commenting them out ("// J3D_HOOKFUNC(x);"): those functions still run the
+        # original exe code, so a commented-out hook must not count
+        text = re.sub(r"/\*.*?\*/", " ", text, flags=re.S)
+        text = re.sub(r"//[^\n]*", " ", text)
         for kind, pat in pats.items():
             for m in re.findall(pat, text):
                 for name in (m if isinstance(m, tuple) else (m,)):
@@ -514,7 +518,7 @@ def main():
     def strength(n):
         r = reviewed.get(n)
         if r:
-            if r["reviewer"] in ("manual", "semantic") or r["verdict"] == "fixed":
+            if r["reviewer"] in ("manual", "semantic", "xref") or r["verdict"] == "fixed":
                 return "strong"
             return "strong" if r["evidence"].startswith(("called by", "used by", "field used by")) else "weak"
         a = syms[n][0]
@@ -544,8 +548,13 @@ def main():
             if exe.lo <= tgt < exe.hi and tgt % 16 == 0:
                 callers_of[tgt].add(owner(exe.base + i))
 
+    trampolined = {n for n in syms if "trampoline" in usage.get(n, set())}
+
     def reachable(b):
-        return b in data_ptrs or b in exe.refs or any(c not in hooked for c in callers_of.get(b, ()))
+        # reached by original code: a data pointer, a code reference, a caller that stays original, or the DLL itself
+        # calling the exe address through J3D_TRAMPOLINE_CALL
+        return (b in data_ptrs or b in exe.refs or owner_by_start.get(b) in trampolined
+                or any(c not in hooked for c in callers_of.get(b, ())))
 
     with out_csv.open("w", newline="") as f:
         w = csv.writer(f, lineterminator="\n")

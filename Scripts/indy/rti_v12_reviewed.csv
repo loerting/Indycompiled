@@ -10,16 +10,18 @@ AudioLib_aStepTable,0x0050a2a0,confirmed,auto,"exact refs from own module (Audio
 AudioLib_bDeltaTableInitialized,0x014e7668,confirmed,auto,exact refs from own module (AudioLib_UncompressBlock)
 AudioLib_word_14E4928,0x014e4a68,confirmed,auto,exact refs from own module (AudioLib_UncompressBlock)
 Indy3D_WinMain,0x0041c9e0,confirmed,semantic,unique string shared with upstream: 'INDY3D'
+JonesConsole_FlushToDisplay,0x0040f270,confirmed,xref,"references JonesConsole_aBuffers, JonesConsole_nextIndex, JonesConsole_pFont, rdCamera_g_pCurCamera, JonesConsole_RemoveExpired, rdFont_DrawTextLine, rdFont_GetWrapLine, rdFont_SetFontColor, stdDisplay_GetBackBufferSize"
 JonesConsole_Open,0x0040f110,confirmed,semantic,unique string shared with upstream: 'version'
 JonesConsole_PrintFramerate,0x0040f990,fixed,semantic,v1.2 registers it as console command 'framerate'
 JonesConsole_PrintPolys,0x0040f9b0,fixed,semantic,v1.2 registers it as console command 'polys'
 JonesConsole_PrintVersion,0x0040f970,fixed,semantic,v1.2 registers it as console command 'version'
 JonesConsole_ShowEndCredits,0x0040fa50,fixed,semantic,v1.2 registers it as console command 'endcredit'
 JonesConsole_pFuncHashtbl,0x005531a8,confirmed,auto,"exact refs from own module (JonesConsole_Close, JonesConsole_ExeCommand)"
+JonesControl_ProcessControls,0x0040fc70,confirmed,xref,"references JonesConsole_g_bVisible, JonesConsole_ShowConsole, sithControl_GetKey"
 JonesDialog_AllocOffScreenDIBSection,0x00411d50,confirmed,semantic,unique string shared with upstream: 'JonesDialog_AllocOffScreenDIBSection: Bi'
 JonesDialog_AllocOffScreenGDISection,0x00411b60,confirmed,semantic,unique string shared with upstream: 'JonesDialog_AllocOffScreenGDISection: Cr'
 JonesDialog_CopyRectToDrawBuffer,0x00410530,confirmed,semantic,unique string shared with upstream: 'JonesDialog_CopyRectToDrawBuffer: BitBlt'
-JonesDialog_DummyFlipGDI,0x00410cd0,confirmed,auto,signature matches (0 params)
+JonesDialog_DummyFlipGDI,0x00410cd0,confirmed,manual,"empty function in v1.2, as expected for a dummy; interpolated between strong neighbours (reviewed 2026-10-06)"
 JonesDialog_HandleWM_ERASEBKGND,0x00411800,confirmed,semantic,unique string shared with upstream: 'JonesDialog_HandleWM_ERASEBKGND: GDIDIBS'
 JonesDialog_HandleWM_NCPAINT,0x00411970,confirmed,semantic,unique string shared with upstream: 'JonesDialog_HandleWM_NCPAINT: GDIDIBSect'
 JonesDialog_HandleWM_PAINT,0x004118c0,confirmed,semantic,unique string shared with upstream: 'JonesDialog_HandleWM_PAINT: hScreenDC is'
@@ -31,13 +33,21 @@ JonesDialog_SubclassFileDialogProc,0x00411f90,confirmed,semantic,unique string s
 JonesDialog_TrackCursor,0x004100c0,confirmed,semantic,unique string shared with upstream: 'JonesDialog_TrackCursor: BitBlt of curso'
 JonesDisplay_backBufferHeight,0x00553414,confirmed,auto,exact refs from own module (JonesDisplay_Startup)
 JonesDisplay_backBufferWidth,0x00553410,confirmed,auto,exact refs from own module (JonesDisplay_Startup)
-JonesFile_FileExists,0x00412eb0,confirmed,auto,signature matches (1 params)
+JonesFile_FileEOF,0x00413690,confirmed,xref,"references JonesFile_aFileHandles, JonesFile_pHS, stdGob_FileEOF"
+JonesFile_FileExists,0x00412eb0,confirmed,xref,references std_g_pHS
+JonesFile_FileGets,0x00413600,confirmed,xref,"references JonesFile_aFileHandles, JonesFile_pHS, stdGob_FileGets"
 JonesFile_FilePrintf,0x00413820,confirmed,semantic,"unique string shared with upstream: ""Error tried to printf to bundled file '%"""
+JonesFile_FileRead,0x004134d0,confirmed,xref,"references JonesFile_aFileHandles, JonesFile_pHS, stdGob_FileRead"
+JonesFile_FileSeek,0x00413770,confirmed,xref,"references JonesFile_aFileHandles, JonesFile_pHS, stdGob_FileSeek"
+JonesFile_FileSize,0x00413800,confirmed,xref,references JonesFile_pHS
+JonesFile_FileTell,0x00413700,confirmed,xref,"references JonesFile_aFileHandles, JonesFile_pHS, stdGob_FileTell"
 JonesFile_FileWrite,0x00413560,confirmed,semantic,"unique string shared with upstream: ""Error tried to write to bundled file '%s"""
 JonesFile_GetCurrentCDNum,0x00412e30,confirmed,semantic,unique string shared with upstream: 'CD1.GOB'
 JonesFile_OpenFile,0x00413220,confirmed,semantic,unique string shared with upstream: 'Out of file handles!\n'
 JonesFile_OpenResource,0x004130d0,confirmed,semantic,"unique string shared with upstream: ""Error opening gob '%s'.\n"""
 JonesFile_SetCDPath,0x00412f10,confirmed,semantic,unique string shared with upstream: 'Empty CD path specified.\n'
+JonesFile_pHS,0x00554258,fixed,manual,v1.2 JonesFile_Open stores &JonesFile_sysHS here; JonesFile_FileSize/FileRead call through it (swapped with pSysEnv in the v1.0-derived map) (reviewed 2026-10-06)
+JonesFile_pSysEnv,0x0055425c,fixed,manual,v1.2 JonesFile_Open stores the pEnv argument here; JonesFile_InitServices/ResetServices patch through it (swapped with pHS in the v1.0-derived map) (reviewed 2026-10-06)
 JonesHud_InitializeMenu,0x00417100,confirmed,semantic,unique string shared with upstream: 'Menu already initialized.\n'
 JonesHud_MenuActivateItem,0x00418950,confirmed,semantic,unique string shared with upstream: 'riv_raft_repair.wav'
 JonesHud_Open,0x00413b70,confirmed,semantic,"unique string shared with upstream: ""Unable to open Hud: Couldn't load %s\n"""
@@ -76,21 +86,29 @@ JonesHud_pyrInventoryOrient,0x005064d0,confirmed,auto,exact refs from own module
 JonesHud_screenHeightScalar,0x005544bc,confirmed,auto,"exact refs from own module (JonesHud_RenderMenuItem, JonesHud_Shutdown)"
 JonesHud_screenWidthScalar,0x005544c0,confirmed,auto,"exact refs from own module (JonesHud_RenderMenuItem, JonesHud_Shutdown)"
 JonesHud_selectedOptionsMenuItemID,0x00554ad8,confirmed,auto,"exact refs from own module (JonesHud_MenuCollapseColumn, JonesHud_MenuMoveDown)"
+JonesMain_Assert,0x0041f800,confirmed,xref,"references std_g_pHS, JonesMain_Shutdown"
 JonesMain_DevDialogInitDisplayDevices,0x004211a0,confirmed,semantic,unique string shared with upstream: '%dx%d %dbpp'
-JonesMain_FilePrintf,0x0041ea30,confirmed,auto,"between verified JonesMain_CloseWindow and JonesMain_LogError, same shift -0x230"
+JonesMain_FilePrintf,0x0041ea30,confirmed,xref,"references JonesMain_pLogFile, std_g_genBuffer"
 JonesMain_HandleWMPowerBroadcast,0x0041da50,confirmed,semantic,unique string shared with upstream: 'WM_POWERBROADCAST Query Suspend.\n'
 JonesMain_InitDevDialog,0x00420230,confirmed,semantic,unique string shared with upstream: 'Vertex Only'
+JonesMain_InitializeHUD,0x0041f8f0,confirmed,xref,"references jonesCog_g_bEnableGamesave, jonesCog_g_bShowHealthHUD, JonesHud_EnableMenu, JonesHud_SetHealthBarAlpha"
+JonesMain_IntroMovieBlt32,0x0041f6d0,confirmed,xref,"references JonesMain_aIntroMovieColorTable, JonesMain_bNoProcessWndEvents, JonesMain_bSkipIntro, stdDisplay_LockBackBuffer, stdDisplay_UnlockBackBuffer, stdDisplay_Update, stdMemory_Free, wkernel_PeekProcessEvents"
+JonesMain_IntroMovieBlt555,0x0041f590,confirmed,xref,"references JonesMain_aIntroMovieColorTable, JonesMain_bNoProcessWndEvents, JonesMain_bSkipIntro, stdDisplay_LockBackBuffer, stdDisplay_UnlockBackBuffer, stdDisplay_Update, stdMemory_Free, wkernel_PeekProcessEvents"
+JonesMain_IntroMovieBlt565,0x0041f470,confirmed,xref,"references JonesMain_aIntroMovieColorTable, JonesMain_bNoProcessWndEvents, JonesMain_bSkipIntro, stdDisplay_LockBackBuffer, stdDisplay_UnlockBackBuffer, stdDisplay_Update, stdMemory_Free, wkernel_PeekProcessEvents"
+JonesMain_IntroWndProc,0x0041f2a0,confirmed,xref,"references JonesMain_bWndMsgProcessed, JonesMain_HandleWMActivate, JonesMain_HandleWMActivateApp, JonesMain_HandleWMGetMinMaxInfo, JonesMain_HandleWMPowerBroadcast, JonesMain_IntroHandleWMKeydown, JonesMain_IntroHandleWMLButtonUp"
 JonesMain_IsGamePaused,0x0041dc70,confirmed,auto,called by JonesDialog_SetGameState
 JonesMain_LoadSettings,0x0041fb20,confirmed,semantic,unique string shared with upstream: 'NoName'
+JonesMain_LogError,0x0041ea80,confirmed,xref,"references JonesMain_circBuf, std_g_genBuffer, stdCircBuf_GetNextElement"
 JonesMain_LogErrorToFile,0x0041f9e0,confirmed,semantic,unique string shared with upstream: 'JONES_STR_ERRORFILE'
 JonesMain_PlayIntroMovie,0x0041eb30,confirmed,semantic,unique string shared with upstream: 'jonesopn.snm'
 JonesMain_PrintQuickSave,0x0041d760,confirmed,semantic,unique string shared with upstream: 'JONES_STR_QUICKSAVE'
-JonesMain_Process,0x0041dc80,confirmed,auto,signature matches (0 params)
+JonesMain_Process,0x0041dc80,confirmed,xref,references JonesMain_pfProcess
 JonesMain_ProcessGame,0x0041dca0,confirmed,semantic,unique string shared with upstream: 'JONES_STR_VIDEOERROR'
 JonesMain_ProcessGamesaveState,0x0041e500,confirmed,semantic,unique string shared with upstream: 'JONES_STR_SAVEERROR'
 JonesMain_ProcessStartGame,0x0041e790,confirmed,semantic,unique string shared with upstream: 'JONES_STR_CLOSEERROR'
 JonesMain_Restore,0x0041e390,confirmed,semantic,unique string shared with upstream: 'mat\\cyb_amap'
 JonesMain_RestoreHUD,0x0041f970,fixed,semantic,v1.2 registers it as message id 47
+JonesMain_SaveHUD,0x0041f920,confirmed,xref,"references jonesCog_g_bShowHealthHUD, sithMulti_g_message, JonesHud_GetHealthBarAlpha, JonesHud_IsMenuEnabled"
 JonesMain_Startup,0x0041ca40,confirmed,semantic,unique string shared with upstream: 'Software\\LucasArts Entertainment Company'
 JonesMain_bDisplayError,0x00555680,confirmed,auto,exact refs from own module (JonesMain_ProcessMenu)
 JonesMain_bEndCredits,0x00555670,confirmed,auto,field used by JonesMain_ProcessCredits
@@ -110,6 +128,7 @@ Sound_ImportBank,0x004dd8b0,confirmed,semantic,unique string shared with upstrea
 Sound_Initialize,0x004da110,confirmed,auto,signature matches (1 params)
 Sound_IsThingFadingVol,0x004dc860,confirmed,semantic,"unique string shared with upstream: ""Sound_IsThingFadingVol: Don't know what """
 Sound_Load,0x004db2a0,confirmed,semantic,"unique string shared with upstream: ""Sound_Load: Can't load %s because loads """
+Sound_MemFileRead,0x004dd610,confirmed,xref,"references Sound_memfilePos, Sound_memfileSize, Sound_pMemfileBuf"
 Sound_MemFileWrite,0x004dd690,confirmed,semantic,"unique string shared with upstream: ""Sound.MemFileWrite: Couldn't realloc %d."""
 Sound_Open,0x004da1e0,confirmed,semantic,unique string shared with upstream: 'Sound_Open: module already in open state'
 Sound_Pause,0x004daf80,confirmed,semantic,unique string shared with upstream: 'Sound_Pause: module is not open.\n'
@@ -128,6 +147,7 @@ Sound_Update,0x004dcb80,confirmed,semantic,unique string shared with upstream: '
 Sound_nextHandle,0x014e1ce0,confirmed,auto,"exact refs from own module (Sound_ExportBank, Sound_GenerateChannelHandle)"
 jonesCog_EnableInterfaceFunc,0x00401480,fixed,semantic,v1.2 registers it as COG verb 'enableinterface'
 jonesCog_EndCutscene,0x004013c0,fixed,semantic,v1.2 registers it as COG verb 'endcutscene'
+jonesCog_EndLevel,0x004011c0,confirmed,xref,"references JonesConsole_g_bVisible, jonesCog_g_bShowHealthHUD, sithPlayer_g_bBonusMapBought, sithPlayer_g_curLevelNum, JonesConsole_HideConsole, JonesHud_ShowLevelCompleted, JonesMain_SetBonusLevel, JonesMain_ShowEndCredits, jonesInventory_AdvanceStatistics, sithOverlayMap_IsMapVisible, sithOverlayMap_ToggleMap, sithSoundMixer_StopAll"
 jonesCog_EndLevelFunc,0x004011b0,fixed,semantic,v1.2 registers it as COG verb 'jonesendlevel'
 jonesCog_ExitToShell,0x00401250,fixed,semantic,v1.2 registers it as COG verb 'exittoshell'
 jonesCog_HideHealthDisplay,0x00401150,fixed,semantic,v1.2 registers it as COG verb 'healthdisplayoff'
@@ -171,6 +191,13 @@ jonesString_Startup,0x00421ad0,confirmed,semantic,unique string shared with upst
 rdCamera_Free,0x004c5480,confirmed,semantic,unique string shared with upstream: 'Warning: attempt to free NULL camera ptr'
 rdCamera_New,0x004c52f0,confirmed,semantic,unique string shared with upstream: 'Error allocating memory for camera.\n'
 rdCamera_NewEntry,0x004c5360,confirmed,semantic,unique string shared with upstream: 'Error allocating memory for camera clip '
+rdCamera_OrthoProject,0x004c5b20,confirmed,xref,references rdCamera_g_pCurCamera
+rdCamera_OrthoProjectLst,0x004c5b60,confirmed,manual,"loop over (dest, src, count) with the orthographic projection inlined; whole rdCamera block shifted -0x130 like rdCamera_PerspProject (strong) (reviewed 2026-10-06)"
+rdCamera_OrthoProjectSquare,0x004c5be0,confirmed,xref,references rdCamera_g_pCurCamera
+rdCamera_OrthoProjectSquareLst,0x004c5c20,confirmed,manual,loop with the projection inlined; whole rdCamera block shifted -0x130 like rdCamera_PerspProject (strong) (reviewed 2026-10-06)
+rdCamera_PerspProjectLst,0x004c5cd0,confirmed,manual,loop with the projection inlined; whole rdCamera block shifted -0x130 like rdCamera_PerspProject (strong) (reviewed 2026-10-06)
+rdCamera_PerspProjectSquare,0x004c5d50,confirmed,xref,references rdCamera_g_pCurCamera
+rdCamera_PerspProjectSquareLst,0x004c5d90,confirmed,manual,loop with the projection inlined; whole rdCamera block shifted -0x130 like rdCamera_PerspProject (strong) (reviewed 2026-10-06)
 rdCanvas_Free,0x004c6230,confirmed,semantic,unique string shared with upstream: 'Warning: Attempt to free NULL Canvas ptr'
 rdCanvas_New,0x004c6110,confirmed,semantic,unique string shared with upstream: 'Error allocating memory for canvas.\n'
 rdClip_SphereInFrustrum,0x004d7d30,confirmed,auto,called by sithRender_RenderThings
@@ -182,7 +209,8 @@ rdKeyframe_pKeyframeLoader,0x014ddad0,confirmed,auto,exact refs from own module 
 rdMaterial_LoadEntry,0x004c8c70,confirmed,semantic,"unique string shared with upstream: ""Error: Bad header for '%s'\n"""
 rdMaterial_pfMaterialLoader,0x014daa60,confirmed,auto,"exact refs from own module (rdMaterial_Load, rdMaterial_RegisterLoader)"
 rdMaterial_pfMaterialUnloader,0x014daa64,confirmed,auto,exact refs from own module (rdMaterial_Free)
-rdMatrix_Copy34,0x004c8150,confirmed,auto,signature matches (2 params)
+rdMatrix_Copy34,0x004c8150,confirmed,manual,"(dest, src) copy of 12 dwords = rdMatrix34 (reviewed 2026-10-06)"
+rdModel3_DrawFace,0x004cb7f0,confirmed,xref,"references rdCamera_g_pCurCamera, rdModel3_g_numDrawnAlphaFaces, rdModel3_g_numDrawnFaces, rdroid_g_curRenderOptions, rdCache_AddAlphaProcFace, rdCache_AddProcFace, rdCache_GetAlphaProcEntry, rdCache_GetProcEntry, rdClip_FaceToPlane, rdLight_CalcFaceIntensity"
 rdModel3_GetThingColor,0x004cb0a0,confirmed,auto,"called by JonesHud_RenderMenuItem, sithThing_Draw"
 rdModel3_LoadEntry,0x004c9820,confirmed,semantic,unique string shared with upstream: ' 3do %d.%d'
 rdModel3_SwapMesh,0x004cafd0,confirmed,semantic,"unique string shared with upstream: ""Error: SwapMesh for models '%s and %s'.\n"""
@@ -203,6 +231,7 @@ rdModel3_maxGeoRadius,0x014dda84,confirmed,auto,"exact refs from own module (rdM
 rdModel3_pCurThing,0x014dda68,confirmed,auto,"exact refs from own module (rdModel3_Draw, rdModel3_DrawHNode)"
 rdModel3_pModel3Loader,0x014dda70,confirmed,auto,exact refs from own module (rdModel3_RegisterLoader)
 rdModel3_pfDrawFace,0x0054ac4c,confirmed,auto,exact refs from own module (rdModel3_DrawMesh)
+rdOpen,0x004c6020,confirmed,xref,"references rdroid_bRDroidOpen, rdroid_bRDroidStartup, rdroid_g_curGeometryMode, rdroid_g_curLightingMode, rdroid_g_curRenderOptions, rdFont_Open"
 rdParticle_Free,0x004d9600,confirmed,semantic,unique string shared with upstream: 'Warning: Attempt to free NULL particle p'
 rdParticle_LoadEntry,0x004d96a0,confirmed,semantic,unique string shared with upstream: ' par %d.%d'
 rdParticle_NewEntry,0x004d93b0,confirmed,semantic,unique string shared with upstream: 'Error: Bad memory allocation for particl'
@@ -215,7 +244,7 @@ rdStartup,0x004c5fb0,confirmed,semantic,unique string shared with upstream: 'War
 rdThing_Free,0x004c92b0,confirmed,semantic,unique string shared with upstream: 'Warning: attempt to free NULL thing ptr.'
 rdThing_SetModel3,0x004c9380,confirmed,semantic,unique string shared with upstream: 'Error allocating memory for joint matric'
 rdWallpaper_NewWallLine,0x004c67f0,confirmed,semantic,unique string shared with upstream: 'Error allocating memory for WallLine.\n'
-sithAIAwareness_IsInTransmittingRange,0x004b0b10,confirmed,auto,signature matches (3 params)
+sithAIAwareness_IsInTransmittingRange,0x004b0b10,confirmed,manual,"three params, pThing->pos minus aEndPos[type], inlined vector length and clip-near-zero, like the C body (reviewed 2026-10-06)"
 sithAIAwareness_aEvents,0x0059bef0,confirmed,auto,"exact refs from own module (sithAIAwareness_CreateEvent, sithAIAwareness_ProcessEvents)"
 sithAIAwareness_bOpened,0x0059c278,confirmed,auto,"exact refs from own module (sithAIAwareness_Close, sithAIAwareness_Open)"
 sithAIAwareness_curProcessID,0x0059c27c,confirmed,auto,"exact refs from own module (sithAIAwareness_ProcessEvent, sithAIAwareness_Update)"
@@ -223,8 +252,9 @@ sithAIAwareness_numEvents,0x0059c274,confirmed,auto,"exact refs from own module 
 sithAIClass_AllocWorldAIClasses,0x00456960,confirmed,semantic,unique string shared with upstream: 'Memory allocation failure.\n'
 sithAIClass_Load,0x00456ad0,confirmed,semantic,unique string shared with upstream: 'No space to load AI class %s.\n'
 sithAIClass_LoadEntry,0x00456cd0,confirmed,semantic,unique string shared with upstream: 'Syntax error reading AI info.  File %s l'
+sithAIClass_ReadStaticAIClassesListBinary,0x004568e0,confirmed,xref,"references sith_g_pHS, sithAIClass_AllocWorldAIClasses, sithAIClass_Load"
 sithAIClass_ReadStaticAIClassesListText,0x00456620,confirmed,semantic,unique string shared with upstream: 'aiclasses'
-sithAIClass_WriteStaticAIClassesListBinary,0x00456870,confirmed,auto,signature matches (2 params)
+sithAIClass_WriteStaticAIClassesListBinary,0x00456870,confirmed,xref,references sith_g_pHS
 sithAIInstinct_AlternateFire,0x00490f40,fixed,semantic,"v1.2 registers it as AI instinct ""alternatefire"""
 sithAIInstinct_BasicFallow,0x004934f0,confirmed,auto,signature matches (5 params)
 sithAIInstinct_CircleStrafe,0x004911f0,fixed,semantic,"v1.2 registers it as AI instinct ""circlestrafe"""
@@ -335,15 +365,17 @@ sithAI_FindInstinct,0x0042ac10,confirmed,semantic,unique string shared with upst
 sithAI_ForceInstinctUpdate,0x0042a270,confirmed,semantic,"unique string shared with upstream: ""Invalid instinct '%s' passed to sithAI_F"""
 sithAI_Open,0x00429d50,confirmed,semantic,unique string shared with upstream: 'Error: Attempt to open uninitialized sys'
 sithAI_ParseArg,0x0042ae10,confirmed,semantic,unique string shared with upstream: 'Too many AI frames for thing %d.\n'
-sithAI_RegisterInstinct,0x0042ab10,confirmed,auto,signature matches (5 params)
+sithAI_RegisterInstinct,0x0042ab10,confirmed,manual,"called 25x by v1.2 sithAIInstinct_InitInstincts with (name, instinct function, 3 flags) = the 5-param C signature; first call registers sithAIInstinct_Listen (reviewed 2026-10-06)"
 sithAI_aFreeAIIndices,0x0055eb00,confirmed,auto,"exact refs from own module (sithAI_CreateAI, sithAI_FreeAI)"
 sithAI_aRegisteredInstincts,0x0055ef08,confirmed,auto,"exact refs from own module (sithAI_CreateInstinctRegistry, sithAI_FindInstinct)"
 sithAI_bStartup,0x0055ef04,confirmed,auto,"exact refs from own module (sithAI_Open, sithAI_Shutdown)"
 sithAI_numFreeAIs,0x0055eafc,confirmed,auto,"exact refs from own module (sithAI_CreateAI, sithAI_FreeAI)"
 sithAI_numRegisteredInstincts,0x0055ef0c,confirmed,auto,"exact refs from own module (sithAI_FindInstinct, sithAI_RegisterInstinct)"
 sithAI_pRegisteredInstinctHashtbl,0x0055eaf8,confirmed,auto,"exact refs from own module (sithAI_CreateInstinctRegistry, sithAI_Shutdown)"
+sithActor_ActorCollisionHandler,0x0048c530,confirmed,xref,"references sithAI_EmitEvent, sithCollision_ThingCollisionHandler"
+sithActor_SurfaceCollisionHandler,0x0048c4a0,confirmed,xref,"references sithAI_EmitEvent, sithCollision_HandleThingHitSurface"
 sithAnimate_CameraZoom,0x00462570,confirmed,semantic,"unique string shared with upstream: 'Out of animation slots, CameraZoom.\n'"
-sithAnimate_Create,0x00462be0,confirmed,auto,signature matches (0 params)
+sithAnimate_Create,0x00462be0,confirmed,manual,calls sithAnimate_NewAnim (its only callee) (reviewed 2026-10-06)
 sithAnimate_PullItem,0x00462710,confirmed,semantic,"unique string shared with upstream: 'Out of animation slots, PullItem.\n'"
 sithAnimate_PushItem,0x00462630,confirmed,semantic,"unique string shared with upstream: 'Out of animation slots, PushItem.\n'"
 sithAnimate_StartMaterialAnim,0x00461ad0,confirmed,semantic,unique string shared with upstream: 'Bad parameters to startMaterialAnim.\n'
@@ -539,6 +571,7 @@ sithCogFunctionSurface_GetAdjoinFlags,0x004681a0,fixed,semantic,v1.2 registers i
 sithCogFunctionSurface_GetCeilingSkyOffset,0x00467a40,fixed,semantic,v1.2 registers it as COG verb 'getceilingskyoffset'
 sithCogFunctionSurface_GetFaceGeoMode,0x00468380,fixed,semantic,v1.2 registers it as COG verb 'getfacegeomode'
 sithCogFunctionSurface_GetFaceLightMode,0x00468410,fixed,semantic,v1.2 registers it as COG verb 'getfacelightmode'
+sithCogFunctionSurface_GetFaceType,0x004682c0,confirmed,xref,"references sithCogExec_PopSurface, sithCogExec_PushInt"
 sithCogFunctionSurface_GetHorizonSkyOffset,0x004679c0,fixed,semantic,v1.2 registers it as COG verb 'gethorizonskyoffset'
 sithCogFunctionSurface_GetNumSurfaceVertices,0x00467860,fixed,semantic,v1.2 registers it as COG verb 'getnumsurfacevertices'
 sithCogFunctionSurface_GetSurfaceAdjoin,0x00467750,fixed,semantic,v1.2 registers it as COG verb 'getsurfaceadjoin'
@@ -607,6 +640,7 @@ sithCogFunctionThing_GetCurFrame,0x0046fc50,fixed,semantic,v1.2 registers it as 
 sithCogFunctionThing_GetFireOffset,0x00474020,fixed,semantic,v1.2 registers it as COG verb 'getthingfireoffset'
 sithCogFunctionThing_GetGoalFrame,0x0046fd00,fixed,semantic,v1.2 registers it as COG verb 'getgoalframe'
 sithCogFunctionThing_GetGuidThing,0x004746f0,fixed,semantic,v1.2 registers it as COG verb 'getguidthing'
+sithCogFunctionThing_GetHeadLightIntensity,0x004724b0,confirmed,xref,"references sithCogExec_PopThing, sithCogExec_PopVector, sithCogExec_PushVector"
 sithCogFunctionThing_GetHealth,0x0046e100,fixed,semantic,v1.2 registers it as COG verb 'gethealth'
 sithCogFunctionThing_GetInventory,0x00470270,fixed,semantic,v1.2 registers it as COG verb 'getinv'
 sithCogFunctionThing_GetInventoryCog,0x00470490,fixed,semantic,v1.2 registers it as COG verb 'getinvcog'
@@ -647,6 +681,7 @@ sithCogFunctionThing_GetThingMaxHeadYaw,0x00474d80,fixed,semantic,v1.2 registers
 sithCogFunctionThing_GetThingMaxRotVel,0x004756a0,fixed,semantic,v1.2 registers it as COG verb 'getthingmaxrotvel'
 sithCogFunctionThing_GetThingMaxVel,0x00474760,fixed,semantic,v1.2 registers it as COG verb 'getthingmaxvel'
 sithCogFunctionThing_GetThingMinHeadPitch,0x00474c60,fixed,semantic,v1.2 registers it as COG verb 'getthingminheadpitch'
+sithCogFunctionThing_GetThingModel,0x00471c80,confirmed,xref,"references sithCogExec_PopThing, sithCogExec_PushInt"
 sithCogFunctionThing_GetThingMoveSize,0x00474280,fixed,semantic,v1.2 registers it as COG verb 'getthingmovesize'
 sithCogFunctionThing_GetThingParent,0x00470160,fixed,semantic,v1.2 registers it as COG verb 'getthingparent'
 sithCogFunctionThing_GetThingPos,0x004701a0,fixed,semantic,v1.2 registers it as COG verb 'getthingpos'
@@ -739,6 +774,7 @@ sithCogFunctionThing_SetThingCurLightMode,0x00472630,fixed,semantic,v1.2 registe
 sithCogFunctionThing_SetThingFlags,0x00471e20,fixed,semantic,v1.2 registers it as COG verb 'setthingflags'
 sithCogFunctionThing_SetThingHeadLookPos,0x00473310,fixed,semantic,v1.2 registers it as COG verb 'setthingheadlookpos'
 sithCogFunctionThing_SetThingHeadLookThing,0x00473430,fixed,semantic,v1.2 registers it as COG verb 'setthingheadlookthing'
+sithCogFunctionThing_SetThingHeadOrientation,0x00473100,confirmed,xref,"references rdVector_Normalize3Acc, sithActor_SetHeadPYR, stdMath_ArcSin3"
 sithCogFunctionThing_SetThingInsertOffset,0x00475b80,fixed,semantic,v1.2 registers it as COG verb 'setthinginsertoffset'
 sithCogFunctionThing_SetThingLVec,0x00474fe0,fixed,semantic,v1.2 registers it as COG verb 'setthinglvecpyr'
 sithCogFunctionThing_SetThingLook,0x00473050,fixed,semantic,v1.2 registers it as COG verb 'setthinglook'
@@ -779,6 +815,7 @@ sithCogFunctionThing_TrackToMode,0x00471220,fixed,semantic,v1.2 registers it as 
 sithCogFunctionThing_WaitForAnimStop,0x0046fb30,fixed,semantic,v1.2 registers it as COG verb 'waitforanimstop'
 sithCogFunctionThing_WaitForStop,0x0046fa60,fixed,semantic,v1.2 registers it as COG verb 'waitforstop'
 sithCogFunctionThing_WaitMode,0x00470c40,fixed,semantic,v1.2 registers it as COG verb 'waitmode'
+sithCogFunction_Abs,0x00479dd0,confirmed,xref,"references sithCogExec_PopFlex, sithCogExec_PushFlex"
 sithCogFunction_ActivateWeapon,0x00479250,fixed,semantic,v1.2 registers it as COG verb 'activateweapon'
 sithCogFunction_ArcTan,0x00479f30,fixed,semantic,v1.2 registers it as COG verb 'arctan'
 sithCogFunction_AutoSavegame,0x004799c0,fixed,semantic,v1.2 registers it as COG verb 'autosavegame'
@@ -789,6 +826,7 @@ sithCogFunction_ClearDebugModeFlags,0x004784e0,fixed,semantic,v1.2 registers it 
 sithCogFunction_ClearMapModeFlags,0x004789b0,fixed,semantic,v1.2 registers it as COG verb 'clearmapmodeflags'
 sithCogFunction_ClearSubModeFlags,0x00478480,fixed,semantic,v1.2 registers it as COG verb 'clearsubmodeflags'
 sithCogFunction_CopyPlayerHolsters,0x0047a460,fixed,semantic,v1.2 registers it as COG verb 'copyplayerholsters'
+sithCogFunction_Cos,0x00479ef0,confirmed,xref,"references sithCogExec_PopFlex, sithCogExec_PushFlex, stdMath_SinCos"
 sithCogFunction_DeactivateCurrentWeapon,0x00479340,fixed,semantic,v1.2 registers it as COG verb 'deactivatecurweapon'
 sithCogFunction_DeactivateWeapon,0x004792d0,fixed,semantic,v1.2 registers it as COG verb 'deactivateweapon'
 sithCogFunction_DeselectWeapon,0x004796f0,fixed,semantic,v1.2 registers it as COG verb 'deselectweapon'
@@ -845,15 +883,19 @@ sithCogFunction_LoadModel,0x00477a40,fixed,semantic,v1.2 registers it as COG ver
 sithCogFunction_LoadTemplate,0x004779c0,fixed,semantic,v1.2 registers it as COG verb 'loadtemplate'
 sithCogFunction_MaterialAnim,0x00477710,fixed,semantic,v1.2 registers it as COG verb 'materialanim'
 sithCogFunction_Pow,0x00479e10,confirmed,semantic,unique string shared with upstream: 'Cog %s: 0 to the 0 power is undefined\n'
+sithCogFunction_Print,0x00477580,confirmed,manual,v1.2 only pops the string (sithCogExec_PopString); the console print is an upstream addition from the debug build (reviewed 2026-10-06)
 sithCogFunction_PrintFlex,0x00477610,fixed,semantic,v1.2 registers it as COG verb 'printflex'
 sithCogFunction_PrintInt,0x00477590,fixed,semantic,v1.2 registers it as COG verb 'printint'
 sithCogFunction_PrintVector,0x004775a0,fixed,semantic,v1.2 registers it as COG verb 'printvector'
+sithCogFunction_Rand,0x00479bc0,confirmed,xref,references sithCogExec_PushFlex
 sithCogFunction_RandBetween,0x00479bf0,fixed,semantic,v1.2 registers it as COG verb 'randbetween'
 sithCogFunction_RandVec,0x00479c60,fixed,semantic,v1.2 registers it as COG verb 'randvec'
 sithCogFunction_RegisterFunctions,0x00476520,confirmed,semantic,unique string shared with upstream: 'getsenderref'
+sithCogFunction_Reset,0x00477ce0,confirmed,manual,"sets pCog->callDepth (offset 0x94) to 0, the whole C body (reviewed 2026-10-06)"
 sithCogFunction_ResetHolsterModel,0x0047a2b0,fixed,semantic,v1.2 registers it as COG verb 'resetholstermodel'
 sithCogFunction_ResetWeaponModel,0x0047a070,fixed,semantic,v1.2 registers it as COG verb 'resetweaponmodel'
 sithCogFunction_ReturnEx,0x004786e0,fixed,semantic,v1.2 registers it as COG verb 'returnex'
+sithCogFunction_Round,0x00479ce0,confirmed,xref,"references sithCogExec_PopFlex, sithCogExec_PushFlex"
 sithCogFunction_SelectWeapon,0x00479520,fixed,semantic,v1.2 registers it as COG verb 'selectweapon'
 sithCogFunction_SelectWeaponWait,0x00479610,fixed,semantic,v1.2 registers it as COG verb 'selectweaponwait'
 sithCogFunction_SendMessage,0x004781a0,fixed,semantic,v1.2 registers it as COG verb 'sendmessage'
@@ -884,6 +926,7 @@ sithCogFunction_SetSubModeFlags,0x00478460,fixed,semantic,v1.2 registers it as C
 sithCogFunction_SetTimer,0x00477b40,fixed,semantic,v1.2 registers it as COG verb 'settimer'
 sithCogFunction_SetTimerEx,0x00477bf0,fixed,semantic,v1.2 registers it as COG verb 'settimerex'
 sithCogFunction_SetWeaponModel,0x00479f80,fixed,semantic,v1.2 registers it as COG verb 'setweaponmodel'
+sithCogFunction_Sin,0x00479eb0,confirmed,xref,"references sithCogExec_PopFlex, sithCogExec_PushFlex, stdMath_SinCos"
 sithCogFunction_Sleep,0x004774c0,confirmed,semantic,unique string shared with upstream: 'Cog %s: Wait time less than 0 in Sleep()'
 sithCogFunction_StopAnim,0x00477860,fixed,semantic,v1.2 registers it as COG verb 'stopanim'
 sithCogFunction_StopMaterialAnim,0x00477800,fixed,semantic,v1.2 registers it as COG verb 'stopmaterialanim'
@@ -991,12 +1034,15 @@ sithCog_LoadScript,0x004247a0,confirmed,semantic,unique string shared with upstr
 sithCog_Open,0x00421c90,confirmed,semantic,"unique string shared with upstream: 'Global symbol space %d, used %d.\n'"
 sithCog_ParseSymbolRef,0x004235a0,confirmed,semantic,"unique string shared with upstream: ""Ref '%s' could not be read as a vector, """
 sithCog_ProcessCog,0x00424900,confirmed,semantic,unique string shared with upstream: 'Cog %s: Waking up due to timer elapse.\n'
+sithCog_ReadCogScriptsListBinary,0x00424720,confirmed,xref,"references sith_g_pHS, sithCog_AllocWorldCogScripts, sithCog_LoadScript"
 sithCog_ReadCogScriptsListText,0x00424480,confirmed,semantic,unique string shared with upstream: 'scripts'
+sithCog_ReadCogsListBinary,0x00423390,confirmed,xref,"references sith_g_pHS, sithCog_AllocWorldCogs, sithCog_Load"
 sithCog_ReadCogsListText,0x00422e60,confirmed,semantic,unique string shared with upstream: 'Placement of Cog %s failed.\n'
 sithCog_SendMessage,0x004223f0,confirmed,semantic,"unique string shared with upstream: 'Cog %s: Message %d delivered, senderType'"
 sithCog_SendMessageEx,0x00422610,confirmed,semantic,"unique string shared with upstream: 'Cog %s: Disabled, MessageEx ignored.\n'"
 sithCog_Startup,0x00421b70,confirmed,semantic,unique string shared with upstream: 'Could not allocate COG symboltable\n'
-sithCog_WriteCogScriptsListBinary,0x004246b0,confirmed,auto,signature matches (2 params)
+sithCog_WriteCogScriptsListBinary,0x004246b0,confirmed,xref,references sith_g_pHS
+sithCog_WriteCogsListBinary,0x00423160,confirmed,xref,"references sith_g_pHS, sithCog_GetSymbolRefInitializer"
 sithCog_aCogLinkSectors,0x00555918,confirmed,auto,"exact refs from own module (sithCog_LinkCogToSector, sithCog_SectorSendMessageEx)"
 sithCog_aCogLinkSurfaces,0x0055c918,confirmed,auto,"exact refs from own module (sithCog_LinkCogToSurface, sithCog_SurfaceSendMessageEx)"
 sithCog_aThingLinks,0x00557918,confirmed,auto,"exact refs from own module (sithCog_FixupLinksToThings, sithCog_IsThingLinked)"
@@ -1006,12 +1052,13 @@ sithCog_numThingLinks,0x0055e920,confirmed,auto,"exact refs from own module (sit
 sithCollision_AddCollisionHandler,0x004a6460,confirmed,semantic,unique string shared with upstream: 'Warning- overriding previous collision h'
 sithCollision_AddSurfaceCollisionHandler,0x004a6580,confirmed,semantic,unique string shared with upstream: 'Warning- overriding previous collision h'
 sithCollision_MoveThing,0x004a6fc0,confirmed,semantic,unique string shared with upstream: 'MoveThing called for %s with distance %f'
+sithCollision_ParticleAndActorCollisionHandler,0x004aabc0,confirmed,xref,"references sithCollision_ThingCollisionHandler, sithThing_DamageThing"
 sithCollision_Shutdown,0x004a6420,confirmed,semantic,unique string shared with upstream: 'Collide system not started.\n'
 sithCollision_ThingCollisionHandler,0x004a8cc0,confirmed,semantic,unique string shared with upstream: 'elevpltfrm'
 sithCollision_aCollideResults,0x00586400,confirmed,auto,"exact refs from own module (sithCollision_AddCollisionHandler, sithCollision_MoveThing)"
 sithCollision_bCollideStartup,0x0059bee0,confirmed,auto,"exact refs from own module (sithCollision_MoveThing, sithCollision_Shutdown)"
 sithCollision_stackLevel,0x0053b308,confirmed,auto,"exact refs from own module (sithCollision_DecreaseStackLevel, sithCollision_PopStack)"
-sithCollision_sub_4AAF30,0x004aae60,confirmed,auto,signature matches (2 params)
+sithCollision_sub_4AAF30,0x004aae60,confirmed,manual,"same type checks (player 10, actor 2), physics flags JEEP|MINECAR and attach flag TAIL as the C body (reviewed 2026-10-06)"
 sithCommand_CipherText,0x004b4cc0,confirmed,auto,signature matches (1 params)
 sithCommand_Coords,0x004b48b0,fixed,semantic,v1.2 registers it as console command 'coords'
 sithCommand_DebugMode,0x004b4600,fixed,semantic,v1.2 registers it as console command 'VCINKV}OCPKML'
@@ -1044,7 +1091,7 @@ sithConsole_pfPrintString,0x0056b82c,confirmed,auto,"exact refs from own module 
 sithConsole_pfPrintWString,0x0056b830,confirmed,auto,"exact refs from own module (sithConsole_PrintWString, sithConsole_RegisterPrintFunctions)"
 sithControl_BindAxis,0x0043f710,confirmed,semantic,unique string shared with upstream: 'Tried to bind unavailable axis %d to fun'
 sithControl_Close,0x0043f530,confirmed,semantic,unique string shared with upstream: 'Control system illegal close.\n'
-sithControl_RegisterAxisFunction,0x0043f580,confirmed,auto,signature matches (2 params)
+sithControl_RegisterAxisFunction,0x0043f580,confirmed,manual,"asserts at consecutive lines (functionId < 0x3a, !bControlOpen), stores flag | AXIS | REGISTERED into aControlFlags, like the C body; followed by sithControl_RegisterKeyFunction (strong) (reviewed 2026-10-06)"
 sithControl_RegisterControlCallback,0x0043fa10,confirmed,semantic,unique string shared with upstream: 'Tried to register too many control callb'
 sithControl_Startup,0x0043f410,confirmed,semantic,unique string shared with upstream: 'MAXFUNCTIONS'
 sithControl_Update,0x0043fa60,confirmed,semantic,unique string shared with upstream: 'Switch to idle camera.\n'
@@ -1112,7 +1159,7 @@ sithFX_CreateRaftWakeFX,0x0048d9e0,confirmed,semantic,unique string shared with 
 sithFX_UpdateFairyDustUserBlock,0x0048ce10,confirmed,semantic,unique string shared with upstream: 'aet_4sprite_glow_fairy_dust.mat'
 sithFX_rowRippleLastPos,0x00585570,confirmed,auto,exact refs from own module (sithFX_CreateRaftPaddleWaterFX)
 sithFX_secLastCreatedRowRipple,0x005855a0,confirmed,auto,exact refs from own module (sithFX_CreateRaftPaddleWaterFX)
-sithGamesave_GetPreviousLevelFilename,0x00442bd0,confirmed,auto,signature matches (0 params)
+sithGamesave_GetPreviousLevelFilename,0x00442bd0,confirmed,xref,references sithGamesave_aPrevLevelFilename
 sithGamesave_Restore,0x00441700,confirmed,semantic,unique string shared with upstream: 'Could not open savegame file %s.\n'
 sithGamesave_RestoreFile,0x00441d40,confirmed,semantic,unique string shared with upstream: 'RESTORE: could not open restore file!\n'
 sithGamesave_Save,0x00441610,confirmed,semantic,unique string shared with upstream: 'Cannot overwrite existing file without b'
@@ -1130,7 +1177,7 @@ sithInventory_g_aUnknown,0x017f1e60,confirmed,auto,"between verified sithMulti_g
 sithInventory_g_bSendDeactivateMessage,0x0056b88c,fixed,manual,referenced by v1.2 sithInventory_ResetInventory (its only C user)
 sithInventory_g_dword_56B750,0x0056b890,fixed,manual,referenced by v1.2 sithInventory_ResetInventory (its only C user)
 sithInventory_g_dword_56B754,0x0056b894,fixed,manual,referenced by v1.2 sithInventory_ResetInventory (its only C user)
-sithItem_PlayerCollisionHandler,0x004aed40,confirmed,auto,"between verified sithParticle_CacheRemove and sithItem_Initialize, same shift -0xd0"
+sithItem_PlayerCollisionHandler,0x004aed40,confirmed,manual,"three asserts at consecutive lines (item type 5, player type 10), stdComm_IsGameActive, LOS check, msecGameTime + 500 (reviewed 2026-10-06)"
 sithMain_aLevelNdsFileNameBuf,0x00563e38,confirmed,auto,"between verified sithControl_bControlOpen and sith_g_pHS, same shift +0x140"
 sithMain_aNdsLevelFilenameBuf,0x005640b8,confirmed,auto,"between verified sithControl_bControlOpen and sith_g_pHS, same shift +0x140"
 sithMain_aScreenShotsFileName,0x00564038,confirmed,auto,"between verified sithControl_bControlOpen and sith_g_pHS, same shift +0x140"
@@ -1149,22 +1196,28 @@ sithMain_performanceLevel,0x005644d0,confirmed,auto,"between verified sith_g_pHS
 sithMain_pfOpenCallback,0x005644d4,confirmed,auto,"between verified sith_g_pHS and sithGamesave_state, same shift +0x140"
 sithMain_somePos,0x017fd2e0,confirmed,auto,"between verified sithVoice_aSubtitleInfos and sithMain_g_frameNumber, same shift +0x140"
 sithMain_somePos2,0x017fd2d0,confirmed,auto,"between verified sithVoice_aSubtitleInfos and sithMain_g_frameNumber, same shift +0x140"
+sithMaterial_ReadMaterialsListBinary,0x0045db80,confirmed,manual,"calls all 11 C callees except sithMaterial_Load, which only upstream's added external-material path calls (reviewed 2026-10-06)"
 sithMaterial_ReadMaterialsListText,0x0045d540,confirmed,semantic,unique string shared with upstream: ' world materials %d'
-sithMessage_GetSenderID,0x00451c00,confirmed,auto,signature matches (0 params)
+sithMaterial_WriteMaterialsListBinary,0x0045d7f0,confirmed,xref,"references sith_g_pHS, std3D_GetMipMapCount, stdFnames_MakePath"
+sithMessage_CheckMembershipList,0x00451e10,confirmed,manual,"calls sithMessage_SendMessage, stdComm_GetNumPlayers, stdComm_GetPlayerID, stdComm_UpdatePlayers like the C body (reviewed 2026-10-06)"
+sithMessage_GetSenderID,0x00451c00,confirmed,manual,reads sithMessage_senderId (reviewed 2026-10-06)
+sithMessage_NetWrite,0x00451c10,confirmed,xref,"references sithMessage_g_localPlayerId, sithMessage_totalNetSent, sithMessage_totalSentDataSize, sithPlayer_g_aPlayers, sithPlayer_g_numPlayers, stdComm_Send"
 sithMessage_Process,0x00452010,confirmed,semantic,unique string shared with upstream: 'Message contained illegal type field %d.'
 sithMessage_ProcessCheckMembershipList,0x00451eb0,fixed,semantic,v1.2 registers it as message id 41
 sithMessage_ProcessMessages,0x00451ad0,confirmed,semantic,unique string shared with upstream: 'Called ProcessMessages without any input'
+sithMessage_ReceiveMessage,0x00451d20,confirmed,xref,"references sithMain_g_sith_mode, sithMessage_g_localPlayerId, sithMulti_g_serverId, sithTime_g_msecGameTime, sithMulti_ProcessPlayerLost, sithMulti_SyncPlayers, stdComm_IsGameHost, stdComm_Receive"
 sithMessage_Shutdown,0x004519b0,confirmed,semantic,unique string shared with upstream: 'Shutdown of message system w/o startup.\n'
 sithMessage_Startup,0x00451940,confirmed,semantic,unique string shared with upstream: 'Multiple startup on message system.\n'
-sithMessage_StopProcessMessages,0x00451bf0,confirmed,auto,signature matches (0 params)
+sithMessage_StopProcessMessages,0x00451bf0,confirmed,manual,writes sithMessage_bStopProcessMessages (reviewed 2026-10-06)
 sithMessage_someMsg,0x0056b9d0,confirmed,auto,exact refs from own module (sithMessage_CheckMembershipList)
 sithModel_AllocWorldModels,0x0044c7a0,confirmed,semantic,unique string shared with upstream: 'Failed to allocate models array.\n'
 sithModel_Load,0x0044c4e0,confirmed,semantic,"unique string shared with upstream: ""No space to load new model '%s'.\n"""
+sithModel_ReadStaticModelsListBinary,0x0044c370,confirmed,xref,"references sith_g_pHS, sithModel_AllocWorldModels, sithModel_Load"
 sithModel_ReadStaticModelsListText,0x0044c000,confirmed,semantic,unique string shared with upstream: 'Parse error reading static models list l'
-sithModel_WriteStaticModelsListBinary,0x0044c2d0,confirmed,auto,signature matches (2 params)
+sithModel_WriteStaticModelsListBinary,0x0044c2d0,confirmed,xref,references sith_g_pHS
 sithMulti_CheckPlayers,0x00454c20,confirmed,auto,"between verified sithMulti_CloseGame and sithMulti_ProcessPlayerLost, same shift -0x110"
 sithMulti_FinishJoining,0x004558f0,confirmed,auto,signature matches (3 params)
-sithMulti_GetPlayerIndexByID,0x00455cf0,confirmed,auto,signature matches (1 params)
+sithMulti_GetPlayerIndexByID,0x00455cf0,confirmed,manual,reads sithPlayer_g_aPlayers and sithPlayer_g_numPlayers (reviewed 2026-10-06)
 sithMulti_ProcessChat,0x00455930,fixed,semantic,v1.2 registers it as message id 2
 sithMulti_ProcessJoinRequest,0x00455530,fixed,semantic,v1.2 registers it as message id 34
 sithMulti_ProcessPing,0x004559e0,fixed,semantic,v1.2 registers it as message id 38
@@ -1206,9 +1259,9 @@ sithMulti_quitGameState,0x0056fab8,confirmed,auto,"exact refs from own module (s
 sithMulti_tickRate,0x0052d5b8,confirmed,auto,exact refs from own module (sithMulti_ProcessWelcome)
 sithOpenNormal,0x00440aa0,confirmed,semantic,unique string shared with upstream: 'Error opening world: %s.\n'
 sithOpenStatic,0x00440980,confirmed,semantic,unique string shared with upstream: '\\Jones3D\\Resource\\Ndy'
-sithPVS_ReadPVSBinary,0x004b0760,confirmed,auto,signature matches (2 params)
+sithPVS_ReadPVSBinary,0x004b0760,confirmed,xref,references sith_g_pHS
 sithPVS_ReadPVSText,0x004b0510,confirmed,semantic,unique string shared with upstream: 'pvs size: %d'
-sithPVS_WritePVSBinary,0x004b06f0,confirmed,auto,signature matches (2 params)
+sithPVS_WritePVSBinary,0x004b06f0,confirmed,xref,references sith_g_pHS
 sithParticle_AllocWorldParticles,0x004ae1b0,confirmed,semantic,unique string shared with upstream: 'Failed to allocate particles array.\n'
 sithParticle_Load,0x004ae050,confirmed,semantic,"unique string shared with upstream: ""No space to define new particle '%s'.\n"""
 sithPathMove_FollowNextPath,0x004abf90,confirmed,semantic,unique string shared with upstream: 'Thing %s (index %d) reached goal frame %'
@@ -1236,13 +1289,16 @@ sithPhysics_vecMineCarSparkPosLeft,0x00538d6c,confirmed,auto,exact refs from own
 sithPhysics_vecMineCarSparkPosRight,0x00538d5c,confirmed,auto,exact refs from own module (sithPhysics_UpdateMineCarFx)
 sithPlayerActions_Activate,0x0044d1d0,confirmed,semantic,unique string shared with upstream: 'Activate: eyepoint outside of sector?\n'
 sithPlayerActions_CenterOnClimbSurface,0x004515f0,confirmed,semantic,"unique string shared with upstream: ""can't move to valid sector centering on """
+sithPlayerActions_EndInvisibility,0x00451330,confirmed,xref,"references sithPlayerActions_g_bPlayerInvisible, sithPlayer_g_pLocalPlayerThing, sithAnimate_StartThingFadeAnim, sithFX_DestroyFairyDustDeluxe"
+sithPlayerActions_StartInvisibility,0x00451290,confirmed,xref,"references sithPlayerActions_g_bPlayerInvisible, sithPlayer_g_pLocalPlayerThing, sithAnimate_StartThingFadeAnim"
 sithPlayerActions_StartJewelFlying,0x004513f0,confirmed,semantic,unique string shared with upstream: 'in_imp3_float.key'
 sithPlayerActions_climbPupTrackNum,0x0055ef14,confirmed,auto,"between verified sithAI_numRegisteredInstincts and sithPlayerControls_bActionKeyActive, same shift +0x140"
 sithPlayerControls_BoardVehicle,0x004319e0,confirmed,semantic,unique string shared with upstream: 'gascan_%s'
-sithPlayerControls_GetVehicleBoardedThing,0x00432e20,confirmed,auto,signature matches (0 params)
+sithPlayerControls_GetVehicleBoardedThing,0x00432e20,confirmed,manual,reads sithPlayerControls_pBoardedVehicleThing (its only global) (reviewed 2026-10-06)
+sithPlayerControls_Process,0x0042b650,confirmed,xref,"references rdroid_g_zVector3, sithCamera_g_bExtCameraLookMode, sithMain_g_sith_mode, sithPlayerControls_bActionKeyActive, sithPlayerControls_bHealthKeyActive, sithPlayerControls_bLookKeyActive, sithPlayerControls_bTurnLeftKeyActive, sithPlayerControls_bTurnRightKeyActive, sithPlayerControls_g_bCutsceneMode, sithPlayerControls_msecUnknownTimer, sithPlayerControls_secCommentWaitTimer, sithPlayerControls_secSwimIdleTime, sithPuppet_g_bPlayerLeapForward, sithTime_g_bPaused, sithActor_SetHeadPYR, sithCamera_RestoreExtCamera, sithCamera_SetExtCameraLookOffset, sithCamera_SetExtCameraOffset, sithControl_GetKey, sithInventory_GetCurrentWeapon, sithPhysics_SetThingLook, sithPlayerControls_ProcessClimbMove, sithPlayerControls_ProcessDeadPlayer, sithPlayerControls_ProcessEditorDebugControls, sithPlayerControls_ProcessFallingMove, sithPlayerControls_ProcessFlyMove, sithPlayerControls_ProcessGeneralMove, sithPlayerControls_ProcessHUDControls, sithPlayerControls_ProcessHangMove, sithPlayerControls_ProcessJewelFlyMove, sithPlayerControls_ProcessLookControls, sithPlayerControls_ProcessPlayerDebugControls, sithPlayerControls_ProcessSwimMove, sithPlayerControls_ProcessWeaponAim, sithVehicleControls_ProcessJeepMove, sithVehicleControls_ProcessMineCarMove, sithVehicleControls_ProcessRaftMove, sithWeapon_IsAiming, sithWhip_ProcessWhipClimbMove"
 sithPlayerControls_ProcessFallingMove,0x0042f830,confirmed,semantic,unique string shared with upstream: 'in_jump_up_grab.key'
-sithPlayerControls_RotateAimJoints,0x004329f0,confirmed,auto,signature matches (3 params)
-sithPlayerControls_SetVehicleBoardedThing,0x00432e30,confirmed,auto,signature matches (1 params)
+sithPlayerControls_RotateAimJoints,0x004329f0,confirmed,manual,"calls sithInventory_GetCurrentWeapon, sithPlayerControls_ResetAimJoints on pitch == yaw == 0, then sithThing_GetThingJointIndex per joint, like upstream's RotateAimJointsEx (reviewed 2026-10-06)"
+sithPlayerControls_SetVehicleBoardedThing,0x00432e30,confirmed,manual,writes sithPlayerControls_pBoardedVehicleThing (its only global) (reviewed 2026-10-06)
 sithPlayerControls_bJumpActivated,0x0055ef2c,confirmed,auto,"exact refs from own module (sithPlayerControls_FindClimbSurface, sithPlayerControls_Process)"
 sithPlayerControls_cameraDistance,0x00528e04,confirmed,auto,exact refs from own module (sithPlayerControls_ProcessWeaponAim)
 sithPlayerControls_pCurActivatedThing,0x0055ef28,confirmed,auto,"exact refs from own module (sithPlayerControls_ProcessGeneralMove, sithPlayerControls_ProcessSwimMove)"
@@ -1259,14 +1315,16 @@ sithPuppet_LoadPuppetClassEntry,0x0045aaf0,confirmed,semantic,unique string shar
 sithPuppet_PlayForceMoveMode,0x004591b0,confirmed,semantic,unique string shared with upstream: 'No valid track for force-move anim.\n'
 sithPuppet_PlayKey,0x00459370,confirmed,semantic,unique string shared with upstream: 'Could not get free track to play in.\n'
 sithPuppet_PlayMode,0x00458fe0,confirmed,semantic,"unique string shared with upstream: ""PlayMode(): Invalid data for THING '%s' """
+sithPuppet_ReadStaticKeyframesListBinary,0x0045b830,confirmed,manual,"calls the C callees except sithPuppet_LoadKeyframe, which only upstream's added external-keyframe path calls (reviewed 2026-10-06)"
 sithPuppet_ReadStaticKeyframesListText,0x0045b0f0,confirmed,semantic,unique string shared with upstream: 'Parse error reading keyframe list line %'
+sithPuppet_ReadStaticPuppetsListBinary,0x0045a8e0,confirmed,xref,"references sith_g_pHS, sithPuppet_AllocWorldPuppets, sithPuppet_LoadPuppetClass"
 sithPuppet_ReadStaticPuppetsListText,0x0045a700,confirmed,semantic,unique string shared with upstream: 'puppets'
 sithPuppet_RemoveAllTracks,0x004575c0,confirmed,semantic,"unique string shared with upstream: 'Pup track list is messed up, pointer to '"
 sithPuppet_Startup,0x004573b0,confirmed,semantic,unique string shared with upstream: 'Could not allocate memory of puppets.\n'
 sithPuppet_SynchMode,0x0045c440,confirmed,semantic,unique string shared with upstream: 'SynchMode(): Old mode (%d) out of range.'
 sithPuppet_UpdatePuppet,0x004576d0,confirmed,semantic,"unique string shared with upstream: 'Removed submode %d from pup list, no KFT'"
-sithPuppet_WriteStaticKeyframesListBinary,0x0045b420,confirmed,auto,signature matches (2 params)
-sithPuppet_WriteStaticPuppetsListBinary,0x0045a880,confirmed,auto,signature matches (2 params)
+sithPuppet_WriteStaticKeyframesListBinary,0x0045b420,confirmed,xref,references sith_g_pHS
+sithPuppet_WriteStaticPuppetsListBinary,0x0045a880,confirmed,xref,references sith_g_pHS
 sithRenderSky_Update,0x004b3770,confirmed,auto,signature matches (0 params)
 sithRenderSky_ceilingSkyHeight,0x0059c2a4,confirmed,auto,exact refs from own module (sithRenderSky_Open)
 sithRenderSky_ceilingSkyMaxZ,0x0059c298,confirmed,auto,"exact refs from own module (sithRenderSky_CeilingFaceToPlane, sithRenderSky_Open)"
@@ -1288,25 +1346,33 @@ sithRender_bPVSClipEnabled,0x0052bc68,confirmed,auto,exact refs from own module 
 sithRender_curSectorIdx,0x0056a304,confirmed,auto,exact refs from own module (sithRender_Draw)
 sithRender_pfUnknownFunc,0x0056a7f0,confirmed,auto,"exact refs from own module (sithRender_RenderThing, sithRender_Shutdown)"
 sithSector_AllocWorldSectors,0x00460860,confirmed,semantic,unique string shared with upstream: 'Failed to allocate mem for %d sectors.\n'
-sithSector_GetSectorIndexEx,0x00461070,confirmed,auto,signature matches (2 params)
+sithSector_GetSectorIndexEx,0x00461070,confirmed,manual,"two params, bounds check of pWorld->aSectors/numSectors and division by the sector size, like the C body (reviewed 2026-10-06)"
+sithSector_ReadSectorsListBinary,0x00460430,confirmed,xref,"references sith_g_pHS, sithSector_AllocWorldSectors, sithSound_Load, sithSurface_GetSurfaceEx, stdMemory_Free"
 sithSector_ReadSectorsListText,0x0045fb20,confirmed,semantic,unique string shared with upstream: ' world sectors %d'
 sithSector_SyncSector,0x00460f20,confirmed,semantic,unique string shared with upstream: 'Too many modified sectors.\n'
+sithSector_WriteSectorsListBinary,0x004600e0,confirmed,xref,"references sith_g_pHS, Sound_GetSoundFilename, sithSurface_GetSurfaceIndexEx, stdMemory_Free"
 sithSoundClass_AllocSoundClasses,0x004a1670,confirmed,semantic,unique string shared with upstream: 'Memory failure allocating %d soundclasse'
 sithSoundClass_Load,0x004a1200,confirmed,semantic,unique string shared with upstream: 'Soundclasses array not allocated for thi'
 sithSoundClass_LoadEntry,0x004a13e0,confirmed,semantic,"unique string shared with upstream: 'Short line in file %s, line %d.\n'"
 sithSoundClass_PlayPlayerVoiceModeRandom,0x004a1b90,confirmed,semantic,unique string shared with upstream: '%d %d\n'
+sithSoundClass_ReadSoundClassesListBinary,0x004a1180,confirmed,xref,"references sith_g_pHS, sithSoundClass_AllocSoundClasses, sithSoundClass_Load"
 sithSoundClass_ReadSoundClassesListText,0x004a0ef0,confirmed,semantic,unique string shared with upstream: 'soundclasses'
-sithSoundClass_WriteSoundClassesListBinary,0x004a1120,confirmed,auto,signature matches (2 params)
+sithSoundClass_WriteSoundClassesListBinary,0x004a1120,confirmed,xref,references sith_g_pHS
 sithSoundClass_lastStartEntry,0x0053a79c,confirmed,auto,"exact refs from own module (sithSoundClass_PlayPlayerVoiceModeRandom, sithSoundClass_Startup)"
+sithSoundMixer_CalcCameraRelativeSoundMix,0x004281d0,confirmed,xref,"references sithCamera_g_pCurCamera, rdVector_Normalize3QuickAcc"
+sithSoundMixer_GetThingInfo,0x00428130,confirmed,xref,"references sithSoundMixer_GetThingIndex, sithThing_GetThingByIndex"
 sithSound_Load,0x0044d040,confirmed,semantic,"unique string shared with upstream: ""Could not open sound file '%s'.\n"""
+sithSound_ReadSoundsListBinary,0x0044cf80,confirmed,xref,"references Sound_ImportNormalBank, Sound_ImportStaticBank, Sound_SkipSoundFileSection"
 sithSound_ReadSoundsListText,0x0044cd20,confirmed,semantic,unique string shared with upstream: '%d sounds loaded.\n'
 sithSound_Startup,0x0044cc20,confirmed,semantic,unique string shared with upstream: 'stdSound_Startup failed (no hardware?).\n'
+sithSound_WriteSoundsListBinary,0x0044cf40,confirmed,xref,"references Sound_ExportNormalBank, Sound_ExportStaticBank"
 sithSound_bSkipRestoringSounds,0x0056b8a4,confirmed,auto,"exact refs from own module (sithSound_FreeWorldSounds, sithSound_ReadSoundsListBinary)"
 sithSound_bStartup,0x0056b8a0,confirmed,auto,"exact refs from own module (sithSound_Load, sithSound_Shutdown)"
 sithSprite_AllocWorldSprites,0x004ab990,confirmed,semantic,unique string shared with upstream: 'Failed to allocate sprites array.\n'
 sithSprite_Load,0x004ab570,confirmed,semantic,"unique string shared with upstream: ""No space to define new sprite '%s'.\n"""
+sithSprite_ReadStaticSpritesListBinary,0x004ab400,confirmed,xref,"references sith_g_pHS, sithSprite_AllocWorldSprites, sithSprite_Load"
 sithSprite_ReadStaticSpritesListText,0x004ab0e0,confirmed,semantic,unique string shared with upstream: 'Parse error reading static sprites list '
-sithSprite_WriteStaticSpritesListBinary,0x004ab3a0,confirmed,auto,signature matches (2 params)
+sithSprite_WriteStaticSpritesListBinary,0x004ab3a0,confirmed,xref,references sith_g_pHS
 sithStartup,0x00440750,confirmed,semantic,unique string shared with upstream: 'Sith startup failed.\n'
 sithString_Startup,0x0043f270,confirmed,semantic,unique string shared with upstream: 'sithString startup -- already started!\n'
 sithString_bStartup,0x00562608,confirmed,auto,"exact refs from own module (sithString_GetString, sithString_Shutdown)"
@@ -1315,12 +1381,18 @@ sithString_voiceStringsTbl,0x005625f8,confirmed,auto,"exact refs from own module
 sithSurface_AllocWorldAdjoins,0x0045e8e0,confirmed,semantic,unique string shared with upstream: 'Failed to allocate mem for %d adjoins.\n'
 sithSurface_AllocWorldSurfaces,0x0045e530,confirmed,semantic,unique string shared with upstream: 'Failed to allocate mem for %d surfaces.\n'
 sithSurface_GetCenterPoint,0x0045f8a0,confirmed,semantic,unique string shared with upstream: 'Cannot place surface centerpoint in pare'
+sithSurface_ReadAdjoinsListBinary,0x0045e7f0,confirmed,xref,"references sith_g_pHS, sithSurface_AllocWorldAdjoins, stdMemory_Free"
+sithSurface_ReadSurfacesListBinary,0x0045ecc0,confirmed,xref,"references sithWorld_g_pStaticWorld, sith_g_pHS, sithSurface_AllocWorldSurfaces, stdMemory_Free"
 sithSurface_ReadSurfacesListText,0x0045f040,confirmed,semantic,unique string shared with upstream: ' world adjoins %d'
+sithSurface_WriteAdjoinsListBinary,0x0045e700,confirmed,xref,"references sith_g_pHS, stdMemory_Free"
 sithSurface_WriteSurfacesListBinary,0x0045e9c0,confirmed,semantic,unique string shared with upstream: 'Surface Material %s not in world.\n'
+sithTemplate_AddTemplate,0x0045cd30,confirmed,xref,references sithTemplate_CacheAdd
 sithTemplate_GetTemplate,0x0045ce30,confirmed,semantic,unique string shared with upstream: 'Template %s could not be found.\n'
 sithTemplate_Parse,0x0045cfc0,confirmed,semantic,"unique string shared with upstream: 'Based-on template %s not found, using bl'"
 sithTemplate_ParseTemplateList,0x0045d370,confirmed,semantic,unique string shared with upstream: 'Template parse failed for template on li'
+sithTemplate_ReadThingTemplatesListBinary,0x0045cce0,confirmed,xref,"references sithTemplate_AllocWorldTemplates, sithThing_ReadThingsListBinary"
 sithTemplate_ReadThingTemplatesListText,0x0045cb80,confirmed,semantic,unique string shared with upstream: 'Memory allocation failure reading thing '
+sithTemplate_WriteThingTemplatesListBinary,0x0045ccb0,confirmed,xref,references sithThing_WriteThingsListBinary
 sithTemplate_bMasterFileInitialized,0x0056fb04,confirmed,auto,exact refs from own module (sithTemplate_GetTemplate)
 sithTemplate_g_pHashtable,0x0056fb00,confirmed,auto,"exact refs from own module (sithTemplate_AllocWorldTemplates, sithTemplate_CacheAdd)"
 sithTemplate_pMasterFile,0x0056fb08,confirmed,auto,exact refs from own module (sithTemplate_GetTemplate)
@@ -1335,12 +1407,14 @@ sithThing_ParseArg,0x004392e0,confirmed,semantic,"unique string shared with upst
 sithThing_ParseThingArg,0x00439470,confirmed,semantic,unique string shared with upstream: 'physics'
 sithThing_ParseThingPlacement,0x0043a1e0,confirmed,semantic,"unique string shared with upstream: 'Template %s not found, line %d.\n'"
 sithThing_PurgeGarbageThings,0x004370d0,confirmed,semantic,unique string shared with upstream: 'Garbage purging thing %d.\n'
+sithThing_ReadStaticThingsListBinary,0x004373e0,confirmed,xref,"references sithThing_curSignature, sithGetPerformanceLevel, sithThing_AllocWorldThings, sithThing_FreeThing, sithThing_LoadPostProcess, sithThing_ReadThingsListBinary"
 sithThing_ReadStaticThingsListText,0x00437180,confirmed,semantic,unique string shared with upstream: 'Allocation failure while allocating thin'
 sithThing_RemoveSwapEntry,0x004336e0,confirmed,semantic,"unique string shared with upstream: ""Please don't pass -1 as a refnum to sith"""
 sithThing_ScaleCombatDamage,0x00434450,confirmed,semantic,unique string shared with upstream: 'Bad params passed to sithThing_ScaleComb'
 sithThing_Shutdown,0x00433300,confirmed,semantic,unique string shared with upstream: 'Thing system not started.\n'
 sithThing_Startup,0x00433240,confirmed,semantic,unique string shared with upstream: 'Multiple startup on sithThing_startup().'
 sithThing_SyncThing,0x00439e20,confirmed,semantic,unique string shared with upstream: 'Too many modified things in a single fra'
+sithThing_WriteStaticThingsListBinary,0x004373b0,confirmed,xref,references sithThing_WriteThingsListBinary
 sithThing_curQuetzAttachInfo,0x005613a0,confirmed,auto,exact refs from own module (sithThing_UpdateQuetzUserBlock)
 sithThing_dword_5612B8,0x005613f8,confirmed,auto,exact refs from own module (sithThing_UpdateQuetzUserBlock)
 sithThing_jeepHitMinVelocityZ,0x005291d4,confirmed,auto,exact refs from own module (sithThing_AttachThingToSurface)
@@ -1353,11 +1427,12 @@ sithTime_g_frameTime,0x0056b86c,fixed,manual,"v1.2 sithTime_Advance references t
 sithTime_g_frameTimeFlex,0x0056b870,fixed,manual,"v1.2 sithTime_Advance references the sithTime block 0x56B86C-0x56B884 with matching usage (bPaused 1x, clockTime 4x, msecGameTime 2x, frameTime/Flex)"
 sithTime_g_msecGameTime,0x0056b878,fixed,manual,"v1.2 sithTime_Advance references the sithTime block 0x56B86C-0x56B884 with matching usage (bPaused 1x, clockTime 4x, msecGameTime 2x, frameTime/Flex)"
 sithTime_g_secGameTime,0x0056b87c,fixed,manual,"v1.2 sithTime_Advance references the sithTime block 0x56B86C-0x56B884 with matching usage (bPaused 1x, clockTime 4x, msecGameTime 2x, frameTime/Flex); inside the block"
-sithVehicleControls_GetMineCarState,0x004a21e0,confirmed,auto,signature matches (0 params)
-sithVehicleControls_GetRaftState,0x004a2210,confirmed,auto,signature matches (0 params)
+sithUpdate,0x00440e80,confirmed,xref,"references sithMain_g_frameNumber, sithMain_g_sith_mode, sithMessage_g_inputstream, sithTime_g_frameTime, sithTime_g_frameTimeFlex, sithAI_Process, sithAdvanceRenderTick, sithAnimate_Update, sithCog_ProcessCogs, sithControl_Update, sithEvent_Process, sithMessage_ProcessMessages, sithMulti_Update, sithSoundMixer_Update, sithThing_Update, sithTime_Advance, sithTime_IsPaused"
+sithVehicleControls_GetMineCarState,0x004a21e0,confirmed,manual,returns the address of sithVehicleControls_curMineCarState (reviewed 2026-10-06)
+sithVehicleControls_GetRaftState,0x004a2210,confirmed,manual,returns the address of sithVehicleControls_curRaftState (reviewed 2026-10-06)
 sithVehicleControls_ProcessJeepMove,0x004a3370,confirmed,semantic,unique string shared with upstream: 'Jeep wheel node missing.\n'
-sithVehicleControls_SetMineCarState,0x004a21f0,confirmed,auto,signature matches (1 params)
-sithVehicleControls_SetRaftState,0x004a2220,confirmed,auto,signature matches (1 params)
+sithVehicleControls_SetMineCarState,0x004a21f0,confirmed,manual,copies the argument into sithVehicleControls_curMineCarState (reviewed 2026-10-06)
+sithVehicleControls_SetRaftState,0x004a2220,confirmed,manual,copies the argument into sithVehicleControls_curRaftState (reviewed 2026-10-06)
 sithVehicleControls_dword_53B188,0x0053b2a8,confirmed,auto,exact refs from own module (sithVehicleControls_UpdateRaftPaddleSoundFx)
 sithVehicleControls_flt_586294,0x005863d4,confirmed,auto,exact refs from own module (sithVehicleControls_ProcessJeepMove)
 sithVehicleControls_g_bJeepAccMoveSndFxPlayed,0x005863dc,confirmed,auto,exact refs from own module (sithVehicleControls_ProcessJeepMove)
@@ -1379,15 +1454,15 @@ sithWeapon_CreateWeaponExplosion,0x004481d0,confirmed,semantic,unique string sha
 sithWeapon_FireProjectile,0x00448fe0,confirmed,semantic,unique string shared with upstream: 'Bad thing in sithWeapon_FireProjectile.\n'
 sithWeapon_FireProjectileEx,0x0044a240,confirmed,semantic,unique string shared with upstream: 'Bad thing in sithWeapon_FireProjectileEx'
 sithWeapon_GenBloodsplort,0x00449b40,confirmed,auto,signature matches (1 params)
-sithWeapon_GetWeaponCollideSize,0x00449e50,confirmed,auto,signature matches (1 params)
-sithWeapon_HasWeaponSelected,0x00448c20,confirmed,auto,signature matches (1 params)
+sithWeapon_GetWeaponCollideSize,0x00449e50,confirmed,manual,"same thresholds (20, 23, 24) and constants (0.0, 0.02, 0.065) (reviewed 2026-10-06)"
+sithWeapon_HasWeaponSelected,0x00448c20,confirmed,manual,"assert ""pThing"" in sithWeapon.c; same type and weapon-id constants (player 10: 1..10, actor 2: 20..24) (reviewed 2026-10-06)"
 sithWeapon_ProcessWeaponControls,0x00448600,confirmed,semantic,unique string shared with upstream: 'Processed buffered weapon key %d.\n'
 sithWeapon_SurfaceCollisionHandler,0x00447f40,confirmed,semantic,unique string shared with upstream: 'Non-physics weapon %s hit a wall.\n'
 sithWeapon_ThingCollisionHandler,0x004476d0,confirmed,semantic,unique string shared with upstream: '+mardukhit'
 sithWeapon_WeaponFireProjectile,0x004471f0,confirmed,semantic,unique string shared with upstream: 'Bad arguments passed.\n'
 sithWhip_CreatePlayerWhip,0x004a0cf0,confirmed,semantic,unique string shared with upstream: '+whip_actor'
 sithWhip_Restore,0x004a0a80,fixed,semantic,v1.2 registers it as message id 30
-sithWhip_SearchWhipClimbThing,0x004a0bf0,confirmed,auto,signature matches (1 params)
+sithWhip_SearchWhipClimbThing,0x004a0bf0,confirmed,manual,"builds (0,0,1) from immediates instead of reading rdroid_g_zVector3; same sithCollision_SearchForCollisions arguments (0.6, 0.075, 0x122) and stack calls (reviewed 2026-10-06)"
 sithWhip_WhipClimbPuppetCallback,0x004a08c0,confirmed,semantic,unique string shared with upstream: '+whipc_actor'
 sithWhip_bFoundWhipClimbThing,0x005863c8,confirmed,auto,used by sithWhip_SearchWhipClimbThing
 sithWhip_vecCameraLookOffsetWhipClimbAim,0x0053a480,confirmed,auto,exact refs from own module (sithWhip_UpdateWhipAim)
@@ -1398,13 +1473,13 @@ sithWorld_Load,0x0043d900,confirmed,semantic,"unique string shared with upstream
 sithWorld_LoadEntryText,0x0043dd00,confirmed,semantic,"unique string shared with upstream: ""Warning: Section '%s' contained errors.\n"""
 sithWorld_LoadPostProcess,0x0043da70,confirmed,semantic,unique string shared with upstream: 'Some required sections not found or load'
 sithWorld_ReadCopyrightText,0x0043e3e0,confirmed,semantic,unique string shared with upstream: 'Error: Invalid copyright symbol.\n'
-sithWorld_ReadGeoresourceBinary,0x0043ef30,confirmed,auto,signature matches (2 params)
+sithWorld_ReadGeoresourceBinary,0x0043ef30,confirmed,xref,references sith_g_pHS
 sithWorld_ReadGeoresourceText,0x0043ec70,confirmed,semantic,unique string shared with upstream: ' world vertices %d'
 sithWorld_ReadHeaderText,0x0043e160,confirmed,semantic,unique string shared with upstream: 'version %d'
 sithWorld_ReadTextSection,0x0043eb50,confirmed,semantic,"unique string shared with upstream: ""Warning: Unknown Section '%s'.\n"""
 sithWorld_Startup,0x0043d680,confirmed,semantic,unique string shared with upstream: 'copyright'
 sithWorld_ValidateWorld,0x0043e9d0,confirmed,semantic,"unique string shared with upstream: 'Problem with things array, should not be'"
-sithWorld_WriteGeoresourceBinary,0x0043eec0,confirmed,auto,signature matches (2 params)
+sithWorld_WriteGeoresourceBinary,0x0043eec0,confirmed,xref,references sith_g_pHS
 sithWorld_aBinarySectionParsers,0x0052a47c,confirmed,auto,exact refs from own module (sithWorld_LoadEntryBinary)
 sithWorld_aCopyrightBuf,0x00561488,confirmed,auto,exact refs from own module (sithWorld_ReadCopyrightText)
 sithWorld_aCopyrightSymbol,0x00506dc0,confirmed,auto,"exact refs from own module (sithWorld_LoadEntryBinary, sithWorld_ReadCopyrightText)"
@@ -1421,8 +1496,8 @@ std3D_ClearZBuffer,0x004beca0,confirmed,semantic,unique string shared with upstr
 std3D_D3DEnumDevicesCallback,0x004befc0,confirmed,semantic,unique string shared with upstream: 'Found |%s|%s|%s|%s| D3D Device\n'
 std3D_EndScene,0x004bd360,confirmed,semantic,unique string shared with upstream: 'Error %s ending scene.\n'
 std3D_EnumTextureFormatsCallback,0x004bf320,confirmed,semantic,unique string shared with upstream: 'Found 8 bpp palettized tex format.\n'
-std3D_EnumZBufferFormatsCallback,0x004bef80,confirmed,auto,"signature matches (2 params, stdcall)"
-std3D_FindClosestFormat,0x004be3d0,confirmed,auto,signature matches (1 params)
+std3D_EnumZBufferFormatsCallback,0x004bef80,confirmed,manual,"stdcall 2 args: DDPF_ZBUFFER, depth >= 16 and < context, 32-byte copy, like the C body (DX6 backend only) (reviewed 2026-10-06)"
+std3D_FindClosestFormat,0x004be3d0,confirmed,xref,"references std3D_aTextureFormats, std3D_numTextureFormats"
 std3D_GetZBufferFormat,0x004bef30,confirmed,auto,signature matches (1 params)
 std3D_StartScene,0x004bd300,confirmed,semantic,unique string shared with upstream: 'Error %s beginning scene.\n'
 std3D_bStartup,0x005dc4f0,confirmed,auto,"exact refs from own module (std3D_Open, std3D_Shutdown)"
@@ -1458,13 +1533,14 @@ stdConffile_openFile,0x005d73cc,confirmed,auto,"exact refs from own module (stdC
 stdConffile_openFileStack,0x005d6370,confirmed,auto,"exact refs from own module (stdConffile_PopStack, stdConffile_PushStack)"
 stdConffile_stackLevel,0x005d73d4,confirmed,auto,"exact refs from own module (stdConffile_Close, stdConffile_PopStack)"
 stdConffile_writeFile,0x005d73d0,confirmed,auto,"exact refs from own module (stdConffile_CloseWrite, stdConffile_OpenWrite)"
-stdConsole_SetAttributes,0x004c2230,confirmed,auto,signature matches (1 params)
+stdConsolePrintf,0x004b6370,confirmed,xref,"references std_g_genBuffer, stdConsole_WriteConsole"
+stdConsole_SetAttributes,0x004c2230,confirmed,xref,references stdConsole_wAttributes
 stdConsole_dword_5DCCCC,0x005dce0c,confirmed,auto,exact refs from own module (stdConsole_Startup)
 stdConsole_dword_5DCCD8,0x005dce18,confirmed,auto,exact refs from own module (stdConsole_Startup)
 stdConsole_dword_5DCCDC,0x005dce1c,confirmed,auto,exact refs from own module (stdConsole_Startup)
 stdConsole_hInput,0x005dce10,confirmed,auto,exact refs from own module (stdConsole_Startup)
 stdControl_DisableReadJoysticks,0x004b79e0,confirmed,auto,called by sithControl_UnbindJoystickAxes
-stdControl_EnableMouseSensitivity,0x004b92a0,confirmed,auto,signature matches (1 params)
+stdControl_EnableMouseSensitivity,0x004b92a0,confirmed,xref,references stdControl_bMouseSensitivityEnabled
 stdControl_EnumDevicesCallback,0x004b90a0,confirmed,semantic,unique string shared with upstream: 'Mouse:%s:%s\n'
 stdControl_InitKeyboard,0x004b8440,confirmed,semantic,unique string shared with upstream: '%s error Acquiring Keyboard.\n'
 stdControl_InitMouse,0x004b8570,confirmed,semantic,unique string shared with upstream: '%s error Acquiring Mouse.\n'
@@ -1482,22 +1558,22 @@ stdDisplay_CreateZBuffer,0x004bace0,confirmed,semantic,unique string shared with
 stdDisplay_DDEnumCallback,0x004bb050,confirmed,semantic,unique string shared with upstream: 'Error %s when creating scratch DirectDra'
 stdDisplay_EnumVideoModesCallback,0x004bb290,confirmed,semantic,unique string shared with upstream: 'Not enough video RAM for mode %d by %d b'
 stdDisplay_FlipToGDISurface,0x004bc7a0,confirmed,auto,called by JonesDialog_SetGameState
-stdDisplay_GetBackBufferDC,0x004bc6d0,confirmed,auto,signature matches (0 params)
+stdDisplay_GetBackBufferDC,0x004bc6d0,confirmed,xref,"references stdDisplay_bModeSet, stdDisplay_bOpen, stdDisplay_g_backBuffer"
 stdDisplay_GetSystemDevice,0x004bb620,confirmed,auto,signature matches (0 params)
 stdDisplay_InitDirectDraw,0x004bae20,confirmed,semantic,unique string shared with upstream: 'Error %s when creating DirectDraw object'
 stdDisplay_IsFullscreen,0x004bc9f0,confirmed,auto,called by JonesDialog_SetGameState
 stdDisplay_LockBackBuffer,0x004bca00,confirmed,semantic,unique string shared with upstream: 'Error %s when locking back buffer.\n'
-stdDisplay_ReleaseBackBufferDC,0x004bc740,confirmed,auto,signature matches (1 params)
-stdDisplay_ReleaseBuffers,0x004bc0d0,confirmed,auto,signature matches (0 params)
+stdDisplay_ReleaseBackBufferDC,0x004bc740,confirmed,xref,"references stdDisplay_bModeSet, stdDisplay_bOpen, stdDisplay_g_backBuffer"
+stdDisplay_ReleaseBuffers,0x004bc0d0,confirmed,xref,"references stdDisplay_g_backBuffer, stdDisplay_g_frontBuffer, stdDisplay_zBuffer"
 stdDisplay_ReleaseDirectDraw,0x004baf90,confirmed,semantic,unique string shared with upstream: 'Error %s when setting coop level.\n'
 stdDisplay_SetBufferClipper,0x004bc850,confirmed,auto,called by JonesDialog_SetGameState
-stdDisplay_SetDefaultResolution,0x004bc540,confirmed,auto,signature matches (2 params)
+stdDisplay_SetDefaultResolution,0x004bc540,confirmed,xref,references stdDisplay_primaryVideoMode
 stdDisplay_Startup,0x004b9b50,confirmed,semantic,unique string shared with upstream: 'Found %d Display Devices.\n'
 stdDisplay_UnlockBackBuffer,0x004bcac0,confirmed,semantic,unique string shared with upstream: 'Error %s when unlocking back buffer.\n'
 stdDisplay_VBufferConvertColorFormat,0x004ba7d0,confirmed,semantic,unique string shared with upstream: 'Unable to allocate memory for new tVBuff'
 stdDisplay_VBufferNew,0x004ba1c0,confirmed,semantic,unique string shared with upstream: 'Error allocating vbuffer.\n'
 stdEffect_Reset,0x004c1ee0,confirmed,auto,called by stdEffect_Startup
-stdEffect_SetFadeFactor,0x004c1f00,confirmed,auto,signature matches (2 params)
+stdEffect_SetFadeFactor,0x004c1f00,confirmed,xref,references stdEffect_fadeFactor
 stdFileClose,0x004c04e0,fixed,manual,v1.2 stdPlatform_InitServices stores it in tHostServices slot +0x34 (pFileClose)
 stdFileEof,0x004c0530,fixed,manual,v1.2 stdPlatform_InitServices stores it in tHostServices slot +0x44 (pFileEOF); returns fp->_flag & _IOEOF
 stdFileGets,0x004c04f0,fixed,manual,"v1.2 stdPlatform_InitServices stores it in tHostServices slot +0x3C (pFileGets); calls fgets(buf,n,fp)"
@@ -1520,10 +1596,11 @@ stdGob_bStartup,0x005dcdf0,confirmed,auto,"exact refs from own module (stdGob_Sh
 stdGob_hs,0x005dcd80,confirmed,auto,exact refs from own module (stdGob_Startup)
 stdHashtbl_GetTailNode,0x004c00b0,confirmed,auto,called by stdHashtbl_Add
 stdLinkList_AddNode,0x004c3860,confirmed,auto,called by stdHashtbl_Add
-stdMath_Dist2D1,0x004c1d00,confirmed,auto,signature matches (2 params)
+stdMath_Dist2D1,0x004c1d00,confirmed,manual,"fabs, fabs, min, max, then min / 2.0 + max, like the C body; followed by stdMath_Dist3D1 (strong) (reviewed 2026-10-06)"
 stdMath_FlexPower,0x004c1110,confirmed,auto,signature matches (2 params)
 stdMath_aSinTable,0x005418c8,confirmed,auto,exact refs from own module (stdMath_SinCos)
 stdMath_aTanTable,0x005458c8,confirmed,auto,exact refs from own module (stdMath_Tan)
+stdMemory_BlockRealloc,0x004b7250,confirmed,xref,"references stdMemory_BlockFree, stdMemory_BlockMalloc"
 stdMemory_Close,0x004b6bf0,confirmed,semantic,unique string shared with upstream: 'Maximum dynamic memory used: %d bytes.\n'
 stdMemory_bOpen,0x005bddd8,confirmed,auto,"exact refs from own module (stdMemory_Close, stdMemory_Open)"
 stdMemory_bStartup,0x005bddd4,confirmed,auto,"exact refs from own module (stdMemory_Open, stdMemory_Shutdown)"
@@ -1536,13 +1613,13 @@ stdPlatform_Printf,0x004c0430,fixed,manual,v1.2 stdPlatform_InitServices stores 
 stdPlatform_ReallocHandle,0x004c0480,fixed,manual,v1.2 stdPlatform_InitServices stores it in tHostServices slot +0x64 (pReallocHandle)
 stdPlatform_UnlockHandle,0x004c04b0,fixed,manual,v1.2 stdPlatform_InitServices stores it in tHostServices slot +0x6C (pUnlockHandle)
 stdPlatform_bAssert,0x005dccf8,confirmed,auto,exact refs from own module (stdPlatform_GetTimeMsec)
-stdPrintf,0x004b62d0,confirmed,auto,"between verified stdShutdown and stdConsolePrintf, same shift -0xe0"
+stdPrintf,0x004b62d0,confirmed,manual,"same buffer, sprintf of the prefix, vsprintf and callback; the stdFileFromPath call is an upstream fix (v1.2 passes the path as a format string) (reviewed 2026-10-06)"
 stdStrTable_Load,0x004c2310,confirmed,semantic,unique string shared with upstream: 'MSGS %d'
 stdUtil_Format,0x004b7310,confirmed,auto,"between verified stdMemory_BlockAlloc and stdUtil_StringSplit, same shift -0xe0"
-stdWin95_GetInstance,0x004b9350,confirmed,auto,signature matches (0 params)
-stdWin95_SetGuid,0x004b9360,confirmed,auto,signature matches (1 params)
-stdWin95_SetInstance,0x004b9340,confirmed,auto,signature matches (1 params)
-stdWin95_SetWindow,0x004b9320,confirmed,auto,signature matches (1 params)
+stdWin95_GetInstance,0x004b9350,confirmed,xref,references stdWin95_hInstance
+stdWin95_SetGuid,0x004b9360,confirmed,xref,references stdWin95_guid
+stdWin95_SetInstance,0x004b9340,confirmed,xref,references stdWin95_hInstance
+stdWin95_SetWindow,0x004b9320,confirmed,xref,references stdWin95_hwnd
 std_bStdStartup,0x0059cd48,confirmed,auto,"between verified sithCogYacc_yy_start and stdMemory_aZoneData, same shift +0x140"
 std_g_aEmptyString,0x00551f50,confirmed,auto,"between verified jonesConfig_hFontDialogInsertCD and JonesConsole_aCmdLine, same shift +0x120"
 std_printBuffer,0x0059c548,confirmed,auto,"between verified sithCogYacc_yy_start and stdMemory_aZoneData, same shift +0x140"
@@ -1550,8 +1627,8 @@ stdio_close,0x004e9f90,fixed,manual,INSANE stdio services table (0x54D824) entry
 stdio_flush,0x004ea010,fixed,manual,INSANE stdio services table (0x54D838) entry 6: the remaining 1-arg wrapper (tell is 0x4E9FE0)
 stdio_open,0x004e9f60,fixed,manual,INSANE stdio services table (0x54D820) entry 0: fopen wrapper
 wkernel_CreateWindow,0x004c4310,confirmed,semantic,unique string shared with upstream: 'APPICON'
-wkernel_ProcessEvents,0x004c4210,confirmed,auto,"between verified wkernel_PeekProcessEvents and wkernel_SetWindowStyle, same shift -0x130"
-wkernel_SetWindowStyle,0x004c4280,confirmed,auto,signature matches (1 params)
+wkernel_ProcessEvents,0x004c4210,confirmed,xref,references wkernel_msg_2
+wkernel_SetWindowStyle,0x004c4280,confirmed,xref,"references wkernel_hwnd, wkernel_wndBorderWidth, wkernel_wndMenuBarHeight"
 wkernel_guid,0x005099a8,confirmed,auto,exact refs from own module (wkernel_Run)
 wkernel_nShowCmd,0x005e1174,confirmed,auto,exact refs from own module (wkernel_Run)
 wuRegistry_GetFloat,0x004c3d30,confirmed,auto,signature matches (2 params)
