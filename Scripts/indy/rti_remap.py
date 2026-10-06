@@ -61,15 +61,17 @@ def read_symbols(root):
 def read_usage(root):
     """name -> set of runtime uses: hook (patched), trampoline (called in the original exe), live (global read from the exe)."""
     usage = collections.defaultdict(set)
-    pats = {"hook": r"J3D_HOOKFUNC\(\s*(\w+)", "trampoline": r"J3D_TRAMPOLINE_CALL\(\s*(\w+)",
+    pats = {"hook": r"(?:J3D_HOOKFUNC\(\s*(\w+)|J3DHookFunction\(\s*(\w+)_ADDR)", "trampoline": r"J3D_TRAMPOLINE_CALL\(\s*(\w+)",
             "live": r"J3D_DECL_FAR_(?:ARRAY)?VAR\(\s*(\w+)"}
     for src in list(root.glob("Libs/**/*.[ch]")) + list(root.glob("Jones3D/**/*.[ch]")):
         if "external" in src.parts or src.name == "j3dhook.h":
             continue
         text = src.read_text("latin1")
         for kind, pat in pats.items():
-            for name in re.findall(pat, text):
-                usage[name].add(kind)
+            for m in re.findall(pat, text):
+                for name in (m if isinstance(m, tuple) else (m,)):
+                    if name:
+                        usage[name].add(kind)
     return usage
 
 

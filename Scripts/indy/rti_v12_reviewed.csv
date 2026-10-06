@@ -9,6 +9,93 @@ AudioLib_aStepBits,0x0050a358,confirmed,auto,"exact refs from own module (AudioL
 AudioLib_aStepTable,0x0050a2a0,confirmed,auto,"exact refs from own module (AudioLib_CompressBlock, AudioLib_UncompressBlock)"
 AudioLib_bDeltaTableInitialized,0x014e7668,confirmed,auto,exact refs from own module (AudioLib_UncompressBlock)
 AudioLib_word_14E4928,0x014e4a68,confirmed,auto,exact refs from own module (AudioLib_UncompressBlock)
+JonesConsole_pFuncHashtbl,0x005531a8,confirmed,auto,"exact refs from own module (JonesConsole_Close, JonesConsole_ExeCommand)"
+JonesDialog_DummyFlipGDI,0x00410cd0,confirmed,auto,signature matches (0 params)
+JonesDisplay_backBufferHeight,0x00553414,confirmed,auto,exact refs from own module (JonesDisplay_Startup)
+JonesDisplay_backBufferWidth,0x00553410,confirmed,auto,exact refs from own module (JonesDisplay_Startup)
+JonesFile_FileExists,0x00412eb0,confirmed,auto,signature matches (1 params)
+JonesHud_aCreditFontColors,0x005163c0,confirmed,auto,used by JonesHud_DrawCredits
+JonesHud_aCreditsTextHeights,0x00554bd8,confirmed,auto,exact refs from own module (JonesHud_DrawCredits)
+JonesHud_aDfltMenuItemsOrients,0x005156f8,confirmed,auto,"exact refs from own module (JonesHud_RenderChangedItem, JonesHud_RenderMenuItem)"
+JonesHud_bFadingHealthHUD,0x005552b8,confirmed,auto,exact refs from own module (JonesHud_RenderHealthIndicator)
+JonesHud_bFinishingCredits,0x005552d8,confirmed,auto,exact refs from own module (JonesHud_DrawCredits)
+JonesHud_bRestoreActivated,0x00555290,confirmed,auto,"used by JonesHud_Close, JonesHud_MenuActivateItem, JonesHud_Process"
+JonesHud_bSomeCreditsBoolean,0x005552dc,confirmed,auto,exact refs from own module (JonesHud_DrawCredits)
+JonesHud_breathIndicatorColor,0x005064a0,confirmed,auto,exact refs from own module (JonesHud_DrawEnduranceIndicator)
+JonesHud_bufferHeight,0x00554bd4,confirmed,auto,exact refs from own module (JonesHud_DrawCredits)
+JonesHud_bufferWidth,0x00555170,confirmed,auto,exact refs from own module (JonesHud_DrawCredits)
+JonesHud_colorPink,0x005064b0,confirmed,auto,exact refs from own module (JonesHud_DrawEnduranceIndicator)
+JonesHud_creditsSomeIdx,0x005544b8,confirmed,auto,exact refs from own module (JonesHud_DrawCredits)
+JonesHud_creditsSomeIdx_0,0x00555118,confirmed,auto,exact refs from own module (JonesHud_DrawCredits)
+JonesHud_creditsSomeIdx_1,0x00555124,confirmed,auto,exact refs from own module (JonesHud_DrawCredits)
+JonesHud_curCelNum,0x005544dc,confirmed,auto,exact refs from own module (JonesHud_DrawCredits)
+JonesHud_dword_554FDC,0x00555108,confirmed,auto,field used by JonesHud_UpdateHUDLayout
+JonesHud_hitOverlayAlpha,0x005552c0,confirmed,auto,exact refs from own module (JonesHud_DrawHealthHitOverlay)
+JonesHud_hitOverlayAlphaState,0x005552bc,confirmed,auto,exact refs from own module (JonesHud_DrawHealthHitOverlay)
+JonesHud_indScale,0x005544d8,confirmed,auto,"exact refs from own module (JonesHud_DrawEnduranceIndicator, JonesHud_DrawHealthIndicatorBar)"
+JonesHud_levelStartIQPoints,0x005550ec,confirmed,auto,"field used by JonesHud_InitializeGameStatistics, JonesHud_MenuActivateItem, JonesHud_ShowLevelCompleted"
+JonesHud_maxItemZ,0x005545a4,confirmed,auto,"exact refs from own module (JonesHud_MenuCollapseColumn, JonesHud_MenuExpandColumn)"
+JonesHud_msecHealthIndLastFadeUpdate,0x00555240,confirmed,auto,exact refs from own module (JonesHud_RenderHealthIndicatorHit)
+JonesHud_pEnduranceOverlayMat,0x0055526c,confirmed,auto,"exact refs from own module (JonesHud_Open, JonesHud_RenderEnduranceIndicator)"
+JonesHud_pHealthOverlay,0x00555260,confirmed,auto,"exact refs from own module (JonesHud_DrawHealthIndicator, JonesHud_Open)"
+JonesHud_pHealthOverlayHitMat,0x00555264,confirmed,auto,"exact refs from own module (JonesHud_DrawHealthHitOverlay, JonesHud_Open)"
+JonesHud_pHudBaseMat,0x0055525c,confirmed,auto,"exact refs from own module (JonesHud_DrawEnduranceIndicator, JonesHud_DrawHealthIndicatorBase)"
+JonesHud_pMenuFont,0x00555270,confirmed,auto,"exact refs from own module (JonesHud_Close, JonesHud_Open)"
+JonesHud_pPoisonedOverlayMat,0x00555268,confirmed,auto,"exact refs from own module (JonesHud_DrawHealthIndicator, JonesHud_Open)"
+JonesHud_playerHealthFadeStart,0x00555244,confirmed,auto,exact refs from own module (JonesHud_RenderHealthIndicator)
+JonesHud_pyrInventoryOrient,0x005064d0,confirmed,auto,exact refs from own module (JonesHud_Open)
+JonesHud_screenHeightScalar,0x005544bc,confirmed,auto,"exact refs from own module (JonesHud_RenderMenuItem, JonesHud_Shutdown)"
+JonesHud_screenWidthScalar,0x005544c0,confirmed,auto,"exact refs from own module (JonesHud_RenderMenuItem, JonesHud_Shutdown)"
+JonesHud_selectedOptionsMenuItemID,0x00554ad8,confirmed,auto,"exact refs from own module (JonesHud_MenuCollapseColumn, JonesHud_MenuMoveDown)"
+JonesMain_FilePrintf,0x0041ea30,confirmed,auto,"between verified JonesMain_CloseWindow and JonesMain_LogError, same shift -0x230"
+JonesMain_IsGamePaused,0x0041dc70,confirmed,auto,called by JonesDialog_SetGameState
+JonesMain_Process,0x0041dc80,confirmed,auto,signature matches (0 params)
+JonesMain_bDisplayError,0x00555680,confirmed,auto,exact refs from own module (JonesMain_ProcessMenu)
+JonesMain_bEndCredits,0x00555670,confirmed,auto,field used by JonesMain_ProcessCredits
+JonesMain_bMenuToggled,0x0055567c,confirmed,auto,field used by JonesMain_ProcessMenu
+JonesMain_frameRate,0x00555684,confirmed,auto,field used by JonesMain_PrintFramerate
+Sound_GenerateChannelHandle,0x004dd2f0,confirmed,auto,called by Sound_Play
+Sound_GetChannelBySoundHandle,0x004dd530,confirmed,auto,called by Sound_Play
+Sound_Initialize,0x004da110,confirmed,auto,signature matches (1 params)
+Sound_Shutdown,0x004da1c0,confirmed,auto,called by sithSound_ShutdownSound
+Sound_Startup,0x004da170,confirmed,auto,called by sithSound_StartupSound
+Sound_Uninitialize,0x004da150,confirmed,auto,called by sithSound_Uninitialize
+Sound_nextHandle,0x014e1ce0,confirmed,auto,"exact refs from own module (Sound_ExportBank, Sound_GenerateChannelHandle)"
+jonesConfig_JONES_STR_SUMMERY,0x00510bcc,confirmed,auto,exact refs from own module (jonesConfig_StatisticsDialogProc)
+jonesConfig_aStoreItemsInfo,0x00513a18,confirmed,auto,"between verified JonesDisplay_primaryDisplayNum and JonesHud_aDfltMenuItemsOrients, same shift +0x0"
+jonesConfig_apDialogIconFiles,0x00510b70,confirmed,auto,exact refs from own module (jonesConfig_Startup)
+jonesConfig_bStartup,0x00551ee8,confirmed,auto,exact refs from own module (jonesConfig_Startup)
+rdClip_SphereInFrustrum,0x004d7d30,confirmed,auto,called by sithRender_RenderThings
+rdFont_DrawChar,0x004c4d10,confirmed,auto,signature matches (5 params)
+rdFont_DrawTextLineClipped,0x004c4f60,confirmed,auto,signature matches (6 params)
+rdKeyframe_pKeyframeLoader,0x014ddad0,confirmed,auto,exact refs from own module (rdKeyframe_RegisterLoader)
+rdMaterial_pfMaterialLoader,0x014daa60,confirmed,auto,"exact refs from own module (rdMaterial_Load, rdMaterial_RegisterLoader)"
+rdMaterial_pfMaterialUnloader,0x014daa64,confirmed,auto,exact refs from own module (rdMaterial_Free)
+rdMatrix_Copy34,0x004c8150,confirmed,auto,signature matches (2 params)
+rdModel3_GetThingColor,0x004cb0a0,confirmed,auto,"called by JonesHud_RenderMenuItem, sithThing_Draw"
+rdModel3_aView,0x014daa68,confirmed,auto,exact refs from own module (rdModel3_DrawMesh)
+rdModel3_apMeshLights,0x0183b900,confirmed,auto,exact refs from own module (rdModel3_DrawMesh)
+rdModel3_bCalcRadius,0x014dda80,confirmed,auto,"exact refs from own module (rdModel3_BuildExpandedRadius, rdModel3_LoadEntry)"
+rdModel3_bDrawMeshBounds,0x014dda6c,confirmed,auto,exact refs from own module (rdModel3_DrawMesh)
+rdModel3_extraFaceFlags,0x014dda88,confirmed,auto,"exact refs from own module (rdModel3_DrawFace, rdModel3_EnableFogRendering)"
+rdModel3_g_aLocalLightPos,0x0183b2e0,confirmed,auto,"exact refs from own module (rdModel3_DrawFace, rdModel3_DrawMesh)"
+rdModel3_g_apGeoLights,0x0183b0e0,confirmed,auto,"exact refs from own module (rdModel3_Draw, rdModel3_DrawMesh)"
+rdModel3_g_curLightingMode,0x0183b8e4,confirmed,auto,"exact refs from own module (rdModel3_Draw, rdModel3_DrawMesh)"
+rdModel3_g_lightingMode,0x0183bb00,confirmed,auto,"exact refs from own module (rdModel3_DrawFace, rdModel3_DrawMesh)"
+rdModel3_g_localCamera,0x0183b0d0,confirmed,auto,exact refs from own module (rdModel3_DrawMesh)
+rdModel3_g_numGeoLights,0x014dda78,confirmed,auto,"exact refs from own module (rdModel3_Draw, rdModel3_DrawMesh)"
+rdModel3_g_numMeshLights,0x014dda7c,confirmed,auto,exact refs from own module (rdModel3_DrawMesh)
+rdModel3_g_pCurMesh,0x0183b8e0,confirmed,auto,"exact refs from own module (rdModel3_DrawFace, rdModel3_DrawMesh)"
+rdModel3_maxGeoRadius,0x014dda84,confirmed,auto,"exact refs from own module (rdModel3_BuildExpandedRadius, rdModel3_LoadEntry)"
+rdModel3_pCurThing,0x014dda68,confirmed,auto,"exact refs from own module (rdModel3_Draw, rdModel3_DrawHNode)"
+rdModel3_pModel3Loader,0x014dda70,confirmed,auto,exact refs from own module (rdModel3_RegisterLoader)
+rdModel3_pfDrawFace,0x0054ac4c,confirmed,auto,exact refs from own module (rdModel3_DrawMesh)
+sithAIAwareness_IsInTransmittingRange,0x004b0b10,confirmed,auto,signature matches (3 params)
+sithAIAwareness_aEvents,0x0059bef0,confirmed,auto,"exact refs from own module (sithAIAwareness_CreateEvent, sithAIAwareness_ProcessEvents)"
+sithAIAwareness_bOpened,0x0059c278,confirmed,auto,"exact refs from own module (sithAIAwareness_Close, sithAIAwareness_Open)"
+sithAIAwareness_curProcessID,0x0059c27c,confirmed,auto,"exact refs from own module (sithAIAwareness_ProcessEvent, sithAIAwareness_Update)"
+sithAIAwareness_numEvents,0x0059c274,confirmed,auto,"exact refs from own module (sithAIAwareness_CreateEvent, sithAIAwareness_Open)"
+sithAIClass_WriteStaticAIClassesListBinary,0x00456870,confirmed,auto,signature matches (2 params)
 sithAIInstinct_AlternateFire,0x00490f40,confirmed,auto,"same-module refs (sithAIInstinct_InitInstincts), 3/5 params used"
 sithAIInstinct_BasicFallow,0x004934f0,confirmed,auto,signature matches (5 params)
 sithAIInstinct_CircleStrafe,0x004911f0,confirmed,auto,signature matches (5 params)
@@ -110,9 +197,182 @@ sithAIUtil_thingsInViewFovX,0x005855ec,confirmed,auto,"exact refs from own modul
 sithAIUtil_thingsInViewFovY,0x005855b8,confirmed,auto,"exact refs from own module (sithAIUtil_GetNextThingsInView, sithAIUtil_GetThingsInView)"
 sithAIUtil_vec_585490,0x005855d0,confirmed,auto,"exact refs from own module (sithAIUtil_MakeRandPoint, sithAIUtil_RetryMakeRandPoint)"
 sithAIUtil_vec_585718,0x00585858,confirmed,auto,"exact refs from own module (sithAIUtil_MakeRandPoint, sithAIUtil_RetryMakeRandPoint)"
+sithAI_RegisterInstinct,0x0042ab10,confirmed,auto,signature matches (5 params)
+sithAI_aFreeAIIndices,0x0055eb00,confirmed,auto,"exact refs from own module (sithAI_CreateAI, sithAI_FreeAI)"
+sithAI_aRegisteredInstincts,0x0055ef08,confirmed,auto,"exact refs from own module (sithAI_CreateInstinctRegistry, sithAI_FindInstinct)"
+sithAI_bStartup,0x0055ef04,confirmed,auto,"exact refs from own module (sithAI_Open, sithAI_Shutdown)"
+sithAI_numFreeAIs,0x0055eafc,confirmed,auto,"exact refs from own module (sithAI_CreateAI, sithAI_FreeAI)"
+sithAI_numRegisteredInstincts,0x0055ef0c,confirmed,auto,"exact refs from own module (sithAI_FindInstinct, sithAI_RegisterInstinct)"
+sithAI_pRegisteredInstinctHashtbl,0x0055eaf8,confirmed,auto,"exact refs from own module (sithAI_CreateInstinctRegistry, sithAI_Shutdown)"
+sithAnimate_Create,0x00462be0,confirmed,auto,signature matches (0 params)
+sithAnimate_aAnims,0x005704b8,confirmed,auto,"exact refs from own module (sithAnimate_FreeAllAnims, sithAnimate_FreeAnim)"
+sithAnimate_aFreeAnimNums,0x0056fcac,confirmed,auto,exact refs from own module (sithAnimate_NewAnim)
+sithAnimate_aPullItemAnimFrames,0x0052f9a4,confirmed,auto,"between verified sithAnimate_lastPullItemAnimFrameIdx and sithAnimate_aPullItemDistances, same shift +0x120"
+sithAnimate_aPullItemDistances,0x0052f9d8,confirmed,auto,exact refs from own module (sithAnimate_UpdatePullItemAnim)
+sithAnimate_aPushItemAnimFrames,0x0052fa34,confirmed,auto,"between verified sithAnimate_lastPushItemAnimFrameIdx and sithAnimate_aPushItemDistances, same shift +0x120"
+sithAnimate_aPushItemDistances,0x0052fa68,confirmed,auto,exact refs from own module (sithAnimate_UpdatePushItemAnim)
+sithAnimate_bOpen,0x005854b8,confirmed,auto,"exact refs from own module (sithAnimate_Close, sithAnimate_Open)"
+sithAnimate_lastPullItemAnimFrameIdx,0x0052f9a0,confirmed,auto,exact refs from own module (sithAnimate_UpdatePullItemAnim)
+sithAnimate_lastPushItemAnimFrameIdx,0x0052fa30,confirmed,auto,exact refs from own module (sithAnimate_UpdatePushItemAnim)
+sithAnimate_lastUsedAnimNum,0x005704b0,confirmed,auto,"exact refs from own module (sithAnimate_FreeAllAnims, sithAnimate_FreeAnim)"
+sithAnimate_numFreeAnims,0x0056fca8,confirmed,auto,"exact refs from own module (sithAnimate_FreeAllAnims, sithAnimate_FreeAnim)"
 sithCamera_g_orbCamOrient,0x01801440,confirmed,auto,"used by sithCamera_Update, sithPlayerControls_ProcessEditorDebugControls"
+sithCamera_idleCamOrient,0x00561410,confirmed,auto,"used by sithCamera_SetCurrentCamera, sithCamera_Update"
+sithCamera_secFocusThingFadeInTime,0x00561464,confirmed,auto,used by sithCamera_Update
+sithCamera_vecCameraOffsetClimbDown,0x0052a258,confirmed,auto,used by sithCamera_Update
+sithCamera_vecCameraOffsetClimbingLeft,0x0052a268,confirmed,auto,used by sithCamera_Update
+sithCamera_vecCameraOffsetClimbingRight,0x0052a278,confirmed,auto,used by sithCamera_Update
+sithCamera_vecCameraOffsetClimbingUp,0x0052a248,confirmed,auto,used by sithCamera_Update
+sithCamera_vecCameraOffsetJumpRollback,0x0052a2a8,confirmed,auto,used by sithCamera_Update
+sithCamera_vecCameraOffsetSlideBackward,0x0052a298,confirmed,auto,used by sithCamera_Update
+sithCamera_vecCameraOffsetSlideForward,0x0052a288,confirmed,auto,used by sithCamera_Update
+sithCamera_vecCameraOffsetWeaponDrawn,0x0052a1d8,confirmed,auto,used by sithCamera_Update
+sithCamera_vecDefaulExtCameraOffset,0x0052a228,confirmed,auto,exact refs from own module (sithCamera_Update)
+sithCamera_vecOffsetCamType40,0x0052a2b8,confirmed,auto,used by sithCamera_Update
+sithCogParse_LexerSetVector,0x00453490,confirmed,auto,signature matches (1 params)
+sithCogParse_aLabelTable,0x0056e680,confirmed,auto,"exact refs from own module (sithCogParse_GenerateCode, sithCogParse_GenerateLabelTable)"
+sithCogParse_bSkipYYRestart,0x0052d02c,confirmed,auto,exact refs from own module (sithCogParse_ParseSectionCode)
+sithCogParse_codepos,0x0056f690,confirmed,auto,"exact refs from own module (sithCogParse_GenerateCode, sithCogParse_GenerateLabelTable)"
+sithCogParse_nextlabel,0x0052d028,confirmed,auto,"exact refs from own module (sithCogParse_GetNextLabel, sithCogParse_Load)"
+sithCogParse_numTreeNodes,0x0056f694,confirmed,auto,"exact refs from own module (sithCogParse_FreeParseTree, sithCogParse_GetNextNode)"
+sithCogParse_pCurrentCode,0x0056f680,confirmed,auto,"exact refs from own module (sithCogParse_GenerateCode, sithCogParse_ParseSectionCode)"
+sithCogParse_pCurrentRoot,0x0056f684,confirmed,auto,"exact refs from own module (sithCogParse_Load, sithCogParse_MakeLeafNode)"
+sithCogParse_pCurrentScript,0x0056f68c,confirmed,auto,"exact refs from own module (sithCogParse_LexerSetSymbol, sithCogParse_ParseSectionCode)"
+sithCogParse_pCurrentSymbols,0x0056e678,confirmed,auto,"exact refs from own module (sithCogParse_GetSymbolLabel, sithCogParse_LexerSetString)"
+sithCogParse_pSyntaxTree,0x0056f688,confirmed,auto,"exact refs from own module (sithCogParse_FreeParseTree, sithCogParse_GetNextNode)"
+sithCogParse_syntaxTreeSize,0x0056f698,confirmed,auto,"exact refs from own module (sithCogParse_FreeParseTree, sithCogParse_GetNextNode)"
+sithCogYacc_aLexerSymText,0x0059c438,confirmed,auto,exact refs from own module (sithCogYacc_yylex)
+sithCogYacc_beanchNode,0x017f11cc,confirmed,auto,exact refs from own module (sithCogYacc_yyparse)
+sithCogYacc_conditionNode,0x017f012c,confirmed,auto,exact refs from own module (sithCogYacc_yyparse)
+sithCogYacc_g_yylineno,0x017f0114,confirmed,auto,"exact refs from own module (sithCogYacc_yyerror, sithCogYacc_yylex)"
+sithCogYacc_g_yylval,0x017f0120,confirmed,auto,"exact refs from own module (sithCogYacc_yylex, sithCogYacc_yyparse)"
+sithCogYacc_yy_accept,0x00507c00,confirmed,auto,"exact refs from own module (sithCogYacc_yy_get_previous_state, sithCogYacc_yy_try_NUL_trans)"
+sithCogYacc_yy_base,0x00507db0,confirmed,auto,"exact refs from own module (sithCogYacc_yy_get_previous_state, sithCogYacc_yy_try_NUL_trans)"
+sithCogYacc_yy_c_buf_p,0x0059c540,confirmed,auto,"exact refs from own module (sithCogYacc_yy_get_next_buffer, sithCogYacc_yy_get_previous_state)"
+sithCogYacc_yy_chk,0x005081b0,confirmed,auto,"exact refs from own module (sithCogYacc_yy_get_previous_state, sithCogYacc_yy_try_NUL_trans)"
+sithCogYacc_yy_create_buffer,0x004b6130,confirmed,auto,signature matches (2 params)
+sithCogYacc_yy_current_buffer,0x0059c430,confirmed,auto,"exact refs from own module (sithCogYacc_yy_get_next_buffer, sithCogYacc_yy_load_buffer_state)"
+sithCogYacc_yy_def,0x00507eb0,confirmed,auto,"exact refs from own module (sithCogYacc_yy_get_previous_state, sithCogYacc_yy_try_NUL_trans)"
+sithCogYacc_yy_did_buffer_switch_on_eof,0x0059c420,confirmed,auto,exact refs from own module (sithCogYacc_yylex)
+sithCogYacc_yy_ec,0x00507cf8,confirmed,auto,"exact refs from own module (sithCogYacc_yy_get_previous_state, sithCogYacc_yylex)"
+sithCogYacc_yy_get_next_buffer,0x004b5da0,confirmed,auto,signature matches (0 params)
+sithCogYacc_yy_get_previous_state,0x004b5fa0,confirmed,auto,signature matches (0 params)
+sithCogYacc_yy_hold_char,0x0059c424,confirmed,auto,"exact refs from own module (sithCogYacc_yy_load_buffer_state, sithCogYacc_yylex)"
+sithCogYacc_yy_init,0x0053e130,confirmed,auto,exact refs from own module (sithCogYacc_yylex)
+sithCogYacc_yy_init_buffer,0x004b6210,confirmed,auto,signature matches (2 params)
+sithCogYacc_yy_last_accepting_cpos,0x0059c42c,confirmed,auto,"exact refs from own module (sithCogYacc_yy_get_previous_state, sithCogYacc_yy_try_NUL_trans)"
+sithCogYacc_yy_last_accepting_state,0x0059c434,confirmed,auto,"exact refs from own module (sithCogYacc_yy_get_previous_state, sithCogYacc_yy_try_NUL_trans)"
+sithCogYacc_yy_load_buffer_state,0x004b6100,confirmed,auto,signature matches (0 params)
+sithCogYacc_yy_meta,0x00507d78,confirmed,auto,"exact refs from own module (sithCogYacc_yy_get_previous_state, sithCogYacc_yylex)"
+sithCogYacc_yy_n_chars,0x0059c428,confirmed,auto,"exact refs from own module (sithCogYacc_yy_get_next_buffer, sithCogYacc_yy_load_buffer_state)"
+sithCogYacc_yy_nxt,0x00507fb0,confirmed,auto,"exact refs from own module (sithCogYacc_yy_get_previous_state, sithCogYacc_yy_try_NUL_trans)"
+sithCogYacc_yy_start,0x0059c544,confirmed,auto,"exact refs from own module (sithCogYacc_yy_get_previous_state, sithCogYacc_yylex)"
+sithCogYacc_yy_try_NUL_trans,0x004b6050,confirmed,auto,signature matches (1 params)
+sithCogYacc_yychar,0x017f0130,confirmed,auto,exact refs from own module (sithCogYacc_yyparse)
+sithCogYacc_yycheck,0x0053d9d8,confirmed,auto,exact refs from own module (sithCogYacc_yyparse)
+sithCogYacc_yydebug,0x017f11c8,confirmed,auto,exact refs from own module (sithCogYacc_yyparse)
+sithCogYacc_yydefred,0x0053d000,confirmed,auto,exact refs from own module (sithCogYacc_yyparse)
+sithCogYacc_yydgoto,0x0053d100,confirmed,auto,exact refs from own module (sithCogYacc_yyparse)
+sithCogYacc_yyerrflag,0x017f011c,confirmed,auto,exact refs from own module (sithCogYacc_yyparse)
+sithCogYacc_yyerror,0x004b4d10,confirmed,auto,signature matches (1 params)
+sithCogYacc_yygindex,0x0053d330,confirmed,auto,exact refs from own module (sithCogYacc_yyparse)
+sithCogYacc_yyin,0x0059c538,confirmed,auto,"exact refs from own module (sithCogYacc_yy_get_next_buffer, sithCogYacc_yy_load_buffer_state)"
+sithCogYacc_yylen,0x0053cf78,confirmed,auto,exact refs from own module (sithCogYacc_yyparse)
+sithCogYacc_yyleng,0x017f0110,confirmed,auto,exact refs from own module (sithCogYacc_yylex)
+sithCogYacc_yylex,0x004b5770,confirmed,auto,signature matches (0 params)
+sithCogYacc_yylhs,0x0053cef0,confirmed,auto,exact refs from own module (sithCogYacc_yyparse)
+sithCogYacc_yynerrs,0x017f11c0,confirmed,auto,exact refs from own module (sithCogYacc_yyparse)
+sithCogYacc_yyout,0x0059c53c,confirmed,auto,exact refs from own module (sithCogYacc_yylex)
+sithCogYacc_yyparse,0x004b4d50,confirmed,auto,signature matches (0 params)
+sithCogYacc_yyrestart,0x004b60e0,confirmed,auto,"between verified sithCogYacc_yy_try_NUL_trans and sithCogYacc_yy_load_buffer_state, same shift -0xe0"
+sithCogYacc_yyrindex,0x0053d230,confirmed,auto,exact refs from own module (sithCogYacc_yyparse)
+sithCogYacc_yysindex,0x0053d130,confirmed,auto,exact refs from own module (sithCogYacc_yyparse)
+sithCogYacc_yyss,0x017f0140,confirmed,auto,exact refs from own module (sithCogYacc_yyparse)
+sithCogYacc_yyssp,0x017f11bc,confirmed,auto,exact refs from own module (sithCogYacc_yyparse)
+sithCogYacc_yytable,0x0053d360,confirmed,auto,exact refs from own module (sithCogYacc_yyparse)
+sithCogYacc_yytext,0x017f0118,confirmed,auto,"exact refs from own module (sithCogYacc_yy_get_next_buffer, sithCogYacc_yy_get_previous_state)"
+sithCogYacc_yyval,0x017f11b0,confirmed,auto,exact refs from own module (sithCogYacc_yyparse)
+sithCogYacc_yyvs,0x017f03a0,confirmed,auto,exact refs from own module (sithCogYacc_yyparse)
+sithCogYacc_yyvsp,0x017f11c4,confirmed,auto,exact refs from own module (sithCogYacc_yyparse)
+sithCog_GetCog,0x00423c50,confirmed,auto,called by jonesInventory_Load
+sithCog_WriteCogScriptsListBinary,0x004246b0,confirmed,auto,signature matches (2 params)
+sithCog_aCogLinkSectors,0x00555918,confirmed,auto,"exact refs from own module (sithCog_LinkCogToSector, sithCog_SectorSendMessageEx)"
+sithCog_aCogLinkSurfaces,0x0055c918,confirmed,auto,"exact refs from own module (sithCog_LinkCogToSurface, sithCog_SurfaceSendMessageEx)"
+sithCog_aThingLinks,0x00557918,confirmed,auto,"exact refs from own module (sithCog_FixupLinksToThings, sithCog_IsThingLinked)"
+sithCog_numSectorLinks,0x0055e928,confirmed,auto,"exact refs from own module (sithCog_Close, sithCog_LinkCogToSector)"
+sithCog_numSurfLinks,0x0055e924,confirmed,auto,"exact refs from own module (sithCog_Close, sithCog_LinkCogToSurface)"
+sithCog_numThingLinks,0x0055e920,confirmed,auto,"exact refs from own module (sithCog_Close, sithCog_FixupLinksToThings)"
+sithCollision_AddCollisionHandler,0x004a6460,confirmed,auto,signature matches (4 params)
+sithCollision_AddSurfaceCollisionHandler,0x004a6580,confirmed,auto,signature matches (2 params)
+sithCollision_aCollideResults,0x00586400,confirmed,auto,"exact refs from own module (sithCollision_AddCollisionHandler, sithCollision_MoveThing)"
+sithCollision_bCollideStartup,0x0059bee0,confirmed,auto,"exact refs from own module (sithCollision_MoveThing, sithCollision_Shutdown)"
+sithCollision_stackLevel,0x0053b308,confirmed,auto,"exact refs from own module (sithCollision_DecreaseStackLevel, sithCollision_PopStack)"
+sithCollision_sub_4AAF30,0x004aae60,confirmed,auto,signature matches (2 params)
+sithCommand_CipherText,0x004b4cc0,confirmed,auto,signature matches (1 params)
+sithCommand_DebugMode,0x004b4600,confirmed,auto,signature matches (2 params)
+sithCommand_DynamicMemory,0x004b4be0,confirmed,auto,"between verified sithCommand_Memory and sithCommand_MemoryDump, same shift -0xe0"
+sithCommand_aBuf,0x0059c320,confirmed,auto,exact refs from own module (sithCommand_CipherText)
+sithConsole_Flush,0x00446410,confirmed,auto,signature matches (0 params)
+sithConsole_aBuffers,0x0056a810,confirmed,auto,"exact refs from own module (sithConsole_Flush, sithConsole_Open)"
+sithConsole_apCommands,0x0056a804,confirmed,auto,"exact refs from own module (sithConsole_CreateCommandTable, sithConsole_FreeCommandTable)"
+sithConsole_bOpen,0x0056b814,confirmed,auto,"exact refs from own module (sithConsole_Close, sithConsole_ExeCommand)"
+sithConsole_bStarted,0x0056b818,confirmed,auto,"exact refs from own module (sithConsole_Open, sithConsole_Shutdown)"
+sithConsole_bufferSize,0x0056b828,confirmed,auto,"exact refs from own module (sithConsole_Close, sithConsole_Flush)"
+sithConsole_curFlushIndex,0x0056a7fc,confirmed,auto,"exact refs from own module (sithConsole_Flush, sithConsole_Open)"
+sithConsole_curPrintIndex,0x0056a808,confirmed,auto,"exact refs from own module (sithConsole_Flush, sithConsole_Open)"
+sithConsole_endPrintIndex,0x0056a800,confirmed,auto,"exact refs from own module (sithConsole_Open, sithConsole_PrintString)"
+sithConsole_maxRegisteredCommands,0x0056b820,confirmed,auto,"exact refs from own module (sithConsole_Close, sithConsole_CreateCommandTable)"
+sithConsole_numRegistredCommands,0x0056b824,confirmed,auto,"exact refs from own module (sithConsole_Close, sithConsole_RegisterCommand)"
+sithConsole_pTable,0x0056b810,confirmed,auto,"exact refs from own module (sithConsole_CreateCommandTable, sithConsole_ExeCommand)"
+sithConsole_pfFlush,0x0056b834,confirmed,auto,"exact refs from own module (sithConsole_Flush, sithConsole_RegisterPrintFunctions)"
+sithConsole_pfPrintString,0x0056b82c,confirmed,auto,"exact refs from own module (sithConsole_PrintString, sithConsole_RegisterPrintFunctions)"
+sithConsole_pfPrintWString,0x0056b830,confirmed,auto,"exact refs from own module (sithConsole_PrintWString, sithConsole_RegisterPrintFunctions)"
+sithControl_RegisterAxisFunction,0x0043f580,confirmed,auto,signature matches (2 params)
+sithControl_RegisterControlCallback,0x0043fa10,confirmed,auto,signature matches (1 params)
+sithControl_aControlBindings,0x00562780,confirmed,auto,"exact refs from own module (sithControl_BindAxis, sithControl_BindControl)"
+sithControl_aControlCallbacks,0x00562618,confirmed,auto,"exact refs from own module (sithControl_RegisterControlCallback, sithControl_Update)"
+sithControl_aControlFlags,0x00562698,confirmed,auto,"exact refs from own module (sithControl_BindAxis, sithControl_BindControl)"
+sithControl_bControlOpen,0x00563e30,confirmed,auto,"exact refs from own module (sithControl_Close, sithControl_Open)"
+sithControl_bControlStartup,0x00563e2c,confirmed,auto,"exact refs from own module (sithControl_Open, sithControl_ReadControls)"
+sithControl_msecIdleTime,0x00563e28,confirmed,auto,"exact refs from own module (sithControl_Open, sithControl_UnbindControl)"
+sithControl_numControlCallbacks,0x00562610,confirmed,auto,"exact refs from own module (sithControl_RegisterControlCallback, sithControl_Update)"
 sithDSSThing_MoveToPos,0x0047e2a0,confirmed,auto,signature matches (3 params)
+sithEvent_aEventBuffer,0x0056c600,confirmed,auto,"exact refs from own module (sithEvent_Create, sithEvent_FreeEvent)"
+sithEvent_aFreeEventBufferIdxs,0x0056e200,confirmed,auto,"exact refs from own module (sithEvent_Create, sithEvent_FreeEvent)"
+sithEvent_aTasks,0x0056e600,confirmed,auto,"exact refs from own module (sithEvent_Process, sithEvent_RegisterTask)"
+sithEvent_bEventStartup,0x0056e66c,confirmed,auto,"exact refs from own module (sithEvent_RegisterTask, sithEvent_Shutdown)"
+sithEvent_bOpen,0x0056e670,confirmed,auto,"exact refs from own module (sithEvent_Close, sithEvent_Open)"
+sithEvent_numFreeEventBuffers,0x0056e664,confirmed,auto,"exact refs from own module (sithEvent_Create, sithEvent_FreeEvent)"
+sithFX_rowRippleLastPos,0x00585570,confirmed,auto,exact refs from own module (sithFX_CreateRaftPaddleWaterFX)
+sithFX_secLastCreatedRowRipple,0x005855a0,confirmed,auto,exact refs from own module (sithFX_CreateRaftPaddleWaterFX)
+sithGamesave_GetPreviousLevelFilename,0x00442bd0,confirmed,auto,signature matches (0 params)
+sithGamesave_wszPlayerName,0x0052b9bc,confirmed,auto,exact refs from own module (sithGamesave_RestoreFile)
+sithIntersect_aSphereHitIndices,0x0053c560,confirmed,auto,exact refs from own module (sithIntersect_TestSphereFaceHit)
+sithInventory_RegisterType,0x0044aa40,confirmed,auto,called by jonesInventory_Load
 sithInventory_g_aUnknown,0x017f1e60,confirmed,auto,"between verified sithMulti_g_message and sithInventory_g_aTypes, same shift +0x140"
+sithItem_PlayerCollisionHandler,0x004aed40,confirmed,auto,"between verified sithParticle_CacheRemove and sithItem_Initialize, same shift -0xd0"
+sithMain_aLevelNdsFileNameBuf,0x00563e38,confirmed,auto,"between verified sithControl_bControlOpen and sith_g_pHS, same shift +0x140"
+sithMain_aNdsLevelFilenameBuf,0x005640b8,confirmed,auto,"between verified sithControl_bControlOpen and sith_g_pHS, same shift +0x140"
+sithMain_aScreenShotsFileName,0x00564038,confirmed,auto,"between verified sithControl_bControlOpen and sith_g_pHS, same shift +0x140"
+sithMain_aTmpAutoSaveFilePrefix,0x005643b8,confirmed,auto,"between verified sithControl_bControlOpen and sith_g_pHS, same shift +0x140"
+sithMain_aTmpQuickSavePrefix,0x005642b8,confirmed,auto,"between verified sithControl_bControlOpen and sith_g_pHS, same shift +0x140"
+sithMain_aTmpSaveGameDirPath,0x00564338,confirmed,auto,"between verified sithControl_bControlOpen and sith_g_pHS, same shift +0x140"
+sithMain_aTmpScreenShotDirPath,0x00564438,confirmed,auto,"between verified sithControl_bControlOpen and sith_g_pHS, same shift +0x140"
+sithMain_bDrawPlayerMoveBounds,0x005644c0,confirmed,auto,"between verified sith_g_pHS and sithGamesave_state, same shift +0x140"
+sithMain_bDrawThingMoveBounds,0x005644c4,confirmed,auto,"between verified sith_g_pHS and sithGamesave_state, same shift +0x140"
+sithMain_bOpen,0x005644cc,confirmed,auto,"between verified sith_g_pHS and sithGamesave_state, same shift +0x140"
+sithMain_bStartup,0x005644c8,confirmed,auto,"between verified sith_g_pHS and sithGamesave_state, same shift +0x140"
+sithMain_dword_56437C,0x005644bc,confirmed,auto,"between verified sith_g_pHS and sithGamesave_state, same shift +0x140"
+sithMain_flt_17FD1B0,0x017fd2f0,confirmed,auto,"between verified sithMain_g_frameNumber and sithMain_g_sith_mode, same shift +0x140"
+sithMain_flt_17FD1B4,0x017fd2f4,confirmed,auto,"between verified sithMain_g_frameNumber and sithMain_g_sith_mode, same shift +0x140"
+sithMain_performanceLevel,0x005644d0,confirmed,auto,"between verified sith_g_pHS and sithGamesave_state, same shift +0x140"
+sithMain_pfOpenCallback,0x005644d4,confirmed,auto,"between verified sith_g_pHS and sithGamesave_state, same shift +0x140"
+sithMain_somePos,0x017fd2e0,confirmed,auto,"between verified sithVoice_aSubtitleInfos and sithMain_g_frameNumber, same shift +0x140"
+sithMain_somePos2,0x017fd2d0,confirmed,auto,"between verified sithVoice_aSubtitleInfos and sithMain_g_frameNumber, same shift +0x140"
+sithMessage_GetSenderID,0x00451c00,confirmed,auto,signature matches (0 params)
+sithMessage_StopProcessMessages,0x00451bf0,confirmed,auto,signature matches (0 params)
+sithMessage_someMsg,0x0056b9d0,confirmed,auto,exact refs from own module (sithMessage_CheckMembershipList)
+sithModel_WriteStaticModelsListBinary,0x0044c2d0,confirmed,auto,signature matches (2 params)
 sithMulti_CheckPlayers,0x00454c20,confirmed,auto,"between verified sithMulti_CloseGame and sithMulti_ProcessPlayerLost, same shift -0x110"
 sithMulti_FinishJoining,0x004558f0,confirmed,auto,signature matches (3 params)
 sithMulti_GetPlayerIndexByID,0x00455cf0,confirmed,auto,signature matches (1 params)
@@ -148,6 +408,8 @@ sithMulti_pfNewPlayerJoinedCallback,0x0056fad0,confirmed,auto,exact refs from ow
 sithMulti_playerWelcomeState,0x0056f6a8,confirmed,auto,"exact refs from own module (sithMulti_StartWelcomingPlayer, sithMulti_StopWelcomingPlayer)"
 sithMulti_quitGameState,0x0056fab8,confirmed,auto,"exact refs from own module (sithMulti_ProcessJoinRequest, sithMulti_ProcessQuit)"
 sithMulti_tickRate,0x0052d5b8,confirmed,auto,exact refs from own module (sithMulti_ProcessWelcome)
+sithPVS_ReadPVSBinary,0x004b0760,confirmed,auto,signature matches (2 params)
+sithPVS_WritePVSBinary,0x004b06f0,confirmed,auto,signature matches (2 params)
 sithPhysics_CreateJeepUserBlock,0x0048b250,confirmed,auto,signature matches (1 params)
 sithPhysics_Jeep_sub_4892E0,0x004891d0,confirmed,auto,signature matches (3 params)
 sithPhysics_Jeep_sub_48B4D0,0x0048b3c0,confirmed,auto,signature matches (2 params)
@@ -163,7 +425,180 @@ sithPhysics_flt_585410,0x00585550,confirmed,auto,exact refs from own module (sit
 sithPhysics_sub_487EC0,0x00487db0,confirmed,auto,signature matches (6 params)
 sithPhysics_sub_48A970,0x0048a860,confirmed,auto,signature matches (3 params)
 sithPhysics_sub_48AD20,0x0048ac10,confirmed,auto,signature matches (4 params)
+sithPhysics_vecMineCarSparkPosLeft,0x00538d6c,confirmed,auto,exact refs from own module (sithPhysics_UpdateMineCarFx)
+sithPhysics_vecMineCarSparkPosRight,0x00538d5c,confirmed,auto,exact refs from own module (sithPhysics_UpdateMineCarFx)
+sithPlayerActions_climbPupTrackNum,0x0055ef14,confirmed,auto,"between verified sithAI_numRegisteredInstincts and sithPlayerControls_bActionKeyActive, same shift +0x140"
+sithPlayerControls_GetVehicleBoardedThing,0x00432e20,confirmed,auto,signature matches (0 params)
+sithPlayerControls_RotateAimJoints,0x004329f0,confirmed,auto,signature matches (3 params)
+sithPlayerControls_SetVehicleBoardedThing,0x00432e30,confirmed,auto,signature matches (1 params)
+sithPlayerControls_bJumpActivated,0x0055ef2c,confirmed,auto,"exact refs from own module (sithPlayerControls_FindClimbSurface, sithPlayerControls_Process)"
+sithPlayerControls_cameraDistance,0x00528e04,confirmed,auto,exact refs from own module (sithPlayerControls_ProcessWeaponAim)
+sithPlayerControls_pCurActivatedThing,0x0055ef28,confirmed,auto,"exact refs from own module (sithPlayerControls_ProcessGeneralMove, sithPlayerControls_ProcessSwimMove)"
+sithPlayerControls_pMovableThing,0x0055ef20,confirmed,auto,exact refs from own module (sithPlayerControls_ProcessGeneralMove)
+sithPlayerControls_vecDebugCamDir,0x00528de8,confirmed,auto,exact refs from own module (sithPlayerControls_ProcessEditorDebugControls)
+sithPuppet_ClearTrackList,0x0045c940,confirmed,auto,signature matches (1 params)
+sithPuppet_FindActiveTrack,0x00457f60,confirmed,auto,called by sithAIMove_SetSubMode
+sithPuppet_WriteStaticKeyframesListBinary,0x0045b420,confirmed,auto,signature matches (2 params)
+sithPuppet_WriteStaticPuppetsListBinary,0x0045a880,confirmed,auto,signature matches (2 params)
+sithRenderSky_Update,0x004b3770,confirmed,auto,signature matches (0 params)
+sithRenderSky_ceilingSkyHeight,0x0059c2a4,confirmed,auto,exact refs from own module (sithRenderSky_Open)
+sithRenderSky_ceilingSkyMaxZ,0x0059c298,confirmed,auto,"exact refs from own module (sithRenderSky_CeilingFaceToPlane, sithRenderSky_Open)"
+sithRenderSky_ceilingSkyMinZ,0x0059c2a8,confirmed,auto,exact refs from own module (sithRenderSky_Open)
+sithRenderSky_ceilingSkyNormal,0x0053caf8,confirmed,auto,exact refs from own module (sithRenderSky_CeilingFaceToPlane)
+sithRenderSky_horizonPixelsPerRev,0x0059c284,confirmed,auto,"exact refs from own module (sithRenderSky_Open, sithRenderSky_Update)"
+sithRenderSky_horizonScale,0x0059c288,confirmed,auto,"exact refs from own module (sithRenderSky_HorizonFaceToPlane, sithRenderSky_Update)"
+sithRenderSky_horizonSkyDistance,0x0059c2b4,confirmed,auto,"exact refs from own module (sithRenderSky_HorizonFaceToPlane, sithRenderSky_Open)"
+sithRenderSky_lookPitch,0x0059c28c,confirmed,auto,"exact refs from own module (sithRenderSky_HorizonFaceToPlane, sithRenderSky_Update)"
+sithRenderSky_lookRollCos,0x0059c290,confirmed,auto,"exact refs from own module (sithRenderSky_HorizonFaceToPlane, sithRenderSky_Update)"
+sithRenderSky_lookRollSin,0x0059c2b8,confirmed,auto,"exact refs from own module (sithRenderSky_HorizonFaceToPlane, sithRenderSky_Update)"
+sithRenderSky_lookYaw,0x0059c280,confirmed,auto,"exact refs from own module (sithRenderSky_HorizonFaceToPlane, sithRenderSky_Update)"
+sithRender_aFaceVerts,0x00564ed8,confirmed,auto,"exact refs from own module (sithRender_BuildVisibleSectorList, sithRender_BuildVisibleSectorListPVS)"
+sithRender_aView,0x005658d8,confirmed,auto,"exact refs from own module (sithRender_BuildVisibleSectorList, sithRender_BuildVisibleSectorListPVS)"
+sithRender_bPVSClipEnabled,0x0052bc68,confirmed,auto,exact refs from own module (sithRender_Draw)
+sithRender_curSectorIdx,0x0056a304,confirmed,auto,exact refs from own module (sithRender_Draw)
+sithRender_pfUnknownFunc,0x0056a7f0,confirmed,auto,"exact refs from own module (sithRender_RenderThing, sithRender_Shutdown)"
+sithSector_GetSectorIndexEx,0x00461070,confirmed,auto,signature matches (2 params)
+sithSoundClass_WriteSoundClassesListBinary,0x004a1120,confirmed,auto,signature matches (2 params)
+sithSoundClass_lastStartEntry,0x0053a79c,confirmed,auto,"exact refs from own module (sithSoundClass_PlayPlayerVoiceModeRandom, sithSoundClass_Startup)"
+sithSound_bSkipRestoringSounds,0x0056b8a4,confirmed,auto,"exact refs from own module (sithSound_FreeWorldSounds, sithSound_ReadSoundsListBinary)"
+sithSound_bStartup,0x0056b8a0,confirmed,auto,"exact refs from own module (sithSound_Load, sithSound_Shutdown)"
+sithSprite_WriteStaticSpritesListBinary,0x004ab3a0,confirmed,auto,signature matches (2 params)
+sithString_bStartup,0x00562608,confirmed,auto,"exact refs from own module (sithString_GetString, sithString_Shutdown)"
+sithString_sithStringsTbl,0x005625e8,confirmed,auto,"exact refs from own module (sithString_GetString, sithString_Shutdown)"
+sithString_voiceStringsTbl,0x005625f8,confirmed,auto,"exact refs from own module (sithString_GetString, sithString_Shutdown)"
+sithTemplate_bMasterFileInitialized,0x0056fb04,confirmed,auto,exact refs from own module (sithTemplate_GetTemplate)
+sithTemplate_g_pHashtable,0x0056fb00,confirmed,auto,"exact refs from own module (sithTemplate_AllocWorldTemplates, sithTemplate_CacheAdd)"
+sithTemplate_pMasterFile,0x0056fb08,confirmed,auto,exact refs from own module (sithTemplate_GetTemplate)
 sithThing_curQuetzAttachInfo,0x005613a0,confirmed,auto,exact refs from own module (sithThing_UpdateQuetzUserBlock)
 sithThing_dword_5612B8,0x005613f8,confirmed,auto,exact refs from own module (sithThing_UpdateQuetzUserBlock)
+sithThing_jeepHitMinVelocityZ,0x005291d4,confirmed,auto,exact refs from own module (sithThing_AttachThingToSurface)
 sithThing_prevQuetzAttachInfo,0x0055ef9c,confirmed,auto,exact refs from own module (sithThing_UpdateQuetzUserBlock)
+sithVehicleControls_GetMineCarState,0x004a21e0,confirmed,auto,signature matches (0 params)
+sithVehicleControls_GetRaftState,0x004a2210,confirmed,auto,signature matches (0 params)
+sithVehicleControls_SetMineCarState,0x004a21f0,confirmed,auto,signature matches (1 params)
+sithVehicleControls_SetRaftState,0x004a2220,confirmed,auto,signature matches (1 params)
+sithVehicleControls_dword_53B188,0x0053b2a8,confirmed,auto,exact refs from own module (sithVehicleControls_UpdateRaftPaddleSoundFx)
+sithVehicleControls_flt_586294,0x005863d4,confirmed,auto,exact refs from own module (sithVehicleControls_ProcessJeepMove)
+sithVehicleControls_g_bJeepAccMoveSndFxPlayed,0x005863dc,confirmed,auto,exact refs from own module (sithVehicleControls_ProcessJeepMove)
+sithVehicleControls_g_bJeepForceStopped,0x005863d8,confirmed,auto,exact refs from own module (sithVehicleControls_ProcessJeepMove)
+sithVehicleControls_raftRotThrust,0x0053b27c,confirmed,auto,exact refs from own module (sithVehicleControls_ProcessRaftMove)
+sithVoice_bThingHasSwapHeadRdModel,0x005648fc,confirmed,auto,"exact refs from own module (sithVoice_PlayThingVoice, sithVoice_UpdateLipSync)"
+sithVoice_dword_5647A0,0x005648e0,confirmed,auto,"exact refs from own module (sithVoice_AddSubtitle, sithVoice_Close)"
+sithVoice_dword_5647AC,0x005648ec,confirmed,auto,"exact refs from own module (sithVoice_PlayThingVoice, sithVoice_UpdateLipSync)"
+sithVoice_headHeight,0x00564900,confirmed,auto,exact refs from own module (sithVoice_UpdateLipSync)
+sithVoice_nextSubtitleNum,0x005648c8,confirmed,auto,"exact refs from own module (sithVoice_Close, sithVoice_Draw)"
+sithWeapon_GenBloodsplort,0x00449b40,confirmed,auto,signature matches (1 params)
+sithWeapon_GetWeaponCollideSize,0x00449e50,confirmed,auto,signature matches (1 params)
+sithWeapon_HasWeaponSelected,0x00448c20,confirmed,auto,signature matches (1 params)
+sithWhip_SearchWhipClimbThing,0x004a0bf0,confirmed,auto,signature matches (1 params)
+sithWhip_bFoundWhipClimbThing,0x005863c8,confirmed,auto,used by sithWhip_SearchWhipClimbThing
+sithWhip_vecCameraLookOffsetWhipClimbAim,0x0053a480,confirmed,auto,exact refs from own module (sithWhip_UpdateWhipAim)
+sithWhip_vecCameraLookOffsetWhipSwingAim,0x0053a4a0,confirmed,auto,exact refs from own module (sithWhip_UpdateWhipAim)
+sithWhip_vecCameraOffsetWhipClimbAim,0x0053a470,confirmed,auto,exact refs from own module (sithWhip_UpdateWhipAim)
+sithWhip_vecCameraOffsetWhipSwingAim,0x0053a490,confirmed,auto,exact refs from own module (sithWhip_UpdateWhipAim)
+sithWorld_ReadGeoresourceBinary,0x0043ef30,confirmed,auto,signature matches (2 params)
+sithWorld_WriteGeoresourceBinary,0x0043eec0,confirmed,auto,signature matches (2 params)
+sithWorld_aBinarySectionParsers,0x0052a47c,confirmed,auto,exact refs from own module (sithWorld_LoadEntryBinary)
+sithWorld_aCopyrightBuf,0x00561488,confirmed,auto,exact refs from own module (sithWorld_ReadCopyrightText)
+sithWorld_aCopyrightSymbol,0x00506dc0,confirmed,auto,"exact refs from own module (sithWorld_LoadEntryBinary, sithWorld_ReadCopyrightText)"
+sithWorld_aCurSection,0x005621d8,confirmed,auto,"exact refs from own module (sithWorld_LoadEntryBinary, sithWorld_LoadEntryText)"
+sithWorld_aNdyParseHandlers,0x00561948,confirmed,auto,"exact refs from own module (sithWorld_GetTextSectionParserIndex, sithWorld_ReadCopyrightText)"
+sithWorld_bValidCopyright,0x005625e4,confirmed,auto,"exact refs from own module (sithWorld_LoadEntryText, sithWorld_ReadCopyrightText)"
+sithWorld_bWorldStartup,0x005625e0,confirmed,auto,"exact refs from own module (sithWorld_Close, sithWorld_Load)"
+sithWorld_numTextSectionParseHandlers,0x005625dc,confirmed,auto,"exact refs from own module (sithWorld_GetTextSectionParserIndex, sithWorld_RegisterTextSectionParser)"
+sithWorld_pfLoadProgressCallback,0x00561480,confirmed,auto,"exact refs from own module (sithWorld_SetLoadProgressCallback, sithWorld_UpdateLoadProgress)"
+std3D_EnumTextureFormatsCallback,0x004bf320,confirmed,auto,"between verified std3D_D3DEnumDevicesCallback and std3D_AddTextureToCacheList, same shift -0xe0"
+std3D_EnumZBufferFormatsCallback,0x004bef80,confirmed,auto,"signature matches (2 params, stdcall)"
+std3D_FindClosestFormat,0x004be3d0,confirmed,auto,signature matches (1 params)
+std3D_GetZBufferFormat,0x004bef30,confirmed,auto,signature matches (1 params)
+std3D_bStartup,0x005dc4f0,confirmed,auto,"exact refs from own module (std3D_Open, std3D_Shutdown)"
+std3D_cfRGB4444,0x005088c8,confirmed,auto,exact refs from own module (std3D_Open)
+std3D_cfRGB5551,0x00508890,confirmed,auto,exact refs from own module (std3D_Open)
+std3D_cfRGB565,0x00508858,confirmed,auto,exact refs from own module (std3D_Open)
+std3D_lpD3DViewPort,0x005dc4ec,confirmed,auto,"exact refs from own module (std3D_ClearZBuffer, std3D_Close)"
+std3D_lpDD,0x005dc4dc,confirmed,auto,"exact refs from own module (std3D_AddToTextureCache, std3D_AllocSystemTexture)"
+std3D_pDDPalette,0x005dc4e0,confirmed,auto,"exact refs from own module (std3D_Close, std3D_Open)"
+stdBmp_Load,0x004b6740,confirmed,auto,signature matches (1 params)
+stdCalcBitPos,0x004b63d0,confirmed,auto,signature matches (1 params)
+stdComm_aDPStatusTbl,0x005097a0,confirmed,auto,exact refs from own module (stdComm_DPGetStatus)
+stdComm_aPlayerInfos,0x005dcea0,confirmed,auto,"exact refs from own module (stdComm_EnumPlayersCallback, stdComm_UpdatePlayers)"
+stdComm_bGameActive,0x005e10d4,confirmed,auto,"exact refs from own module (stdComm_CloseGame, stdComm_CreatePlayer)"
+stdComm_bGameHost,0x005dd2c8,confirmed,auto,"exact refs from own module (stdComm_CloseGame, stdComm_IsGameHost)"
+stdComm_pDirectPlay,0x005dd2c4,confirmed,auto,"exact refs from own module (stdComm_CloseGame, stdComm_CreatePlayer)"
+stdConffile_aEntryStack,0x005c2320,confirmed,auto,"exact refs from own module (stdConffile_PopStack, stdConffile_PushStack)"
+stdConffile_aFilenameStack,0x005c1800,confirmed,auto,"exact refs from own module (stdConffile_PopStack, stdConffile_PushStack)"
+stdConffile_apBufferStack,0x005c2200,confirmed,auto,"exact refs from own module (stdConffile_PopStack, stdConffile_PushStack)"
+stdConffile_linenumStack,0x005c2250,confirmed,auto,"exact refs from own module (stdConffile_PopStack, stdConffile_PushStack)"
+stdConffile_openFile,0x005d73cc,confirmed,auto,"exact refs from own module (stdConffile_Close, stdConffile_GetFileHandle)"
+stdConffile_openFileStack,0x005d6370,confirmed,auto,"exact refs from own module (stdConffile_PopStack, stdConffile_PushStack)"
+stdConffile_stackLevel,0x005d73d4,confirmed,auto,"exact refs from own module (stdConffile_Close, stdConffile_PopStack)"
+stdConffile_writeFile,0x005d73d0,confirmed,auto,"exact refs from own module (stdConffile_CloseWrite, stdConffile_OpenWrite)"
+stdConsole_SetAttributes,0x004c2230,confirmed,auto,signature matches (1 params)
+stdConsole_dword_5DCCCC,0x005dce0c,confirmed,auto,exact refs from own module (stdConsole_Startup)
+stdConsole_dword_5DCCD8,0x005dce18,confirmed,auto,exact refs from own module (stdConsole_Startup)
+stdConsole_dword_5DCCDC,0x005dce1c,confirmed,auto,exact refs from own module (stdConsole_Startup)
+stdConsole_hInput,0x005dce10,confirmed,auto,exact refs from own module (stdConsole_Startup)
+stdControl_DisableReadJoysticks,0x004b79e0,confirmed,auto,called by sithControl_UnbindJoystickAxes
+stdControl_EnableMouseSensitivity,0x004b92a0,confirmed,auto,signature matches (1 params)
+stdControl_EnumDevicesCallback,0x004b90a0,confirmed,auto,"between verified stdControl_DIGetStatus and stdControl_ResetMousePos, same shift -0xe0"
+stdControl_IsGamePad,0x004b92f0,confirmed,auto,called by jonesConfig_BindJoystickControl
+stdControl_aAxisPos,0x005bf308,confirmed,auto,"exact refs from own module (stdControl_ReadAxis, stdControl_ReadAxisRaw)"
+stdControl_aKeyInfos,0x005bfe18,confirmed,auto,"exact refs from own module (stdControl_ReadJoysticks, stdControl_ReadKey)"
+stdControl_aKeyPressCounter,0x005c0d28,confirmed,auto,"exact refs from own module (stdControl_ReadControls, stdControl_ReadJoysticks)"
+stdControl_msecFPS,0x0053e9a4,confirmed,auto,exact refs from own module (stdControl_ReadControls)
+stdControl_secFPS,0x0053e9a0,confirmed,auto,"exact refs from own module (stdControl_ReadControls, stdControl_ReadKeyAsAxis)"
+stdDisplay_CreateZBuffer,0x004bace0,confirmed,auto,signature matches (2 params)
+stdDisplay_FlipToGDISurface,0x004bc7a0,confirmed,auto,called by JonesDialog_SetGameState
+stdDisplay_GetBackBufferDC,0x004bc6d0,confirmed,auto,signature matches (0 params)
+stdDisplay_GetSystemDevice,0x004bb620,confirmed,auto,signature matches (0 params)
+stdDisplay_IsFullscreen,0x004bc9f0,confirmed,auto,called by JonesDialog_SetGameState
+stdDisplay_ReleaseBackBufferDC,0x004bc740,confirmed,auto,signature matches (1 params)
+stdDisplay_ReleaseBuffers,0x004bc0d0,confirmed,auto,signature matches (0 params)
+stdDisplay_SetBufferClipper,0x004bc850,confirmed,auto,called by JonesDialog_SetGameState
+stdDisplay_SetDefaultResolution,0x004bc540,confirmed,auto,signature matches (2 params)
+stdEffect_Reset,0x004c1ee0,confirmed,auto,called by stdEffect_Startup
+stdEffect_SetFadeFactor,0x004c1f00,confirmed,auto,signature matches (2 params)
+stdFilePrintf,0x004c0590,confirmed,auto,"between verified stdFileSize and stdGob_Startup, same shift -0x130"
+stdFileRead,0x004c04f0,confirmed,auto,signature matches (3 params)
+stdFileSeek,0x004e9fa0,confirmed,auto,signature matches (3 params)
+stdFileWrite,0x004c0510,confirmed,auto,signature matches (3 params)
+stdFnames_ChangeExt,0x004b6a10,confirmed,auto,signature matches (2 params)
+stdGob_Startup,0x004c05d0,confirmed,auto,signature matches (1 params)
+stdGob_aEntryNameBuff,0x005dcd00,confirmed,auto,used by stdGob_FileOpen
+stdGob_bStartup,0x005dcdf0,confirmed,auto,"exact refs from own module (stdGob_Shutdown, stdGob_Startup)"
+stdGob_hs,0x005dcd80,confirmed,auto,exact refs from own module (stdGob_Startup)
+stdHashtbl_GetTailNode,0x004c00b0,confirmed,auto,called by stdHashtbl_Add
+stdLinkList_AddNode,0x004c3860,confirmed,auto,called by stdHashtbl_Add
+stdMath_Dist2D1,0x004c1d00,confirmed,auto,signature matches (2 params)
+stdMath_FlexPower,0x004c1110,confirmed,auto,signature matches (2 params)
+stdMath_aSinTable,0x005418c8,confirmed,auto,exact refs from own module (stdMath_SinCos)
+stdMath_aTanTable,0x005458c8,confirmed,auto,exact refs from own module (stdMath_Tan)
+stdMemory_bOpen,0x005bddd8,confirmed,auto,"exact refs from own module (stdMemory_Close, stdMemory_Open)"
+stdMemory_bStartup,0x005bddd4,confirmed,auto,"exact refs from own module (stdMemory_Open, stdMemory_Shutdown)"
+stdPlatform_AllocHandle,0x004c0470,confirmed,auto,signature matches (1 params)
+stdPlatform_FreeHandle,0x004c0480,confirmed,auto,"between verified stdPlatform_AllocHandle and stdFileOpen, same shift -0xe0"
+stdPlatform_GetTimeMsec,0x004c0360,confirmed,auto,"between verified stdPlatform_ClearServices and stdPlatform_AllocHandle, same shift -0xe0"
+stdPlatform_LockHandle,0x004c04b0,confirmed,auto,"between verified stdPlatform_AllocHandle and stdFileOpen, same shift -0xe0"
+stdPlatform_bAssert,0x005dccf8,confirmed,auto,exact refs from own module (stdPlatform_GetTimeMsec)
+stdPrintf,0x004b62d0,confirmed,auto,"between verified stdShutdown and stdConsolePrintf, same shift -0xe0"
+stdUtil_Format,0x004b7310,confirmed,auto,"between verified stdMemory_BlockAlloc and stdUtil_StringSplit, same shift -0xe0"
+stdWin95_GetInstance,0x004b9350,confirmed,auto,signature matches (0 params)
+stdWin95_SetGuid,0x004b9360,confirmed,auto,signature matches (1 params)
+stdWin95_SetInstance,0x004b9340,confirmed,auto,signature matches (1 params)
+stdWin95_SetWindow,0x004b9320,confirmed,auto,signature matches (1 params)
+std_bStdStartup,0x0059cd48,confirmed,auto,"between verified sithCogYacc_yy_start and stdMemory_aZoneData, same shift +0x140"
 std_g_aEmptyString,0x00551f50,confirmed,auto,"between verified jonesConfig_hFontDialogInsertCD and JonesConsole_aCmdLine, same shift +0x120"
+std_printBuffer,0x0059c548,confirmed,auto,"between verified sithCogYacc_yy_start and stdMemory_aZoneData, same shift +0x140"
+stdio_close,0x004e9f90,confirmed,auto,"between verified stdio_open and stdFileSeek, same shift -0x120"
+stdio_open,0x004e9f60,confirmed,auto,signature matches (2 params)
+wkernel_ProcessEvents,0x004c4210,confirmed,auto,"between verified wkernel_PeekProcessEvents and wkernel_SetWindowStyle, same shift -0x130"
+wkernel_SetWindowStyle,0x004c4280,confirmed,auto,signature matches (1 params)
+wkernel_guid,0x005099a8,confirmed,auto,exact refs from own module (wkernel_Run)
+wkernel_nShowCmd,0x005e1174,confirmed,auto,exact refs from own module (wkernel_Run)
+wuRegistry_GetFloat,0x004c3d30,confirmed,auto,signature matches (2 params)
+wuRegistry_GetStr,0x004c3fa0,confirmed,auto,signature matches (4 params)
+wuRegistry_SaveFloat,0x004c3b40,confirmed,auto,"between verified wuRegistry_SaveInt and wuRegistry_GetInt, same shift -0x130"
+wuRegistry_SaveStr,0x004c3ea0,confirmed,auto,signature matches (2 params)
+wuRegistry_appRootKey,0x005e1168,confirmed,auto,"exact refs from own module (wuRegistry_GetFloat, wuRegistry_GetInt)"
+wuRegistry_appSubKey,0x005e1164,confirmed,auto,"exact refs from own module (wuRegistry_GetFloat, wuRegistry_GetInt)"
+wuRegistry_g_bStarted,0x005e1160,confirmed,auto,"exact refs from own module (wuRegistry_GetBool, wuRegistry_GetFloat)"

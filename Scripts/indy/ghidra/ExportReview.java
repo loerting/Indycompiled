@@ -2,7 +2,7 @@
 // compare it with upstream's expectations (PROJECT.md §5.7):
 //   functions: is it a function entry, decompiled parameter count, stack purge (ret N)
 //   data:      which functions reference the address (exactly, or a field within 0x100 bytes)
-// Usage (headless): -postScript ExportReview.java <rti_v12.csv> <out.tsv> [all|critical]
+// Usage (headless): -postScript ExportReview.java <rti_v12.csv> <out.tsv> [all|critical|unverified]
 //@category Indycompiled
 import ghidra.app.decompiler.DecompInterface;
 import ghidra.app.decompiler.DecompileResults;
@@ -24,7 +24,7 @@ public class ExportReview extends GhidraScript {
     protected void run() throws Exception {
         String[] args = getScriptArgs();
         List<String> lines = Files.readAllLines(new File(args[0]).toPath());
-        boolean all = args.length > 2 && args[2].equals("all");
+        String mode = args.length > 2 ? args[2] : "critical";   // all | critical | unverified
         Map<String, Integer> col = new HashMap<>();
         String[] header = lines.get(0).split(",", -1);
         for (int i = 0; i < header.length; i++) {
@@ -41,7 +41,9 @@ public class ExportReview extends GhidraScript {
                 String name = f[col.get("name")], kind = f[col.get("kind")], v12 = f[col.get("v12")];
                 String conf = f[col.get("confidence")], usage = f[col.get("usage")];
                 boolean critical = usage.contains("trampoline") || usage.contains("live");
-                if (v12.isEmpty() || (!all && (!critical || conf.equals("verified")))) {
+                boolean wanted = mode.equals("all") || (!conf.equals("verified")
+                    && (mode.equals("unverified") || critical));
+                if (v12.isEmpty() || !wanted) {
                     continue;
                 }
                 Address addr = toAddr(Long.decode(v12));
