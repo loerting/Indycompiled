@@ -46,7 +46,7 @@ profile until tested; enable it explicitly in `toggles`).
 | Stick Y inverted: XInput's up is positive, the engine's (DirectInput's) is negative, so forward on the stick walked backwards | same | fixed, tested |
 | Double dead zone on XInput sticks (XInput's, then the engine's, unscaled): the first ~42% of stick travel did nothing | same | fixed |
 | `stdControl_IsGamePad`: `>` instead of `>=`, so the first XInput pad counted as no gamepad | same | fixed |
-| Inventory items half size at 21:9 and wider: integer division in the HUD aspect factor (`width / height` with `uint32_t`) | `Jones3D/Display/JonesHud.c` | fixed, screenshots at 4:3 / 16:9 / 21:9 |
+| Inventory items half size at 21:9 and wider: integer division in the HUD aspect factor (`width / height` with `uint32_t`) | `Jones3D/Display/JonesHud.c` | fixed, screenshots at 4:3 / 16:9 / 21:9; upstream [PR #49](https://github.com/smlu/OpenJones3D/pull/49) |
 
 Reported upstream: [PR #44](https://github.com/smlu/OpenJones3D/pull/44). Port fixes below: sithEvent [PR #45](https://github.com/smlu/OpenJones3D/pull/45), COG lexer [issue #46](https://github.com/smlu/OpenJones3D/issues/46), MSAA [issue #47](https://github.com/smlu/OpenJones3D/issues/47).
 
