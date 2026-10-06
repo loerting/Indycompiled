@@ -28,7 +28,7 @@ static const IndyEnhInfo indyEnh_aInfos[INDY_ENH_COUNT] = {
     [INDY_ENH_RIGHT_STICK_CAMERA] = { "ENH-0002", "rightStickCamera", INDY_KIND_ENH },
     [INDY_ENH_QUICK_DIRECTION]    = { "ENH-0003", "quickDirectionChange", INDY_KIND_ENH },
     [INDY_ENH_SKIP_INTRO]         = { "ENH-0004", "skipIntro", INDY_KIND_ENH },
-    [INDY_ENH_MODERN_CONTROLS]    = { "ENH-0005", "modernControls", INDY_KIND_EXP }, // until played with a pad
+    [INDY_ENH_MODERN_CONTROLS]    = { "ENH-0005", "modernControls", INDY_KIND_ENH }, // played with a pad 2026-10-07
 };
 
 static bool indyEnh_bLoaded;
