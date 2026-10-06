@@ -18,6 +18,7 @@ typedef enum eIndyEnh
     INDY_FIX_TURN_RATE       = 1, // FIX-0001: key/stick turning speed independent of the frame rate
     INDY_FIX_CONTINUOUS_DAMAGE = 2, // FIX-0002: drowning/raft/IMP damage independent of the frame rate
     INDY_FIX_TIME_CYCLES       = 3, // FIX-0003: "every N-th frame" events (idle anims, breathing, ...) on game time
+    INDY_FIX_JEWEL_FLY_THRUST  = 4, // FIX-0004: jewel-flight up/down acceleration independent of the frame rate
     INDY_ENH_COUNT
 } IndyEnh;
 

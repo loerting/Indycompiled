@@ -1,5 +1,6 @@
 #include "sithPlayerControls.h"
 #include <indy/indyInput.h> // INDY
+#include <indy/indyEnh.h> // INDY
 #include <j3dcore/j3dhook.h>
 
 #include <rdroid/Engine/rdPuppet.h>
@@ -1298,12 +1299,15 @@ void J3DAPI sithPlayerControls_ProcessJewelFlyMove(SithThing* pThing, float secD
 
     // Process Up/Down movement keys
     const float thrustIncrement = 0.00019999999f;
+    // INDY(FIX-0004): the original adds thrustIncrement * fps every frame, so the thrust built up with fps squared per
+    // second (16x faster at 120 than at 30 FPS). Scale it by the frame time instead, calibrated to 60 FPS (unchanged there).
+    const float jewelFlyFps = indyEnh_IsEnabled(INDY_FIX_JEWEL_FLY_THRUST) ? 60.0f * 60.0f * secDeltaTime : sithTime_g_fps;
     int bPressed;
     if ( sithControl_GetKey(SITHCONTROL_FORWARD, &bPressed) )
     {
         if ( bCanMoveUp )
         {
-            pPhysics->thrust.z = STDMATH_CLAMP(pPhysics->thrust.z + thrustIncrement * sithTime_g_fps, -1.0f, 1.0f);
+            pPhysics->thrust.z = STDMATH_CLAMP(pPhysics->thrust.z + thrustIncrement * jewelFlyFps, -1.0f, 1.0f); // INDY(FIX-0004)
         }
         else
         {
@@ -1315,7 +1319,7 @@ void J3DAPI sithPlayerControls_ProcessJewelFlyMove(SithThing* pThing, float secD
     {
         if ( bCanMoveDown )
         {
-            pPhysics->thrust.z = STDMATH_CLAMP(pPhysics->thrust.z - thrustIncrement * sithTime_g_fps, -1.0f, 1.0f);
+            pPhysics->thrust.z = STDMATH_CLAMP(pPhysics->thrust.z - thrustIncrement * jewelFlyFps, -1.0f, 1.0f); // INDY(FIX-0004)
         }
         else
         {

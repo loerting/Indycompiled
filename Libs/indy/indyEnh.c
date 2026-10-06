@@ -24,6 +24,7 @@ static const IndyEnhInfo indyEnh_aInfos[INDY_ENH_COUNT] = {
     [INDY_FIX_TURN_RATE]       = { "FIX-0001", "fpsIndependentTurning", INDY_KIND_FIX },
     [INDY_FIX_CONTINUOUS_DAMAGE] = { "FIX-0002", "fpsIndependentDamage", INDY_KIND_FIX },
     [INDY_FIX_TIME_CYCLES]       = { "FIX-0003", "fpsIndependentCycles", INDY_KIND_FIX },
+    [INDY_FIX_JEWEL_FLY_THRUST]  = { "FIX-0004", "fpsIndependentJewelFly", INDY_KIND_FIX },
 };
 
 static bool indyEnh_bLoaded;

@@ -49,5 +49,11 @@ unmerged branch, applied per site instead of to every call. Test: `Scripts/indy/
 
 - Functions still running as original v1.2 code (AI: `sithAIUtil`, `sithAIMove`, `sithAIInstinct`) may have their
   own frame-rate dependencies; they can only be fixed once reimplemented (Stage 3).
-- Jewel-fly thrust (`sithPlayerControls_ProcessJewelFlyMove`) uses `thrustIncrement × fps`; upstream's branch has a
-  fixed-step version.
+- Debug fly mode (`sithPlayerControls_ProcessFlyMove`, not gameplay) pitches at `±fps` degrees per second.
+
+## 4. Jewel-flight thrust (FIX-0004, `fpsIndependentJewelFly`)
+
+`sithPlayerControls_ProcessJewelFlyMove` adds `0.0002 × fps` to the vertical thrust every frame: per second that is
+`0.0002 × fps²` (0.18 at 30 FPS, 0.72 at 60, 2.88 at 120, 11.5 at 240). With the fix the increment is
+`0.0002 × 60 × 60 × frame time`: 0.72 per second at any frame rate, the same as the original at 60 FPS. Not
+playtested (the jewel flight is late in the Aetherium level).

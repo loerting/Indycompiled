@@ -23,6 +23,8 @@ IDs are permanent. New entries go at the end of the `IndyEnh` enum.
 | FIX-0002 | `fpsIndependentDamage` | fix | measured headless (100 damage/s for 3 s): without the fix 270 / 180 / 279 lost at 30 / 60 / ~100 FPS; with it 300 / 300 / 300 | Damage dealt a little every frame (drowning, raft leak, IMP blast) no longer depends on the frame rate. `sithThing_DamageThing` passes damage to COG as an integer, so per-frame fractions were lost and amounts below 1 vanished (no drowning at ~250 FPS). The fraction is carried to the next frame. See `notes/timing.md`. |
 | FIX-0003 | `fpsIndependentCycles` | fix | measured headless (cycle of 16 per second): without the fix 1.84 / 6.10 at 30 / 100 FPS; with it 1.84 / 1.90 (30/16 = 1.875) | "Every N-th frame" events that are about time (random idle animations, breathing sounds, sprite flicker, AI awareness pings; 16 sites) run on game time (30 intended frames per second) instead of frame count. Per-frame upkeep (matrix normalisation, texture wrap, target search) is unchanged. See `notes/timing.md`. |
 
+| FIX-0004 | `fpsIndependentJewelFly` | fix | arithmetic checked and builds; not playtested (jewel flight is late in the Aetherium level, out of reach for the headless tests) | Up/down acceleration in jewel flight: the original added `0.0002 × fps` to the thrust every frame, so it built up with fps² per second (0.18/s at 30 FPS, 0.72 at 60, 2.88 at 120, 11.5 at 240). Now scaled by the frame time and calibrated to 60 FPS: 0.72/s at any frame rate. |
+
 Kinds: **fix** (on in `fixed` and `enhanced`), **enhancement** (on in `enhanced`), **experimental** (off in every
 profile until tested; enable it explicitly in `toggles`).
 
