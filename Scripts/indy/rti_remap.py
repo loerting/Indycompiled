@@ -506,9 +506,50 @@ def main():
         if demoted:
             print(f"displaced by reviewed fixes (now unmapped, hooks disabled): {', '.join(demoted)}")
 
+    # evidence strength and reachability (gen_rti_headers.py disables weak hooks that nothing original can reach)
+    reviewed = {}
+    if reviewed_path.exists():
+        reviewed = {r["name"]: r for r in csv.DictReader(reviewed_path.open())}
+
+    def strength(n):
+        r = reviewed.get(n)
+        if r:
+            if r["reviewer"] in ("manual", "semantic") or r["verdict"] == "fixed":
+                return "strong"
+            return "strong" if r["evidence"].startswith(("called by", "used by", "field used by")) else "weak"
+        a = syms[n][0]
+        how = (method if syms[n][1] == "func" else dmethod).get(a, "")
+        return "strong" if how in ("consensus", "callers", "usage") else "weak"
+
+    hooked = {n for n in syms if "hook" in usage.get(n, set())}
+    starts_all = sorted(fmap.values())
+    owner_by_start = {b: fname[a] for a, b in fmap.items()}
+
+    def owner(addr):
+        k = bisect.bisect_right(starts_all, addr) - 1
+        return owner_by_start.get(starts_all[k]) if k >= 0 else None
+
+    data_ptrs = set()
+    for sec in (".rdata", ".data"):
+        raw = exe.secs[sec]["raw"]
+        data_ptrs.update(struct.unpack_from("<I", raw, i)[0] for i in range(0, len(raw) - 3, 4))
+    callers_of = collections.defaultdict(set)
+    for site, tgt in exe.sites:
+        callers_of[tgt].add(owner(site))
+    # tail calls: MSVC often ends a function with "jmp <other function>" (E9 rel32); count those as callers too.
+    # (Still not complete, e.g. jump tables: treat "reach=no" as a hint, never as proof.)
+    for i in range(len(exe.code) - 5):
+        if exe.code[i] == 0xE9:
+            tgt = exe.base + i + 5 + struct.unpack_from("<i", exe.code, i + 1)[0]
+            if exe.lo <= tgt < exe.hi and tgt % 16 == 0:
+                callers_of[tgt].add(owner(exe.base + i))
+
+    def reachable(b):
+        return b in data_ptrs or b in exe.refs or any(c not in hooked for c in callers_of.get(b, ()))
+
     with out_csv.open("w", newline="") as f:
         w = csv.writer(f, lineterminator="\n")
-        w.writerow(["name", "kind", "module", "v10", "v12", "method", "confidence", "size_delta", "usage"])
+        w.writerow(["name", "kind", "module", "v10", "v12", "method", "confidence", "size_delta", "usage", "evidence", "reach"])
         delta = dict(changed_funcs)
         for n, (a, k, m) in sorted(syms.items(), key=lambda kv: kv[1][0]):
             if k == "func":
@@ -517,8 +558,9 @@ def main():
             else:
                 b, how, conf = dmap.get(a), dmethod.get(a, ""), dver.get(a, "unmapped")
                 sd = ""
+            reach = ("yes" if reachable(b) else "no") if (k == "func" and b) else ""
             w.writerow([n, k, m, f"{a:#010x}", f"{b:#010x}" if b else "", how, conf, f"{sd:+#x}" if sd else "",
-                        "+".join(sorted(usage.get(n, ())))])
+                        "+".join(sorted(usage.get(n, ()))), strength(n), reach])
     crit = collections.Counter()
     for n, (a, k, m) in syms.items():
         u = usage.get(n, set())
@@ -527,6 +569,19 @@ def main():
             crit[conf] += 1
     print("runtime-critical (trampolines + live globals): " + ", ".join(f"{k} {v}" for k, v in crit.most_common()))
     print(f"written: {out_csv}")
+
+    # review targets: weakly evidenced hooks that original code can reach (the residual risk, PROJECT.md §12)
+    review_dir = Path(sys.argv[1]) / "game/review"
+    if review_dir.is_dir():
+        targets = sorted(n for n, (a, k, m) in syms.items() if k == "func" and "hook" in usage.get(n, set())
+                         and a in fmap and strength(n) == "weak" and reachable(fmap[a]))
+        with (review_dir / "weak_reachable_hooks.md").open("w") as f:
+            f.write("# Weakly evidenced hooks that original code can reach (review targets)\n\n"
+                    "| function | v1.2 | method |\n|---|---|---|\n")
+            for n in targets:
+                a = syms[n][0]
+                f.write(f"| {n} | {fmap[a]:#010x} | {method.get(a, '')} |\n")
+        print(f"review targets: {len(targets)} weak reachable hooks -> {review_dir / 'weak_reachable_hooks.md'}")
 
 
 if __name__ == "__main__":

@@ -12,6 +12,7 @@ Libs/ on the include path, so upstream code picks up these copies without being 
 Usage: python3 -I gen_rti_headers.py <repo root> <rti_v12.csv> <host exe> <outdir>
 """
 import csv
+import os
 import re
 import struct
 import sys
@@ -57,6 +58,7 @@ def main():
     headers = sorted(root.glob("Libs/*/RTI/addresses.h")) + [root / "Jones3D/RTI/addresses.h", root / "Libs/smush/SmushPlay.h"]
     define = re.compile(r"^(#define\s+)(\w+)_ADDR(\s+)(0x[0-9A-Fa-f]+)(.*)$", re.M)
     disabled, errors, count, written = [], [], 0, 0
+    skipped_unreachable = []
 
     for hdr in headers:
         rel = hdr.relative_to(root / "Libs") if hdr.is_relative_to(root / "Libs") else hdr.relative_to(root)
@@ -74,8 +76,18 @@ def main():
                 critical = "trampoline" in r["usage"] or "live" in r["usage"]
                 if critical and r["confidence"] != "verified":
                     errors.append(f"{name}: runtime-critical but {r['confidence']}")
+                weak_unreachable = (r["kind"] == "func" and "hook" in r["usage"] and "trampoline" not in r["usage"]
+                                    and r.get("evidence") == "weak" and r.get("reach") == "no"
+                                    # opt-in only: the reachability scan is incomplete (leaving these hooks out
+                                    # broke startup on 2026-10-06), so by default every verified hook is kept
+                                    and os.environ.get("INDY_SKIP_WEAK_UNREACHABLE") == "1")
                 if r["kind"] == "func" and r["confidence"] != "verified":
                     disabled.append(name)
+                    new = 0
+                elif weak_unreachable:
+                    # nothing original can call it, so the hook gains nothing; a wrong address would patch a jump
+                    # into some other function: leave it unhooked
+                    skipped_unreachable.append(name)
                     new = 0
                 else:
                     new = int(r["v12"], 16) if r["v12"] else 0
@@ -94,7 +106,8 @@ def main():
     if errors:
         sys.exit("gen_rti_headers: " + "; ".join(errors))
     print(f"gen_rti_headers: {len(headers)} headers ({written} updated), {count} addresses; "
-          f"{len(disabled)} unverified hooks disabled: {', '.join(sorted(disabled))}")
+          f"{len(disabled)} unverified hooks disabled: {', '.join(sorted(disabled))}; "
+          f"{len(skipped_unreachable)} weakly evidenced hooks left out because nothing original can reach them")
 
 
 if __name__ == "__main__":

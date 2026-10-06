@@ -44,3 +44,22 @@ never into git), then port the differences as FIX entries.
 1. What exactly feels janky? Tank turning, camera, jump timing, ledge grabbing, aiming, the whip?
 2. Which controller (Xbox, PlayStation, 8BitDo …)? Testing analog movement needs it, so in a real window, not headless.
 3. Modern scheme: camera-relative movement with an orbit camera (a bigger change), or "analog tank" controls first (smaller)?
+
+## 1.2 signature changes (found 2026-10-06 by comparing call-site argument counts with upstream's signatures)
+
+All callers of these functions are hooked, i.e. run upstream's C code, so there's no runtime mismatch. But they show where
+LucasArts changed code in 1.2, and those fixes are lost wherever upstream's v1.0-based C code replaces the original:
+- `sithControl_RegisterKeyFunction`: 2 arguments in v1.2 (49 call sites), 1 in upstream. Possibly part of the 1.2 fix
+  to the control configuration dialog.
+- `sithThing_AttachThingToClimbSurface`: 3 arguments in v1.2, 2 in upstream. A climbing change, matching the leads in
+  `sithPlayerControls_ProcessGeneralMove`.
+- Smaller ones (one argument more): `sithAnimate_StartSurfaceLightAnim`, `sithCogParse_ResetTreeNodes`, `Sound_Update`,
+  `jonesConfig_MsgBoxDlg_HandleWM_COMMAND`, `jonesConfig_sub_405F60`, `JonesDialog_HandleWM_ERASEBKGND`.
+
+Full list: `game/review/semantic.md` (regenerate with `Scripts/indy/verify_semantic.py`).
+
+## Prototype status (ENH-0001)
+
+Implemented in `Libs/indy/indyInput.c`, with hooks in `sithPlayerControls.c` (stick run in `ProcessGeneralMove`, turn
+scale at the 8 turn sites) and a read-only binding accessor in `sithControl.c`. Experimental: off until you've tested it
+(see `enhancements.md`).
