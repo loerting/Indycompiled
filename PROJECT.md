@@ -5,7 +5,7 @@
 
 | | |
 |---|---|
-| **Status** | Stage 1 done (2026-10-06): our Linux-built OpenJones3D, hosted by Indy3D.exe v1.2, plays Canyonlands under Wine. Known issue: the intro video hangs (§12). Next: Stage 2 (modding). |
+| **Status** | Stage 1 done, Stage 2 started (2026-10-06): our Linux-built OpenJones3D, hosted by Indy3D.exe v1.2, plays the intro and Canyonlands under Wine (debug and optimised builds). Toggle module in place; control improvements await your input (`Docs/Indycompiled/notes/controls.md`). |
 | **Last updated** | 2026-10-06 |
 | **Upstream base** | `smlu/OpenJones3D`, branch `develop` @ `b9c0eaa` (2026-06-08), 92.5% of engine functions done |
 | **Host** | Manjaro Linux with i3, and nothing else. **No Windows VM, no Visual Studio, no MSVC.** |
@@ -469,7 +469,7 @@ Each stage gets a milestone tag: `s1-linux-build`, `s2-modded`, `s4-standalone`,
 |---|---|---|---|
 | **0 Foundation** ✅ | Everything in place | Install the packages (§5.1). Move `INDY/INDY/` to `game/original/` and write its `SHA256SUMS`. Set up the repo (§7.1). Create the Wine prefix on the root filesystem and the run folder (§5.5). **Play the unmodified v1.2 game under Wine first**, as the baseline that separates Wine problems from our own. Review the runtime-critical entries of the address map in Ghidra (§5.7). | The original v1.2 game plays under Wine in our prefix. Every trampoline and live global in `rti_v12.csv` is `verified`. |
 | **1 Linux build on v1.2** ✅ | Build it ourselves | Toolchain file, presets, patch set (§5.3), shader step, the generated v1.2 RTI headers and the hook filter (§5.7), the ABI check from §5.4, gdb debugging. Unverified hooks are then reviewed in batches. | Our `develop` build, hosted by the v1.2 exe, plays Canyonlands under Wine, and gdb stops at a breakpoint in our code |
-| **2 Modding** 🎮 | The game you want to play | Controls, controller and visuals (§10), building on upstream's XInput support and `Jones.cfg` | A complete playthrough with the `enhanced` profile |
+| **2 Modding** 🎮 (started) | The game you want to play | Controls, controller and visuals (§10), building on upstream's XInput support and `Jones.cfg` | A complete playthrough with the `enhanced` profile |
 | **3 Completion** | No more original functions | AI, DSS, physics, AudioLib, sithThing (§3.2), reverse engineered on the v1.2 exe in Ghidra with the names from the address map. Multiplayer stubbed. Every hook in the map is `verified`. | `analyze.py` reports 100%, excluding the stubs. A full playthrough including save/load. |
 | **4 Standalone** | No more original exe | All global variables defined in our code. Injection removed. | The game starts and plays with `Indy3D.exe` deleted (still a Windows build, under Wine) |
 | **5 Platform layer** | No more Win32 | Merge upstream's OpenGL/SDL3 renderer. Input and audio move to SDL3. Engine-drawn menus replace the Win32 dialogs. The registry goes; `Jones.cfg` takes over. May overlap with Stage 4. | No Win32 or DirectX calls outside one platform file. Still runs under Wine. |
