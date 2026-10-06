@@ -547,7 +547,7 @@ Because v1.2 is our host, these fixes stay active as long as the affected functi
 - **Remaining map review.** How many of the 234 plausible functions does Ghidra confirm, and do any of them turn out wrong? That decides whether `plausible` hooks may be enabled in bulk.
 - ~~**Shaders.** Does `vkd3d-compiler` 1.19 compile upstream's DX9 HLSL shaders (shader model 3)?~~ Yes, since Stage 1 (`compile_shader.py`).
 - ~~**Gamepads under Wine.**~~ Works: Wine's SDL backend exposes an Xbox 360 pad as XInput (tested with a virtual pad), after four fixes to upstream's XInput code (enhancements.md). Your own controller still needs a feel test.
-- **Upstream bug reports.** The XInput fixes, `sithEvent_ResetFreeBufferTable` (out-of-bounds write), the COG lexer's signed-char index and the MSAA copy-back are bugs in OpenJones3D itself. Reporting them upstream (issues or PRs) is publishing: only with your go-ahead, from your GitHub account, and with nothing but upstream's own C code in the patches.
+- **Upstream bug reports (filed 2026-10-06 from your account `loerting`):** PR [#44](https://github.com/smlu/OpenJones3D/pull/44) XInput stick fixes, PR [#45](https://github.com/smlu/OpenJones3D/pull/45) `sithEvent` out-of-bounds write, issue [#46](https://github.com/smlu/OpenJones3D/issues/46) COG lexer, issue [#47](https://github.com/smlu/OpenJones3D/issues/47) DX9 MSAA under Wine. PR branches live in the public fork `loerting/OpenJones3D`, cut from upstream `develop`; the private repo is never pushed. Related upstream work: PR #41 (frame-rate-dependent turn rate, issue #10) touches the same turn code as ENH-0001.
 - **Upstream patches.** Should the Linux-host patch set be offered upstream?
 
 ---

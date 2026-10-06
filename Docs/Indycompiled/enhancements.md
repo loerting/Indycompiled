@@ -42,7 +42,7 @@ profile until tested; enable it explicitly in `toggles`).
 | Double dead zone on XInput sticks (XInput's, then the engine's, unscaled): the first ~42% of stick travel did nothing | same | fixed |
 | `stdControl_IsGamePad`: `>` instead of `>=`, so the first XInput pad counted as no gamepad | same | fixed |
 
-Candidates for upstream bug reports (see PROJECT.md §12).
+Reported upstream: [PR #44](https://github.com/smlu/OpenJones3D/pull/44). Port fixes below: sithEvent [PR #45](https://github.com/smlu/OpenJones3D/pull/45), COG lexer [issue #46](https://github.com/smlu/OpenJones3D/issues/46), MSAA [issue #47](https://github.com/smlu/OpenJones3D/issues/47).
 
 ## Port fixes (no toggle: they make our build behave like the original)
 
