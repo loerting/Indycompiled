@@ -54,6 +54,20 @@ So the +0x110 bytes are still unexplained. Signature differences are only hints,
 To do: compare in detail with `Scripts/indy/ghidra/DecompileFunctions.java` (output goes to `game/review/decomp/`,
 never into git), then port the differences as FIX entries.
 
+## Gamepad layout (XBOX360 key set, shipped with the game) and the plan (2026-10-07)
+
+A jump/swim, B look, X activate (grab: then push/pull with the stick), Y roll, LB next weapon, RB run toggle,
+Back map, Start inventory; D-pad up draw/holster, down crawl, left/right sidestep. Left stick: classic tank movement
+(ENH-0001 makes it analog). Right stick: camera (ENH-0002). Triggers: unbound.
+
+Your feedback after the first pad test: analog movement feels good; reversing waits for the stop/idle animation;
+you reached for the right stick to look around. Modern third-person games: left stick moves the character relative
+to the camera, right stick orbits the camera. Tomb Raider I-III Remastered (2024) offers exactly that as a setting
+("modern controls") next to the original tank controls, which is the model here:
+1. ENH-0002 right stick camera (done).
+2. Faster direction changes (reverse without waiting for the stop animation), as a toggle.
+3. Modern movement: camera-relative, as a toggle next to the classic controls.
+
 ## Open questions for you
 
 1. What exactly feels janky? Tank turning, camera, jump timing, ledge grabbing, aiming, the whip?
