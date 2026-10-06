@@ -71,6 +71,10 @@ int sithRender_GetRenderFlags(void);
 void J3DAPI sithRender_SetLightingMode(rdLightMode mode);
 rdLightMode sithRender_GetLightingMode(void); // Added
 
+// INDY: the underwater camera-aspect reset flag is part of the savegame game state (sithDSS_SyncGameState)
+bool sithRender_GetResetCameraAspect(void);
+void J3DAPI sithRender_SetResetCameraAspect(bool bReset);
+
 /**
  * Sets the visible thing sector collection traversal algorithm.
  * @param mode - Traversal algorithm to use (LEGACY DFS or BFS).

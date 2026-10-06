@@ -145,19 +145,19 @@ int J3DAPI sithDSS_sub_4B3760(DPID idTo, unsigned int outstream);
 int J3DAPI sithDSS_sub_4B3790(const SithMessage* pMsg);
 
 // Functions for de-serializing data from stream
-static inline int8_t J3DAPI sithDSS_ReadInt8(uint8_t** stream);
-static inline uint8_t J3DAPI sithDSS_ReadUint8(uint8_t** stream);
-static inline int16_t J3DAPI sithDSS_ReadInt16(uint8_t** stream);
-static inline uint16_t J3DAPI sithDSS_ReadUint16(uint8_t** stream);
-static inline int32_t J3DAPI sithDSS_ReadInt32(uint8_t** stream);
-static inline uint32_t J3DAPI sithDSS_ReadUint32(uint8_t** stream);
-static inline float J3DAPI sithDSS_ReadFloat(uint8_t** stream);
-static inline void J3DAPI sithDSS_ReadVec2(uint8_t** stream, rdVector2* vec);
-static inline void J3DAPI sithDSS_ReadVec3(uint8_t** stream, rdVector3* vec);
-static inline void J3DAPI sithDSS_ReadVec4(uint8_t** stream, rdVector4* vec);
-static inline void J3DAPI sithDSS_ReadMat34(uint8_t** stream, rdMatrix34* mat);
-static inline void J3DAPI sithDSS_ReadString(uint8_t** stream, char* str, int length);
-static inline void J3DAPI sithDSS_ReadWString(uint8_t** stream, wchar_t* str, int length);
+static inline int8_t J3DAPI sithDSS_ReadInt8(const uint8_t** stream);
+static inline uint8_t J3DAPI sithDSS_ReadUint8(const uint8_t** stream);
+static inline int16_t J3DAPI sithDSS_ReadInt16(const uint8_t** stream);
+static inline uint16_t J3DAPI sithDSS_ReadUint16(const uint8_t** stream);
+static inline int32_t J3DAPI sithDSS_ReadInt32(const uint8_t** stream);
+static inline uint32_t J3DAPI sithDSS_ReadUint32(const uint8_t** stream);
+static inline float J3DAPI sithDSS_ReadFloat(const uint8_t** stream);
+static inline void J3DAPI sithDSS_ReadVec2(const uint8_t** stream, rdVector2* vec);
+static inline void J3DAPI sithDSS_ReadVec3(const uint8_t** stream, rdVector3* vec);
+static inline void J3DAPI sithDSS_ReadVec4(const uint8_t** stream, rdVector4* vec);
+static inline void J3DAPI sithDSS_ReadMat34(const uint8_t** stream, rdMatrix34* mat);
+static inline void J3DAPI sithDSS_ReadString(const uint8_t** stream, char* str, int length);
+static inline void J3DAPI sithDSS_ReadWString(const uint8_t** stream, wchar_t* str, int length);
 
 // Functions for serializing data to stream
 static inline void J3DAPI sithDSS_WriteInt8(uint8_t** stream, int8_t val);
@@ -261,86 +261,86 @@ void sithDSS_WriteWString(uint8_t** stream, const wchar_t* str, int length)
 
 // De-serialization functions
 
-int8_t sithDSS_ReadInt8(uint8_t** stream)
+int8_t sithDSS_ReadInt8(const uint8_t** stream)
 {
-    int8_t data = *(int8_t*)*stream;
+    int8_t data = *(const int8_t*)*stream;
     *stream += sizeof(int8_t);
     return data;
 }
 
-uint8_t sithDSS_ReadUint8(uint8_t** stream)
+uint8_t sithDSS_ReadUint8(const uint8_t** stream)
 {
     uint8_t data = **stream;
     *stream += sizeof(uint8_t);
     return data;
 }
 
-int16_t sithDSS_ReadInt16(uint8_t** stream)
+int16_t sithDSS_ReadInt16(const uint8_t** stream)
 {
-    int16_t data = *(int16_t*)*stream;
+    int16_t data = *(const int16_t*)*stream;
     *stream += sizeof(int16_t);
     return data;
 }
 
-uint16_t sithDSS_ReadUint16(uint8_t** stream)
+uint16_t sithDSS_ReadUint16(const uint8_t** stream)
 {
-    uint16_t data = *(uint16_t*)*stream;
+    uint16_t data = *(const uint16_t*)*stream;
     *stream += sizeof(uint16_t);
     return data;
 }
 
-int32_t sithDSS_ReadInt32(uint8_t** stream)
+int32_t sithDSS_ReadInt32(const uint8_t** stream)
 {
-    int32_t data = *(int32_t*)*stream;
+    int32_t data = *(const int32_t*)*stream;
     *stream += sizeof(int32_t);
     return data;
 }
 
-uint32_t sithDSS_ReadUint32(uint8_t** stream)
+uint32_t sithDSS_ReadUint32(const uint8_t** stream)
 {
-    uint32_t data = *(uint32_t*)*stream;
+    uint32_t data = *(const uint32_t*)*stream;
     *stream += sizeof(uint32_t);
     return data;
 }
 
-float sithDSS_ReadFloat(uint8_t** stream)
+float sithDSS_ReadFloat(const uint8_t** stream)
 {
-    float data = *(float*)*stream;
+    float data = *(const float*)*stream;
     *stream += sizeof(float);
     return data;
 }
 
-void sithDSS_ReadVec2(uint8_t** stream, rdVector2* vec)
+void sithDSS_ReadVec2(const uint8_t** stream, rdVector2* vec)
 {
-    rdVector_Copy2(vec, (rdVector2*)*stream);
+    rdVector_Copy2(vec, (const rdVector2*)*stream);
     *stream += sizeof(rdVector2);
 }
 
-void sithDSS_ReadVec3(uint8_t** stream, rdVector3* vec)
+void sithDSS_ReadVec3(const uint8_t** stream, rdVector3* vec)
 {
-    rdVector_Copy3(vec, (rdVector3*)*stream);
+    rdVector_Copy3(vec, (const rdVector3*)*stream);
     *stream += sizeof(rdVector3);
 }
 
-void sithDSS_ReadVec4(uint8_t** stream, rdVector4* vec)
+void sithDSS_ReadVec4(const uint8_t** stream, rdVector4* vec)
 {
-    rdVector_Copy4(vec, (rdVector4*)*stream);
+    rdVector_Copy4(vec, (const rdVector4*)*stream);
     *stream += sizeof(rdVector4);
 }
 
-void sithDSS_ReadMat34(uint8_t** stream, rdMatrix34* mat)
+void sithDSS_ReadMat34(const uint8_t** stream, rdMatrix34* mat)
 {
-    rdMatrix_Copy34(mat, (rdMatrix34*)*stream);
+    rdMatrix_Copy34(mat, (const rdMatrix34*)*stream);
     *stream += sizeof(rdMatrix34);
 }
 
-void sithDSS_ReadString(uint8_t** stream, char* str, int length)
+void sithDSS_ReadString(const uint8_t** stream, char* str, int length)
 {
     memcpy(str, *stream, length);
     *stream += length;
 }
 
-void sithDSS_ReadWString(uint8_t** stream, wchar_t* str, int length)
+void sithDSS_ReadWString(const uint8_t** stream, wchar_t* str, int length)
 {
     memcpy(str, *stream, length * sizeof(wchar_t));
     *stream += length * sizeof(wchar_t);

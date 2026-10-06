@@ -26,178 +26,249 @@ void sithDSSThing_InstallHooks(void)
 {
     // Uncomment only lines for functions that have full definition and doesn't call original function (non-thunk functions)
 
-    // J3D_HOOKFUNC(sithDSSThing_Pos);
-    // J3D_HOOKFUNC(sithDSSThing_ProcessPos);
-    // J3D_HOOKFUNC(sithDSSThing_MovePos);
-    // J3D_HOOKFUNC(sithDSSThing_ProcessMovePos);
-    // J3D_HOOKFUNC(sithDSSThing_UpdateState);
-    // J3D_HOOKFUNC(sithDSSThing_ProcessStateUpdate);
-    // J3D_HOOKFUNC(sithDSSThing_PlaySound);
-    // J3D_HOOKFUNC(sithDSSThing_ProcessPlaySound);
-    // J3D_HOOKFUNC(sithDSSThing_PlaySoundMode);
-    // J3D_HOOKFUNC(sithDSSThing_ProcessPlaySoundMode);
-    // J3D_HOOKFUNC(sithDSSThing_PlayKey);
-    // J3D_HOOKFUNC(sithDSSThing_ProcessPlayKey);
-    // J3D_HOOKFUNC(sithDSSThing_PlayKeyMode);
-    // J3D_HOOKFUNC(sithDSSThing_ProcessPlayKeyMode);
-    // J3D_HOOKFUNC(sithDSSThing_SetModel);
-    // J3D_HOOKFUNC(sithDSSThing_ProcessSetModel);
-    // J3D_HOOKFUNC(sithDSSThing_StopKey);
-    // J3D_HOOKFUNC(sithDSSThing_ProcessStopKey);
-    // J3D_HOOKFUNC(sithDSSThing_StopSound);
-    // J3D_HOOKFUNC(sithDSSThing_ProcessStopSound);
-    // J3D_HOOKFUNC(sithDSSThing_Fire);
-    // J3D_HOOKFUNC(sithDSSThing_ProcessFire);
-    // J3D_HOOKFUNC(sithDSSThing_Death);
-    // J3D_HOOKFUNC(sithDSSThing_ProcessDeath);
-    // J3D_HOOKFUNC(sithDSSThing_DamageThing);
-    // J3D_HOOKFUNC(sithDSSThing_ProcessDamage);
+    J3D_HOOKFUNC(sithDSSThing_Pos);
+    J3D_HOOKFUNC(sithDSSThing_ProcessPos);
+    J3D_HOOKFUNC(sithDSSThing_MovePos);
+    J3D_HOOKFUNC(sithDSSThing_ProcessMovePos);
+    J3D_HOOKFUNC(sithDSSThing_UpdateState);
+    J3D_HOOKFUNC(sithDSSThing_ProcessStateUpdate);
+    J3D_HOOKFUNC(sithDSSThing_PlaySound);
+    J3D_HOOKFUNC(sithDSSThing_ProcessPlaySound);
+    J3D_HOOKFUNC(sithDSSThing_PlaySoundMode);
+    J3D_HOOKFUNC(sithDSSThing_ProcessPlaySoundMode);
+    J3D_HOOKFUNC(sithDSSThing_PlayKey);
+    J3D_HOOKFUNC(sithDSSThing_ProcessPlayKey);
+    J3D_HOOKFUNC(sithDSSThing_PlayKeyMode);
+    J3D_HOOKFUNC(sithDSSThing_ProcessPlayKeyMode);
+    J3D_HOOKFUNC(sithDSSThing_SetModel);
+    J3D_HOOKFUNC(sithDSSThing_ProcessSetModel);
+    J3D_HOOKFUNC(sithDSSThing_StopKey);
+    J3D_HOOKFUNC(sithDSSThing_ProcessStopKey);
+    J3D_HOOKFUNC(sithDSSThing_StopSound);
+    J3D_HOOKFUNC(sithDSSThing_ProcessStopSound);
+    J3D_HOOKFUNC(sithDSSThing_Fire);
+    J3D_HOOKFUNC(sithDSSThing_ProcessFire);
+    J3D_HOOKFUNC(sithDSSThing_Death);
+    J3D_HOOKFUNC(sithDSSThing_ProcessDeath);
+    J3D_HOOKFUNC(sithDSSThing_DamageThing);
+    J3D_HOOKFUNC(sithDSSThing_ProcessDamage);
     J3D_HOOKFUNC(sithDSSThing_ThingFullDescription);
     J3D_HOOKFUNC(sithDSSThing_ProcessThingFullDescription);
-    // J3D_HOOKFUNC(sithDSSThing_PathMove);
-    // J3D_HOOKFUNC(sithDSSThing_ProcessPathMove);
+    J3D_HOOKFUNC(sithDSSThing_PathMove);
+    J3D_HOOKFUNC(sithDSSThing_ProcessPathMove);
     J3D_HOOKFUNC(sithDSSThing_Attachment);
     J3D_HOOKFUNC(sithDSSThing_ProcessAttachment);
-    // J3D_HOOKFUNC(sithDSSThing_Take);
-    // J3D_HOOKFUNC(sithDSSThing_ProcessTake);
-    // J3D_HOOKFUNC(sithDSSThing_CreateThing);
-    // J3D_HOOKFUNC(sithDSSThing_ProcessCreateThing);
-    // J3D_HOOKFUNC(sithDSSThing_DestroyThing);
-    // J3D_HOOKFUNC(sithDSSThing_ProcessDestroyThing);
-    // J3D_HOOKFUNC(sithDSSThing_MoveToPos);
+    J3D_HOOKFUNC(sithDSSThing_Take);
+    J3D_HOOKFUNC(sithDSSThing_ProcessTake);
+    J3D_HOOKFUNC(sithDSSThing_CreateThing);
+    J3D_HOOKFUNC(sithDSSThing_ProcessCreateThing);
+    J3D_HOOKFUNC(sithDSSThing_DestroyThing);
+    J3D_HOOKFUNC(sithDSSThing_ProcessDestroyThing);
+    J3D_HOOKFUNC(sithDSSThing_MoveToPos);
 }
 
 void sithDSSThing_ResetGlobals(void)
 {}
 
+// INDY: The functions below that send or process position, state, sound, key, model, fire, death, damage, path,
+//       take, create and destroy messages are multiplayer stubs. Outside of a network game the message output stream
+//       is closed (sithMessage_g_outputstream is only set to the file stream while a savegame is being written, and
+//       none of these is called then), so the original only builds the message in sithMulti_g_message and
+//       sithMessage_SendMessage drops it and returns 1. The stubs keep the original's argument checks, asserts and
+//       return values. The Process* handlers only run for messages received over the network (savegames never contain
+//       these message types); their stubs discard the message like an unregistered message type (return 1).
+
 int J3DAPI sithDSSThing_Pos(const SithThing* pThing, DPID toID, unsigned int dpFlags)
 {
-    return J3D_TRAMPOLINE_CALL(sithDSSThing_Pos, pThing, toID, dpFlags);
+    // INDY: multiplayer stub (single-player: message dropped by the send layer)
+    if ( !pThing || pThing->type == SITH_THING_FREE || !pThing->pInSector )
+    {
+        SITHLOG_STATUS("Asked to send state for invalid thing pointer.\n");
+        return 0;
+    }
+
+    return 1;
 }
 
 int J3DAPI sithDSSThing_ProcessPos(const SithMessage* pMsg)
 {
-    return J3D_TRAMPOLINE_CALL(sithDSSThing_ProcessPos, pMsg);
+    // INDY: multiplayer stub (network-only message handler)
+    return 1;
 }
 
 int J3DAPI sithDSSThing_MovePos(const SithThing* pThing, DPID idTo, unsigned int sendFlags)
 {
-    return J3D_TRAMPOLINE_CALL(sithDSSThing_MovePos, pThing, idTo, sendFlags);
+    // INDY: multiplayer stub (single-player: message dropped by the send layer)
+    if ( !pThing || pThing->type == SITH_THING_FREE || !pThing->pInSector )
+    {
+        SITHLOG_STATUS("Asked to send state for invalid thing pointer.\n");
+        return 0;
+    }
+
+    return 1;
 }
 
 int J3DAPI sithDSSThing_ProcessMovePos(const SithMessage* pMsg)
 {
-    return J3D_TRAMPOLINE_CALL(sithDSSThing_ProcessMovePos, pMsg);
+    // INDY: multiplayer stub (network-only message handler)
+    return 1;
 }
 
 int J3DAPI sithDSSThing_UpdateState(const SithThing* pThing, DPID toID, SithMessageStream outstream)
 {
-    return J3D_TRAMPOLINE_CALL(sithDSSThing_UpdateState, pThing, toID, outstream);
+    // INDY: multiplayer stub (single-player: message dropped by the send layer)
+    if ( !pThing || pThing->type == SITH_THING_FREE || !pThing->pInSector || !sithThing_ValidateThingPointer(sithWorld_g_pCurrentWorld, pThing) )
+    {
+        SITHLOG_STATUS("Asked to send state for invalid thing pointer.\n");
+        return 0;
+    }
+
+    return 1;
 }
 
 int J3DAPI sithDSSThing_ProcessStateUpdate(const SithMessage* pMsg)
 {
-    return J3D_TRAMPOLINE_CALL(sithDSSThing_ProcessStateUpdate, pMsg);
+    // INDY: multiplayer stub (network-only message handler)
+    return 1;
 }
 
 int J3DAPI sithDSSThing_PlaySound(const SithThing* pThing, const rdVector3* pPos, tSoundHandle hSnd, float volume, float pan, SoundPlayFlag playflags, int guid, DPID idTo, SithMessageStream outstream)
 {
-    return J3D_TRAMPOLINE_CALL(sithDSSThing_PlaySound, pThing, pPos, hSnd, volume, pan, playflags, guid, idTo, outstream);
+    // INDY: multiplayer stub (single-player: message dropped by the send layer)
+    SITH_ASSERTREL(hSnd);
+    if ( (playflags & SOUNDPLAY_THING_POS) != 0 )
+    {
+        SITH_ASSERTREL(pThing);
+    }
+
+    return 1;
 }
 
 int J3DAPI sithDSSThing_ProcessPlaySound(const SithMessage* pMsg)
 {
-    return J3D_TRAMPOLINE_CALL(sithDSSThing_ProcessPlaySound, pMsg);
+    // INDY: multiplayer stub (network-only message handler)
+    return 1;
 }
 
 int J3DAPI sithDSSThing_PlaySoundMode(const SithThing* pThing, int16_t mode, int channel, float a4)
 {
-    return J3D_TRAMPOLINE_CALL(sithDSSThing_PlaySoundMode, pThing, mode, channel, a4);
+    // INDY: multiplayer stub (single-player: message dropped by the send layer)
+    SITH_ASSERTREL(pThing);
+    return 1;
 }
 
 int J3DAPI sithDSSThing_ProcessPlaySoundMode(const SithMessage* pMsg)
 {
-    return J3D_TRAMPOLINE_CALL(sithDSSThing_ProcessPlaySoundMode, pMsg);
+    // INDY: multiplayer stub (network-only message handler)
+    return 1;
 }
 
 int J3DAPI sithDSSThing_PlayKey(const SithThing* pThing, const rdKeyframe* pKey, rdKeyframeFlags flags, int16_t lo, unsigned int trackGUID, DPID idTo, SithMessageStream outstream)
 {
-    return J3D_TRAMPOLINE_CALL(sithDSSThing_PlayKey, pThing, pKey, flags, lo, trackGUID, idTo, outstream);
+    // INDY: multiplayer stub (single-player: message dropped by the send layer)
+    SITH_ASSERTREL(pThing && pKey);
+    return 1;
 }
 
 int J3DAPI sithDSSThing_ProcessPlayKey(const SithMessage* pMsg)
 {
-    return J3D_TRAMPOLINE_CALL(sithDSSThing_ProcessPlayKey, pMsg);
+    // INDY: multiplayer stub (network-only message handler)
+    return 1;
 }
 
 int J3DAPI sithDSSThing_PlayKeyMode(const SithThing* pThing, SithPuppetSubMode mode, unsigned int trackGUID, DPID idTo, SithMessageStream outstream)
 {
-    return J3D_TRAMPOLINE_CALL(sithDSSThing_PlayKeyMode, pThing, mode, trackGUID, idTo, outstream);
+    // INDY: multiplayer stub (single-player: message dropped by the send layer)
+    SITH_ASSERTREL(pThing);
+    return 1;
 }
 
 int J3DAPI sithDSSThing_ProcessPlayKeyMode(const SithMessage* pMsg)
 {
-    return J3D_TRAMPOLINE_CALL(sithDSSThing_ProcessPlayKeyMode, pMsg);
+    // INDY: multiplayer stub (network-only message handler)
+    return 1;
 }
 
 int J3DAPI sithDSSThing_SetModel(const SithThing* pThing, DPID idTo)
 {
-    return J3D_TRAMPOLINE_CALL(sithDSSThing_SetModel, pThing, idTo);
+    // INDY: multiplayer stub (single-player: message dropped by the send layer)
+    SITH_ASSERTREL(pThing);
+    if ( !pThing || pThing->renderData.type != RD_THING_MODEL3 || !pThing->renderData.data.pModel3 )
+    {
+        SITHLOG_STATUS("Asked to send state for invalid thing pointer.\n");
+        return 0;
+    }
+
+    return 1;
 }
 
 int J3DAPI sithDSSThing_ProcessSetModel(const SithMessage* pMsg)
 {
-    return J3D_TRAMPOLINE_CALL(sithDSSThing_ProcessSetModel, pMsg);
+    // INDY: multiplayer stub (network-only message handler)
+    return 1;
 }
 
 int J3DAPI sithDSSThing_StopKey(const SithThing* pThing, int trackGUID, float fadeTime, DPID idTo, SithMessageStream outstream)
 {
-    return J3D_TRAMPOLINE_CALL(sithDSSThing_StopKey, pThing, trackGUID, fadeTime, idTo, outstream);
+    // INDY: multiplayer stub (single-player: message dropped by the send layer)
+    SITH_ASSERTREL(pThing);
+    return 1;
 }
 
 int J3DAPI sithDSSThing_ProcessStopKey(const SithMessage* pMsg)
 {
-    return J3D_TRAMPOLINE_CALL(sithDSSThing_ProcessStopKey, pMsg);
+    // INDY: multiplayer stub (network-only message handler)
+    return 1;
 }
 
 int J3DAPI sithDSSThing_StopSound(tSoundChannelHandle hChannel, float secFadeTime, DPID idTo, SithMessageStream outstream)
 {
-    return J3D_TRAMPOLINE_CALL(sithDSSThing_StopSound, hChannel, secFadeTime, idTo, outstream);
+    // INDY: multiplayer stub (single-player: message dropped by the send layer)
+    return 1;
 }
 
 int J3DAPI sithDSSThing_ProcessStopSound(const SithMessage* pMsg)
 {
-    return J3D_TRAMPOLINE_CALL(sithDSSThing_ProcessStopSound, pMsg);
+    // INDY: multiplayer stub (network-only message handler)
+    return 1;
 }
 
 int J3DAPI sithDSSThing_Fire(const SithThing* pShooter, const SithThing* pProjectileTemplate, const rdVector3* fireDir, const rdVector3* firePos, tSoundHandle hFireSnd, uint16_t puppetSubmode, float extra, int16_t projectileFlags, float sedRapidFireTime, int projectileGUID, DPID idTo, SithMessageStream outstream)
 {
-    return J3D_TRAMPOLINE_CALL(sithDSSThing_Fire, pShooter, pProjectileTemplate, fireDir, firePos, hFireSnd, puppetSubmode, extra, projectileFlags, sedRapidFireTime, projectileGUID, idTo, outstream);
+    // INDY: multiplayer stub (single-player: message dropped by the send layer)
+    SITH_ASSERTREL(pShooter && fireDir && firePos);
+    return 1;
 }
 
 int J3DAPI sithDSSThing_ProcessFire(const SithMessage* pMsg)
 {
-    return J3D_TRAMPOLINE_CALL(sithDSSThing_ProcessFire, pMsg);
+    // INDY: multiplayer stub (network-only message handler)
+    return 1;
 }
 
 int J3DAPI sithDSSThing_Death(const SithThing* pThing, const SithThing* pKiller, char bKillPlayer, DPID to, SithMessageStream outstream)
 {
-    return J3D_TRAMPOLINE_CALL(sithDSSThing_Death, pThing, pKiller, bKillPlayer, to, outstream);
+    // INDY: multiplayer stub (single-player: message dropped by the send layer)
+    return 1;
 }
 
 int J3DAPI sithDSSThing_ProcessDeath(const SithMessage* pMsg)
 {
-    return J3D_TRAMPOLINE_CALL(sithDSSThing_ProcessDeath, pMsg);
+    // INDY: multiplayer stub (network-only message handler)
+    return 1;
 }
 
 int J3DAPI sithDSSThing_DamageThing(const SithThing* pVictim, const SithThing* pPurpetrator, float damage, SithDamageType hitType, DPID idTo, SithMessageStream outstream)
 {
-    return J3D_TRAMPOLINE_CALL(sithDSSThing_DamageThing, pVictim, pPurpetrator, damage, hitType, idTo, outstream);
+    // INDY: multiplayer stub (single-player: message dropped by the send layer)
+    SITH_ASSERTREL(pVictim);
+    return 1;
 }
 
 int J3DAPI sithDSSThing_ProcessDamage(const SithMessage* pMsg)
 {
-    return J3D_TRAMPOLINE_CALL(sithDSSThing_ProcessDamage, pMsg);
+    // INDY: multiplayer stub (network-only message handler)
+    return 1;
 }
 
 int J3DAPI sithDSSThing_ThingFullDescription(const SithThing* pThing, DPID idTo, SithMessageStream outstream)
@@ -951,12 +1022,19 @@ int J3DAPI sithDSSThing_ProcessThingFullDescription(const SithMessage* pMsg)
 
 int J3DAPI sithDSSThing_PathMove(const SithThing* pThing, int16_t frame, float speed, int moveType, DPID idTO, SithMessageStream outstream)
 {
-    return J3D_TRAMPOLINE_CALL(sithDSSThing_PathMove, pThing, frame, speed, moveType, idTO, outstream);
+    // INDY: multiplayer stub (single-player: message dropped by the send layer)
+    if ( !pThing || pThing->moveType != SITH_MT_PATH || pThing->type == SITH_THING_FREE || !pThing->pInSector )
+    {
+        return 0;
+    }
+
+    return 1;
 }
 
 int J3DAPI sithDSSThing_ProcessPathMove(const SithMessage* pMsg)
 {
-    return J3D_TRAMPOLINE_CALL(sithDSSThing_ProcessPathMove, pMsg);
+    // INDY: multiplayer stub (network-only message handler)
+    return 1;
 }
 
 int J3DAPI sithDSSThing_Attachment(const SithThing* pThing, DPID idTo, SithMessageStream outstream, unsigned int sendFlags)
@@ -1129,35 +1207,66 @@ int J3DAPI sithDSSThing_ProcessAttachment(const SithMessage* pMsg)
 
 int J3DAPI sithDSSThing_Take(const SithThing* pItem, const SithThing* pThing, SithMessageStream outstream)
 {
-    return J3D_TRAMPOLINE_CALL(sithDSSThing_Take, pItem, pThing, outstream);
+    // INDY: multiplayer stub (only called by sithItem_SetItemTaken in an active network game; the original either
+    //       processes the take locally when hosting or sends the request to the server)
+    return 1;
 }
 
 int J3DAPI sithDSSThing_ProcessTake(const SithMessage* pMsg)
 {
-    return J3D_TRAMPOLINE_CALL(sithDSSThing_ProcessTake, pMsg);
+    // INDY: multiplayer stub (network-only message handler, otherwise only called by sithDSSThing_Take)
+    return 1;
 }
 
 int J3DAPI sithDSSThing_CreateThing(const SithThing* pTemplate, const SithThing* pNewThing, const SithThing* pMarker, const SithSector* pSector, const rdVector3* pos, const rdVector3* pyr, SithMessageStream outstream, unsigned int sendFlags)
 {
-    return J3D_TRAMPOLINE_CALL(sithDSSThing_CreateThing, pTemplate, pNewThing, pMarker, pSector, pos, pyr, outstream, sendFlags);
+    // INDY: multiplayer stub (single-player: message dropped by the send layer)
+    if ( !pMarker )
+    {
+        SITH_ASSERTREL(pSector && pos && pyr);
+    }
+
+    return 1;
 }
 
 int J3DAPI sithDSSThing_ProcessCreateThing(const SithMessage* pMsg)
 {
-    return J3D_TRAMPOLINE_CALL(sithDSSThing_ProcessCreateThing, pMsg);
+    // INDY: multiplayer stub (network-only message handler)
+    return 1;
 }
 
 int J3DAPI sithDSSThing_DestroyThing(int guid, DPID idTo)
 {
-    return J3D_TRAMPOLINE_CALL(sithDSSThing_DestroyThing, guid, idTo);
+    // INDY: multiplayer stub (single-player: message dropped by the send layer)
+    return 1;
 }
 
 int J3DAPI sithDSSThing_ProcessDestroyThing(const SithMessage* pMsg)
 {
-    return J3D_TRAMPOLINE_CALL(sithDSSThing_ProcessDestroyThing, pMsg);
+    // INDY: multiplayer stub (network-only message handler)
+    return 1;
 }
 
 void J3DAPI sithDSSThing_MoveToPos(SithThing* pThing, const rdVector3* pPos, SithSector* pSector)
 {
-    J3D_TRAMPOLINE_CALL(sithDSSThing_MoveToPos, pThing, pPos, pSector);
+    INDY_AB_ORIGINAL_VOID(sithDSSThing_MoveToPos, pThing, pPos, pSector);
+
+    SITH_ASSERTREL(pThing && (pThing->moveType == SITH_MT_PHYSICS) && pSector && pPos);
+
+    // Distance to the new position a quarter second ahead at the current velocity
+    rdVector3 delta;
+    delta.x = pThing->moveInfo.physics.velocity.x * 0.25f + pPos->x - pThing->pos.x;
+    delta.y = pThing->moveInfo.physics.velocity.y * 0.25f + pPos->y - pThing->pos.y;
+    delta.z = pThing->moveInfo.physics.velocity.z * 0.25f + pPos->z - pThing->pos.z;
+
+    // Small corrections are applied smoothly through the velocity, larger ones by moving the thing
+    float dist = rdVector_Len3(&delta);
+    if ( dist != 0.0f && dist < 0.5f )
+    {
+        rdVector_Scale3(&pThing->moveInfo.physics.velocity, &delta, 4.0f);
+        return;
+    }
+
+    rdVector_Copy3(&pThing->pos, pPos);
+    sithThing_SetSector(pThing, pSector, 0);
 }

@@ -267,6 +267,16 @@ rdLightMode sithRender_GetLightingMode(void)
     return sithRender_lightMode;
 }
 
+bool sithRender_GetResetCameraAspect(void)
+{
+    return sithRender_bResetCameraAspect;
+}
+
+void J3DAPI sithRender_SetResetCameraAspect(bool bReset)
+{
+    sithRender_bResetCameraAspect = bReset;
+}
+
 void J3DAPI sithRender_SetCulledSectorTraversalMode(SithRenderThingTraversal mode)
 {
     sithRender_culledSectorTraversalMode = mode;
