@@ -23,7 +23,7 @@ a phone with a controller simply uses the gamepad path.
 
 ## 2. Screen layout (landscape)
 
-- **Left half: floating joystick.** It appears where the thumb lands (no fixed spot to hit), and the distance from
+- **Left half: floating joystick** (decided 2026-10-07). It appears where the thumb lands (no fixed spot to hit), and the distance from
   that point sets the speed: a short push walks, beyond the ring runs (ENH-0001's threshold). Walking keeps the
   original's safety: Indy stops at ledge edges instead of falling, which matters even more on glass.
 - **Right half: camera.** One-finger drag orbits the camera (ENH-0002); the camera trails behind Indy more than with a
@@ -52,9 +52,10 @@ trying. The touch layer asks each frame and shows it:
 The icon changes with the context, and the interactive object gets a subtle highlight, so players see *that*
 something is possible without a tutorial. That replaces most of the keyboard's ~20 actions with two buttons.
 
-## 4. Precision helpers (optional, on by default on touch)
+## 4. Precision helpers (optional, **off by default**: mobile keeps the original difficulty)
 
-Indy's platforming expects exact positions and headings; a thumb on glass is less precise than keys:
+Indy's platforming expects exact positions and headings; a thumb on glass is less precise than keys. These helpers
+exist as toggles for players who want them, but the default on mobile is the original challenge:
 - **Align on approach**: when walking slowly toward a ledge, block or climb surface, turn Indy square to it (the game
   has the alignment code for climbing already).
 - **Jump assist**: a running jump toward a ledge in reach is aimed at it (small heading correction, not a teleport).
@@ -83,8 +84,12 @@ large touch targets from the start.
    the layout editor, haptics, Android back button and lifecycle (pause on focus loss).
 4. **Tests:** synthetic touch scripts drive the same checks as the pad tests (`test_modern.sh` with touch input).
 
+## Decisions (2026-10-07)
+
+- **Floating joystick** by default (it appears where the thumb lands).
+- **Original difficulty on mobile**: the precision helpers of section 4 are off by default; the context buttons
+  (section 3) stay, since they show what's possible without making it easier.
+
 ## Open questions
 
-- Fixed or floating joystick by default? (Floating is the modern default; some players prefer fixed.)
-- How much assist by default (alignment and jump assist) without taking away the original's challenge?
 - Tablet layout (bigger screen: more buttons visible, e.g. a dedicated Look button)?
