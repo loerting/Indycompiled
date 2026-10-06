@@ -1,6 +1,6 @@
 # Timing: frame-rate dependencies (2026-10-06)
 
-The engine was built for roughly 30 FPS. On a modern machine (60–240 FPS) several things change speed. Three causes
+The engine was built for roughly 30 FPS. On a modern machine (60–240 FPS) several things change speed. Four causes
 found so far, each with a fix toggle (`enhancements.md`) and a headless test that measures it at fixed frame caps
 (`INDY_FPS_CAP`, see `Libs/indy/indyDebug.c`).
 
@@ -45,15 +45,15 @@ at 30. Whether that matters depends on the site:
 intended frame with `(k + offset) % n == 0` passed since the previous frame. This is the idea of upstream's
 unmerged branch, applied per site instead of to every call. Test: `Scripts/indy/test_cycles.sh`.
 
-## Not covered yet
-
-- Functions still running as original v1.2 code (AI: `sithAIUtil`, `sithAIMove`, `sithAIInstinct`) may have their
-  own frame-rate dependencies; they can only be fixed once reimplemented (Stage 3).
-- Debug fly mode (`sithPlayerControls_ProcessFlyMove`, not gameplay) pitches at `±fps` degrees per second.
-
 ## 4. Jewel-flight thrust (FIX-0004, `fpsIndependentJewelFly`)
 
 `sithPlayerControls_ProcessJewelFlyMove` adds `0.0002 × fps` to the vertical thrust every frame: per second that is
 `0.0002 × fps²` (0.18 at 30 FPS, 0.72 at 60, 2.88 at 120, 11.5 at 240). With the fix the increment is
 `0.0002 × 60 × 60 × frame time`: 0.72 per second at any frame rate, the same as the original at 60 FPS. Not
 playtested (the jewel flight is late in the Aetherium level).
+
+## Not covered yet
+
+- Functions still running as original v1.2 code (AI: `sithAIUtil`, `sithAIMove`, `sithAIInstinct`) may have their
+  own frame-rate dependencies; they can only be fixed once reimplemented (Stage 3).
+- Debug fly mode (`sithPlayerControls_ProcessFlyMove`, not gameplay) pitches at `±fps` degrees per second.

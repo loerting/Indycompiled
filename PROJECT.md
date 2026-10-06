@@ -5,7 +5,7 @@
 
 | | |
 |---|---|
-| **Status** | Stage 1 done, Stage 2 in progress (2026-10-06): our Linux-built OpenJones3D on Indy3D.exe v1.2 starts and loads all 17 levels under Wine (level sweep), with intro video and MSAA. Analog movement prototype awaits your gamepad test. |
+| **Status** | Stage 2 in progress (2026-10-06): our Linux-built OpenJones3D on Indy3D.exe v1.2 loads all 17 levels under Wine (1920×1080, 8× MSAA). Done in Stage 2: gamepads under Wine (4 XInput fixes), analog movement (ENH-0001, needs your feel test), frame-rate fixes FIX-0001–0004 (turning, continuous damage, timed events, jewel flight), ultrawide inventory fix. 89.4% of functions are reimplemented C; the rest is original v1.2 code (Stage 3). |
 | **Last updated** | 2026-10-06 |
 | **Upstream base** | `smlu/OpenJones3D`, branch `develop` @ `b9c0eaa` (2026-06-08), 92.5% of engine functions done |
 | **Host** | Manjaro Linux with i3, and nothing else. **No Windows VM, no Visual Studio, no MSVC.** |
@@ -551,6 +551,7 @@ Because v1.2 is our host, these fixes stay active as long as the affected functi
 - ~~**Shaders.** Does `vkd3d-compiler` 1.19 compile upstream's DX9 HLSL shaders (shader model 3)?~~ Yes, since Stage 1 (`compile_shader.py`).
 - ~~**Gamepads under Wine.**~~ Works: Wine's SDL backend exposes an Xbox 360 pad as XInput (tested with a virtual pad), after four fixes to upstream's XInput code (enhancements.md). Your own controller still needs a feel test.
 - **Upstream bug reports (filed 2026-10-06 from your account `loerting`):** PR [#44](https://github.com/smlu/OpenJones3D/pull/44) XInput stick fixes, PR [#45](https://github.com/smlu/OpenJones3D/pull/45) `sithEvent` out-of-bounds write, issue [#46](https://github.com/smlu/OpenJones3D/issues/46) COG lexer, issue [#47](https://github.com/smlu/OpenJones3D/issues/47) DX9 MSAA under Wine, issue [#48](https://github.com/smlu/OpenJones3D/issues/48) continuous damage truncated (FIX-0002), PR [#49](https://github.com/smlu/OpenJones3D/pull/49) inventory item size on ultrawide, plus measurements and the mouse-turn caveat on issue #10 (FIX-0001). PR branches live in the public fork `loerting/OpenJones3D`, cut from upstream `develop`; the private repo is never pushed. Related upstream work: PR #41 and the unmerged branch `remove-fps-dependencies` (Dec 2025) fix frame-rate dependencies; our FIX-0001 covers turning (keeping mouse turning correct and the rate configurable), and the branch's other fixes (frame-cycle timer, drowning and damage at high frame rates, jewel-fly thrust) are candidates for FIX-0002 onward.
+- **Upstream's OpenGL branch (checked 2026-10-06).** `upstream/OpenGL` (509 commits, last 2026-07-24) adds an SDL window/event layer (`Libs/wkernel/wkernelSDL.c`), an OpenGL renderer with shaders and shadows (`Libs/std/Win95/GL/`), and vendored libraries. That is most of Stage 5's rendering and windowing; input, audio, the Win32 dialogs and the registry remain. Android's OpenGL ES 3.0 is close to the GL 3.3 it targets. Stage 5 should build on this branch rather than start from scratch; check its build on our clang toolchain first.
 - **Upstream patches.** Should the Linux-host patch set be offered upstream?
 
 ---
