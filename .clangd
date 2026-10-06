@@ -1,0 +1,4 @@
+# Indycompiled: clangd (VS Code C/C++ language server) uses the clang/MinGW cross build flags.
+# Configure once: cmake --preset mingw-dx9-debug
+CompileFlags:
+  CompilationDatabase: Build/mingw-dx9-debug

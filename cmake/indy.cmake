@@ -7,6 +7,8 @@ set(INDY_GEN "${CMAKE_BINARY_DIR}/indy")
 set(INDY_HOST_EXE "${INDY_ROOT}/game/original/Resource/Indy3D.exe" CACHE FILEPATH "Host Indy3D.exe (v1.2)")
 set(INDY_HOST_EXE_SHA256 4075e655e0cf0db2d352265ba83a19a51fb373156cba8b3e43107fd6c6129ebb)
 set(INDY_ADDRESS_MAP "${INDY_ROOT}/Scripts/indy/rti_v12.csv")
+set(INDY_O0_TARGETS "" CACHE STRING "Debug aid: targets compiled with -O0 in optimised builds")
+set(INDY_O0_SOURCES "" CACHE STRING "Debug aid: source globs (repo-relative) compiled with -O0 in optimised builds")
 
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
 
@@ -51,6 +53,7 @@ include_directories(BEFORE "${INDY_GEN}/rti" "${INDY_ROOT}/cmake/compat/include"
 # --- compiler and linker ------------------------------------------------------------------------------------
 add_compile_options(
     -fms-extensions -fasm-blocks                    # MSVC-style __asm and extensions used upstream
+    -fno-strict-aliasing -fwrapv                    # MSVC semantics: no type-based alias analysis, no signed-overflow UB
     "$<$<COMPILE_LANGUAGE:C>:SHELL:-include ${INDY_ROOT}/cmake/compat/indy_prelude.h>"
     -Wno-microsoft -Wno-pragma-pack -Wno-unknown-pragmas -Wno-ignored-attributes
     # MSVC accepts these mismatches (e.g. int- vs. void-returning callbacks; same cdecl ABI): warn, don't fail
@@ -101,6 +104,20 @@ function(_indy_fixup_targets)
     endforeach()
 
     target_sources(Jones3D_DLL PRIVATE "${INDY_GEN}/indy_inline_externals.c")
+
+    # debug aid: compile the listed targets without optimisation (e.g. to bisect optimisation-only bugs)
+    foreach(t IN LISTS INDY_O0_TARGETS)
+        set_property(TARGET ${t} APPEND PROPERTY COMPILE_OPTIONS -O0)
+    endforeach()
+    foreach(pattern IN LISTS INDY_O0_SOURCES)   # globs relative to the repo root, e.g. Libs/sith/Cog/*.c
+        file(GLOB files "${INDY_ROOT}/${pattern}")
+        foreach(t IN LISTS targets)
+            get_target_property(type ${t} TYPE)
+            if(NOT type STREQUAL "INTERFACE_LIBRARY")
+                set_source_files_properties(${files} TARGET_DIRECTORY ${t} PROPERTIES COMPILE_OPTIONS -O0)
+            endif()
+        endforeach()
+    endforeach()
 
     # the launcher injects "Jones3D.dll" (MinGW would name it libJones3D.dll)
     set_target_properties(Jones3D_DLL PROPERTIES PREFIX "" IMPORT_PREFIX "")

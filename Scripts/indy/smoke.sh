@@ -6,6 +6,7 @@
 # and its own wineserver, so a game you play in the main prefix is never touched.
 # Safety net: while the test runs, any audio stream opened by a process of the test prefix is muted.
 #
+# INDY_SMOKE_PROC=<name> checks another process (e.g. Indy3D.exe when starting the Jones3D.exe launcher).
 # Usage: Scripts/indy/smoke.sh [seconds=45] [exe relative to game/run=Resource/Indy3D.exe] [game args...]
 # Output: game/screens/smoke-<timestamp>-<t>s.png and smoke-<timestamp>.log
 set -euo pipefail
@@ -47,7 +48,7 @@ run="$1"; exe="$2"; secs="$3"; log="$4"; shot="$5"; shift 5
 cd "$run/$(dirname "$exe")"
 # full Windows path: explorer/start.exe do not search the working directory
 wine explorer /desktop=Indy,800x600 "$(winepath -w "$run/$exe")" "$@" >"$log" 2>&1 &
-proc="$(basename "$exe")"
+proc="${INDY_SMOKE_PROC:-$(basename "$exe")}"   # process to check, e.g. Indy3D.exe when starting the launcher
 for ((t = 1; t <= secs; t++)); do
     sleep 1
     if (( t % 15 == 0 )); then

@@ -5,7 +5,7 @@
 
 | | |
 |---|---|
-| **Status** | Stage 0 done (2026-10-06): the original v1.2 game runs under Wine, and all runtime-critical addresses are verified. Next: Stage 1, the Linux build. |
+| **Status** | Stage 1 done (2026-10-06): our Linux-built OpenJones3D, hosted by Indy3D.exe v1.2, plays Canyonlands under Wine. Known issue: the intro video hangs (§12). Next: Stage 2 (modding). |
 | **Last updated** | 2026-10-06 |
 | **Upstream base** | `smlu/OpenJones3D`, branch `develop` @ `b9c0eaa` (2026-06-08), 92.5% of engine functions done |
 | **Host** | Manjaro Linux with i3, and nothing else. **No Windows VM, no Visual Studio, no MSVC.** |
@@ -196,24 +196,28 @@ All of `develop` was compiled with the installed clang for `i686-w64-windows-gnu
 
 The struct-size `static_assert`s in the shared headers pass. That is the strongest available evidence that clang lays out the engine structs exactly as MSVC did for the original exe.
 
-**Linux-host patch set.** Each item is small and mechanical. These patches would also help upstream; whether to offer them is your call.
+**What the build actually needed (Stage 1, done 2026-10-06).** Most of it lives in our own files (`cmake/indy.cmake`, `cmake/compat/`, `Scripts/indy/`). The diff to upstream's files is **9 files, +29/−13 lines**, all INDY-marked (now 10 files, including the `sithEvent.c` fix). These patches would also help upstream; whether to offer them is your call.
 
 1. **CMake.**
-   - The top-level `CMakeLists.txt` stops with `FATAL_ERROR` for any compiler other than MSVC. It needs a clang/GCC branch.
-   - `configure_file` uses `LIBS/j3dcore` while the folder is `Libs/` (case).
-   - The three `#pragma comment(lib, …)` lines become `target_link_libraries`.
-   - Set `JONES3D_BUILD_PROGRAMS=OFF`: the generated COG parser (`sithCogFlex.c`) is already committed.
-2. **Include casing.**
-   - 13 project `#include`s in 11 files don't match the real file names (e.g. `sith/DSS/` vs `Dss/`).
-   - System headers need lowercase: `<Windows.h>`, `<CommCtrl.h>`, `<Mmreg.h>`, `<Xinput.h>`, `<D3Dcommon.h>`.
-   - `DirectX6/*.h` includes are redirected to the MinGW-w64 headers.
-3. **Missing standard includes.**
-   - `<float.h>` (for `FLT_MAX`) and `<errno.h>` (for `ERANGE`, `EDOM`) in about 6 files; MSVC pulled these in implicitly.
-   - `<assert.h>` in a shared header, so that `static_assert` works in C11.
-4. **Header gaps to re-check with real MinGW-w64 headers** (Wine's headers lacked them): `HKEY_CURRENT_USER_LOCAL_SETTINGS`, `PDIRECT3DDEVICE9`, `wbemidl.h`.
-5. **DX9 shader build step** with `vkd3d-compiler`. If it can't handle the shaders:
-   - first fallback: compile them once with Wine's built-in `d3dcompiler_47` and commit the resulting headers;
-   - second fallback: use the DX6 config until the OpenGL renderer arrives.
+   - The top-level `CMakeLists.txt` gets one `elseif` that includes `cmake/indy.cmake` for clang/GCC (upstream stops with `FATAL_ERROR` for non-MSVC).
+   - The `LIBS/` path casing is fixed.
+   - `JONES3D_BUILD_PROGRAMS=OFF`: the generated COG parser is already committed.
+   - A deferred fix-up maps MSVC library names to MinGW (`Comctl32.lib` → `comctl32`, `Winmm` → `winmm`), drops `/SAFESEH:NO`, and names the DLL `Jones3D.dll`.
+2. **Include casing.** Small redirect headers in `cmake/compat/include/` (`Windows.h`, `CommCtrl.h`, `Mmreg.h`, `Xinput.h`, `D3Dcommon.h`, `DirectX6/*.h`) forward to MinGW-w64's lowercase headers with `#include_next`. No upstream edits. The 13 mis-cased project `#include`s work on the exFAT drive; they still need fixing before native builds.
+3. **Missing standard includes.** `cmake/compat/indy_prelude.h` (`assert.h`, `errno.h`, `float.h`) is force-included into every C file.
+4. **Header gaps.** Only `PDIRECT3DDEVICE9` was missing in MinGW-w64; `cmake/compat/include/d3d9.h` adds it.
+5. **DX9 shaders.** `compile_shader.py` preprocesses with `clang -E` (vkd3d's own preprocessor doesn't expand nested macro arguments), then compiles with `vkd3d-compiler` to shader model 3 bytecode. One INDY fix in `common.hlsli` (two-level token pasting).
+6. **C `inline` semantics.** MSVC compiles plain C `inline` like C++ does: a mergeable copy per file. C99 emits either none or one per file. Fixes:
+   - header inline functions get their single external definition from a generated file (`gen_inline_externals.py`, no upstream edits);
+   - six file-local ones became `static inline` (INDY), and so did `stdConffile_ScanLine`, which was duplicated because of an extra non-inline declaration.
+7. **Pointer type mismatches.** E.g. callbacks that return `int` where `void` is declared. MSVC accepts them, and the cdecl ABI is identical, so they're downgraded from errors to warnings.
+8. **Launcher (`Jones3D.exe`, C++20).** `UNICODE` plus `-municode` (it uses `wmain`), winpthreads for MinGW's static libstdc++, and everything linked statically.
+9. **Libraries from `#pragma comment(lib, …)`.** clang + lld honour them. Only `Xinput.lib` needed a correctly cased alias (→ `libxinput1_4.a`, as in the Windows SDK).
+10. **Hooks.** `j3dhook.h` refuses address 0 (unverified hooks) and unaligned addresses (INDY).
+11. **MSVC-tolerated undefined behaviour.** Code that MSVC compiles "as written" can be optimised differently by clang:
+    - every file is built with `-fno-strict-aliasing -fwrapv` (MSVC semantics);
+    - one real upstream bug was found: `sithEvent_ResetFreeBufferTable` wrote one element past an array. Clang `-O2` turned that loop into an endless one, which hung the release build at startup. Fixed (INDY), found by bisecting with the debug aids `INDY_O0_TARGETS` / `INDY_O0_SOURCES` (compile chosen targets or files with `-O0`).
+12. **Editor support.** `.clangd` points VS Code's language server at `Build/mingw-dx9-debug/compile_commands.json`.
 
 ### 5.4 ABI watch-list
 
@@ -453,7 +457,7 @@ Each stage gets a milestone tag: `s1-linux-build`, `s2-modded`, `s4-standalone`,
 | Stage | Goal | Main work | Exit criterion |
 |---|---|---|---|
 | **0 Foundation** ✅ | Everything in place | Install the packages (§5.1). Move `INDY/INDY/` to `game/original/` and write its `SHA256SUMS`. Set up the repo (§7.1). Create the Wine prefix on the root filesystem and the run folder (§5.5). **Play the unmodified v1.2 game under Wine first**, as the baseline that separates Wine problems from our own. Review the runtime-critical entries of the address map in Ghidra (§5.7). | The original v1.2 game plays under Wine in our prefix. Every trampoline and live global in `rti_v12.csv` is `verified`. |
-| **1 Linux build on v1.2** | Build it ourselves | Toolchain file, presets, patch set (§5.3), shader step, the generated v1.2 RTI headers and the hook filter (§5.7), the ABI check from §5.4, gdb debugging. Unverified hooks are then reviewed in batches. | Our `develop` build, hosted by the v1.2 exe, plays Canyonlands under Wine, and gdb stops at a breakpoint in our code |
+| **1 Linux build on v1.2** ✅ | Build it ourselves | Toolchain file, presets, patch set (§5.3), shader step, the generated v1.2 RTI headers and the hook filter (§5.7), the ABI check from §5.4, gdb debugging. Unverified hooks are then reviewed in batches. | Our `develop` build, hosted by the v1.2 exe, plays Canyonlands under Wine, and gdb stops at a breakpoint in our code |
 | **2 Modding** 🎮 | The game you want to play | Controls, controller and visuals (§10), building on upstream's XInput support and `Jones.cfg` | A complete playthrough with the `enhanced` profile |
 | **3 Completion** | No more original functions | AI, DSS, physics, AudioLib, sithThing (§3.2), reverse engineered on the v1.2 exe in Ghidra with the names from the address map. Multiplayer stubbed. Every hook in the map is `verified`. | `analyze.py` reports 100%, excluding the stubs. A full playthrough including save/load. |
 | **4 Standalone** | No more original exe | All global variables defined in our code. Injection removed. | The game starts and plays with `Indy3D.exe` deleted (still a Windows build, under Wine) |
@@ -513,6 +517,11 @@ Because v1.2 is our host, these fixes stay active as long as the affected functi
 
 ## 12. Open questions
 
+- **Intro video hangs in our build (bug, first known issue).** With our DLL, the original SMUSH player runs `jonesopn.snm` but the screen stays black and playback never ends. The main thread keeps moving inside the SMUSH library (v1.2 `0x4E5224`/`0x4E52F8`). The unmodified v1.2 game plays the same video fine, and a working (silent null-sink) audio device doesn't change anything. Suspects:
+  - upstream's DX9 frame-blit callback (`JonesMain_IntroMovieBlt*`) running on Wine;
+  - a v1.0→v1.2 difference in SMUSH internals.
+
+  Workaround for testing: without the video files the game skips the intro (`game/run/_movies_parked/`).
 - **Struct changes in 1.2.** Did LucasArts change any struct layout in 1.2? Check the shared structs touched by size-changed functions first.
 - **Remaining map review.** How many of the 234 plausible functions does Ghidra confirm, and do any of them turn out wrong? That decides whether `plausible` hooks may be enabled in bulk.
 - **Shaders.** Does `vkd3d-compiler` 1.19 compile upstream's DX9 HLSL shaders (shader model 3)?

@@ -38,6 +38,12 @@ if [[ $refresh_run -eq 1 || ! -d "$RUN" ]]; then
     [[ $keep_ddraw -eq 1 ]] || rm -f "$RUN/Resource/ddraw.dll"
 fi
 
+# OpenJones3D's settings file (Docs/Jones.cfg.md): start the game directly (not the developer dialog) and log
+# to JonesLog.txt. The engine fills in every other key with its defaults on first start.
+if [[ ! -f "$RUN/Resource/Jones.cfg" ]]; then
+    printf '{\n  "version": "1.0.0",\n  "startMode": 0,\n  "log": { "mode": 2, "level": 1 }\n}\n' > "$RUN/Resource/Jones.cfg"
+fi
+
 regfile="$(mktemp --suffix=.reg)"
 trap 'rm -f "$regfile"' EXIT
 reg_escape() { printf '%s' "$1" | sed 's/\\/\\\\/g'; }
