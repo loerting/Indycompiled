@@ -5,7 +5,7 @@
 
 | | |
 |---|---|
-| **Status** | Stage 2 in progress (2026-10-06): our Linux-built OpenJones3D on Indy3D.exe v1.2 loads all 17 levels under Wine (1920×1080, 8× MSAA). Done in Stage 2: gamepads under Wine (4 XInput fixes), analog movement (ENH-0001, needs your feel test), frame-rate fixes FIX-0001–0004 (turning, continuous damage, timed events, jewel flight), ultrawide inventory fix. 89.4% of functions are reimplemented C; the rest is original v1.2 code (Stage 3). |
+| **Status** | Stage 2 in progress (2026-10-06): our Linux-built OpenJones3D on Indy3D.exe v1.2 loads all 17 levels under Wine (1920×1080, 8× MSAA). Done in Stage 2: gamepads under Wine (4 XInput fixes), analog movement (ENH-0001, needs your feel test), frame-rate fixes FIX-0001–0004 (turning, continuous damage, timed events, jewel flight), ultrawide inventory fix. Stage 3 started: 92.7% of functions (84.5% of the code) are C, AudioLib complete; `Scripts/indy/progress.py` measures it. |
 | **Last updated** | 2026-10-06 |
 | **Upstream base** | `smlu/OpenJones3D`, branch `develop` @ `b9c0eaa` (2026-06-08), 92.5% of engine functions done |
 | **Host** | Manjaro Linux with i3, and nothing else. **No Windows VM, no Visual Studio, no MSVC.** |
@@ -472,6 +472,7 @@ Each stage gets a milestone tag: `s1-linux-build`, `s2-modded`, `s4-standalone`,
 | Turn rate vs frame rate: `Scripts/indy/test_turnrate.sh` (frame caps via `INDY_FPS_CAP`, rate from the `INDY_INPUT_TRACE` heading) | When turning or timing code changes |
 | Continuous damage vs frame rate: `Scripts/indy/test_damage.sh` (`INDY_TEST_DPS`) | When damage or timing code changes |
 | "Every N-th frame" events vs frame rate: `Scripts/indy/test_cycles.sh` | When timing code changes |
+| Stage 3 progress: `Scripts/indy/progress.py` (functions still reached through `J3D_TRAMPOLINE_CALL`, by module and size) | After each reimplemented module |
 | Differential test (Stage 3): `Scripts/indy/test_diff.sh <suite>`: original v1.2 function vs our C version, same inputs, byte-compared in-process (`Libs/indy/indyDiff.c`) | For every reimplemented function |
 
 ---
