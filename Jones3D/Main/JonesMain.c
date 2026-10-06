@@ -1,5 +1,6 @@
 #include "JonesMain.h"
 #include <indy/indyDebug.h> // INDY
+#include <indy/indyDiff.h> // INDY
 #include <j3dcore/j3dhook.h>
 
 #include <Jones3D/Gui/JonesDialog.h>
@@ -1257,6 +1258,7 @@ int JonesMain_ProcessGame(void)
         JonesMain_PrintFramerate();
         stdDisplay_Update();
         indyDebug_FrameCap(); // INDY: frame cap for tests (INDY_FPS_CAP)
+        indyDiff_RunOnce();   // INDY: differential tests (INDY_DIFFTEST)
     }
 
     if ( JonesMain_bRefreshDisplayDevice )

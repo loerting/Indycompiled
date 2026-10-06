@@ -472,6 +472,7 @@ Each stage gets a milestone tag: `s1-linux-build`, `s2-modded`, `s4-standalone`,
 | Turn rate vs frame rate: `Scripts/indy/test_turnrate.sh` (frame caps via `INDY_FPS_CAP`, rate from the `INDY_INPUT_TRACE` heading) | When turning or timing code changes |
 | Continuous damage vs frame rate: `Scripts/indy/test_damage.sh` (`INDY_TEST_DPS`) | When damage or timing code changes |
 | "Every N-th frame" events vs frame rate: `Scripts/indy/test_cycles.sh` | When timing code changes |
+| Differential test (Stage 3): `Scripts/indy/test_diff.sh <suite>`: original v1.2 function vs our C version, same inputs, byte-compared in-process (`Libs/indy/indyDiff.c`) | For every reimplemented function |
 
 ---
 

@@ -4,6 +4,8 @@
 #   Scripts/indy/ghidra.sh init        create the project, import + analyze the exe, apply the address map
 #   Scripts/indy/ghidra.sh apply-map   re-apply Scripts/indy/rti_v12.csv after the map changed
 #   Scripts/indy/ghidra.sh gui         open Ghidra (with the i3 fix for grey Java windows)
+#   Scripts/indy/ghidra.sh decompile <name or 0xaddress>...
+#                                      decompile into game/review/decomp/<name>.c (git-ignored: never commit it)
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
@@ -25,12 +27,18 @@ case "${1:-}" in
         "$GHIDRA/support/analyzeHeadless" "$PROJ_DIR" "$PROJ" -process Indy3D.exe -noanalysis \
             -scriptPath "$SCRIPTS" -postScript ImportIndyMap.java "$MAP"
         ;;
+    decompile)
+        shift
+        mkdir -p "$ROOT/game/review/decomp"
+        "$GHIDRA/support/analyzeHeadless" "$PROJ_DIR" "$PROJ" -process Indy3D.exe -noanalysis -readOnly \
+            -scriptPath "$SCRIPTS" -postScript DecompileFunctions.java "$ROOT/game/review/decomp" "$@"
+        ;;
     gui)
         export _JAVA_AWT_WM_NONREPARENTING=1   # i3: without this, Java windows stay grey
         exec "$GHIDRA/ghidraRun" "$PROJ_DIR/$PROJ.gpr"
         ;;
     *)
-        sed -n '2,7p' "$0"
+        sed -n '2,9p' "$0"
         exit 2
         ;;
 esac
