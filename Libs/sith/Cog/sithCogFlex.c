@@ -498,7 +498,7 @@ YY_DECL
 yy_match:
 	do
 	    {
-	    register YY_CHAR yy_c = yy_ec[*yy_cp];
+	    register YY_CHAR yy_c = yy_ec[(unsigned char)*yy_cp & 0x7F]; /* INDY: 7-bit table; bytes >= 0x80 (e.g. "Mero\xeb" in a comment of 10_sea_vol_frets.cog) indexed outside it and could loop forever */
 	    if ( yy_accept[yy_current_state] )
 		{
 		yy_last_accepting_state = yy_current_state;
@@ -923,7 +923,7 @@ static yy_state_type yy_get_previous_state()
 
     for ( yy_cp = yytext + YY_MORE_ADJ; yy_cp < yy_c_buf_p; ++yy_cp )
 	{
-	register YY_CHAR yy_c = (*yy_cp ? yy_ec[*yy_cp] : 1);
+	register YY_CHAR yy_c = (*yy_cp ? yy_ec[(unsigned char)*yy_cp & 0x7F] : 1); /* INDY: see yy_match */
 	if ( yy_accept[yy_current_state] )
 	    {
 	    yy_last_accepting_state = yy_current_state;
