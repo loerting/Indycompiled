@@ -1,0 +1,169 @@
+name,v12,verdict,reviewer,evidence
+AudioLib_CompressBlock,0x004dfee0,confirmed,auto,signature matches (7 params)
+AudioLib_UncompressBlock,0x004e01d0,confirmed,auto,signature matches (6 params)
+AudioLib_WVSMCompressBlock,0x004e0470,confirmed,auto,signature matches (4 params)
+AudioLib_WVSMUncompressBlock,0x004e07d0,confirmed,auto,signature matches (3 params)
+AudioLib_aDeltaTable,0x014e49e8,confirmed,auto,exact refs from own module (AudioLib_UncompressBlock)
+AudioLib_aIndexTableTable,0x0054bcf0,confirmed,auto,"exact refs from own module (AudioLib_CompressBlock, AudioLib_UncompressBlock)"
+AudioLib_aStepBits,0x0050a358,confirmed,auto,"exact refs from own module (AudioLib_CompressBlock, AudioLib_UncompressBlock)"
+AudioLib_aStepTable,0x0050a2a0,confirmed,auto,"exact refs from own module (AudioLib_CompressBlock, AudioLib_UncompressBlock)"
+AudioLib_bDeltaTableInitialized,0x014e7668,confirmed,auto,exact refs from own module (AudioLib_UncompressBlock)
+AudioLib_word_14E4928,0x014e4a68,confirmed,auto,exact refs from own module (AudioLib_UncompressBlock)
+sithAIInstinct_AlternateFire,0x00490f40,confirmed,auto,"same-module refs (sithAIInstinct_InitInstincts), 3/5 params used"
+sithAIInstinct_BasicFallow,0x004934f0,confirmed,auto,signature matches (5 params)
+sithAIInstinct_CircleStrafe,0x004911f0,confirmed,auto,signature matches (5 params)
+sithAIInstinct_Dodge,0x00491720,confirmed,auto,signature matches (5 params)
+sithAIInstinct_FearGunshot,0x0048fd80,confirmed,auto,"same-module refs (sithAIInstinct_InitInstincts), 4/5 params used"
+sithAIInstinct_Flee,0x00493160,confirmed,auto,signature matches (5 params)
+sithAIInstinct_HitAndRun,0x00491da0,confirmed,auto,"same-module refs (sithAIInstinct_InitInstincts), 4/5 params used"
+sithAIInstinct_Hop,0x0048fef0,confirmed,auto,"same-module refs (sithAIInstinct_InitInstincts), 3/5 params used"
+sithAIInstinct_HoverDrift,0x0048ffa0,confirmed,auto,"same-module refs (sithAIInstinct_InitInstincts), 3/5 params used"
+sithAIInstinct_HumanCombatMove,0x004923f0,confirmed,auto,signature matches (5 params)
+sithAIInstinct_Jump,0x00490590,confirmed,auto,"same-module refs (sithAIInstinct_InitInstincts), 4/5 params used"
+sithAIInstinct_Listen,0x0048f140,confirmed,auto,signature matches (5 params)
+sithAIInstinct_LobFire,0x00490870,confirmed,auto,"same-module refs (sithAIInstinct_InitInstincts), 3/5 params used"
+sithAIInstinct_LookForTarget,0x0048f7d0,confirmed,auto,signature matches (5 params)
+sithAIInstinct_OpenDoors,0x00490560,confirmed,auto,"same-module refs (sithAIInstinct_InitInstincts), 3/5 params used"
+sithAIInstinct_PrimaryFire,0x00490a20,confirmed,auto,"same-module refs (sithAIInstinct_InitInstincts), 3/5 params used"
+sithAIInstinct_RandomMove,0x004920d0,confirmed,auto,"same-module refs (sithAIInstinct_InitInstincts), 4/5 params used"
+sithAIInstinct_RandomTurn,0x00490430,confirmed,auto,"same-module refs (sithAIInstinct_InitInstincts), 3/5 params used"
+sithAIInstinct_Retreat,0x00491f70,confirmed,auto,"same-module refs (sithAIInstinct_InitInstincts), 4/5 params used"
+sithAIInstinct_ReturnHome,0x004930b0,confirmed,auto,signature matches (5 params)
+sithAIInstinct_Roam,0x00492d70,confirmed,auto,signature matches (5 params)
+sithAIInstinct_SenseDanger,0x0048fb60,confirmed,auto,signature matches (5 params)
+sithAIInstinct_SnakeFollow,0x004947f0,confirmed,auto,signature matches (5 params)
+sithAIInstinct_SnakeMungeTestCheck,0x00494520,confirmed,auto,signature matches (4 params)
+sithAIInstinct_Talk,0x00490110,confirmed,auto,signature matches (5 params)
+sithAIInstinct_WallCrawl,0x00493fa0,confirmed,auto,signature matches (5 params)
+sithAIInstinct_flt_539AB8,0x00539bd8,confirmed,auto,exact refs from own module (sithAIInstinct_SnakeFollow)
+sithAIInstinct_sub_494360,0x00494280,confirmed,auto,signature matches (3 params)
+sithAIInstinct_sub_494FF0,0x00494f10,confirmed,auto,signature matches (2 params)
+sithAIMove_UpdateBoss,0x00498cb0,confirmed,auto,signature matches (2 params)
+sithAIMove_UpdateMardukTail,0x0049b180,confirmed,auto,signature matches (2 params)
+sithAIMove_UpdateMineCar,0x00495280,confirmed,auto,signature matches (2 params)
+sithAIMove_UpdateQuetzTail,0x0049a8e0,confirmed,auto,signature matches (2 params)
+sithAIMove_g_flt_585464,0x005855a4,confirmed,auto,"between verified sithFX_fairyDustDeluxSizeFactor and sithAIMove_g_flt_58546C, same shift +0x140"
+sithAIMove_g_flt_585468,0x005855a8,confirmed,auto,"between verified sithFX_fairyDustDeluxSizeFactor and sithAIMove_g_flt_58546C, same shift +0x140"
+sithAIMove_g_flt_58546C,0x005855ac,confirmed,auto,exact refs from own module (sithAIMove_sub_499090)
+sithAIMove_g_flt_585470,0x005855b0,confirmed,auto,exact refs from own module (sithAIMove_sub_499A80)
+sithAIMove_sub_4958B0,0x004957d0,confirmed,auto,signature matches (2 params)
+sithAIMove_sub_495CD0,0x00495bf0,confirmed,auto,signature matches (2 params)
+sithAIMove_sub_4961A0,0x004960c0,confirmed,auto,signature matches (1 params)
+sithAIMove_sub_496550,0x00496470,confirmed,auto,signature matches (2 params)
+sithAIMove_sub_4966D0,0x004965f0,confirmed,auto,signature matches (2 params)
+sithAIMove_sub_496820,0x00496740,confirmed,auto,signature matches (2 params)
+sithAIMove_sub_499090,0x00498fb0,confirmed,auto,signature matches (2 params)
+sithAIMove_sub_4996C0,0x004995e0,confirmed,auto,signature matches (2 params)
+sithAIMove_sub_499A80,0x004999a0,confirmed,auto,signature matches (5 params)
+sithAIMove_sub_499CA0,0x00499bc0,confirmed,auto,signature matches (2 params)
+sithAIMove_sub_49A020,0x00499f40,confirmed,auto,signature matches (5 params)
+sithAIMove_sub_49A1B0,0x0049a0d0,confirmed,auto,signature matches (2 params)
+sithAIMove_sub_49A450,0x0049a370,confirmed,auto,signature matches (2 params)
+sithAIMove_sub_49A630,0x0049a550,confirmed,auto,signature matches (2 params)
+sithAIMove_sub_49A810,0x0049a730,confirmed,auto,signature matches (2 params)
+sithAIMove_sub_49AA60,0x0049a980,confirmed,auto,signature matches (1 params)
+sithAIMove_sub_49B1B0,0x0049b0d0,confirmed,auto,called by sithCogFunctionThing_StartQuetzAnim
+sithAIUtil_AIAdvanceToNextWpnt,0x0049c910,confirmed,auto,signature matches (2 params)
+sithAIUtil_AIGetMovePos,0x0049f4e0,confirmed,auto,signature matches (3 params)
+sithAIUtil_AIPlaySoundMode,0x0049f250,confirmed,auto,signature matches (2 params)
+sithAIUtil_CanAttackTarget,0x0049f8b0,confirmed,auto,signature matches (1 params)
+sithAIUtil_CanSeeTarget,0x0049fe40,confirmed,auto,signature matches (3 params)
+sithAIUtil_CheckFloorAtPos,0x0049dc40,confirmed,auto,signature matches (4 params)
+sithAIUtil_CheckPathToPos,0x0049e6b0,confirmed,auto,signature matches (9 params)
+sithAIUtil_CompareAIWpntDistances,0x0049d8a0,confirmed,auto,signature matches (2 params)
+sithAIUtil_CreateAIWaypoint,0x0049d780,confirmed,auto,signature matches (2 params)
+sithAIUtil_GetAIWaypointNum,0x0049d870,confirmed,auto,signature matches (1 params)
+sithAIUtil_GetDistanceToTarget,0x0049b6e0,confirmed,auto,signature matches (8 params)
+sithAIUtil_GetDistanceToTargetPos,0x0049b980,confirmed,auto,signature matches (8 params)
+sithAIUtil_GetNextThingsInView,0x0049fba0,confirmed,auto,signature matches (3 params)
+sithAIUtil_GetXYZHeadingVector,0x0049f750,confirmed,auto,signature matches (2 params)
+sithAIUtil_IsThingMoving,0x0049f8e0,confirmed,auto,signature matches (1 params)
+sithAIUtil_MakeRandPoint,0x0049df60,confirmed,auto,signature matches (7 params)
+sithAIUtil_RandomRotate,0x0049fa20,confirmed,auto,signature matches (2 params)
+sithAIUtil_RetryMakeRandPoint,0x0049e510,confirmed,auto,signature matches (5 params)
+sithAIUtil_SetWeaponFireFlags,0x0049f490,confirmed,auto,signature matches (2 params)
+sithAIUtil_aAIWpnts,0x00585870,confirmed,auto,"exact refs from own module (sithAIUtil_AIAdvanceToNextWpnt, sithAIUtil_AIConnectWpnts)"
+sithAIUtil_aThingsInView,0x00585668,confirmed,auto,"exact refs from own module (sithAIUtil_CreateAIWaypoint, sithAIUtil_GetAIWaypointNum)"
+sithAIUtil_aWpntDistances,0x00585670,confirmed,auto,exact refs from own module (sithAIUtil_AIFindNearestWpnt)
+sithAIUtil_aWpntOwners,0x005855f0,confirmed,auto,"exact refs from own module (sithAIUtil_AIResetWaypoints, sithAIUtil_ClearAIWaypoint)"
+sithAIUtil_activeWpntLayer,0x005855c4,confirmed,auto,"exact refs from own module (sithAIUtil_AIAdvanceToNextWpnt, sithAIUtil_AIFindNearestWpnt)"
+sithAIUtil_g_bRenderAIWpnts,0x005855c0,confirmed,auto,"exact refs from own module (sithAIUtil_AIResetWaypoints, sithAIUtil_RenderAIWaypoints)"
+sithAIUtil_maxDistanceToThingsInView,0x00585864,confirmed,auto,"exact refs from own module (sithAIUtil_GetNextThingsInView, sithAIUtil_GetThingsInView)"
+sithAIUtil_mkPoinCurFlags,0x005863b4,confirmed,auto,"exact refs from own module (sithAIUtil_MakeRandPoint, sithAIUtil_RetryMakeRandPoint)"
+sithAIUtil_mkPointCurPYR,0x005855e0,confirmed,auto,"exact refs from own module (sithAIUtil_MakeRandPoint, sithAIUtil_RetryMakeRandPoint)"
+sithAIUtil_numThingsInView,0x005855c8,confirmed,auto,"exact refs from own module (sithAIUtil_GetNextThingsInView, sithAIUtil_GetThingsInView)"
+sithAIUtil_numVisitedSectors,0x005855bc,confirmed,auto,"exact refs from own module (sithAIUtil_GetNextThingsInView, sithAIUtil_GetThingsInView)"
+sithAIUtil_pMkPointCurLocal,0x005855dc,confirmed,auto,"exact refs from own module (sithAIUtil_MakeRandPoint, sithAIUtil_RetryMakeRandPoint)"
+sithAIUtil_secLastUpdate,0x005863b0,confirmed,auto,"exact refs from own module (sithAIUtil_RenderAIWaypoints, sithAIUtil_sub_49D750)"
+sithAIUtil_sizeThingsInView,0x00585850,confirmed,auto,"exact refs from own module (sithAIUtil_GetNextThingsInView, sithAIUtil_GetThingsInView)"
+sithAIUtil_sub_49B2E0,0x0049b200,confirmed,auto,signature matches (2 params)
+sithAIUtil_sub_49B640,0x0049b560,confirmed,auto,signature matches (1 params)
+sithAIUtil_sub_49CC60,0x0049cb80,confirmed,auto,signature matches (5 params)
+sithAIUtil_sub_49D170,0x0049d090,confirmed,auto,signature matches (1 params)
+sithAIUtil_sub_49D640,0x0049d560,confirmed,auto,signature matches (0 params)
+sithAIUtil_sub_49D750,0x0049d670,confirmed,auto,signature matches (1 params)
+sithAIUtil_sub_49EE50,0x0049ed70,confirmed,auto,signature matches (6 params)
+sithAIUtil_sub_49F010,0x0049ef30,confirmed,auto,signature matches (7 params)
+sithAIUtil_sub_49F1F0,0x0049f110,confirmed,auto,signature matches (2 params)
+sithAIUtil_thingInViewTypeMask,0x00585868,confirmed,auto,"exact refs from own module (sithAIUtil_GetNextThingsInView, sithAIUtil_GetThingsInView)"
+sithAIUtil_thingsInViewFovX,0x005855ec,confirmed,auto,"exact refs from own module (sithAIUtil_GetNextThingsInView, sithAIUtil_GetThingsInView)"
+sithAIUtil_thingsInViewFovY,0x005855b8,confirmed,auto,"exact refs from own module (sithAIUtil_GetNextThingsInView, sithAIUtil_GetThingsInView)"
+sithAIUtil_vec_585490,0x005855d0,confirmed,auto,"exact refs from own module (sithAIUtil_MakeRandPoint, sithAIUtil_RetryMakeRandPoint)"
+sithAIUtil_vec_585718,0x00585858,confirmed,auto,"exact refs from own module (sithAIUtil_MakeRandPoint, sithAIUtil_RetryMakeRandPoint)"
+sithCamera_g_orbCamOrient,0x01801440,confirmed,auto,"used by sithCamera_Update, sithPlayerControls_ProcessEditorDebugControls"
+sithDSSThing_MoveToPos,0x0047e2a0,confirmed,auto,signature matches (3 params)
+sithInventory_g_aUnknown,0x017f1e60,confirmed,auto,"between verified sithMulti_g_message and sithInventory_g_aTypes, same shift +0x140"
+sithMulti_CheckPlayers,0x00454c20,confirmed,auto,"between verified sithMulti_CloseGame and sithMulti_ProcessPlayerLost, same shift -0x110"
+sithMulti_FinishJoining,0x004558f0,confirmed,auto,signature matches (3 params)
+sithMulti_GetPlayerIndexByID,0x00455cf0,confirmed,auto,signature matches (1 params)
+sithMulti_ProcessPlayerJoin,0x00455190,confirmed,auto,signature matches (1 params)
+sithMulti_QuitGame,0x00455ec0,confirmed,auto,signature matches (2 params)
+sithMulti_RemovePlayer,0x00454dd0,confirmed,auto,signature matches (1 params)
+sithMulti_Respawn,0x00455ef0,confirmed,auto,called by sithPlayer_NewPlayer
+sithMulti_SendWelcome,0x00454ef0,confirmed,auto,called by sithOpenPostProcess
+sithMulti_StartWelcomingPlayer,0x00456490,confirmed,auto,signature matches (1 params)
+sithMulti_StopWelcomingPlayer,0x00456540,confirmed,auto,signature matches (1 params)
+sithMulti_SyncScores,0x00455ce0,confirmed,auto,called by sithCogFunctionPlayer_SyncScores
+sithMulti_UpdateRemovals,0x00456390,confirmed,auto,signature matches (0 params)
+sithMulti_UpdateSectors,0x004561d0,confirmed,auto,signature matches (0 params)
+sithMulti_UpdateSurfaces,0x00456120,confirmed,auto,signature matches (0 params)
+sithMulti_UpdateThings,0x00456290,confirmed,auto,signature matches (0 params)
+sithMulti_aRemovedStaticThings,0x0056f6b0,confirmed,auto,"exact refs from own module (sithMulti_RemoveStaticThing, sithMulti_UpdateRemovals)"
+sithMulti_bSyncScores,0x0056facc,confirmed,auto,"exact refs from own module (sithMulti_SyncScores, sithMulti_Update)"
+sithMulti_bWelcomingPlayer,0x0056fac4,confirmed,auto,"exact refs from own module (sithMulti_CloseGame, sithMulti_ProcessJoinRequest)"
+sithMulti_checksum,0x0056fabc,confirmed,auto,exact refs from own module (sithMulti_ProcessJoinRequest)
+sithMulti_curWelcomePlayerNum,0x0056fab0,confirmed,auto,"exact refs from own module (sithMulti_ProcessJoinRequest, sithMulti_UpdateRemovals)"
+sithMulti_dword_17F10EC,0x017f122c,confirmed,auto,"exact refs from own module (sithMulti_CloseGame, sithMulti_ProcessSyncPlayers)"
+sithMulti_lastUpdateIdx,0x0056f6a4,confirmed,auto,"exact refs from own module (sithMulti_StartWelcomingPlayer, sithMulti_StopWelcomingPlayer)"
+sithMulti_msecLastSyncScoreTime,0x0056fae0,confirmed,auto,exact refs from own module (sithMulti_CheckPlayers)
+sithMulti_msecPingStartTime,0x0056fad4,confirmed,auto,exact refs from own module (sithMulti_ProcessPong)
+sithMulti_msecQuitGameTime,0x0056fad8,confirmed,auto,"exact refs from own module (sithMulti_QuitGame, sithMulti_Update)"
+sithMulti_msecWelcomeUpdateInterval,0x0056fae4,confirmed,auto,exact refs from own module (sithMulti_Update)
+sithMulti_newPlayerId,0x0056fac8,confirmed,auto,"exact refs from own module (sithMulti_ProcessJoinRequest, sithMulti_ProcessPlayerLost)"
+sithMulti_numRemovedStaticThings,0x0056fadc,confirmed,auto,"exact refs from own module (sithMulti_RemoveStaticThing, sithMulti_UpdateRemovals)"
+sithMulti_numUpdatedSectors,0x0056f6ac,confirmed,auto,"exact refs from own module (sithMulti_StartWelcomingPlayer, sithMulti_Update)"
+sithMulti_numUpdatedSurfaces,0x0056f6a0,confirmed,auto,"exact refs from own module (sithMulti_StartWelcomingPlayer, sithMulti_Update)"
+sithMulti_numUpdatedThings,0x0056fab4,confirmed,auto,"exact refs from own module (sithMulti_StartWelcomingPlayer, sithMulti_Update)"
+sithMulti_pfNewPlayerJoinedCallback,0x0056fad0,confirmed,auto,exact refs from own module (sithMulti_ProcessPlayerJoin)
+sithMulti_playerWelcomeState,0x0056f6a8,confirmed,auto,"exact refs from own module (sithMulti_StartWelcomingPlayer, sithMulti_StopWelcomingPlayer)"
+sithMulti_quitGameState,0x0056fab8,confirmed,auto,"exact refs from own module (sithMulti_ProcessJoinRequest, sithMulti_ProcessQuit)"
+sithMulti_tickRate,0x0052d5b8,confirmed,auto,exact refs from own module (sithMulti_ProcessWelcome)
+sithPhysics_CreateJeepUserBlock,0x0048b250,confirmed,auto,signature matches (1 params)
+sithPhysics_Jeep_sub_4892E0,0x004891d0,confirmed,auto,signature matches (3 params)
+sithPhysics_Jeep_sub_48B4D0,0x0048b3c0,confirmed,auto,signature matches (2 params)
+sithPhysics_ProcessTrackFace,0x00486730,confirmed,auto,signature matches (6 params)
+sithPhysics_UpdateJeepFx,0x0048b3f0,confirmed,auto,signature matches (3 params)
+sithPhysics_bJeepMoveFx,0x00538e54,confirmed,auto,exact refs from own module (sithPhysics_UpdateJeepFx)
+sithPhysics_dword_538D2C,0x00538e4c,confirmed,auto,exact refs from own module (sithPhysics_UpdateJeepFx)
+sithPhysics_dword_538D30,0x00538e50,confirmed,auto,exact refs from own module (sithPhysics_UpdateJeepFx)
+sithPhysics_dword_538D38,0x00538e58,confirmed,auto,exact refs from own module (sithPhysics_UpdateJeepFx)
+sithPhysics_dword_58540C,0x0058554c,confirmed,auto,exact refs from own module (sithPhysics_UpdateJeepFx)
+sithPhysics_flt_538D04,0x00538e24,confirmed,auto,exact refs from own module (sithPhysics_sub_48A970)
+sithPhysics_flt_585410,0x00585550,confirmed,auto,exact refs from own module (sithPhysics_UpdateJeepPhysics)
+sithPhysics_sub_487EC0,0x00487db0,confirmed,auto,signature matches (6 params)
+sithPhysics_sub_48A970,0x0048a860,confirmed,auto,signature matches (3 params)
+sithPhysics_sub_48AD20,0x0048ac10,confirmed,auto,signature matches (4 params)
+sithThing_curQuetzAttachInfo,0x005613a0,confirmed,auto,exact refs from own module (sithThing_UpdateQuetzUserBlock)
+sithThing_dword_5612B8,0x005613f8,confirmed,auto,exact refs from own module (sithThing_UpdateQuetzUserBlock)
+sithThing_prevQuetzAttachInfo,0x0055ef9c,confirmed,auto,exact refs from own module (sithThing_UpdateQuetzUserBlock)
+std_g_aEmptyString,0x00551f50,confirmed,auto,"between verified jonesConfig_hFontDialogInsertCD and JonesConsole_aCmdLine, same shift +0x120"

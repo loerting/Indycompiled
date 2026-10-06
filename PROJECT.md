@@ -5,7 +5,7 @@
 
 | | |
 |---|---|
-| **Status** | Stage 0: Foundation |
+| **Status** | Stage 0 done (2026-10-06): the original v1.2 game runs under Wine, and all runtime-critical addresses are verified. Next: Stage 1, the Linux build. |
 | **Last updated** | 2026-10-06 |
 | **Upstream base** | `smlu/OpenJones3D`, branch `develop` @ `b9c0eaa` (2026-06-08), 92.5% of engine functions done |
 | **Host** | Manjaro Linux with i3, and nothing else. **No Windows VM, no Visual Studio, no MSVC.** |
@@ -275,14 +275,25 @@ Upstream's code refers to the original exe through 4,044 hard-coded v1.0 address
 
 Each entry gets a confidence level: `verified`, `plausible` (lands on a function boundary but has no independent evidence) or `doubtful`.
 
+**Review.** Entries that aren't verified go through an automated review against Ghidra:
+1. `ghidra.sh` builds the project.
+2. `ExportReview.java` exports Ghidra's view of each entry: is it a function entry, its callers and references, the decompiled parameter count, and the stack purge.
+3. `review_map.py` confirms an entry when one of these holds:
+   - its callers or users match upstream's C code;
+   - its signature matches;
+   - it is called or referenced exactly from its own module;
+   - it sits between two verified neighbours with the same shift.
+
+   Confirmations are written to `Scripts/indy/rti_v12_reviewed.csv` (committed). `rti_remap.py` applies them, so they survive every regeneration. Manual corrections go into the same file with `verdict=fixed` and `reviewer=manual`, and they always win.
+
 **Status on 2026-10-06:**
 
 | | Total | Verified | Plausible | Doubtful / unmapped |
 |---|---|---|---|---|
 | Functions | 2,915 | 2,677 | 219 | 10 / 9 |
 | Data | 1,122 | 735 | 361 | 26 |
-| **Runtime-critical:** trampolines (calls into still-original functions) | 237 | 132 | 104 | 1 |
-| **Runtime-critical:** globals upstream still reads from the exe | 174 | 111 | 62 | 1 |
+| **Runtime-critical:** trampolines (calls into still-original functions) | 237 | **237** | 0 | 0 |
+| **Runtime-critical:** globals upstream still reads from the exe | 174 | **174** | 0 | 0 |
 
 Upstream's call edges found in v1.2: 91%. The remainder comes from code upstream restructured in C and from functions LucasArts changed in 1.2.
 
@@ -294,7 +305,7 @@ Without these two rules, 124 address collisions slipped through. Some of them ev
 
 **Rules**
 - **Hooks**: a wrong hook address corrupts code (a crash). A skipped hook only means the original v1.2 function keeps running, which is harmless while our C code calls our own functions directly. So **the DLL hooks only `verified` functions.** The rest are hooked one by one after review in Ghidra.
-- **Trampolines and live globals MUST be `verified`** before the first run. That means reviewing in Ghidra the 26 doubtful and about 166 plausible runtime-critical entries.
+- **Trampolines and live globals MUST be `verified`** before the first run. Done on 2026-10-06: all 411 entries. 243 came straight from the mapper, and 168 were confirmed by the review: 163 by upstream callers or users, signature or own-module references, and 5 by the sandwich rule.
 - **Build integration without editing upstream files.** A generator writes `build/rti_v12/<module>/RTI/addresses.h` from the CSV. That folder comes **before** `Libs/` on the include path, so upstream's `#include <sith/RTI/addresses.h>` picks up the v1.2 version. Only these need INDY-marked edits:
   - `SmushPlay.h` (its four addresses);
   - the launcher's hash check in `exemain.cpp` (accept the v1.2 hash);
@@ -440,7 +451,7 @@ Each stage gets a milestone tag: `s1-linux-build`, `s2-modded`, `s4-standalone`,
 
 | Stage | Goal | Main work | Exit criterion |
 |---|---|---|---|
-| **0 Foundation** | Everything in place | Install the packages (§5.1). Move `INDY/INDY/` to `game/original/` and write its `SHA256SUMS`. Set up the repo (§7.1). Create the Wine prefix on the root filesystem and the run folder (§5.5). **Play the unmodified v1.2 game under Wine first**, as the baseline that separates Wine problems from our own. Review the runtime-critical entries of the address map in Ghidra (§5.7). | The original v1.2 game plays under Wine in our prefix. Every trampoline and live global in `rti_v12.csv` is `verified`. |
+| **0 Foundation** ✅ | Everything in place | Install the packages (§5.1). Move `INDY/INDY/` to `game/original/` and write its `SHA256SUMS`. Set up the repo (§7.1). Create the Wine prefix on the root filesystem and the run folder (§5.5). **Play the unmodified v1.2 game under Wine first**, as the baseline that separates Wine problems from our own. Review the runtime-critical entries of the address map in Ghidra (§5.7). | The original v1.2 game plays under Wine in our prefix. Every trampoline and live global in `rti_v12.csv` is `verified`. |
 | **1 Linux build on v1.2** | Build it ourselves | Toolchain file, presets, patch set (§5.3), shader step, the generated v1.2 RTI headers and the hook filter (§5.7), the ABI check from §5.4, gdb debugging. Unverified hooks are then reviewed in batches. | Our `develop` build, hosted by the v1.2 exe, plays Canyonlands under Wine, and gdb stops at a breakpoint in our code |
 | **2 Modding** 🎮 | The game you want to play | Controls, controller and visuals (§10), building on upstream's XInput support and `Jones.cfg` | A complete playthrough with the `enhanced` profile |
 | **3 Completion** | No more original functions | AI, DSS, physics, AudioLib, sithThing (§3.2), reverse engineered on the v1.2 exe in Ghidra with the names from the address map. Multiplayer stubbed. Every hook in the map is `verified`. | `analyze.py` reports 100%, excluding the stubs. A full playthrough including save/load. |

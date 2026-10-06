@@ -30,6 +30,10 @@ public class ImportIndyMap extends GhidraScript {
         }
 
         BookmarkManager bookmarks = currentProgram.getBookmarkManager();
+        for (String category : new String[] {"Indy: review CRITICAL", "Indy: review"}) {
+            bookmarks.removeBookmarks(BookmarkType.WARNING, category, monitor);   // re-apply from scratch
+        }
+        bookmarks.removeBookmarks(BookmarkType.NOTE, "Indy: changed in 1.2", monitor);
         int named = 0, created = 0, skipped = 0, failed = 0, critical = 0, review = 0, changed = 0;
         for (String line : lines.subList(1, lines.size())) {
             String[] f = line.split(",", -1);

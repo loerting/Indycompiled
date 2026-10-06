@@ -466,8 +466,28 @@ def main():
     print(f"doubtful functions: {len(doubt)}  e.g. {doubt[:6]}")
     print(f"unmapped functions: {len(unmapped)}  e.g. {unmapped[:6]}")
 
+    # reviewed entries (Scripts/indy/rti_v12_reviewed.csv): confirmed -> verified; manual fixes override the address
+    reviewed_path = Path(__file__).with_name("rti_v12_reviewed.csv")
+    if reviewed_path.exists():
+        applied = stale = 0
+        for r in csv.DictReader(reviewed_path.open()):
+            if r["name"] not in syms:
+                continue
+            a, k, _ = syms[r["name"]]
+            mp, conf, meth = (fmap, fver, method) if k == "func" else (dmap, dver, dmethod)
+            if r["verdict"] == "fixed":
+                mp[a], conf[a], meth[a] = int(r["v12"], 16), "verified", "manual"
+                applied += 1
+            elif r["verdict"] == "confirmed" and a in mp and mp[a] == int(r["v12"], 16):
+                conf[a] = "verified"
+                meth[a] = meth.get(a, "") + "+review"
+                applied += 1
+            elif r["verdict"] == "confirmed":
+                stale += 1
+        print(f"review file: {applied} entries applied, {stale} stale (map changed since review)")
+
     with out_csv.open("w", newline="") as f:
-        w = csv.writer(f)
+        w = csv.writer(f, lineterminator="\n")
         w.writerow(["name", "kind", "module", "v10", "v12", "method", "confidence", "size_delta", "usage"])
         delta = dict(changed_funcs)
         for n, (a, k, m) in sorted(syms.items(), key=lambda kv: kv[1][0]):
