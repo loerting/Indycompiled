@@ -1,4 +1,5 @@
 #include "sithMain.h"
+#include <indy/indyDebug.h> // INDY
 #include "sithString.h"
 #include <j3dcore/j3dhook.h>
 
@@ -497,6 +498,7 @@ int J3DAPI sithOpen(const wchar_t* pwPlayerName)
 
     sithGamesave_Open();
 
+    indyDebug_DumpWorld(); // INDY: A/B tests (INDY_DUMP_WORLD)
     sith_bOpen = true;
     return 0;
 }

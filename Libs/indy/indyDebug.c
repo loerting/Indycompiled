@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <sith/World/sithWorld.h>
+
 // Thread sampler (debug aid): with INDY_SAMPLE_THREADS=<seconds> set, a background thread periodically suspends every
 // other thread of the game, logs its instruction pointer and the return-address candidates found on its stack (exe and
 // Jones3D.dll ranges), and appends that to indy_samples.txt in the working directory. Meant for hangs and endless loops,
@@ -154,4 +156,40 @@ void indyDebug_FrameCap(void)
 
     // a slow frame (e.g. loading) restarts the schedule instead of letting later frames catch up
     next.QuadPart = now.QuadPart - next.QuadPart > period ? now.QuadPart + period : next.QuadPart + period;
+}
+
+static void indyDebug_DumpBytes(FILE* pFile, const char* pTag, size_t index, const void* pData, size_t size)
+{
+    fprintf(pFile, "%s%u ", pTag, (unsigned)index);
+    for ( size_t i = 0; i < size; i++ )
+    {
+        fprintf(pFile, "%02x", ((const uint8_t*)pData)[i]);
+    }
+    fputc('\n', pFile);
+}
+
+void indyDebug_DumpWorld(void)
+{
+    const char* pPath = getenv("INDY_DUMP_WORLD");
+    const SithWorld* pWorld = sithWorld_g_pCurrentWorld;
+    if ( !pPath || !pWorld )
+    {
+        return;
+    }
+
+    FILE* pFile = fopen(pPath, "w");
+    if ( !pFile )
+    {
+        return;
+    }
+    fprintf(pFile, "world %s templates %u things %d\n", pWorld->aName, (unsigned)pWorld->numThingTemplates, pWorld->lastThingIdx + 1);
+    for ( size_t i = 0; i < pWorld->numThingTemplates; i++ )
+    {
+        indyDebug_DumpBytes(pFile, "T", i, &pWorld->aThingTemplates[i], sizeof(SithThing));
+    }
+    for ( int i = 0; i <= pWorld->lastThingIdx; i++ )
+    {
+        indyDebug_DumpBytes(pFile, "O", (size_t)i, &pWorld->aThings[i], sizeof(SithThing));
+    }
+    fclose(pFile);
 }

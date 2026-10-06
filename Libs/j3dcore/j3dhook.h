@@ -3,6 +3,8 @@
 #define JONES3D_HOOK_H
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h> // INDY: getenv
+#include <string.h> // INDY: strstr
 #include <j3dcore/j3d.h>
 
 /**
@@ -42,7 +44,60 @@
 *             included in the source file where this macro is used.
 */
 #define J3D_HOOKFUNC(func) \
-    J3DHookFunction(func##_ADDR, (void*)func)
+    (J3DHookIsSkipped(#func) ? false : J3DHookFunction(func##_ADDR, (void*)func)) // INDY: INDY_NOHOOK (A/B tests)
+
+/**
+* INDY: A/B tests (Scripts/indy/test_ab.sh). INDY_NOHOOK="func,func,..." leaves those functions unhooked, so callers in
+* the exe run the original. Calls from our own C code reach the C function directly; a reimplemented function under
+* test starts with INDY_AB_ORIGINAL / INDY_AB_ORIGINAL_VOID to hand those to the original too.
+*/
+static inline bool J3DHookIsSkipped(const char* pName)
+{
+    const char* pList = getenv("INDY_NOHOOK");
+    if ( !pList )
+    {
+        return false;
+    }
+
+    size_t len = strlen(pName);
+    for ( const char* p = pList; (p = strstr(p, pName)) != NULL; p += len )
+    {
+        if ( (p == pList || p[-1] == ',') && (p[len] == '\0' || p[len] == ',') )
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+#define INDY_AB_ORIGINAL(func, ...)                                                         \
+    do                                                                                      \
+    {                                                                                       \
+        static int bOriginal_ = -1;                                                         \
+        if ( bOriginal_ < 0 )                                                               \
+        {                                                                                   \
+            bOriginal_ = J3DHookIsSkipped(#func);                                           \
+        }                                                                                   \
+        if ( bOriginal_ )                                                                   \
+        {                                                                                   \
+            return J3D_TRAMPOLINE_CALL(func, __VA_ARGS__);                                  \
+        }                                                                                   \
+    } while ( 0 )
+
+#define INDY_AB_ORIGINAL_VOID(func, ...)                                                    \
+    do                                                                                      \
+    {                                                                                       \
+        static int bOriginal_ = -1;                                                         \
+        if ( bOriginal_ < 0 )                                                               \
+        {                                                                                   \
+            bOriginal_ = J3DHookIsSkipped(#func);                                           \
+        }                                                                                   \
+        if ( bOriginal_ )                                                                   \
+        {                                                                                   \
+            J3D_TRAMPOLINE_CALL(func, __VA_ARGS__);                                         \
+            return;                                                                         \
+        }                                                                                   \
+    } while ( 0 )
 
 /**
 * @brief Declares a variable at a specific memory address.
