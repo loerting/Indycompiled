@@ -1,6 +1,7 @@
 #include "sithPlayerControls.h"
 #include <indy/indyInput.h> // INDY
 #include <indy/indyEnh.h> // INDY
+#include <indy/indyModern.h> // INDY
 #include <j3dcore/j3dhook.h>
 
 #include <rdroid/Engine/rdPuppet.h>
@@ -899,6 +900,41 @@ void J3DAPI sithPlayerControls_ProcessLookControls(SithThing* pThing, float secD
     }
 }
 
+// INDY(ENH-0005): the move-state dispatch of sithPlayerControls_ProcessGeneralMove, moved here so the virtual keys
+// of the modern controls can be switched off right after it
+static void J3DAPI sithPlayerControls_DispatchGeneralMove(SithThing* pThing, float secDeltaTime, float moveFactor, bool bRun)
+{
+    switch ( pThing->moveStatus )
+    {
+        case SITHPLAYERMOVE_STILL:
+            sithPlayerControls_ProcessStillMove(pThing, secDeltaTime, moveFactor, bRun);
+            return;
+
+        case SITHPLAYERMOVE_WALKING:
+            sithPlayerControls_ProcessWalkMove(pThing, secDeltaTime, moveFactor, bRun);
+            return;
+
+        case SITHPLAYERMOVE_RUNNING:
+            sithPlayerControls_ProcessRunMove(pThing, secDeltaTime, moveFactor, bRun);
+            return;
+
+        case SITHPLAYERMOVE_CRAWLIDLE:
+            sithPlayerControls_ProcessCrawlMove(pThing, secDeltaTime, moveFactor);
+            return;
+
+        case SITHPLAYERMOVE_PUSHPULL_READY:
+            sithPlayerControls_ProcessPushPullMove(pThing, secDeltaTime);
+            return;
+
+        case SITHPLAYERMOVE_SLIDEDOWNFORWARD:
+            sithPlayerControls_ProcessSlideDownMove(pThing, secDeltaTime);
+            return;
+
+        default:
+            return;
+    }
+}
+
 void J3DAPI sithPlayerControls_ProcessGeneralMove(SithThing* pThing, float secDeltaTime)
 {
     sithPlayerActions_g_pCurLedgeThingModelFace = NULL;
@@ -930,6 +966,8 @@ void J3DAPI sithPlayerControls_ProcessGeneralMove(SithThing* pThing, float secDe
             return;
         }
     }
+
+    indyModern_Begin(pThing, secDeltaTime); // INDY(ENH-0005): virtual keys for the ground-movement dispatch below
 
     //
     // Calculate movement speed modifier
@@ -966,35 +1004,8 @@ void J3DAPI sithPlayerControls_ProcessGeneralMove(SithThing* pThing, float secDe
         moveFactor *= 0.80000001f;
     }
 
-    switch ( pThing->moveStatus )
-    {
-        case SITHPLAYERMOVE_STILL:
-            sithPlayerControls_ProcessStillMove(pThing, secDeltaTime, moveFactor, bRun);
-            return;
-
-        case SITHPLAYERMOVE_WALKING:
-            sithPlayerControls_ProcessWalkMove(pThing, secDeltaTime, moveFactor, bRun);
-            return;
-
-        case SITHPLAYERMOVE_RUNNING:
-            sithPlayerControls_ProcessRunMove(pThing, secDeltaTime, moveFactor, bRun);
-            return;
-
-        case SITHPLAYERMOVE_CRAWLIDLE:
-            sithPlayerControls_ProcessCrawlMove(pThing, secDeltaTime, moveFactor);
-            return;
-
-        case SITHPLAYERMOVE_PUSHPULL_READY:
-            sithPlayerControls_ProcessPushPullMove(pThing, secDeltaTime);
-            return;
-
-        case SITHPLAYERMOVE_SLIDEDOWNFORWARD:
-            sithPlayerControls_ProcessSlideDownMove(pThing, secDeltaTime);
-            return;
-
-        default:
-            return;
-    }
+    sithPlayerControls_DispatchGeneralMove(pThing, secDeltaTime, moveFactor, bRun); // INDY(ENH-0005): moved into a helper
+    indyModern_End();                                                                 // INDY(ENH-0005)
 }
 
 // New function

@@ -3,7 +3,8 @@
 
 Creates a uinput device with the Xbox 360 pad's USB IDs, so SDL, and through it Wine's winebus/XInput, treat it as a
 real controller. It then plays a timeline and removes the device again.
-Needs write access to /dev/uinput (here: a user ACL). While it exists, every program that reads gamepads sees it.
+Needs write access to /dev/uinput (here: a user ACL). While it exists, every program that reads gamepads sees it, so
+it refuses to start while the user's game runs (play prefix).
 
 Timeline: "<second>:<control>=<value>,...;..." with seconds counted from the start of this script.
   sticks lx ly rx ry: -1.0 .. 1.0 (ly = -1.0 is up/forward, as on a real pad)
@@ -53,9 +54,26 @@ def parse(timeline):
     return sorted(steps, key=lambda s: s[0])
 
 
+def user_game_running():
+    """True if the user's game runs (play prefix): a virtual pad would steer that game too (every program sees it)."""
+    play_prefix = os.path.expanduser("~/.local/share/indycompiled/prefix")
+    for pid in filter(str.isdigit, os.listdir("/proc")):
+        try:
+            if open(f"/proc/{pid}/comm").read().strip() not in ("Indy3D.exe", "Jones3D.exe"):
+                continue
+            env = open(f"/proc/{pid}/environ", "rb").read().split(b"\0")
+        except OSError:
+            continue
+        if f"WINEPREFIX={play_prefix}".encode() in env:
+            return True
+    return False
+
+
 def main():
     if len(sys.argv) != 3:
         sys.exit(__doc__)
+    if user_game_running():
+        sys.exit("virtual_pad: the game is running in the play prefix; not creating a virtual pad (it would steer it)")
     total, steps = float(sys.argv[1]), parse(sys.argv[2])
     fd = os.open("/dev/uinput", os.O_WRONLY | os.O_NONBLOCK)
 

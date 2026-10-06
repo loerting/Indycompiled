@@ -67,7 +67,8 @@ to the camera, right stick orbits the camera. Tomb Raider I-III Remastered (2024
 1. ENH-0002 right stick camera (done).
 2. ENH-0003 faster direction changes (done): the delay came from the walk-to-stand animation, which starts on the
    first frame without input and locks the controls until it ends; a stick flip passes the centre for a few frames.
-3. Modern movement: camera-relative, as a toggle next to the classic controls.
+3. ENH-0005 modern movement (done, experimental until played): camera-relative, as a toggle next to the classic
+   controls; see `enhancements.md`.
 
 ## Open questions for you
 

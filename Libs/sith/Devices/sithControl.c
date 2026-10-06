@@ -1,4 +1,5 @@
 #include "sithControl.h"
+#include <indy/indyModern.h> // INDY
 #include <j3dcore/j3dhook.h>
 
 #include <sith/Engine/sithCamera.h>
@@ -550,6 +551,13 @@ int J3DAPI sithControl_GetKey(SithControlFunction keyId, int* pState)
     if ( pState )
     {
         *pState = 0;
+    }
+
+    // INDY(ENH-0005): virtual movement keys from the modern (camera-relative) stick input during ground movement
+    int modernValue;
+    if ( indyModern_GetKey(keyId, &modernValue) )
+    {
+        return modernValue;
     }
 
     int value = 0;

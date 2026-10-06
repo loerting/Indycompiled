@@ -1,5 +1,6 @@
 #include "sithCamera.h"
 #include <indy/indyCamera.h> // INDY
+#include <math.h> // INDY: atan2f
 #include <j3dcore/j3dhook.h>
 
 #include <rdroid/Engine/rdCamera.h>
@@ -884,8 +885,9 @@ LABEL_35:
         newPYR.z = newPYR.z + sithCamera_g_vecCameraAngleOffset.roll;
 
         // INDY(ENH-0002): right stick swings the camera around Indy
-        bool bMoving = rdVector_Len3(&pThing1->moveInfo.physics.velocity) > 0.05f;
-        indyCamera_ApplyOrbit(&newPYR, secFrameTime, sithCamera_g_bExtCameraLookMode != 0, bMoving);
+        bool bMoving  = rdVector_Len3(&pThing1->moveInfo.physics.velocity) > 0.05f;
+        float heading = atan2f(pThing1->orient.lvec.y, pThing1->orient.lvec.x) * (180.0f / 3.14159265f);
+        indyCamera_ApplyOrbit(&newPYR, secFrameTime, sithCamera_g_bExtCameraLookMode != 0, bMoving, heading);
     }
 
     if ( pThing1 != sithPlayer_g_pLocalPlayerThing || sithCamera_g_bExtCameraLookMode || sithCamera_bUpdateCameraOffset )

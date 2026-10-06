@@ -1,5 +1,6 @@
 #include "indyInput.h"
 #include "indyEnh.h"
+#include "indyModern.h"
 
 #include <sith/Devices/sithControl.h>
 #include <sith/Gameplay/sithPlayer.h>
@@ -117,6 +118,12 @@ static bool indyInput_IsStick(SithControlFunction function, float* pDeflection)
 
 float J3DAPI indyInput_GetTurnScale(SithControlFunction function)
 {
+    float scale;
+    if ( indyModern_GetTurnScale(function, &scale) ) // ENH-0005: from the angle to the stick direction
+    {
+        return scale;
+    }
+
     float deflection = 0.0f;
     if ( !indyInput_IsStick(function, &deflection) )
     {
@@ -199,6 +206,12 @@ static void indyInput_Trace(void)
 bool indyInput_IsStickRun(void)
 {
     indyInput_Trace();
+
+    bool bModernRun;
+    if ( indyModern_GetRun(&bModernRun) ) // ENH-0005: from the stick vector's length
+    {
+        return bModernRun;
+    }
 
     float deflection = 0.0f;
     bool bRun = indyInput_IsStick(SITHCONTROL_FORWARD, &deflection) && deflection >= INDY_STICK_RUN_THRESHOLD;

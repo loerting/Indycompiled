@@ -22,6 +22,7 @@ typedef enum eIndyEnh
     INDY_ENH_RIGHT_STICK_CAMERA = 5, // ENH-0002: right stick swings the third-person camera around Indy
     INDY_ENH_QUICK_DIRECTION    = 6, // ENH-0003: reversing doesn't wait for the stop animation (input grace period)
     INDY_ENH_SKIP_INTRO         = 7, // ENH-0004: no intro video at game start
+    INDY_ENH_MODERN_CONTROLS    = 8, // ENH-0005: camera-relative left stick (modern controls)
     INDY_ENH_COUNT
 } IndyEnh;
 
