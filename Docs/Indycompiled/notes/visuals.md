@@ -6,13 +6,19 @@ Upstream `develop` already sizes the health and endurance indicators by `JonesHu
 which keeps their original share of the screen height at any aspect ratio. Nothing to do on our side. To verify in a
 widescreen test: `graphics.width/height` = 1280×720 in `Jones.cfg`, and a matching Xvfb screen.
 
-## Likely upstream bug: integer division in the menu-item aspect scale
+## Fixed: integer division in the inventory item scale (ultrawide)
 
-`JonesHud_Update` and `JonesHud_UpdateHUDLayout` compute `RD_REF_APECTRATIO / (width / height)` with `width` and `height`
-as `uint32_t`. `width / height` is integer division: 1 for 4:3 *and* for 16:9. So `JonesHud_itemAspectScaleSize` doesn't
-follow the aspect ratio at all (it is 1.333 × `JonesHud_menuItemScale` everywhere). Upstream may have tuned
-`JonesHud_menuItemScale` around that, so changing it alters the look. Decide when we do the widescreen pass, with
-screenshots at 4:3 and 16:9.
+`JonesHud_Update` computed `RD_REF_APECTRATIO / (width / height)` with `uint32_t` width and height: integer
+division, so 1.333 for every aspect ratio below 2:1, and 0.667 at 21:9 (2560/1080 = 2). Screenshots at 1024×768,
+1280×720 and 2560×1080 with the inventory open: same item size at 4:3 and 16:9, half size at 21:9.
+
+Since the camera is Hor+ (`rdCamera_BuildFOV` keeps the vertical field of view of 4:3), 3D objects in front of the
+camera keep their size relative to the screen height at any aspect ratio, so the right factor is the constant. Both
+uses (item scale and the inventory's Z position) now use `RD_REF_APECTRATIO`: unchanged at 4:3 and 16:9, fixed at
+21:9. Verified with the same screenshots.
+
+Widescreen otherwise works: Hor+ field of view (more to the sides, same vertical framing) and the health indicator
+scaled by height.
 
 ## MSAA
 

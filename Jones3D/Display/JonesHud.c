@@ -1306,7 +1306,11 @@ void J3DAPI JonesHud_Update(const SithWorld* pWorld)
     float hratio = (float)height / RD_REF_HEIGHT;
     JonesHud_heightAspectRatioScale = hratio;
 
-    JonesHud_itemAspectScaleSize     = (RD_REF_APECTRATIO / (width / height)) * JonesHud_menuItemScale;
+    // INDY: was (RD_REF_APECTRATIO / (width / height)) with uint32_t width/height, i.e. integer division: 1.333 for
+    // every aspect ratio below 2:1, and half of that at 21:9 and wider, where the inventory items shrank to half size.
+    // With the Hor+ camera (rdCamera_BuildFOV) 3D menu items keep their size relative to the screen height at any
+    // aspect ratio, so the constant is right: unchanged at 4:3 and 16:9, fixed for ultrawide.
+    JonesHud_itemAspectScaleSize     = RD_REF_APECTRATIO * JonesHud_menuItemScale;
     JonesHud_itemAspectScalePosition = JonesHud_widthAspectRatioScale / JonesHud_heightAspectRatioScale;
 
 
@@ -1454,7 +1458,7 @@ void J3DAPI JonesHud_UpdateHUDLayout(uint32_t width, uint32_t height)
     JonesHud_flt_554FE0 = 16.0f * JonesHud_widthAspectRatioScale;
 
     // Fixed: Adjusted inventory menu position for wide screen resolutions. OG: invMenuBottomOffset was set to invMenuDefaultOffset
-    float adjustedAspect = (RD_REF_APECTRATIO / (width / height));
+    float adjustedAspect = RD_REF_APECTRATIO; // INDY: was RD_REF_APECTRATIO / (width / height), integer division (see JonesHud_Update)
     float adjustedZ      = JonesHud_invMenuDefaultZ * adjustedAspect;
     float offset         = -0.09f * (1 - adjustedAspect); // Add a small offset to move it slightly up
     JonesHud_invMenuMinZ = adjustedZ + offset;

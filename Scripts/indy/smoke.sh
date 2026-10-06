@@ -8,6 +8,7 @@
 #
 # INDY_SMOKE_PROC=<name> checks another process (e.g. Indy3D.exe when starting the Jones3D.exe launcher).
 # INDY_SMOKE_INTERVAL=<s> screenshot interval (default 15); INDY_SMOKE_NOKEYS=1 sends no Escape key presses.
+# INDY_SMOKE_SCREEN=<WxH> Xvfb screen (default 1024x768); INDY_SMOKE_DESKTOP=<WxH> Wine desktop (default 800x600).
 # INDY_SMOKE_ACTIONS="<second>:<xdotool command>;..." runs scripted input, e.g. "40:keydown Up;44:keyup Up";
 #   "<second>:shot <name>" takes a named screenshot (smoke-<timestamp>-<name>.png).
 # Usage: Scripts/indy/smoke.sh [seconds=45] [exe relative to game/run=Resource/Indy3D.exe] [game args...]
@@ -46,11 +47,11 @@ mute_watch &
 watcher=$!
 trap 'kill $watcher 2>/dev/null; wineserver -k 2>/dev/null || true' EXIT
 
-xvfb-run -a -s "-screen 0 1024x768x24" bash -s -- "$RUN" "$exe" "$secs" "$log" "$OUT/smoke-$stamp" "$@" <<'INNER'
+xvfb-run -a -s "-screen 0 ${INDY_SMOKE_SCREEN:-1024x768}x24" bash -s -- "$RUN" "$exe" "$secs" "$log" "$OUT/smoke-$stamp" "$@" <<'INNER'
 run="$1"; exe="$2"; secs="$3"; log="$4"; shot="$5"; shift 5
 cd "$run/$(dirname "$exe")"
 # full Windows path: explorer/start.exe do not search the working directory
-wine explorer /desktop=Indy,800x600 "$(winepath -w "$run/$exe")" "$@" >"$log" 2>&1 &
+wine explorer /desktop=Indy,${INDY_SMOKE_DESKTOP:-800x600} "$(winepath -w "$run/$exe")" "$@" >"$log" 2>&1 &
 proc="${INDY_SMOKE_PROC:-$(basename "$exe")}"   # process to check, e.g. Indy3D.exe when starting the launcher
 # INDY_SMOKE_ACTIONS="<second>:<xdotool command>;..." e.g. "40:keydown Up;44:keyup Up" (scripted input)
 declare -A actions
