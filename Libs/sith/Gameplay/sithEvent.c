@@ -169,7 +169,9 @@ void sithEvent_Process(void)
 
 void sithEvent_ResetFreeBufferTable(void)
 {
-    for ( int i = STD_ARRAYLEN(aFreeEventBufferIdxs); i >= 0; --i )
+    // INDY: i > 0. With i >= 0 the last iteration wrote aFreeEventBufferIdxs[256] (out of bounds); clang -O2
+    // exploits that undefined behaviour and turns the loop into an endless one. Fills [0..255] with 255..0.
+    for ( int i = STD_ARRAYLEN(aFreeEventBufferIdxs); i > 0; --i )
     {
         aFreeEventBufferIdxs[STD_ARRAYLEN(aFreeEventBufferIdxs) - i] = i - 1;
     }
