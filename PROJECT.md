@@ -291,7 +291,18 @@ Each entry gets a confidence level: `verified`, `plausible` (lands on a function
 
    Confirmations are written to `Scripts/indy/rti_v12_reviewed.csv` (committed). `rti_remap.py` applies them, so they survive every regeneration. Manual corrections go into the same file with `verdict=fixed` and `reviewer=manual`, and they always win.
 
-**Status on 2026-10-06:**
+**Semantic verification (`verify_semantic.py`).** This is the strongest evidence, and it overrides position-based guesses:
+1. **COG verb registration:** v1.2 registers each script verb with its name, and so does upstream's C code. That pairs name and address on both sides; 515 verbs were compared.
+2. **String fingerprints:** a log or assert string that only one function uses, both in v1.2 and in upstream's C code.
+
+Result on 2026-10-06:
+- all 515 COG verbs match, after 4 fixes;
+- 682 functions are string-confirmed, with 0 contradictions;
+- the string-based checks and the manual table checks (e.g. the 22 platform/file functions, from v1.2's `stdPlatform_InitServices` slot assignments) go into `rti_v12_reviewed.csv` with `reviewer=semantic`/`manual`.
+
+**Lesson from Stage 1:** LucasArts moved several file wrappers to another block in 1.2. Position-based rules, and "parameter count matches" (all of those wrappers take 3 arguments), confirmed wrong addresses. That sent every read through the INSANE video library's file table into upstream's `seek`, and the intro hung. Only semantic evidence counts as strong.
+
+**Status on 2026-10-06 (before the semantic pass; see §12 for the remaining weak entries):**
 
 | | Total | Verified | Plausible | Doubtful / unmapped |
 |---|---|---|---|---|
@@ -517,11 +528,13 @@ Because v1.2 is our host, these fixes stay active as long as the affected functi
 
 ## 12. Open questions
 
-- **Intro video hangs in our build (bug, first known issue).** With our DLL, the original SMUSH player runs `jonesopn.snm` but the screen stays black and playback never ends. The main thread keeps moving inside the SMUSH library (v1.2 `0x4E5224`/`0x4E52F8`). The unmodified v1.2 game plays the same video fine, and a working (silent null-sink) audio device doesn't change anything. Suspects:
-  - upstream's DX9 frame-blit callback (`JonesMain_IntroMovieBlt*`) running on Wine;
-  - a v1.0→v1.2 difference in SMUSH internals.
+- **Intro video under Wine with MSAA (known issue).** With MSAA on, the intro video's frames stay black. Upstream locks a separate, non-multisampled surface and copies to and from the multisampled back buffer; that copy path doesn't work under Wine, at least with Xvfb's software renderer. With MSAA off (seeded by `setup.sh`), the video shows correctly. To fix in Stage 2 (e.g. draw video frames as a textured quad), and to check on your real GPU.
+- **Remaining weakly evidenced map entries.** After the semantic verification (§5.7), these rest only on weak evidence (signature, same-module references or sandwich):
+  - 100 trampolines;
+  - 62 live globals;
+  - 173 hooks.
 
-  Workaround for testing: without the video files the game skips the intro (`game/run/_movies_parked/`).
+  None caused a problem in Canyonlands. Review them before relying on the affected code paths. Candidates for stronger checks: argument counts at call sites, struct field offsets.
 - **Struct changes in 1.2.** Did LucasArts change any struct layout in 1.2? Check the shared structs touched by size-changed functions first.
 - **Remaining map review.** How many of the 234 plausible functions does Ghidra confirm, and do any of them turn out wrong? That decides whether `plausible` hooks may be enabled in bulk.
 - **Shaders.** Does `vkd3d-compiler` 1.19 compile upstream's DX9 HLSL shaders (shader model 3)?
