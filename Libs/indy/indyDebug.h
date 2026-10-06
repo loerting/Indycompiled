@@ -19,7 +19,8 @@ uint32_t indyDebug_GetFixedFrameMs(void);
 
 // Called after each simulated frame (sithUpdate). With INDY_DUMP_WORLD_FRAME=<n>, writes the world snapshot
 // (INDY_DUMP_WORLD) after n frames of the level and exits the game. With INDY_SAVE_FRAME=<n> and
-// INDY_SAVE_FILE=<file>, saves the game at frame n (savegame A/B tests).
+// INDY_SAVE_FILE=<file>, saves the game at frame n; with INDY_RESTORE_FRAME=<n> and INDY_RESTORE_FILE=<file>, loads that
+// savegame once at frame n (savegame A/B tests).
 void indyDebug_SimFrame(void);
 
 // World snapshot for A/B tests (INDY_DUMP_WORLD=<file>): writes the current world's thing templates and things, one

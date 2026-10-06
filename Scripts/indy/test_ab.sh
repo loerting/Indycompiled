@@ -10,7 +10,9 @@
 # byte-identical are compared field by field (Scripts/indy/compare_world.py) with float tolerance INDY_AB_TOL
 # (default 0: exact); the result line names the differing fields.
 # Savegame A/B (DSS): also set INDY_SAVE_FRAME=<n> (save at frame n, before INDY_DUMP_WORLD_FRAME); both savegames
-# must be byte-identical.
+# must be byte-identical (apart from the sound clock).
+# Restore A/B (DSS Process*): INDY_AB_RESTORE=<savegame file> and INDY_RESTORE_FRAME=<n>; the snapshot frame then
+# counts from the restored level's start.
 #
 # Usage: Scripts/indy/test_ab.sh <func[,func...]> [levels="1 2 ... 17"] [seconds per run=45]
 # Output: game/screens/ab-<timestamp>/ (per level: both snapshots, a diff on mismatch) and summary.md; exit 1 on mismatch
@@ -25,6 +27,8 @@ res="$ROOT/game/run/Resource"
 out="$ROOT/game/screens/ab-$(date +%Y%m%d-%H%M%S)"
 mkdir -p "$out"
 
+# Restore A/B: INDY_AB_RESTORE=<savegame> and INDY_RESTORE_FRAME=<n>: both sides load the same savegame at frame n
+[[ -n "${INDY_AB_RESTORE:-}" ]] && cp "$INDY_AB_RESTORE" "$res/indy_ab_restore.nds"
 fail=0
 printf '# A/B %s\n\n| level | world | things | original | ours | result |\n|---|---|---|---|---|---|\n' "$funcs" > "$out/summary.md"
 for lvl in $levels; do
@@ -34,7 +38,7 @@ for lvl in $levels; do
         # would move every later allocation; underscores match no function
         nohook="$funcs"; [[ $side == ours ]] && nohook="${funcs//?/_}"
         rm -f "$res/indy_ab_$side.nds"
-        INDY_SAVE_FILE="indy_ab_$side.nds" \
+        INDY_SAVE_FILE="indy_ab_$side.nds" INDY_RESTORE_FILE="${INDY_AB_RESTORE:+indy_ab_restore.nds}" \
         INDY_NOHOOK="$nohook" INDY_DUMP_WORLD="indy_ab_$side.txt" INDY_SMOKE_PROC=Indy3D.exe \
             "$ROOT/Scripts/indy/smoke.sh" "$secs" Resource/Jones3D.exe Indy3D.exe "$lvl" > "$out/level$lvl.$side.smoke" 2>&1
         mv "$res/indy_ab_$side.txt" "$out/level$lvl.$side.txt" 2>/dev/null
@@ -49,7 +53,8 @@ for lvl in $levels; do
         result="NO SNAPSHOT"; fail=1
     elif [[ $so == "$su" ]]; then
         result="identical"
-    elif python3 -I "$ROOT/Scripts/indy/compare_world.py" "$o" "$u" --tol "${INDY_AB_TOL:-0}" > "$out/level$lvl.diff"; then
+    elif python3 -I "$ROOT/Scripts/indy/compare_world.py" "$o" "$u" --tol "${INDY_AB_TOL:-0}" \
+            --ignore "${INDY_AB_IGNORE:-renderData.rdFrameNum}" > "$out/level$lvl.diff"; then
         result="equal within tolerance ${INDY_AB_TOL:-0} ($(head -1 "$out/level$lvl.diff" | sed 's/.*; //'))"
     else
         result="DIFFERENT: $(sed -n '2,4p' "$out/level$lvl.diff" | sed 's/^ *//' | paste -sd';')"; fail=1
@@ -57,10 +62,21 @@ for lvl in $levels; do
     if [[ -n "${INDY_SAVE_FRAME:-}" ]]; then   # savegame A/B: both saves must be byte-identical
         if [[ ! -s "$out/level$lvl.orig.nds" || ! -s "$out/level$lvl.ours.nds" ]]; then
             result+="; NO SAVEGAME"; fail=1
-        elif cmp -s "$out/level$lvl.orig.nds" "$out/level$lvl.ours.nds"; then
-            result+="; savegames identical"
         else
-            result+="; SAVEGAMES DIFFER at byte $(cmp "$out/level$lvl.orig.nds" "$out/level$lvl.ours.nds" | sed 's/.*byte \([0-9]*\).*/\1/')"; fail=1
+            # the sound section stores the sound system's wall-clock time (8 bytes after its 0x12345678 marker and
+            # the paused count): masked, everything else must match
+            r=$(python3 -I - "$out/level$lvl.orig.nds" "$out/level$lvl.ours.nds" <<'PY'
+import sys
+a, b = (bytearray(open(f, "rb").read()) for f in sys.argv[1:3])
+for d in (a, b):
+    m = d.rfind(bytes.fromhex("78563412"))
+    if m >= 0:
+        d[m + 8:m + 16] = bytes(8)
+diff = [i for i in range(min(len(a), len(b))) if a[i] != b[i]]
+print("identical" if len(a) == len(b) and not diff else f"DIFFER at byte {diff[0] if diff else min(len(a), len(b))}")
+PY
+)
+            result+="; savegames $r"; [[ $r == identical ]] || fail=1
         fi
     fi
     printf '| %s | %s | %s | %s | %s | %s |\n' "$lvl" "${world:--}" "${things:--}" "$so" "$su" "$result" | tee -a "$out/summary.md"

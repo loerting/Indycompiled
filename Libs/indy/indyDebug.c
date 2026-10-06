@@ -331,7 +331,18 @@ void indyDebug_SimFrame(void)
         sithGamesave_Save(pSaveFile, /*bOverwrite=*/1);
     }
 
-    if ( dumpFrame > 0 && indyDebug_simFrame == dumpFrame )
+    // Restore A/B: load a savegame once at frame n (the level reopens; frames count from its start again)
+    static bool bRestored;
+    const char* pRestoreFile = getenv("INDY_RESTORE_FILE");
+    const char* pRestoreFrame = getenv("INDY_RESTORE_FRAME");
+    if ( !bRestored && pRestoreFile && *pRestoreFile && pRestoreFrame && indyDebug_simFrame == atoi(pRestoreFrame) )
+    {
+        bRestored = true;
+        sithGamesave_Restore(pRestoreFile, /*bNotifyCog=*/1);
+        return;
+    }
+
+    if ( dumpFrame > 0 && indyDebug_simFrame == dumpFrame && (!pRestoreFile || !*pRestoreFile || bRestored) )
     {
         indyDebug_WriteWorld();
         ExitProcess(0);

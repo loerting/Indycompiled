@@ -6,7 +6,8 @@ point to). Simulation A/B runs (INDY_DUMP_WORLD_FRAME) may differ in the last bi
 compiled differently, so 32-bit words that are both finite floats count as equal within a relative tolerance.
 Field names come from the compiler's record layout of SithThing (clang -fdump-record-layouts, cached in Build/).
 
-Usage: python3 -I Scripts/indy/compare_world.py <orig> <ours> [--tol 1e-4] [--max 40]
+Usage: python3 -I Scripts/indy/compare_world.py <orig> <ours> [--tol 1e-4] [--max 40] [--ignore field,...]
+(--ignore: fields that legitimately differ between runs, e.g. renderData.rdFrameNum, which counts rendered frames)
 Exit code 0: equal (within tolerance), 1: different.
 """
 import json
@@ -103,6 +104,7 @@ def main():
     args = sys.argv[1:]
     tol = float(args[args.index("--tol") + 1]) if "--tol" in args else 1e-4
     limit = int(args[args.index("--max") + 1]) if "--max" in args else 40
+    ignore = set(args[args.index("--ignore") + 1].split(",")) if "--ignore" in args else set()
     files = [a for i, a in enumerate(args) if not a.startswith("--") and (i == 0 or not args[i - 1].startswith("--"))]
     a, b = load(files[0]), load(files[1])
     layout = thing_layout()
@@ -121,7 +123,8 @@ def main():
             if fx is not None and fy is not None and abs(fx - fy) <= tol * max(1.0, abs(fx), abs(fy)):
                 close += 1
                 continue
-            diffs.append((key, i * 4, layout.get(i * 4, "?"), x, y))
+            if layout.get(i * 4, "?") not in ignore:
+                diffs.append((key, i * 4, layout.get(i * 4, "?"), x, y))
         if len(ta) != len(tb):
             diffs.append((key, -1, "length", str(len(ta)), str(len(tb))))
     print(f"{len(a)} records; words equal {exact}, within tolerance {close}, different {len(diffs)}")
