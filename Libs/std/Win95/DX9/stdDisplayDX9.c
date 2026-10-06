@@ -11,6 +11,8 @@
 #include <std/General/stdUtil.h>
 #include <std/RTI/symbols.h>
 
+#include <indy/indyDisplayDX9.h> // INDY
+
 
 #define STDDISPLAY_MINFRAMERATE 30
 #define STDDISPLAY_MAXFRAMERATE 256
@@ -2054,6 +2056,14 @@ int J3DAPI stdDisplay_GetCurrentVideoMode(StdVideoMode* pDisplayMode)
 
 int stdDisplay_CopyBufferToSurface(LPDIRECT3DSURFACE9 pSrcSurf, LPDIRECT3DSURFACE9 pDestSurf)
 {
+    // INDY: StretchRect into a multisampled surface isn't portable (Wine reports success without copying):
+    // draw the source as a quad instead (MSAA copy-back of video frames and other CPU-drawn content)
+    if ( indyDisplay_IsMultisampled(pDestSurf) && !indyDisplay_IsMultisampled(pSrcSurf)
+        && indyDisplay_DrawSurfaceToTarget(stdDisplay_pD3DDevice, pSrcSurf, pDestSurf) )
+    {
+        return 1;
+    }
+
     HRESULT hr = IDirect3DDevice9_StretchRect(
         stdDisplay_pD3DDevice,
         pSrcSurf,
