@@ -17,7 +17,8 @@
 #include "Play/jonesCog.h"
 #include "Play/JonesControl.h"
 #include "Play/jonesInventory.h"
-#include <Jones3D/RTI/addresses.h> // INDY: via include path, so the generated v1.2 copy can take precedence
+#include <Jones3D/RTI/addresses.h> // INDY
+#include <indy/indyDebug.h> // INDY: via include path, so the generated v1.2 copy can take precedence
 #include "RTI/symbols.h"
 
 #include <rdroid/Engine/rdCamera.h>
@@ -158,6 +159,8 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  dwReason, LPVOID lpReserved)
     {
         case DLL_PROCESS_ATTACH:
         {
+            indyDebug_Startup((HMODULE)hModule); // INDY: debug aids, only active when their environment variable is set
+
             // Enable HIDPI
             SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
 
