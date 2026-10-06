@@ -33,9 +33,11 @@ comes from the run button or the "always run" option. These are classic tank con
 Comparing what the v1.2 function calls with what upstream's C helpers call:
 - v1.2 calls climbing routines directly (`sithPlayerActions_CenterOnClimbSurface`,
   `sithThing_AttachThingToClimbSurface`) and `sithInventory_SetSwimmingInventory`;
-- v1.2 checks `sithPlayerActions_HasActiveWeapon` 7 times, upstream's C code once (on this path).
+- v1.2 checks `sithPlayerActions_HasActiveWeapon` 7 times, upstream's C code once on this path. **Checked: mostly a
+  refactoring artifact.** Upstream moved the same "can climb and has no weapon drawn" checks into helpers
+  (`sithPlayerControls_CanDoClimbOn1m/2m`).
 
-Likely 1.2 fixes around climbing and swimming with a drawn weapon. Hooking upstream's v1.0-based version replaces them.
+So the +0x110 bytes are still unexplained. Signature differences are only hints, not proof of a 1.2 change. Hooking upstream's v1.0-based version replaces them.
 To do: compare in detail with `Scripts/indy/ghidra/DecompileFunctions.java` (output goes to `game/review/decomp/`,
 never into git), then port the differences as FIX entries.
 
@@ -51,8 +53,8 @@ All callers of these functions are hooked, i.e. run upstream's C code, so there'
 LucasArts changed code in 1.2, and those fixes are lost wherever upstream's v1.0-based C code replaces the original:
 - `sithControl_RegisterKeyFunction`: 2 arguments in v1.2 (49 call sites), 1 in upstream. Possibly part of the 1.2 fix
   to the control configuration dialog.
-- `sithThing_AttachThingToClimbSurface`: 3 arguments in v1.2, 2 in upstream. A climbing change, matching the leads in
-  `sithPlayerControls_ProcessGeneralMove`.
+- `sithThing_AttachThingToClimbSurface`: callers push 3 arguments in v1.2, 2 in upstream. **Checked: not a behaviour change.**
+  The v1.2 function only reads two parameters; the third (always 1) is a dead argument.
 - Smaller ones (one argument more): `sithAnimate_StartSurfaceLightAnim`, `sithCogParse_ResetTreeNodes`, `Sound_Update`,
   `jonesConfig_MsgBoxDlg_HandleWM_COMMAND`, `jonesConfig_sub_405F60`, `JonesDialog_HandleWM_ERASEBKGND`.
 
