@@ -4,6 +4,7 @@
 #include <rdroid/types.h>
 #include <sith/types.h>
 #include <sith/Gameplay/sithTime.h>
+#include <indy/indyInput.h> // INDY(FIX-0001)
 #include <sith/Main/sithMain.h>
 #include <sith/RTI/addresses.h>
 #include <std/types.h>
@@ -76,6 +77,16 @@ static inline float sithPlayerControls_CalculateAngularVelocity(SithActorInfo* p
     // TODO: Replace sithTime_g_fps with fixed step, e.g. 25.0f
     //       Would probably make sense to remove left part of the formula altogether and rely only on right part.
     return (axisDirection * sithTime_g_fps) + (pActor->maxRotVelocity * keyDirection * speedFactor);
+}
+
+// INDY(FIX-0001): turning with keys or a stick, i.e. a constant direction (-1 right .. 1 left). The formula above
+// multiplies the direction by the current frame rate: right for mouse axes (a per-frame delta), but it made key
+// turning faster at higher frame rates. indyInput_GetTurnFps() keeps the current rate (original) or, with FIX-0001,
+// returns the fixed rate the turning is calibrated to. Mouse turning keeps using sithPlayerControls_CalculateAngularVelocity.
+static inline float sithPlayerControls_CalculateTurnVelocity(SithActorInfo* pActor, float direction, float speedFactor)
+{
+    speedFactor = J3DMIN(speedFactor, 1.0f);
+    return (direction * indyInput_GetTurnFps()) + (pActor->maxRotVelocity * direction * speedFactor);
 }
 
 // Helper hooking functions

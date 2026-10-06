@@ -3,6 +3,7 @@
 
 #include <sith/Devices/sithControl.h>
 #include <sith/Gameplay/sithPlayer.h>
+#include <sith/Gameplay/sithTime.h>
 #include <std/General/std.h>
 #include <std/General/stdUtil.h>
 #include <std/Win95/stdControl.h>
@@ -158,8 +159,11 @@ static void indyInput_Trace(void)
     const SithThing* pPlayer = sithPlayer_g_pLocalPlayerThing;
     if ( pPlayer )
     {
-        STDLOG_STATUS("indyInput trace: player pos %.3f %.3f %.3f moveStatus %d\n",
-            pPlayer->pos.x, pPlayer->pos.y, pPlayer->pos.z, (int)pPlayer->moveStatus);
+        // heading: angle of the look vector in the horizontal plane (degrees, counter-clockwise)
+        float heading = atan2f(pPlayer->orient.lvec.y, pPlayer->orient.lvec.x) * (180.0f / 3.14159265f);
+        STDLOG_STATUS("indyInput trace: t %lu player pos %.3f %.3f %.3f heading %.2f moveStatus %d fps %.1f\n",
+            (unsigned long)msecNow, pPlayer->pos.x, pPlayer->pos.y, pPlayer->pos.z, heading, (int)pPlayer->moveStatus,
+            sithTime_g_fps);
     }
 
     static const struct { SithControlFunction fn; const char* pName; } aFunctions[] = {
@@ -206,4 +210,9 @@ bool indyInput_IsStickRun(void)
         lastLogged = (int)bRun;
     }
     return bRun;
+}
+
+float indyInput_GetTurnFps(void)
+{
+    return indyEnh_IsEnabled(INDY_FIX_TURN_RATE) ? indyEnh_GetTurnRateFps() : sithTime_g_fps;
 }

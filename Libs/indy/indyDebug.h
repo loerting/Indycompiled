@@ -8,5 +8,9 @@ J3D_EXTERN_C_START
 // Starts the thread sampler when INDY_SAMPLE_THREADS=<seconds> is set (see indyDebug.c). Call from DllMain.
 void indyDebug_Startup(HMODULE hDll);
 
+// Frame cap for tests (INDY_FPS_CAP=<frames per second>): waits until the frame's time slice is used up. Call once
+// per frame. No effect without the variable.
+void indyDebug_FrameCap(void);
+
 J3D_EXTERN_C_END
 #endif // INDY_INDYDEBUG_H

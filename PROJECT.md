@@ -469,6 +469,7 @@ Each stage gets a milestone tag: `s1-linux-build`, `s2-modded`, `s4-standalone`,
 | Hang analysis: `INDY_SAMPLE_THREADS=<s>` (in-process thread sampler), then `llvm-addr2line` on Jones3D.dll | When a test hangs |
 | Savegame round trip: `Scripts/indy/test_savegame.sh` (F5, move, F8, compare screenshots) | Every change to savegame/DSS code |
 | Controller: `Scripts/indy/test_gamepad.sh` (virtual Xbox 360 pad via uinput → Wine → XInput → keyset → ENH-0001) | When input code changes |
+| Turn rate vs frame rate: `Scripts/indy/test_turnrate.sh` (frame caps via `INDY_FPS_CAP`, rate from the `INDY_INPUT_TRACE` heading) | When turning or timing code changes |
 
 ---
 
@@ -547,7 +548,7 @@ Because v1.2 is our host, these fixes stay active as long as the affected functi
 - **Remaining map review.** How many of the 234 plausible functions does Ghidra confirm, and do any of them turn out wrong? That decides whether `plausible` hooks may be enabled in bulk.
 - ~~**Shaders.** Does `vkd3d-compiler` 1.19 compile upstream's DX9 HLSL shaders (shader model 3)?~~ Yes, since Stage 1 (`compile_shader.py`).
 - ~~**Gamepads under Wine.**~~ Works: Wine's SDL backend exposes an Xbox 360 pad as XInput (tested with a virtual pad), after four fixes to upstream's XInput code (enhancements.md). Your own controller still needs a feel test.
-- **Upstream bug reports (filed 2026-10-06 from your account `loerting`):** PR [#44](https://github.com/smlu/OpenJones3D/pull/44) XInput stick fixes, PR [#45](https://github.com/smlu/OpenJones3D/pull/45) `sithEvent` out-of-bounds write, issue [#46](https://github.com/smlu/OpenJones3D/issues/46) COG lexer, issue [#47](https://github.com/smlu/OpenJones3D/issues/47) DX9 MSAA under Wine. PR branches live in the public fork `loerting/OpenJones3D`, cut from upstream `develop`; the private repo is never pushed. Related upstream work: PR #41 (frame-rate-dependent turn rate, issue #10) touches the same turn code as ENH-0001.
+- **Upstream bug reports (filed 2026-10-06 from your account `loerting`):** PR [#44](https://github.com/smlu/OpenJones3D/pull/44) XInput stick fixes, PR [#45](https://github.com/smlu/OpenJones3D/pull/45) `sithEvent` out-of-bounds write, issue [#46](https://github.com/smlu/OpenJones3D/issues/46) COG lexer, issue [#47](https://github.com/smlu/OpenJones3D/issues/47) DX9 MSAA under Wine. PR branches live in the public fork `loerting/OpenJones3D`, cut from upstream `develop`; the private repo is never pushed. Related upstream work: PR #41 and the unmerged branch `remove-fps-dependencies` (Dec 2025) fix frame-rate dependencies; our FIX-0001 covers turning (keeping mouse turning correct and the rate configurable), and the branch's other fixes (frame-cycle timer, drowning and damage at high frame rates, jewel-fly thrust) are candidates for FIX-0002 onward.
 - **Upstream patches.** Should the Linux-host patch set be offered upstream?
 
 ---

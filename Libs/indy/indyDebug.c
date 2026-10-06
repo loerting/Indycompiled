@@ -118,3 +118,40 @@ void indyDebug_Startup(HMODULE hDll)
         CloseHandle(hThread);
     }
 }
+
+void indyDebug_FrameCap(void)
+{
+    static int cap = -1;
+    static LARGE_INTEGER freq, next;
+    if ( cap == -1 )
+    {
+        const char* pCap = getenv("INDY_FPS_CAP");
+        cap = pCap ? atoi(pCap) : 0;
+        QueryPerformanceFrequency(&freq);
+        QueryPerformanceCounter(&next);
+    }
+
+    if ( cap <= 0 )
+    {
+        return;
+    }
+
+    LONGLONG period = freq.QuadPart / cap;
+    LARGE_INTEGER now;
+    for ( ;; )
+    {
+        QueryPerformanceCounter(&now);
+        LONGLONG left = next.QuadPart - now.QuadPart;
+        if ( left <= 0 )
+        {
+            break;
+        }
+        if ( left > freq.QuadPart / 500 ) // more than 2 ms: sleep, then spin for the rest
+        {
+            Sleep(1);
+        }
+    }
+
+    // a slow frame (e.g. loading) restarts the schedule instead of letting later frames catch up
+    next.QuadPart = now.QuadPart - next.QuadPart > period ? now.QuadPart + period : next.QuadPart + period;
+}

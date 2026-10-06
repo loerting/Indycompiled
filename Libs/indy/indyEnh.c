@@ -21,11 +21,13 @@ typedef struct sIndyEnhInfo
 
 static const IndyEnhInfo indyEnh_aInfos[INDY_ENH_COUNT] = {
     [INDY_ENH_ANALOG_MOVEMENT] = { "ENH-0001", "analogMovement", INDY_KIND_EXP }, // until tested with a gamepad
+    [INDY_FIX_TURN_RATE]       = { "FIX-0001", "fpsIndependentTurning", INDY_KIND_FIX },
 };
 
 static bool indyEnh_bLoaded;
 static IndyProfile indyEnh_profile = INDY_PROFILE_ENHANCED;
 static bool indyEnh_aEnabled[INDY_ENH_COUNT];
+static float indyEnh_turnRateFps = 60.0f;
 
 static const char* const indyEnh_aProfileNames[] = { "vanilla", "fixed", "enhanced" };
 
@@ -69,6 +71,10 @@ static void indyEnh_Load(void)
         indyEnh_aEnabled[i] = stdConfig_Contains(aKey) ? stdConfig_GetBool(aKey, bDefault) : bDefault;
     }
 
+    // 60: how most players have experienced the game (vsync on 60 Hz screens)
+    float fps = stdConfig_GetFloat("indycompiled.turnRateFps", 60.0f);
+    indyEnh_turnRateFps = fps < 15.0f ? 15.0f : fps > 240.0f ? 240.0f : fps;
+
     indyEnh_bLoaded = true;
 }
 
@@ -90,6 +96,11 @@ bool J3DAPI indyEnh_IsEnabled(IndyEnh id)
     }
 
     return indyEnh_aEnabled[id];
+}
+
+float indyEnh_GetTurnRateFps(void)
+{
+    return indyEnh_turnRateFps;
 }
 
 IndyProfile indyEnh_GetProfile(void)

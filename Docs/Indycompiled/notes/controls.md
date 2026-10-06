@@ -27,6 +27,19 @@ comes from the run button or the "always run" option. These are classic tank con
   slide, so the walk/run animation speed (puppet) must scale too, or deflection must choose the state
   (e.g. < 60% walks, ≥ 60% runs).
 
+## Turn rate and frame rate (FIX-0001)
+
+All player turning goes through `sithPlayerControls_CalculateAngularVelocity(actor, axis, key, speed)`
+= `axis × fps + maxRotVelocity × key × min(speed, 1)` (degrees per second). For the mouse, `axis` is the movement of
+this frame, so multiplying by the frame rate gives a rate: correct. For keys and sticks every caller passes a
+constant ±1 (±0.5 when crawling), so the first term is simply the frame rate: Indy turned faster the higher the
+frame rate (upstream issue #10; upstream PR #41 discusses replacing it with a constant 30 or 60).
+
+FIX-0001 adds `sithPlayerControls_CalculateTurnVelocity(actor, direction, speed)` for the 20 constant-direction
+callers (player controls and the whip), with `indyInput_GetTurnFps()` in place of the frame rate: the fixed
+`indycompiled.turnRateFps` (default 60) with the fix, the real frame rate without. The 8 mouse callers keep the
+original formula. Standing turns are then divided by 1.4, or multiplied by 2.5 with the run key.
+
 ## What LucasArts changed in 1.2 (leads, to verify before touching controls)
 
 `sithPlayerControls_ProcessGeneralMove` is 0x110 bytes larger in v1.2 than in v1.0, which upstream's C code is based on.

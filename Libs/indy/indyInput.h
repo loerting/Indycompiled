@@ -20,5 +20,9 @@ float J3DAPI indyInput_GetTurnScale(SithControlFunction function);
 // True when the forward stick is pushed far enough to run (classic controls walk unless the run key is held).
 bool indyInput_IsStickRun(void);
 
+// Frame rate used for key/stick turning (sithPlayerControls_CalculateTurnVelocity): the current one like the
+// original, or the fixed rate from Jones.cfg with FIX-0001 (fpsIndependentTurning).
+float indyInput_GetTurnFps(void);
+
 J3D_EXTERN_C_END
 #endif // INDY_INDYINPUT_H

@@ -15,6 +15,7 @@ typedef enum eIndyEnh
 {
     // Order and IDs are permanent: add new entries at the end, never renumber.
     INDY_ENH_ANALOG_MOVEMENT = 0, // ENH-0001: gamepad stick deflection scales walking/running and turning
+    INDY_FIX_TURN_RATE       = 1, // FIX-0001: key/stick turning speed independent of the frame rate
     INDY_ENH_COUNT
 } IndyEnh;
 
@@ -30,6 +31,9 @@ typedef enum eIndyProfile
 bool J3DAPI indyEnh_IsEnabled(IndyEnh id);
 
 IndyProfile indyEnh_GetProfile(void);
+
+// FIX-0001: the frame rate key/stick turning is calibrated to ("indycompiled.turnRateFps", default 60, 15..240).
+float indyEnh_GetTurnRateFps(void);
 
 // Re-read Jones.cfg (e.g. after the settings changed).
 void indyEnh_Reload(void);

@@ -18,6 +18,8 @@ IDs are permanent. New entries go at the end of the `IndyEnh` enum.
 |---|---|---|---|---|
 | ENH-0001 | `analogMovement` | experimental | tested headless with a virtual Xbox 360 pad through Wine/XInput (`test_gamepad.sh`: half push walks and stops at ledges, full push runs, turning follows the push); needs a real-pad feel test | With a gamepad stick: pushing it past 85% runs, less walks (no run button needed); turn rate follows stick deflection (30–100%). Keyboard input is unchanged. Walking speed itself isn't scaled yet (the walk animation would slide). See `notes/controls.md`. |
 
+| FIX-0001 | `fpsIndependentTurning` | fix | measured headless (standing turn, 4 s): without the fix 70.8 / 91.5 / 133.0 °/s at 30 / 60 / 120 FPS; with it 92.2 / 91.5 / 90.2 °/s | Turning with keys or a stick no longer depends on the frame rate. The original multiplies the turn direction by the current frame rate (right for mouse deltas, wrong for keys), so Indy turned faster at higher frame rates (upstream issue #10). Turning is calibrated to `indycompiled.turnRateFps` (default 60, i.e. how it felt on 60 Hz screens; 15–240). Mouse turning is unchanged. Test: `Scripts/indy/test_turnrate.sh`. |
+
 Kinds: **fix** (on in `fixed` and `enhanced`), **enhancement** (on in `enhanced`), **experimental** (off in every
 profile until tested; enable it explicitly in `toggles`).
 
