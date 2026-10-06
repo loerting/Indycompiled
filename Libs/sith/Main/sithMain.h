@@ -14,7 +14,7 @@
 
 J3D_EXTERN_C_START
 
-#define SITH_RAND() ((double)rand() * (1.0 / RAND_MAX))
+#define SITH_RAND() ((double)rand() * (1.0 / 32767.0)) // INDY: the game's rand() returns 15 bits (MSVC); RAND_MAX is larger on Linux/Android
 #define SITH_RANDF() ((float)SITH_RAND())
 
 #define SITHLOG_DEBUG(format, ...) \

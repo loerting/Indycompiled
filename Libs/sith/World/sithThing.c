@@ -319,20 +319,20 @@ void sithThing_ResetGlobals(void)
     STD_ZEROMEM(&sithThing_dword_5612B8, sizeof(sithThing_dword_5612B8));
 }
 
-// Counts of the per-type sections that follow the thing records in a CND file
+// Counts of the per-type sections that follow the thing records in a CND file (fixed width: on-disk data)
 typedef struct sCndThingSectionCounts
 {
-    size_t numPhysics;
-    size_t numPathFrameCounts;
-    size_t numPathFrames;
-    size_t numActors;
-    size_t numWeapons;
-    size_t numExplosions;
-    size_t numItems;
-    size_t numParticles;
-    size_t numHintValues;
-    size_t numAIControls;
-    size_t numAIFrames;
+    uint32_t numPhysics;
+    uint32_t numPathFrameCounts;
+    uint32_t numPathFrames;
+    uint32_t numActors;
+    uint32_t numWeapons;
+    uint32_t numExplosions;
+    uint32_t numItems;
+    uint32_t numParticles;
+    uint32_t numHintValues;
+    uint32_t numAIControls;
+    uint32_t numAIFrames;
 } CndThingSectionCounts;
 static_assert(sizeof(CndThingSectionCounts) == 44, "sizeof(CndThingSectionCounts) == 44");
 
@@ -355,7 +355,7 @@ int J3DAPI sithThing_WriteThingsListBinary(tFileHandle fh, const SithWorld* pWor
     CndThingSectionCounts counts = { 0 };
     CndThingInfo* aInfos           = NULL;
     CndPhysicsInfo* aPhysics       = NULL;
-    size_t* aPathFrameCounts       = NULL;
+    uint32_t* aPathFrameCounts     = NULL;
     SithPathFrame* aPathFrames     = NULL;
     CndActorInfo* aActors          = NULL;
     CndWeaponInfo* aWeapons        = NULL;
@@ -444,7 +444,7 @@ int J3DAPI sithThing_WriteThingsListBinary(tFileHandle fh, const SithWorld* pWor
     #undef INDY_ALLOC_SECTION
 
     CndPhysicsInfo* pPhysics       = aPhysics;
-    size_t* pPathFrameCount        = aPathFrameCounts;
+    uint32_t* pPathFrameCount      = aPathFrameCounts;
     SithPathFrame* pPathFrames     = aPathFrames;
     CndActorInfo* pActor           = aActors;
     CndWeaponInfo* pWeapon         = aWeapons;
@@ -725,7 +725,7 @@ int J3DAPI sithThing_ReadThingsListBinary(tFileHandle fh, SithWorld* pWorld, siz
     CndThingSectionCounts counts;
     CndThingInfo* aInfos           = NULL;
     CndPhysicsInfo* aPhysics       = NULL;
-    size_t* aPathFrameCounts       = NULL;
+    uint32_t* aPathFrameCounts     = NULL;
     SithPathFrame* aPathFrames     = NULL;
     CndActorInfo* aActors          = NULL;
     CndWeaponInfo* aWeapons        = NULL;
@@ -775,7 +775,7 @@ int J3DAPI sithThing_ReadThingsListBinary(tFileHandle fh, SithWorld* pWorld, siz
     #undef INDY_READ_SECTION
 
     const CndPhysicsInfo* pPhysics       = aPhysics;
-    const size_t* pPathFrameCount        = aPathFrameCounts;
+    const uint32_t* pPathFrameCount      = aPathFrameCounts;
     const SithPathFrame* pPathFrames     = aPathFrames;
     const CndActorInfo* pActor           = aActors;
     const CndWeaponInfo* pWeapon         = aWeapons;
@@ -3971,7 +3971,7 @@ int J3DAPI sithThing_ParseThingArg(const StdConffileArg* pArg, SithWorld* pWorld
     }
 
 syntax_error:
-    SITHLOG_ERROR("Bad argument %s=%s, line %d in %s.\n", pArg->argName, pArg->argValue, stdConffile_GetFilename(), stdConffile_GetLineNumber());
+    SITHLOG_ERROR("Bad argument %s=%s, line %d in %s.\n", pArg->argName, pArg->argValue, stdConffile_GetLineNumber(), stdConffile_GetFilename()); // Fixed: arguments were swapped
     return SITHTHING_PARSEARG_BADSYNTAX;
 }
 
