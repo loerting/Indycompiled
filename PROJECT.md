@@ -246,6 +246,7 @@ Our clang-built DLL runs inside an MSVC 5-compiled exe, so these points need wat
   - `rti_remap.py` and `exe_layout_check.py` (both already exist): the address map (§5.7);
   - `setup.sh`: checks `original/` against its checksums, creates both prefixes, imports the registry values from `regs.cmd` (`Start Mode` = 0, otherwise the developer launcher appears), and assembles `run/`;
   - `smoke.sh [seconds]`: headless test run under Xvfb in the test prefix. It takes screenshots every 15 s (pressing Escape to skip intros), reports whether the game survived, and mutes any audio stream the test prefix opens, as a safety net;
+  - `play.sh [WxH]`: play in the play prefix, with audio, in a virtual-desktop window;
   - `ghidra.sh init|apply-map|gui`: the Ghidra project, with the address map applied as names and review bookmarks;
   - `debug.sh` (Stage 1): `winedbg --gdb`. Our DLL carries DWARF debug info, so gdb shows source lines.
 - **Launching under Wine**: start the exe by its full Windows path (`winepath -w`). `explorer /desktop=…` and `start.exe` don't search the working directory, and then the game silently never starts.
