@@ -37,7 +37,7 @@
 #define SITHAIINSTINCT_EVENT_UPDATE ((SithAIEventType)0)
 
 // rand() scaled to [0, 1] the way the instincts compute it: in single precision, with 1/RAND_MAX rounded to float
-#define SITHAIINSTINCT_RANDF() ((float)rand() * (1.0f / RAND_MAX))
+#define SITHAIINSTINCT_RANDF() ((float)rand() * (1.0f / 32767.0f))
 
 #define SITHAIINSTINCT_VEHICLEFLAGS (SITH_PF_MINECAR | SITH_PF_RAFT | SITH_PF_JEEP | SITH_PF_UNKNOWN_8000000)
 
