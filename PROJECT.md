@@ -371,7 +371,8 @@ Upstream's tree stays as it is. Our additions live in paths upstream never touch
 ```
 Indycompiled/
 ├── PROJECT.md                     this document (ours)
-├── README.md, CHANGELOG.md, …     upstream's (never edited)
+├── README.md                      ours (upstream's: Docs/OpenJones3D-README.md, since 2026-10-07)
+├── CHANGELOG.md, …                upstream's (never edited)
 ├── CMakeLists.txt                 upstream's, plus minimal INDY-marked changes
 ├── CMakePresets.json              ours
 ├── cmake/toolchains/              ours: mingw now, linux-i686/x86_64 and android later
