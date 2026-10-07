@@ -1931,7 +1931,7 @@ int JonesMain_FilePrintf(const char* pFormat, ...)
     vsnprintf_s(std_g_genBuffer, STD_ARRAYLEN(std_g_genBuffer), STD_ARRAYLEN(std_g_genBuffer) - 1, pFormat, args);
     va_end(args); // Fixed: Add missing call to va_end
 
-    fprintf(JonesMain_pLogFile, std_g_genBuffer);
+    fprintf(JonesMain_pLogFile, "%s", std_g_genBuffer); // Fixed: the text isn't a format string
     fflush(JonesMain_pLogFile);
     return STD_ARRAYLEN(std_g_genBuffer);
 }
@@ -2627,7 +2627,7 @@ void J3DAPI JonesMain_LogErrorToFile(const char* pErrorText)
         FILE* fp = fopen(aFilePath, "wt+");
         if ( fp )
         {
-            fprintf(fp, pErrorText);
+            fprintf(fp, "%s", pErrorText); // Fixed: the text isn't a format string
             fprintf(fp, "\n");
             fclose(fp);
         }

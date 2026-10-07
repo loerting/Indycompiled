@@ -14,6 +14,10 @@
 #include <unistd.h>
 #endif
 
+#ifdef __ANDROID__
+#include <std/SDL/stdAndroidSDL.h>
+#endif
+
 void stdFileUtil_InstallHooks(void)
 {
     J3D_HOOKFUNC(stdFileUtil_NewFind);
@@ -180,15 +184,11 @@ int J3DAPI stdFileUtil_FindNext(FindFileData* ffData, tFoundFileInfo* pFileInfo)
     {
         ffData->handle = opendir(aResolved);
     }
-    if ( !ffData->handle )
-    {
-        return 0;
-    }
 
     // "*.*" matches every name on Windows, also names without a dot
     bool bAll = streq(pPattern, "*.*") || streq(pPattern, "*");
     struct dirent* pEntry;
-    while ( (pEntry = readdir((DIR*)ffData->handle)) != NULL )
+    while ( ffData->handle && (pEntry = readdir((DIR*)ffData->handle)) != NULL )
     {
         if ( bAll || fnmatch(pPattern, pEntry->d_name, FNM_CASEFOLD) == 0 )
         {
@@ -203,6 +203,21 @@ int J3DAPI stdFileUtil_FindNext(FindFileData* ffData, tFoundFileInfo* pFileInfo)
             return 1;
         }
     }
+
+#ifdef __ANDROID__
+    // Then the game data read in place from the APK (GOBs, movies)
+    const char* pName;
+    while ( (pName = stdAndroid_NextAsset(aResolved, &ffData->nextAsset)) != NULL )
+    {
+        if ( bAll || fnmatch(pPattern, pName, FNM_CASEFOLD) == 0 )
+        {
+            STD_STRCPY(pFileInfo->aName, pName);
+            pFileInfo->lastChanged  = 0;
+            pFileInfo->bIsDirectory = false;
+            return 1;
+        }
+    }
+#endif
     return 0;
 }
 
@@ -281,7 +296,15 @@ int J3DAPI stdFileUtil_FileExists(const char* pFilename)
 {
     char aPath[J3D_MAX_PATH];
     struct stat st;
-    return stat(J3D_ResolvePath(pFilename, aPath, sizeof(aPath)), &st) == 0;
+    if ( stat(J3D_ResolvePath(pFilename, aPath, sizeof(aPath)), &st) == 0 )
+    {
+        return 1;
+    }
+#ifdef __ANDROID__
+    return stdAndroid_AssetExists(aPath);
+#else
+    return 0;
+#endif
 }
 
 int J3DAPI stdFileUtil_RmDir(const char* pDir)

@@ -9,11 +9,15 @@
 #include <std/RTI/symbols.h>
 
 #include <Xinput.h>
+#ifdef _WIN32 // native builds: XInput and WMI run on SDL3 (std/SDL); lld would look for these libraries
 #pragma comment(lib,"Xinput.lib")
+#endif
 
 #include <wbemidl.h>
 #include <oleauto.h>
+#ifdef _WIN32
 #pragma comment(lib, "wbemuuid.lib")
+#endif
 
 
 #define STDCONTROL_COMSAFE_RELEASE(p) { if (p) { (p)->lpVtbl->Release(p); (p) = NULL; } }

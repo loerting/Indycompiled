@@ -69,7 +69,11 @@ void J3DAPI stdStartup(tHostServices* pHS)
         // TODO: Remove when all round and rand float functions are replaced && updated
         // TODO: consider setting FE_DOWNWARD for round functions (lrintf); i.e.: fesetround(FE_DOWNWARD) to mimic same behavior as OG
         short  tmp = 0;
+#if defined(_M_IX86) || defined(_M_X64) || defined(__i386__) || defined(__x86_64__)
         __asm  fnstcw word ptr[tmp];
+#else
+        tmp = 0x027F; // No x87 FPU (e.g. arm64): the default control word with 53-bit precision, as on Windows
+#endif
         word_183962C = tmp;
 
         // The following flags control in binary (Indy3D.exe) FPU rounding control flags for frndint (floorf, ceilf) and fistp (lrintf)

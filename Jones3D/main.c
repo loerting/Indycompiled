@@ -15,6 +15,10 @@
 #include <indy/indyDebug.h>
 #endif
 
+#ifdef __ANDROID__
+#include <std/SDL/stdAndroidSDL.h>
+#endif
+
 static const char* appName = "Open Jones 3D";
 
 static int J3DAPI Startup(const char* aCmd)
@@ -35,6 +39,13 @@ int main(int argc, char* argv[])
     _FPU_GETCW(cw);
     cw = (fpu_control_t)((cw & ~_FPU_EXTENDED) | _FPU_DOUBLE);
     _FPU_SETCW(cw);
+#endif
+
+#ifdef __ANDROID__
+    if ( stdAndroid_PrepareDataDir() ) // game data: APK assets and internal storage; makes Resource/ the working dir
+    {
+        return 1;
+    }
 #endif
 
 #ifdef INDY_NATIVE_DEBUG

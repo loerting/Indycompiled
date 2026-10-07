@@ -1,8 +1,10 @@
 # Android build
 
-Debug APK for arm64-v8a (phones) and x86_64 (emulator). For now it is a demo: it plays the intro movie
-`jonesopn.snm` with `Libs/smush/smushDecoder.c` (video into an SDL texture, letterboxed 4:3; audio into an
-SDL audio stream). A tap or Back exits.
+Debug APK for arm64-v8a (phones) and x86_64 (emulator): the whole game. Gradle builds the engine with its own
+CMake project (top-level `CMakeLists.txt`, `cmake/native.cmake`) as `libmain.so`, next to SDL3's `libSDL3.so`;
+SDL3's `SDLActivity` loads both and runs the game's `SDL_main` (`Jones3D/main.c`). Platform layer as on Linux
+(SDL3, OpenGL ES 3); Android-only: `Libs/std/SDL/stdAndroidSDL.c` (game data, below). No touch controls yet: a
+gamepad or keyboard is needed to play.
 
 ## Requirements
 
@@ -23,7 +25,8 @@ adb install -r android/app/build/outputs/apk/debug/app-debug.apk
 ```
 
 Test without a phone: `Scripts/android/test_emulator.sh` boots the x86_64 AVD headless, installs and starts the
-APK, and saves screenshots at about 3 s and 10 s plus the logcat to `game/screens/android-<timestamp>/`.
+APK, and saves screenshots, the logcat and the game's logs to `game/screens/android-<timestamp>/`. It needs about
+3 GB of RAM and refuses to start with less than 7 GB available (`INDY_EMU_MIN_MB`); it once froze this PC.
 
 Options: `-Pindy.abis=arm64-v8a` (one ABI only), `-Pindy.ninjaJobs=N` (native compile jobs, default 4).
 
@@ -33,13 +36,11 @@ The game data is never committed and the APK is never distributed. Before every 
 `Scripts/android/pack_data.sh`, which copies the data into the git-ignored staging dir
 `android/app/build/gameassets/`; its contents end up in the APK's `assets/` (stored uncompressed).
 
-- Source folder: `-Pindy.gameData=<dir>` or `INDY_GAME_DATA=<dir>`; default `game/run/Resource` of the checkout
-  (or of the main checkout, when building from a git worktree).
-- Packed for now: the intro movies (`*.snm`, about 60 MB). Without data the build still works; the app then
-  shows an error.
-
-## Layout
-
-- `app/jni/CMakeLists.txt` - builds `libSDL3.so` and `libmain.so` (`demo_main.c` + the SMUSH decoder)
-- `app/src/main/java/com/indycompiled/game/IndyActivity.java` - subclass of SDL's `SDLActivity`
-- `app/build.gradle` - SDL Java sources, staging dir, `packGameData` task
+- Game folder: `-Pindy.gameData=<dir>` or `INDY_GAME_DATA=<dir>` (the installed game, or its `Resource` folder);
+  default `game/run` of the checkout (or of the main checkout, when building from a git worktree).
+- Packed: `Resource/*.gob` and `*.snm` (about 870 MB), `KeySets/`, and the list `indy_assets.txt`. Without data the
+  build still works; the game then reports the missing files.
+- On the phone: GOBs and movies are read in place from the APK (stored, not compressed); `KeySets/` is copied to
+  internal storage on first start, where `Resource/` is the working dir (`Jones.cfg`, `JonesLog.txt`, `stderr.txt`)
+  and `SaveGames/` holds the saves. Logs of a debug build: `adb shell run-as com.indycompiled.game cat
+  files/Resource/stderr.txt`.

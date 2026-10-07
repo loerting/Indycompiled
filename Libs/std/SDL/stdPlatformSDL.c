@@ -5,7 +5,9 @@
 #include "../General/stdUtil.h"
 
 #include <SDL3/SDL.h>
+#ifndef __ANDROID__ // Android: debuggerd writes the backtrace of a crash to logcat
 #include <execinfo.h>
+#endif
 #include <signal.h>
 #include <stdio.h>
 #include <sys/stat.h>
@@ -133,6 +135,10 @@ bool J3DAPI stdPlatform_DirExists(const char* pPath)
 
 void stdPlatform_PrintStackTrace(tStackTracePrintFunc pfPrintFunc, size_t numFrames)
 {
+#ifdef __ANDROID__
+    J3D_UNUSED(pfPrintFunc);
+    J3D_UNUSED(numFrames);
+#else
     void* aFrames[64];
     if ( numFrames > STD_ARRAYLEN(aFrames) ) numFrames = STD_ARRAYLEN(aFrames);
     int n = backtrace(aFrames, (int)numFrames);
@@ -142,8 +148,10 @@ void stdPlatform_PrintStackTrace(tStackTracePrintFunc pfPrintFunc, size_t numFra
         pfPrintFunc("  #%d %s\n", i, aSymbols ? aSymbols[i] : "?");
     }
     free(aSymbols);
+#endif
 }
 
+#ifndef __ANDROID__
 static void stdPlatform_CrashHandler(int sig)
 {
     fprintf(stderr, "Fatal signal %d\n", sig);
@@ -154,10 +162,14 @@ static void stdPlatform_CrashHandler(int sig)
     raise(sig);
 }
 
+#endif
+
 void J3DAPI stdPlatform_InstallSignalHandler(void)
 {
+#ifndef __ANDROID__
     signal(SIGSEGV, stdPlatform_CrashHandler);
     signal(SIGABRT, stdPlatform_CrashHandler);
     signal(SIGFPE, stdPlatform_CrashHandler);
     signal(SIGILL, stdPlatform_CrashHandler);
+#endif
 }

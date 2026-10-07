@@ -35,7 +35,9 @@ android {
         }
         externalNativeBuild {
             cmake {
-                arguments += ['-DANDROID_STL=c++_static', "-DINDY_NINJA_JOBS=${ninjaJobs}".toString()]
+                arguments += ['-DANDROID_STL=c++_static', '-DJONES3D_BUILD_PROGRAMS=OFF',
+                              "-DINDY_NINJA_JOBS=${ninjaJobs}".toString()]
+                targets += ['Jones3D_DLL', 'SDL3-shared'] // libmain.so (the game) and libSDL3.so
             }
         }
     }
@@ -52,7 +54,7 @@ android {
 
     externalNativeBuild {
         cmake {
-            path = file('jni/CMakeLists.txt')
+            path = file('../../CMakeLists.txt') // the engine's own build (cmake/native.cmake)
             version = '3.31.6'
         }
     }
@@ -81,7 +83,7 @@ android {
 }
 
 // Local recipe: copy the game data into the staging dir before anything is merged (never committed).
-// Data folder: -Pindy.gameData=<dir> or $INDY_GAME_DATA, default game/run/Resource of the checkout.
+// Game folder: -Pindy.gameData=<dir> or $INDY_GAME_DATA, default game/run of the checkout (pack_data.sh).
 def packGameData = tasks.register('packGameData', Exec) {
     commandLine 'bash', rootProject.file('../Scripts/android/pack_data.sh').absolutePath, gameAssetsDir.absolutePath
     if (!gameDataDir.isEmpty()) {

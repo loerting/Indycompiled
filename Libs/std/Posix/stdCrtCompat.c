@@ -13,6 +13,10 @@
 #include <time.h>
 #include <unistd.h>
 
+#ifdef __ANDROID__
+#include <std/SDL/stdAndroidSDL.h>
+#endif
+
 #undef fopen // the C library's, wrapped by J3D_fopen
 
 size_t J3D_strnlen_s(const char* s, size_t n)
@@ -108,7 +112,14 @@ char* J3D_ResolvePath(const char* pPath, char* pOut, size_t outSize)
 FILE* J3D_fopen(const char* name, const char* mode)
 {
     char path[J3D_MAX_PATH];
-    return (fopen)(J3D_ResolvePath(name, path, sizeof(path)), mode);
+    FILE* pFile = (fopen)(J3D_ResolvePath(name, path, sizeof(path)), mode);
+#ifdef __ANDROID__
+    if ( !pFile )
+    {
+        pFile = stdAndroid_OpenAsset(path, mode); // read-only game data, read in place from the APK
+    }
+#endif
+    return pFile;
 }
 
 int J3D_fopen_s(FILE** pf, const char* name, const char* mode)

@@ -6,9 +6,23 @@ cmake_policy(SET CMP0079 NEW) # link libraries to targets of other directories (
 set(JONES3D_STANDALONE ON)
 add_compile_definitions(J3D_STANDALONE _GNU_SOURCE)
 
-# SDL3 (vendored, static), built before the engine's targets and without the engine's compile options
-set(SDL_SHARED OFF CACHE BOOL "" FORCE)
-set(SDL_STATIC ON CACHE BOOL "" FORCE)
+if(ANDROID)
+    # Gradle builds the ABIs at the same time: cap the parallel compile jobs per ABI
+    set(INDY_NINJA_JOBS 4 CACHE STRING "Parallel compile jobs (ninja job pool size)")
+    set_property(GLOBAL APPEND PROPERTY JOB_POOLS indy_compile=${INDY_NINJA_JOBS} indy_link=2)
+    set(CMAKE_JOB_POOL_COMPILE indy_compile)
+    set(CMAKE_JOB_POOL_LINK indy_link)
+endif()
+
+# SDL3 (vendored), built before the engine's targets and without the engine's compile options. Static on Linux;
+# shared on Android, where SDLActivity loads libSDL3.so before the game (libmain.so)
+if(ANDROID)
+    set(SDL_SHARED ON CACHE BOOL "" FORCE)
+    set(SDL_STATIC OFF CACHE BOOL "" FORCE)
+else()
+    set(SDL_SHARED OFF CACHE BOOL "" FORCE)
+    set(SDL_STATIC ON CACHE BOOL "" FORCE)
+endif()
 set(SDL_TEST_LIBRARY OFF CACHE BOOL "" FORCE)
 set(SDL_TESTS OFF CACHE BOOL "" FORCE)
 set(SDL_EXAMPLES OFF CACHE BOOL "" FORCE)
