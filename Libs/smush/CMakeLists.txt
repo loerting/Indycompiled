@@ -9,7 +9,7 @@ else()
 endif()
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES} ${HEADERS}) # INDY: was OBJECT (header-only); static so the DLL links the player
-target_link_libraries(${PROJECT_NAME} PUBLIC j3dcore)
+target_link_libraries(${PROJECT_NAME} PUBLIC j3dcore std) # INDY: std: SmushPlay.h includes std headers (DirectX 6 SDK include dirs)
 if (WIN32)
     target_link_libraries(${PROJECT_NAME} PUBLIC dsound winmm) # INDY: smushPlayWin32.c
 else()

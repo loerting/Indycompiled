@@ -482,7 +482,7 @@ Each stage gets a milestone tag: `s1-linux-build`, `s2-modded`, `s4-standalone`,
 | Check | When |
 |---|---|
 | Build both renderer configs (DX9 and DX6), with QOL on and off | Every change to the build or to upstream files |
-| CI (`.github/workflows/indycompiled.yml`): `linux-x86_64`, `linux-i686`, `mingw-dx9-standalone` in an Arch container, Android arm64 `libmain.so` with the runner's NDK; compile only, on ext4 (catches include case) | Every push |
+| CI (`.github/workflows/indycompiled.yml`): `linux-x86_64`, `linux-i686`, `mingw-dx9-standalone` in an Arch container, Android arm64 `libmain.so` with the runner's NDK; compile only, on ext4 (catches include case). Upstream's MSVC workflows (`build-dx6.yml`, `build-dx9.yml`) are disabled in the GitHub settings (files unchanged): Indycompiled's `Libs/indy` isn't built with MSVC; our upstream-file changes compile under MSVC (checked 2026-10-07, PR #1) | Every push |
 | `Scripts/analyze.py` progress report | After each `port` |
 | Smoke test: start a level from the command line under Wine and check the log | Every build (scripted) |
 | Savegame round trip (save, reload, compare) | Every change to DSS or savegame code |

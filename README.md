@@ -63,8 +63,9 @@ game into it. **Never share such an APK**, it contains the game's data.
 
 ### Windows
 
-The MinGW presets (`mingw-dx9-release`, `mingw-dx9-standalone`) cross-build from Linux. Upstream's
-[README](Docs/OpenJones3D-README.md) describes the Visual Studio build.
+The MinGW presets (`mingw-dx9-release`, `mingw-dx9-standalone`) cross-build from Linux. Indycompiled doesn't build with
+Visual Studio (its own layer, `Libs/indy`, is MinGW and native only); for that, use
+[OpenJones3D](https://github.com/smlu/OpenJones3D) ([README](Docs/OpenJones3D-README.md)).
 
 ## Documentation
 
