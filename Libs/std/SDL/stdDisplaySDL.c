@@ -426,6 +426,7 @@ int J3DAPI stdDisplay_SetMode(size_t modeNum, int bFullscreen, size_t numBackBuf
 
 void stdDisplay_ClearMode(void)
 {
+    std3D_FlushDraws();
     if ( stdDisplay_pLockPixels )
     {
         stdMemory_Free(stdDisplay_pLockPixels);
@@ -692,7 +693,29 @@ int stdDisplay_Update(void)
     {
         return 1;
     }
+    std3D_FlushDraws();
     SDL_GL_SwapWindow(stdDisplay_GetSDLWindow());
+
+    // INDY_FPS_LOG: frames per second to stderr every 5 seconds (performance checks on devices)
+    static int bFpsLog = -1;
+    static Uint64 fpsStart;
+    static unsigned numFrames;
+    if ( bFpsLog < 0 ) bFpsLog = SDL_getenv("INDY_FPS_LOG") != NULL;
+    if ( bFpsLog )
+    {
+        const Uint64 now = SDL_GetTicks();
+        if ( !fpsStart ) fpsStart = now;
+        ++numFrames;
+        if ( now - fpsStart >= 5000 )
+        {
+            extern size_t std3D_g_numDrawCalls, std3D_g_numDrawVertices, std3D_g_numGLDraws;
+            fprintf(stderr, "fps %.1f, per frame: %u draws (%u GL), %u vertices\n", (double)numFrames * 1000.0 / (double)(now - fpsStart),
+                (unsigned)(std3D_g_numDrawCalls / numFrames), (unsigned)(std3D_g_numGLDraws / numFrames), (unsigned)(std3D_g_numDrawVertices / numFrames));
+            fpsStart  = now;
+            numFrames = 0;
+            std3D_g_numDrawCalls = std3D_g_numDrawVertices = std3D_g_numGLDraws = 0;
+        }
+    }
     return 0;
 }
 
@@ -704,6 +727,7 @@ int J3DAPI stdDisplay_BackBufferFill(uint32_t color, const StdRect* pRect)
         return 1;
     }
 
+    std3D_FlushDraws();
     if ( pRect )
     {
         if ( pRect->right <= 0 || pRect->bottom <= 0 ) return 1;
@@ -722,6 +746,7 @@ int J3DAPI stdDisplay_BackBufferFill(uint32_t color, const StdRect* pRect)
 
 static void stdDisplay_ReadBackBuffer(uint8_t* pDest)
 {
+    std3D_FlushDraws();
     const uint32_t width  = stdDisplay_g_backBuffer.rasterInfo.width;
     const uint32_t height = stdDisplay_g_backBuffer.rasterInfo.height;
     glPixelStorei(GL_PACK_ALIGNMENT, 4);
@@ -785,6 +810,8 @@ void stdDisplay_UnlockBackBuffer(void)
     {
         return;
     }
+
+    std3D_FlushDraws();
 
     // Draw the CPU copy over the whole framebuffer
     glDisable(GL_DEPTH_TEST);

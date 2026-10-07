@@ -1,6 +1,7 @@
 package com.indycompiled.game;
 
 import android.os.Bundle;
+import android.view.Display;
 import android.view.WindowManager;
 
 import org.libsdl.app.SDLActivity;
@@ -22,5 +23,23 @@ public class IndyActivity extends SDLActivity {
         // Game: never dim or lock the screen while the activity is in front
         // (SDL also does this while its screensaver is disabled, which is its default).
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        requestHighestRefreshRate();
+    }
+
+    /** Asks for the display's fastest mode at the current resolution (e.g. 120 Hz); Android otherwise runs apps at 60. */
+    private void requestHighestRefreshRate() {
+        Display display = getWindowManager().getDefaultDisplay();
+        Display.Mode current = display.getMode();
+        Display.Mode best = current;
+        for (Display.Mode mode : display.getSupportedModes()) {
+            if (mode.getPhysicalWidth() == current.getPhysicalWidth()
+                    && mode.getPhysicalHeight() == current.getPhysicalHeight()
+                    && mode.getRefreshRate() > best.getRefreshRate()) {
+                best = mode;
+            }
+        }
+        WindowManager.LayoutParams params = getWindow().getAttributes();
+        params.preferredDisplayModeId = best.getModeId();
+        getWindow().setAttributes(params);
     }
 }

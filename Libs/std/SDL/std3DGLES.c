@@ -20,7 +20,7 @@
 
 // Ring buffers for the streamed vertices and indices: each draw call appends behind the previous one, and the storage
 // is orphaned only when full. (Orphaning per draw call made the Adreno driver allocate GPU memory, an ioctl, for every
-// call: 2 fps.)
+// call: 2 fps on a phone.)
 #define STD3D_RINGVERTICES (STD3D_MAXSTREAMVERTICES * 4)
 #define STD3D_RINGINDICES  (STD3D_MAXSTREAMVERTICES * 3 * 4)
 
@@ -78,6 +78,28 @@ static GLuint std3D_program;
 static GLint std3D_locViewport, std3D_locTex, std3D_locFogParams, std3D_locFogColor, std3D_locAlphaRef;
 static GLuint std3D_vao, std3D_vbo, std3D_ibo, std3D_sampler;
 static size_t std3D_vboPos, std3D_iboPos; // next free entry in the ring buffers
+
+// Draw queue: rdCache sends a draw per face list, about 2400 a frame and most of them a face or two. std3D_DrawRenderList
+// queues them with their vertices and indices; std3D_FlushDraws uploads all with one mapping each and replays them in
+// order, merging consecutive draws with the same texture and state. The result is the same; the GL calls per draw drop
+// from about 12 to 1, which mobile drivers need. Whatever changes GL state or ends the frame flushes first.
+#define STD3D_QUEUEVERTICES 65535 // 16-bit indices
+#define STD3D_QUEUEINDICES  (STD3D_QUEUEVERTICES * 3)
+#define STD3D_QUEUEDRAWS    4096
+
+typedef struct sStd3DQueuedDraw
+{
+    tSysTexture* pTex;
+    Std3DRenderState rdflags;
+    uint32_t firstIndex;
+    uint32_t numIndices;
+} Std3DQueuedDraw;
+
+static D3DTLVERTEX std3D_aQueueVerts[STD3D_QUEUEVERTICES];
+static uint16_t std3D_aQueueIndices[STD3D_QUEUEINDICES];
+static Std3DQueuedDraw std3D_aQueueDraws[STD3D_QUEUEDRAWS];
+static size_t std3D_numQueueVerts, std3D_numQueueIndices, std3D_numQueueDraws;
+size_t std3D_g_numDrawCalls, std3D_g_numDrawVertices, std3D_g_numGLDraws; // statistics for INDY_FPS_LOG (stdDisplaySDL.c)
 static struct sStdGLTexture std3D_whiteTexture;
 
 static void J3DAPI std3D_AddTextureToCacheList(tSystemTexture* pTexture);
@@ -304,6 +326,7 @@ int J3DAPI std3D_Open(size_t deviceNum)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, std3D_ibo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, (GLsizeiptr)(STD3D_RINGINDICES * sizeof(uint16_t)), NULL, GL_STREAM_DRAW);
     std3D_vboPos = std3D_iboPos = 0;
+    std3D_numQueueVerts = std3D_numQueueIndices = std3D_numQueueDraws = 0;
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(D3DTLVERTEX), (const void*)offsetof(D3DTLVERTEX, sx));
     glEnableVertexAttribArray(1);
@@ -371,6 +394,8 @@ void std3D_Close(void)
         return;
     }
 
+    std3D_numQueueVerts = std3D_numQueueIndices = std3D_numQueueDraws = 0; // nothing more will be shown
+
     std3D_ResetTextureCache();
     glDeleteTextures(1, &std3D_whiteTexture.id);
     glDeleteSamplers(1, &std3D_sampler);
@@ -416,6 +441,7 @@ int std3D_StartScene(void)
 
 void std3D_EndScene(void)
 {
+    std3D_FlushDraws();
 }
 
 static void std3D_BindTexture(tSysTexture* pTex)
@@ -424,7 +450,7 @@ static void std3D_BindTexture(tSysTexture* pTex)
     glBindTexture(GL_TEXTURE_2D, pTex ? pTex->id : std3D_whiteTexture.id);
 }
 
-void J3DAPI std3D_SetRenderState(Std3DRenderState rdflags)
+static void std3D_ApplyRenderState(Std3DRenderState rdflags)
 {
     if ( std3D_renderState == rdflags )
     {
@@ -474,7 +500,8 @@ static size_t std3D_StreamData(GLenum target, size_t* pPos, size_t capacity, siz
     }
 
     const size_t first = *pPos;
-    void* pDest = glMapBufferRange(target, (GLintptr)(first * elemSize), (GLsizeiptr)(count * elemSize), GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
+    // No GL_MAP_INVALIDATE_RANGE_BIT and no glBufferSubData: on Adreno both allocate per call (2.6 fps against 50, measured)
+    void* pDest = glMapBufferRange(target, (GLintptr)(first * elemSize), (GLsizeiptr)(count * elemSize), GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
     if ( pDest )
     {
         memcpy(pDest, pData, count * elemSize);
@@ -507,25 +534,81 @@ static void std3D_PrepareDraw(void)
     }
 }
 
+void std3D_FlushDraws(void)
+{
+    if ( !std3D_numQueueDraws )
+    {
+        return;
+    }
+
+    std3D_PrepareDraw();
+    std3D_StreamVertices(std3D_aQueueVerts, std3D_numQueueVerts);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, std3D_ibo);
+    const size_t firstIndex = std3D_StreamData(GL_ELEMENT_ARRAY_BUFFER, &std3D_iboPos, STD3D_RINGINDICES, sizeof(uint16_t), std3D_aQueueIndices, std3D_numQueueIndices);
+
+    for ( size_t i = 0; i < std3D_numQueueDraws; ++i )
+    {
+        const Std3DQueuedDraw* pDraw = &std3D_aQueueDraws[i];
+        std3D_ApplyRenderState(pDraw->rdflags);
+        if ( pDraw->pTex != std3D_pCurTexture )
+        {
+            std3D_BindTexture(pDraw->pTex);
+        }
+        glDrawElements(GL_TRIANGLES, (GLsizei)pDraw->numIndices, GL_UNSIGNED_SHORT, (const void*)((firstIndex + pDraw->firstIndex) * sizeof(uint16_t)));
+    }
+    std3D_g_numGLDraws += std3D_numQueueDraws;
+
+    std3D_numQueueVerts = std3D_numQueueIndices = std3D_numQueueDraws = 0;
+}
+
+void J3DAPI std3D_SetRenderState(Std3DRenderState rdflags)
+{
+    std3D_FlushDraws();
+    std3D_ApplyRenderState(rdflags);
+}
+
 void J3DAPI std3D_DrawRenderList(tSysTexture* pTex, Std3DRenderState rdflags, LPD3DTLVERTEX aVerts, size_t numVerts, LPWORD aIndices, size_t numIndices)
 {
-    if ( numVerts > std3D_g_maxVertices || numIndices > STD3D_MAXSTREAMVERTICES * 3 )
+    if ( numVerts > STD3D_QUEUEVERTICES || numIndices > STD3D_QUEUEINDICES )
     {
         STDLOG_ERROR("Error %d > %d maxVertices.\n", (int)numVerts, (int)std3D_g_maxVertices);
         return;
     }
 
-    std3D_PrepareDraw();
-    std3D_SetRenderState(rdflags);
-    if ( pTex != std3D_pCurTexture )
+    if ( std3D_numQueueVerts + numVerts > STD3D_QUEUEVERTICES || std3D_numQueueIndices + numIndices > STD3D_QUEUEINDICES
+        || std3D_numQueueDraws == STD3D_QUEUEDRAWS )
     {
-        std3D_BindTexture(pTex);
+        std3D_FlushDraws();
     }
 
-    std3D_StreamVertices(aVerts, numVerts);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, std3D_ibo);
-    const size_t firstIndex = std3D_StreamData(GL_ELEMENT_ARRAY_BUFFER, &std3D_iboPos, STD3D_RINGINDICES, sizeof(uint16_t), aIndices, numIndices);
-    glDrawElements(GL_TRIANGLES, (GLsizei)numIndices, GL_UNSIGNED_SHORT, (const void*)(firstIndex * sizeof(uint16_t)));
+    ++std3D_g_numDrawCalls;
+    std3D_g_numDrawVertices += numVerts;
+
+    // Indices relative to the queued vertices
+    const uint16_t base = (uint16_t)std3D_numQueueVerts;
+    memcpy(&std3D_aQueueVerts[std3D_numQueueVerts], aVerts, numVerts * sizeof(D3DTLVERTEX));
+    uint16_t* pIndices = &std3D_aQueueIndices[std3D_numQueueIndices];
+    for ( size_t i = 0; i < numIndices; ++i )
+    {
+        pIndices[i] = (uint16_t)(aIndices[i] + base);
+    }
+
+    Std3DQueuedDraw* pLast = std3D_numQueueDraws ? &std3D_aQueueDraws[std3D_numQueueDraws - 1] : NULL;
+    if ( pLast && pLast->pTex == pTex && pLast->rdflags == rdflags )
+    {
+        pLast->numIndices += (uint32_t)numIndices; // contiguous: one draw
+    }
+    else
+    {
+        Std3DQueuedDraw* pDraw = &std3D_aQueueDraws[std3D_numQueueDraws++];
+        pDraw->pTex       = pTex;
+        pDraw->rdflags    = rdflags;
+        pDraw->firstIndex = (uint32_t)std3D_numQueueIndices;
+        pDraw->numIndices = (uint32_t)numIndices;
+    }
+
+    std3D_numQueueVerts += numVerts;
+    std3D_numQueueIndices += numIndices;
 }
 
 static void std3D_DrawArrays(GLenum mode, LPD3DTLVERTEX aVerts, size_t numVerts)
@@ -536,6 +619,7 @@ static void std3D_DrawArrays(GLenum mode, LPD3DTLVERTEX aVerts, size_t numVerts)
         return;
     }
 
+    std3D_FlushDraws();
     std3D_PrepareDraw();
     std3D_StreamVertices(aVerts, numVerts);
     glDrawArrays(mode, 0, (GLsizei)numVerts);
@@ -632,6 +716,7 @@ error:
 
 void J3DAPI std3D_ClearSystemTexture(tSystemTexture* pTex)
 {
+    std3D_FlushDraws(); // queued draws may use the texture
     while ( pTex->numMipLevels > 0 )
     {
         stdDisplay_VBufferFree(pTex->apMipmaps[--pTex->numMipLevels]);
@@ -654,6 +739,7 @@ void J3DAPI std3D_ClearSystemTexture(tSystemTexture* pTex)
 void J3DAPI std3D_AddToTextureCache(tSystemTexture* pCacheTexture, StdColorFormatType format)
 {
     J3D_UNUSED(format);
+    std3D_FlushDraws(); // the cache may evict textures that queued draws use
     STD_ASSERTREL(pCacheTexture);
     if ( pCacheTexture->numMipLevels == 0 || !pCacheTexture->apMipmaps )
     {
@@ -710,6 +796,7 @@ size_t J3DAPI std3D_GetMipMapCount(const tSystemTexture* pTexture)
 
 void std3D_ResetTextureCache(void)
 {
+    std3D_FlushDraws();
     if ( std3D_bOpen )
     {
         std3D_BindTexture(NULL);
@@ -833,6 +920,7 @@ static int J3DAPI std3D_PurgeTextureCache(size_t size)
 
 int J3DAPI std3D_SetMipmapFilter(Std3DMipmapFilterType filter)
 {
+    std3D_FlushDraws();
     std3D_mipmapFilter = filter;
     if ( std3D_sampler )
     {
@@ -855,6 +943,7 @@ int J3DAPI std3D_SetProjection(float fov, float nearPlane, float farPlane)
 
 void J3DAPI std3D_EnableFog(int bEnabled, float density)
 {
+    std3D_FlushDraws();
     std3D_bRenderFog = bEnabled;
     if ( !std3D_pCurDevice )
     {
@@ -865,6 +954,7 @@ void J3DAPI std3D_EnableFog(int bEnabled, float density)
 
 void J3DAPI std3D_SetFog(float red, float green, float blue, float startDepth, float endDepth)
 {
+    std3D_FlushDraws();
     std3D_EnableFog(std3D_bRenderFog, std3D_g_fogDensity);
     std3D_fogStartDepth  = startDepth;
     std3D_fogEndDepth    = (2.0f - std3D_g_fogDensity) * endDepth;
@@ -886,6 +976,7 @@ void std3D_ClearZBuffer(void)
     {
         return;
     }
+    std3D_FlushDraws();
     std3D_PrepareDraw();
     glDepthMask(GL_TRUE);
     glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);

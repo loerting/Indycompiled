@@ -162,4 +162,7 @@ STDGLES_FUNCTIONS(STDGLES_DECLARE)
 bool stdGLES_LoadFunctions(void);            // after the context was created; false if a function is missing
 bool stdGLES_HasExtension(const char* pName);
 
+// std3DGLES.c: draws the queued 3D draws; the display module calls it before it uses GL or ends the frame
+void std3D_FlushDraws(void);
+
 #endif // STD_SDL_STDGLES_H
