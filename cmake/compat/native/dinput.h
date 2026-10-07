@@ -1,6 +1,288 @@
-// Native builds (Linux, Android): the DirectInput key codes (DIK_*), the engine's keyboard key IDs.
-// Values as in the Windows SDK (taken from MinGW-w64's dinput.h).
+// Native builds (Linux, Android): the subset of DirectInput 8 that the control module (stdControlDX9.c) uses,
+// implemented on SDL3 (std/SDL/stdDInputSDL.c): the system keyboard and mouse, no other devices (gamepads go through
+// XInput, see Xinput.h). DIK_* key codes are the engine's keyboard key IDs. Values as in the Windows SDK.
 #pragma once
+#include <j3dcore/j3dwin32.h>
+
+#ifndef DIRECTINPUT_VERSION
+#define DIRECTINPUT_VERSION 0x0800
+#endif
+
+typedef struct IDirectInput8 IDirectInput8, *LPDIRECTINPUT8;
+typedef struct IDirectInputDevice8 IDirectInputDevice8, *LPDIRECTINPUTDEVICE8;
+typedef const GUID* REFGUID;
+typedef const GUID* REFIID;
+
+#define DI_OK            ((HRESULT)0)
+#define DI_NOTATTACHED   ((HRESULT)1)
+#define DI_BUFFEROVERFLOW ((HRESULT)1)
+#define DI_PROPNOEFFECT  ((HRESULT)1)
+#define DI_POLLEDDEVICE  ((HRESULT)2)
+#define DIERR_OLDDIRECTINPUTVERSION  ((HRESULT)0x8007047E)
+#define DIERR_BETADIRECTINPUTVERSION ((HRESULT)0x80070481)
+#define DIERR_BADDRIVERVER           ((HRESULT)0x80070077)
+#define DIERR_DEVICENOTREG           ((HRESULT)0x80040154)
+#define DIERR_NOTFOUND               ((HRESULT)0x80070002)
+#define DIERR_OBJECTNOTFOUND         ((HRESULT)0x80070002)
+#define DIERR_INVALIDPARAM           ((HRESULT)0x80070057)
+#define DIERR_NOINTERFACE            ((HRESULT)0x80004002)
+#define DIERR_GENERIC                ((HRESULT)0x80004005)
+#define DIERR_OUTOFMEMORY            ((HRESULT)0x8007000E)
+#define DIERR_UNSUPPORTED            ((HRESULT)0x80004001)
+#define DIERR_NOTINITIALIZED         ((HRESULT)0x80070015)
+#define DIERR_ALREADYINITIALIZED     ((HRESULT)0x800704DF)
+#define DIERR_NOAGGREGATION          ((HRESULT)0x80040110)
+#define DIERR_OTHERAPPHASPRIO        ((HRESULT)0x80070005)
+#define DIERR_INPUTLOST              ((HRESULT)0x8007001E)
+#define DIERR_ACQUIRED               ((HRESULT)0x800700AA)
+#define DIERR_NOTACQUIRED            ((HRESULT)0x8007000C)
+#define DIERR_READONLY               ((HRESULT)0x80070005)
+#define DIERR_HANDLEEXISTS           ((HRESULT)0x80070005)
+#define DIERR_INSUFFICIENTPRIVS      ((HRESULT)0x80040200)
+#define DIERR_DEVICEFULL             ((HRESULT)0x80040201)
+#define DIERR_MOREDATA               ((HRESULT)0x80040202)
+#define DIERR_NOTDOWNLOADED          ((HRESULT)0x80040203)
+#define DIERR_HASEFFECTS             ((HRESULT)0x80040204)
+#define DIERR_NOTEXCLUSIVEACQUIRED   ((HRESULT)0x80040205)
+#define DIERR_INCOMPLETEEFFECT       ((HRESULT)0x80040206)
+#define DIERR_NOTBUFFERED            ((HRESULT)0x80040207)
+#define DIERR_EFFECTPLAYING          ((HRESULT)0x80040208)
+
+#define DISCL_EXCLUSIVE    0x00000001
+#define DISCL_NONEXCLUSIVE 0x00000002
+#define DISCL_FOREGROUND   0x00000004
+#define DISCL_BACKGROUND   0x00000008
+#define DIPH_DEVICE   0
+#define DIPH_BYOFFSET 1
+#define DI8DEVCLASS_ALL     0
+#define DIEDFL_ATTACHEDONLY 0x00000001
+#define DIENUM_STOP     0
+#define DIENUM_CONTINUE 1
+#define DI_DEGREES 100
+#define DI8DEVTYPE_DEVICE        0x11
+#define DI8DEVTYPE_MOUSE         0x12
+#define DI8DEVTYPE_KEYBOARD      0x13
+#define DI8DEVTYPE_JOYSTICK      0x14
+#define DI8DEVTYPE_GAMEPAD       0x15
+#define DI8DEVTYPE_DRIVING       0x16
+#define DI8DEVTYPE_FLIGHT        0x17
+#define DI8DEVTYPE_DEVICECTRL    0x19
+#define DI8DEVTYPE_SCREENPOINTER 0x1A
+#define DI8DEVTYPE_REMOTE        0x1B
+#define DI8DEVTYPE_SUPPLEMENTAL  0x1C
+#define GET_DIDEVICE_TYPE(dwDevType) LOBYTE(dwDevType)
+#define DI8DEVTYPE_LIMITEDGAMESUBTYPE 1
+#define GET_DIDEVICE_SUBTYPE(dwDevType) HIBYTE(dwDevType)
+#define DI8DEVTYPEMOUSE_UNKNOWN 1
+#define DI8DEVTYPEMOUSE_TRADITIONAL 2
+#define DI8DEVTYPEMOUSE_FINGERSTICK 3
+#define DI8DEVTYPEMOUSE_TOUCHPAD 4
+#define DI8DEVTYPEMOUSE_TRACKBALL 5
+#define DI8DEVTYPEMOUSE_ABSOLUTE 6
+#define DI8DEVTYPEKEYBOARD_UNKNOWN 0
+#define DI8DEVTYPEKEYBOARD_PCXT 1
+#define DI8DEVTYPEKEYBOARD_OLIVETTI 2
+#define DI8DEVTYPEKEYBOARD_PCAT 3
+#define DI8DEVTYPEKEYBOARD_PCENH 4
+#define DI8DEVTYPEKEYBOARD_NOKIA1050 5
+#define DI8DEVTYPEKEYBOARD_NOKIA9140 6
+#define DI8DEVTYPEKEYBOARD_NEC98 7
+#define DI8DEVTYPEKEYBOARD_NEC98LAPTOP 8
+#define DI8DEVTYPEKEYBOARD_NEC98106 9
+#define DI8DEVTYPEKEYBOARD_JAPAN106 10
+#define DI8DEVTYPEKEYBOARD_JAPANAX 11
+#define DI8DEVTYPEKEYBOARD_J3100 12
+#define DI8DEVTYPEJOYSTICK_LIMITED DI8DEVTYPE_LIMITEDGAMESUBTYPE
+#define DI8DEVTYPEJOYSTICK_STANDARD 2
+#define DI8DEVTYPEGAMEPAD_LIMITED DI8DEVTYPE_LIMITEDGAMESUBTYPE
+#define DI8DEVTYPEGAMEPAD_STANDARD 2
+#define DI8DEVTYPEGAMEPAD_TILT 3
+#define DI8DEVTYPEDRIVING_LIMITED DI8DEVTYPE_LIMITEDGAMESUBTYPE
+#define DI8DEVTYPEDRIVING_COMBINEDPEDALS 2
+#define DI8DEVTYPEDRIVING_DUALPEDALS 3
+#define DI8DEVTYPEDRIVING_THREEPEDALS 4
+#define DI8DEVTYPEDRIVING_HANDHELD 5
+#define DI8DEVTYPEFLIGHT_LIMITED DI8DEVTYPE_LIMITEDGAMESUBTYPE
+#define DI8DEVTYPEFLIGHT_STICK 2
+#define DI8DEVTYPEFLIGHT_YOKE 3
+#define DI8DEVTYPEFLIGHT_RC 4
+#define DI8DEVTYPESCREENPTR_UNKNOWN 2
+#define DI8DEVTYPESCREENPTR_LIGHTGUN 3
+#define DI8DEVTYPESCREENPTR_LIGHTPEN 4
+#define DI8DEVTYPESCREENPTR_TOUCH 5
+#define DI8DEVTYPEREMOTE_UNKNOWN 2
+#define DI8DEVTYPEDEVICECTRL_UNKNOWN 2
+#define DI8DEVTYPEDEVICECTRL_COMMSSELECTION 3
+#define DI8DEVTYPESUPPLEMENTAL_UNKNOWN 2
+#define DI8DEVTYPESUPPLEMENTAL_2NDHANDCONTROLLER 3
+#define DI8DEVTYPESUPPLEMENTAL_HEADTRACKER 4
+#define DI8DEVTYPESUPPLEMENTAL_HANDTRACKER 5
+#define DI8DEVTYPESUPPLEMENTAL_SHIFTSTICKGATE 6
+#define DI8DEVTYPESUPPLEMENTAL_SHIFTER 7
+#define DI8DEVTYPESUPPLEMENTAL_THROTTLE 8
+#define DI8DEVTYPESUPPLEMENTAL_SPLITTHROTTLE 9
+#define DI8DEVTYPESUPPLEMENTAL_COMBINEDPEDALS 10
+#define DI8DEVTYPESUPPLEMENTAL_DUALPEDALS 11
+#define DI8DEVTYPESUPPLEMENTAL_THREEPEDALS 12
+#define DI8DEVTYPESUPPLEMENTAL_RUDDERPEDALS 13
+#define DI8DEVTYPE_1STPERSON 0x18
+#define DI8DEVTYPE1STPERSON_LIMITED DI8DEVTYPE_LIMITEDGAMESUBTYPE
+#define DI8DEVTYPE1STPERSON_UNKNOWN 2
+#define DI8DEVTYPE1STPERSON_SIXDOF 3
+#define DI8DEVTYPE1STPERSON_SHOOTER 4
+#define DIDC_ATTACHED 0x00000001
+#define DIDC_POLLEDDEVICE 0x00000002
+#define DIDC_EMULATED 0x00000004
+#define DIDC_POLLEDDATAFORMAT 0x00000008
+#define DIDC_FORCEFEEDBACK 0x00000100
+#define DIDC_FFATTACK 0x00000200
+#define DIDC_FFFADE 0x00000400
+#define DIDC_SATURATION 0x00000800
+#define DIDC_POSNEGCOEFFICIENTS 0x00001000
+#define DIDC_POSNEGSATURATION 0x00002000
+#define DIDC_DEADBAND 0x00004000
+#define DIDC_STARTDELAY 0x00008000
+#define DIDC_ALIAS 0x00010000
+#define DIDC_PHANTOM 0x00020000
+#define DIDC_HIDDEN 0x00040000
+#define DIJOFS_X  0
+#define DIJOFS_Y  4
+#define DIJOFS_Z  8
+#define DIJOFS_RX 12
+#define DIJOFS_RY 16
+#define DIJOFS_RZ 20
+#define DIJOFS_SLIDER(n)  (24 + (n) * 4)
+#define DIJOFS_POV(n)     (32 + (n) * 4)
+#define DIJOFS_BUTTON(n)  (48 + (n))
+#define MAKEDIPROP(prop) ((REFGUID)(uintptr_t)(prop))
+#define DIPROP_BUFFERSIZE MAKEDIPROP(1)
+#define DIPROP_RANGE      MAKEDIPROP(4)
+
+typedef struct DIDEVCAPS
+{
+    DWORD dwSize;
+    DWORD dwFlags;
+    DWORD dwDevType;
+    DWORD dwAxes;
+    DWORD dwButtons;
+    DWORD dwPOVs;
+    DWORD dwFFSamplePeriod;
+    DWORD dwFFMinTimeResolution;
+    DWORD dwFirmwareRevision;
+    DWORD dwHardwareRevision;
+    DWORD dwFFDriverVersion;
+} DIDEVCAPS, *LPDIDEVCAPS;
+
+typedef struct DIDEVICEINSTANCEA
+{
+    DWORD dwSize;
+    GUID guidInstance;
+    GUID guidProduct;
+    DWORD dwDevType;
+    CHAR tszInstanceName[MAX_PATH];
+    CHAR tszProductName[MAX_PATH];
+    GUID guidFFDriver;
+    WORD wUsagePage;
+    WORD wUsage;
+} DIDEVICEINSTANCE, *LPDIDEVICEINSTANCE;
+typedef const DIDEVICEINSTANCE* LPCDIDEVICEINSTANCE;
+typedef BOOL (CALLBACK* LPDIENUMDEVICESCALLBACK)(LPCDIDEVICEINSTANCE, LPVOID);
+
+typedef struct DIPROPHEADER
+{
+    DWORD dwSize;
+    DWORD dwHeaderSize;
+    DWORD dwObj;
+    DWORD dwHow;
+} DIPROPHEADER, *LPDIPROPHEADER;
+typedef const DIPROPHEADER* LPCDIPROPHEADER;
+
+typedef struct DIPROPDWORD
+{
+    DIPROPHEADER diph;
+    DWORD dwData;
+} DIPROPDWORD;
+
+typedef struct DIPROPRANGE
+{
+    DIPROPHEADER diph;
+    LONG lMin;
+    LONG lMax;
+} DIPROPRANGE;
+
+typedef struct DIDEVICEOBJECTDATA
+{
+    DWORD dwOfs;
+    DWORD dwData;
+    DWORD dwTimeStamp;
+    DWORD dwSequence;
+    UINT_PTR uAppData;
+} DIDEVICEOBJECTDATA, *LPDIDEVICEOBJECTDATA;
+
+typedef struct DIMOUSESTATE
+{
+    LONG lX;
+    LONG lY;
+    LONG lZ;
+    BYTE rgbButtons[4];
+} DIMOUSESTATE;
+
+typedef struct DIJOYSTATE
+{
+    LONG lX, lY, lZ, lRx, lRy, lRz;
+    LONG rglSlider[2];
+    DWORD rgdwPOV[4];
+    BYTE rgbButtons[32];
+} DIJOYSTATE;
+
+#define DIMOFS_X       0
+#define DIMOFS_Y       4
+#define DIMOFS_Z       8
+#define DIMOFS_BUTTON0 12
+#define DIMOFS_BUTTON1 13
+#define DIMOFS_BUTTON2 14
+#define DIMOFS_BUTTON3 15
+
+typedef struct DIDATAFORMAT { DWORD dwSize; } DIDATAFORMAT; // only its identity matters
+extern const DIDATAFORMAT c_dfDIKeyboard;
+extern const DIDATAFORMAT c_dfDIMouse;
+extern const DIDATAFORMAT c_dfDIJoystick;
+extern const GUID GUID_SysKeyboard;
+extern const GUID GUID_SysMouse;
+extern const GUID IID_IDirectInput8;
+
+HRESULT DirectInput8Create(HINSTANCE hinst, DWORD version, REFIID riid, void* ppOut, void* pUnkOuter);
+HRESULT DInputSDL_Release(LPDIRECTINPUT8 pDI);
+HRESULT DInputSDL_EnumDevices(LPDIRECTINPUT8 pDI, DWORD devType, LPDIENUMDEVICESCALLBACK pfCallback, LPVOID pRef, DWORD flags);
+HRESULT DInputSDL_CreateDevice(LPDIRECTINPUT8 pDI, REFGUID guid, LPDIRECTINPUTDEVICE8* ppDevice, void* pUnkOuter);
+HRESULT DInputSDL_DeviceRelease(LPDIRECTINPUTDEVICE8 pDev);
+HRESULT DInputSDL_DeviceGetCapabilities(LPDIRECTINPUTDEVICE8 pDev, LPDIDEVCAPS pCaps);
+HRESULT DInputSDL_DeviceSetDataFormat(LPDIRECTINPUTDEVICE8 pDev, const DIDATAFORMAT* pFormat);
+HRESULT DInputSDL_DeviceSetCooperativeLevel(LPDIRECTINPUTDEVICE8 pDev, HWND hwnd, DWORD flags);
+HRESULT DInputSDL_DeviceSetProperty(LPDIRECTINPUTDEVICE8 pDev, REFGUID prop, LPCDIPROPHEADER pHeader);
+HRESULT DInputSDL_DeviceGetProperty(LPDIRECTINPUTDEVICE8 pDev, REFGUID prop, LPDIPROPHEADER pHeader);
+HRESULT DInputSDL_DeviceAcquire(LPDIRECTINPUTDEVICE8 pDev);
+HRESULT DInputSDL_DeviceUnacquire(LPDIRECTINPUTDEVICE8 pDev);
+HRESULT DInputSDL_DevicePoll(LPDIRECTINPUTDEVICE8 pDev);
+HRESULT DInputSDL_DeviceGetDeviceState(LPDIRECTINPUTDEVICE8 pDev, DWORD size, LPVOID pData);
+HRESULT DInputSDL_DeviceGetDeviceData(LPDIRECTINPUTDEVICE8 pDev, DWORD objSize, LPDIDEVICEOBJECTDATA pData, LPDWORD pInOut, DWORD flags);
+
+#define IDirectInput8_Release(p)                            DInputSDL_Release(p)
+#define IDirectInput8_EnumDevices(p, t, cb, r, f)           DInputSDL_EnumDevices(p, t, cb, r, f)
+#define IDirectInput8_CreateDevice(p, g, d, u)              DInputSDL_CreateDevice(p, g, d, u)
+#define IDirectInputDevice8_Release(p)                      DInputSDL_DeviceRelease(p)
+#define IDirectInputDevice8_GetCapabilities(p, c)           DInputSDL_DeviceGetCapabilities(p, c)
+#define IDirectInputDevice8_SetDataFormat(p, f)             DInputSDL_DeviceSetDataFormat(p, f)
+#define IDirectInputDevice8_SetCooperativeLevel(p, h, f)    DInputSDL_DeviceSetCooperativeLevel(p, h, f)
+#define IDirectInputDevice8_SetProperty(p, g, h)            DInputSDL_DeviceSetProperty(p, g, h)
+#define IDirectInputDevice8_GetProperty(p, g, h)            DInputSDL_DeviceGetProperty(p, g, h)
+#define IDirectInputDevice8_Acquire(p)                      DInputSDL_DeviceAcquire(p)
+#define IDirectInputDevice8_Unacquire(p)                    DInputSDL_DeviceUnacquire(p)
+#define IDirectInputDevice8_Poll(p)                         DInputSDL_DevicePoll(p)
+#define IDirectInputDevice8_GetDeviceState(p, s, d)         DInputSDL_DeviceGetDeviceState(p, s, d)
+#define IDirectInputDevice8_GetDeviceData(p, s, d, n, f)    DInputSDL_DeviceGetDeviceData(p, s, d, n, f)
+
+// DIK_* key codes
 #define DIK_ESCAPE           0x01
 #define DIK_1                0x02
 #define DIK_2                0x03

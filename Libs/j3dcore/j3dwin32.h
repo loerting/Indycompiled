@@ -543,6 +543,18 @@ int J3D_snwprintf(wchar_t* buf, size_t n, const wchar_t* fmt, ...);
 #define fopen_s J3D_fopen_s
 #define fopen J3D_fopen
 #define vsnprintf_s(b, n, c, f, a) vsnprintf(b, n, f, a)
+#undef wcslen
+#undef wcsnlen
+#undef wcsncpy
+#undef wcscpy
+#undef wcscmp
+#undef wcsncmp
+#undef wcsdup
+#undef wmemchr
+#undef wcschr
+#undef wcsstr
+#undef swprintf
+#undef vswprintf
 #define wcslen J3D_wcslen
 #define wcsnlen J3D_wcsnlen
 #define wcsncpy J3D_wcsncpy

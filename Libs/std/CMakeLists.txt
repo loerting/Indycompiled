@@ -27,7 +27,8 @@ elseif(J3D_DIRECTX9)
     )
 elseif(J3D_GLES)
     # Native build (SDL3, OpenGL ES 3): no DirectX, DirectPlay or Win32 console; SDL/ and Posix/ replace the rest
-    list(FILTER SOURCES EXCLUDE REGEX ".*DX[69]\\.c$|/stdComm\\.c$|/stdConsole\\.c$|/General/stdPlatform\\.c$")
+    list(FILTER SOURCES EXCLUDE REGEX ".*DX6\\.c$|/DX9/(std3DX9|stdDisplayDX9|stdShaderDX9)\\.c$|/stdComm\\.c$|/stdConsole\\.c$|/General/stdPlatform\\.c$")
+    # stdControlDX9.c is shared: DirectInput and XInput run on SDL3 (SDL/stdDInputSDL.c, SDL/stdXInputSDL.c)
 endif()
 
 # Make project target

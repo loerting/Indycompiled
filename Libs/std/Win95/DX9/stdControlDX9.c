@@ -1283,6 +1283,7 @@ const char* J3DAPI stdControl_DIGetStatus(int HRESULT)
     return pError;
 }
 
+#ifdef _WIN32 // WMI query
 BOOL stdControl_IsXInputDevice(const GUID* pGuidProductFromDirectInput)
 {
     IWbemLocator* pIWbemLocator        = NULL;
@@ -1428,6 +1429,13 @@ LCleanup:
 
     return bIsXinputDevice;
 }
+#else // native builds: no WMI; gamepads come through XInput only, DirectInput enumerates no joysticks
+BOOL stdControl_IsXInputDevice(const GUID* pGuidProductFromDirectInput)
+{
+    J3D_UNUSED(pGuidProductFromDirectInput);
+    return FALSE;
+}
+#endif
 
 BOOL CALLBACK stdControl_EnumDevicesCallback(LPCDIDEVICEINSTANCE pdidInstance, LPVOID pContext)
 {
