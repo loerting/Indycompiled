@@ -2,6 +2,11 @@ project(w32util C)
 
 file(GLOB_RECURSE SOURCES *.c)
 file(GLOB_RECURSE HEADERS *.h)
+if (WIN32)
+    list(FILTER SOURCES EXCLUDE REGEX "Null\\.c$")
+else()
+    list(FILTER SOURCES EXCLUDE REGEX "/wuRegistry\\.c$") # no registry: settings are in the JSON config
+endif()
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES} ${HEADERS})
 

@@ -38,6 +38,7 @@
 
 #cmakedefine J3D_DIRECTX6
 #cmakedefine J3D_DIRECTX9
+#cmakedefine J3D_GLES // Native build: SDL3 and OpenGL ES 3
 
 #cmakedefine J3D_COLORKEYSUPPORTED
 
@@ -58,9 +59,7 @@
 #   define wstrncmpi _wcsnicmp
 #else
     // TODO: define J3D_DEBUG
-    typedef int      BOOL;
-    typedef uint8_t  BYTE;
-    typedef uint16_t WORD;
+#   include <j3dcore/j3dwin32.h> // the Win32 types and CRT names the engine uses
 #endif
 
 #ifdef _MSC_VER 

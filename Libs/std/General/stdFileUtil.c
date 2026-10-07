@@ -7,6 +7,13 @@
 #include <j3dcore/j3dhook.h>
 #include <std/RTI/symbols.h>
 
+#ifndef _WIN32
+#include <dirent.h>
+#include <fnmatch.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#endif
+
 void stdFileUtil_InstallHooks(void)
 {
     J3D_HOOKFUNC(stdFileUtil_NewFind);
@@ -19,6 +26,7 @@ void stdFileUtil_InstallHooks(void)
 void stdFileUtil_ResetGlobals(void)
 {}
 
+#ifdef _WIN32
 time_t FileTimeToUnixTime(const FILETIME* ft)
 {
     // Windows FILETIME starts on January 1, 1601
@@ -36,6 +44,7 @@ time_t FileTimeToUnixTime(const FILETIME* ft)
 
     return (time_t)ull.QuadPart;
 }
+#endif
 
 FindFileData* J3DAPI stdFileUtil_NewFind(const char* path, int mode, const char* pFilter)
 {
@@ -82,6 +91,7 @@ FindFileData* J3DAPI stdFileUtil_NewFind(const char* path, int mode, const char*
     return pData;
 }
 
+#ifdef _WIN32
 void J3DAPI stdFileUtil_DisposeFind(FindFileData* ffData)
 {
     if ( ffData )
@@ -128,6 +138,76 @@ int J3DAPI stdFileUtil_FindNext(FindFileData* ffData, tFoundFileInfo* pFileInfo)
     return 1;
 }
 
+#else // native builds: dirent; aSearchFilter is "<dir>\\<pattern>", matched case-insensitively
+void J3DAPI stdFileUtil_DisposeFind(FindFileData* ffData)
+{
+    if ( ffData )
+    {
+        if ( ffData->handle )
+        {
+            closedir((DIR*)ffData->handle);
+        }
+        stdMemory_Free(ffData);
+    }
+}
+
+int J3DAPI stdFileUtil_FindNext(FindFileData* ffData, tFoundFileInfo* pFileInfo)
+{
+    if ( !ffData )
+    {
+        return 0;
+    }
+
+    char aDir[J3D_MAX_PATH];
+    const char* pPattern = "*";
+    STD_STRCPY(aDir, ffData->aSearchFilter);
+    char* pSep = strrchr(aDir, '\\');
+    if ( !pSep ) pSep = strrchr(aDir, '/');
+    if ( pSep )
+    {
+        *pSep = 0;
+        pPattern = ffData->aSearchFilter + (pSep - aDir) + 1;
+    }
+    else
+    {
+        pPattern = ffData->aSearchFilter;
+        STD_STRCPY(aDir, ".");
+    }
+
+    char aResolved[J3D_MAX_PATH];
+    J3D_ResolvePath(aDir, aResolved, sizeof(aResolved));
+    if ( ffData->nFoundFiles++ == 0 )
+    {
+        ffData->handle = opendir(aResolved);
+    }
+    if ( !ffData->handle )
+    {
+        return 0;
+    }
+
+    // "*.*" matches every name on Windows, also names without a dot
+    bool bAll = streq(pPattern, "*.*") || streq(pPattern, "*");
+    struct dirent* pEntry;
+    while ( (pEntry = readdir((DIR*)ffData->handle)) != NULL )
+    {
+        if ( bAll || fnmatch(pPattern, pEntry->d_name, FNM_CASEFOLD) == 0 )
+        {
+            char aPath[J3D_MAX_PATH];
+            snprintf(aPath, sizeof(aPath), "%s/%s", aResolved, pEntry->d_name);
+            struct stat st;
+            bool bStat = stat(aPath, &st) == 0;
+
+            STD_STRCPY(pFileInfo->aName, pEntry->d_name);
+            pFileInfo->lastChanged  = bStat ? st.st_mtime : 0;
+            pFileInfo->bIsDirectory = bStat && S_ISDIR(st.st_mode);
+            return 1;
+        }
+    }
+    return 0;
+}
+
+#endif
+
 int J3DAPI stdFileUtil_FindQuick(const char* pPath, int mode, const char* pFilter, tFoundFileInfo* pFileInfo)
 {
     FindFileData* pFileData = stdFileUtil_NewFind(pPath, mode, pFilter);
@@ -161,6 +241,7 @@ int J3DAPI stdFileUtil_CountMatches(const char* pPath, int mode, const char* pFi
     return count;
 }
 
+#ifdef _WIN32
 int J3DAPI stdFileUtil_MkDir(const char* pPath)
 {
     return CreateDirectoryA(pPath, NULL);
@@ -189,3 +270,29 @@ int J3DAPI stdFileUtil_DelFile(const char* pFilename)
 {
     return DeleteFileA(pFilename);
 }
+#else
+int J3DAPI stdFileUtil_MkDir(const char* pPath)
+{
+    char aPath[J3D_MAX_PATH];
+    return mkdir(J3D_ResolvePath(pPath, aPath, sizeof(aPath)), 0755) == 0;
+}
+
+int J3DAPI stdFileUtil_FileExists(const char* pFilename)
+{
+    char aPath[J3D_MAX_PATH];
+    struct stat st;
+    return stat(J3D_ResolvePath(pFilename, aPath, sizeof(aPath)), &st) == 0;
+}
+
+int J3DAPI stdFileUtil_RmDir(const char* pDir)
+{
+    char aPath[J3D_MAX_PATH];
+    return rmdir(J3D_ResolvePath(pDir, aPath, sizeof(aPath))) == 0;
+}
+
+int J3DAPI stdFileUtil_DelFile(const char* pFilename)
+{
+    char aPath[J3D_MAX_PATH];
+    return unlink(J3D_ResolvePath(pFilename, aPath, sizeof(aPath))) == 0;
+}
+#endif

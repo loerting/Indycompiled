@@ -55,7 +55,7 @@ dkms.conf
 Build/*
 
 # Generated code
-Libs/j3dcore/j3d.h
+Libs/j3dcore/j3d.h  # INDY: now generated into the build dir; ignore stale copies
 
 # External code
 Libs/external/DirectX61c/include/*

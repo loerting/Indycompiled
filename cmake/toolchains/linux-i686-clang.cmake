@@ -1,0 +1,16 @@
+# Native 32-bit Linux build (Stage 5): clang -m32 with the host's lib32 libraries (Arch/Manjaro multilib).
+# 32-bit first: the engine's structs keep the layout of the Windows build, so native and Wine runs compare directly.
+set(CMAKE_SYSTEM_NAME Linux)
+set(CMAKE_SYSTEM_PROCESSOR i686)
+set(CMAKE_C_COMPILER clang)
+set(CMAKE_CXX_COMPILER clang++)
+set(CMAKE_C_FLAGS_INIT "-m32")
+set(CMAKE_CXX_FLAGS_INIT "-m32")
+foreach(kind EXE SHARED MODULE)
+    set(CMAKE_${kind}_LINKER_FLAGS_INIT "-m32")
+endforeach()
+set(CMAKE_LIBRARY_ARCHITECTURE "")
+set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+set(ENV{PKG_CONFIG_LIBDIR} "/usr/lib32/pkgconfig:/usr/share/pkgconfig")
+set(CMAKE_SYSTEM_LIBRARY_PATH /usr/lib32)
+set(FIND_LIBRARY_USE_LIB32_PATHS ON)

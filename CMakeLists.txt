@@ -61,7 +61,10 @@ if (JONES3D_RUNTIME_GUARDS)
     set(J3D_RUNTIME_GUARDS ON)
 endif()
 
-if(JONES3D_USE_DIRECTX9)
+if(NOT WIN32) # Native build (Linux, Android): SDL3 and OpenGL ES 3 (cmake/native.cmake)
+    set(JONES3D_GAPI_NAME "OpenGL ES 3 (SDL3)")
+    set(J3D_GLES ON)
+elseif(JONES3D_USE_DIRECTX9)
     set(JONES3D_GAPI_NAME "DirectX 9")
     set(J3D_DIRECTX9 ON) # Set the variable for the header template
     if (NOT JONES3D_QOL_IMPROVEMENTS)
@@ -87,10 +90,11 @@ else()
 endif()
 
 # Configure the version header file
-configure_file( # INDY: "Libs", not "LIBS" (case-sensitive file systems)
+configure_file( # INDY: "Libs", not "LIBS" (case-sensitive file systems); into the build dir, as the builds differ
     "${CMAKE_CURRENT_SOURCE_DIR}/Libs/j3dcore/j3d.h.in"
-    "${CMAKE_CURRENT_SOURCE_DIR}/Libs/j3dcore/j3d.h"
+    "${CMAKE_BINARY_DIR}/gen/j3dcore/j3d.h"
 )
+include_directories(BEFORE "${CMAKE_BINARY_DIR}/gen") # INDY
 
 # Set global property for MSVC runtime library (CMake 3.15+)
 set(CMAKE_MSVC_RUNTIME_LIBRARY "$<$<CONFIG:Release>:MultiThreaded>$<$<CONFIG:MinSizeRel>:MultiThreaded>")
@@ -118,6 +122,8 @@ if (MSVC)
         "$<$<CONFIG:DEBUG>:/ZI>"
     )
     add_link_options("/Brepro")
+elseif(NOT WIN32) # Native build (Linux, Android)
+    include(cmake/native.cmake)
 elseif(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU") # INDY: clang + MinGW-w64 build on Linux (PROJECT.md §5)
     include(cmake/indy.cmake)
 else()

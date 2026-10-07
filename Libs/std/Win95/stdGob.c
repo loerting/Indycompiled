@@ -119,6 +119,7 @@ int J3DAPI stdGob_LoadEntry(Gob* pGob, const char* pFilename, int numFileHandles
         bMMapFile = 0;
     }
 
+#ifdef _WIN32 // unreachable (see above); no Win32 file mapping on native builds
     if ( bMMapFile )
     {
         pGob->hFile = CreateFileA(pGob->aFilePath, GENERIC_READ, FILE_SHARE_READ, NULL, CREATE_ALWAYS | CREATE_NEW, FILE_FLAG_RANDOM_ACCESS, NULL);
@@ -147,6 +148,7 @@ int J3DAPI stdGob_LoadEntry(Gob* pGob, const char* pFilename, int numFileHandles
             CloseHandle(pGob->hFile);
         }
     }
+#endif
 
     pGob->bFileMap = 0;
     pGob->hGobFile = stdGob_pHS->pFileOpen(pGob->aFilePath, "rb");
@@ -275,6 +277,7 @@ void J3DAPI stdGob_FreeEntry(Gob* pGob)
     // Added: Keep release builds from dereferencing a NULL Gob entry.
     STD_GUARD_VOID(pGob);
 
+#ifdef _WIN32
     if ( pGob->bFileMap )
     {
         // Fixed: Release all mmap resources and keep the handle state clear.
@@ -304,6 +307,7 @@ void J3DAPI stdGob_FreeEntry(Gob* pGob)
 
         pGob->bFileMap = 0;
     }
+#endif
 
     if ( pGob->directory.aEntries )
     {

@@ -158,6 +158,10 @@ int J3DAPI stdBmp_WriteVBuffer(const char* pFilename, tVBuffer* pVBuffer)
 
 HBITMAP J3DAPI stdBmp_Load(const char* pFilename)
 {
+#ifndef _WIN32
+    J3D_UNUSED(pFilename);
+    return NULL; // GDI bitmaps (dialog icons) exist only on Windows
+#else
     if ( !pFilename )
     {
         return NULL;
@@ -306,4 +310,5 @@ HBITMAP J3DAPI stdBmp_Load(const char* pFilename)
 
     std_g_pHS->pFileClose(fh);
     return hbmp;
+#endif
 }

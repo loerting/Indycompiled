@@ -2751,6 +2751,7 @@ void J3DAPI JonesMain_LoadSettings(StdDisplayEnvironment* pDisplayEnv, JonesStat
     pConfig->soundSettings.bReverseSound = stdConfig_GetBool(JONESCONFIG_CFG_SOUND_REVERSE, false);
 }
 
+#ifdef _WIN32 // developer launcher and display dialogs (Win32 dialogs)
 int J3DAPI JonesMain_ShowDevDialog(HWND hWnd, JonesState* pConfig)
 {
     HINSTANCE hInstance = STDWIN95_RESOURCES((HINSTANCE)GetWindowLongPtr(hWnd, GWL_HINSTANCE)); // INDY: Stage 4
@@ -3313,6 +3314,22 @@ void J3DAPI JonesMain_DevDialogUpdateRadioButtons(HWND hDlg, const JonesState* p
     }
 }
 
+#else // native builds: no developer launcher; the game starts from the config
+int J3DAPI JonesMain_ShowDevDialog(HWND hWnd, JonesState* pConfig)
+{
+    J3D_UNUSED(hWnd);
+    J3D_UNUSED(pConfig);
+    return 1; // start the game
+}
+
+int J3DAPI JonesMain_ShowDisplayOptions(HWND hWnd, JonesState* pState)
+{
+    J3D_UNUSED(hWnd);
+    J3D_UNUSED(pState);
+    return 1; // OK
+}
+#endif // _WIN32
+
 size_t J3DAPI JonesMain_FindClosestVideoMode(const StdDisplayEnvironment* pList, const StdVideoMode* pVideoMode, size_t deviceNum)
 {
     size_t videoMode = 0;
@@ -3349,7 +3366,7 @@ bool J3DAPI JonesMain_CurDisplaySupportsBPP(const JonesDisplaySettings* pSetting
         case 32:
             return (pDisplay->aDevices[pSettings->device3DNum].d3dDesc.dwDeviceRenderBitDepth & DDBD_32) != 0;
     }
-#elif defined(J3D_DIRECTX9)
+#elif defined(J3D_DIRECTX9) || defined(J3D_GLES)
     J3D_UNUSED(pSettings);
     if ( bpp == 24 || bpp == 32 ) return 1;
 #else 

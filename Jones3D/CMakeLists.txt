@@ -15,6 +15,12 @@ set(JONES3D_POST_BUILD_COPY_DIR "" CACHE PATH "Destination folder for the post-b
 file(GLOB_RECURSE JONES3D_DLL_SOURCES *.c)
 file(GLOB_RECURSE JONES3D_DLL_HEADERS *.h)
 list(REMOVE_ITEM JONES3D_DLL_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/sha256.h")
+if (WIN32)
+    list(FILTER JONES3D_DLL_SOURCES EXCLUDE REGEX "SDL\\.c$|/main\\.c$")
+else()
+    # Native build: dialogs and the entry point have SDL versions
+    list(FILTER JONES3D_DLL_SOURCES EXCLUDE REGEX "/jonesConfig\\.c$|/JonesDialog\\.c$|/dllmain\\.c$")
+endif()
 
 # Jones3D EXE sources
 set(JONES3D_EXE_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/exemain.cpp")
@@ -44,7 +50,9 @@ target_include_directories(Jones3D_DLL PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/..)
 
 # Link against Libs project
 target_link_libraries(Jones3D_DLL PRIVATE Libs)
+if (WIN32)
 target_link_libraries(Jones3D_DLL PRIVATE Comctl32.lib)
+endif()
 
 # Organize source files in Visual Studio
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${JONES3D_DLL_SOURCES} ${JONES3D_DLL_HEADERS})

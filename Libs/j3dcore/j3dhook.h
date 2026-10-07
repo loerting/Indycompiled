@@ -192,7 +192,11 @@ inline bool J3DStartHookContext(J3DHookContext* pCtx, uintptr_t startAddress, ui
     }
     pCtx->startAddress = startAddress;
     pCtx->size = endAddress - startAddress;
+#ifdef _WIN32 // native builds have no exe to patch
     return VirtualProtect((LPVOID)pCtx->startAddress, pCtx->size, PAGE_EXECUTE_READWRITE, &pCtx->oldProtect);
+#else
+    return false;
+#endif
 }
 
 /**
@@ -203,8 +207,13 @@ inline bool J3DStartHookContext(J3DHookContext* pCtx, uintptr_t startAddress, ui
  */
 inline bool J3DEndHookContext(J3DHookContext* pCtx)
 {
+#ifdef _WIN32
     DWORD temp;
     return VirtualProtect((LPVOID)pCtx->startAddress, pCtx->size, pCtx->oldProtect, &temp);
+#else
+    (void)pCtx;
+    return false;
+#endif
 }
 
 #ifndef J3D_STANDALONE

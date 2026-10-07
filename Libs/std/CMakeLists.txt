@@ -8,12 +8,14 @@ if(J3D_DIRECTX6)
   # Remove DX9 files.
     list(FILTER SOURCES EXCLUDE REGEX ".*DX9\\.c$")
     list(FILTER SOURCES EXCLUDE REGEX "stdComm.c$")
+    list(FILTER SOURCES EXCLUDE REGEX "/SDL/|/Posix/")
 
     set(SHADERS "")
     set(SHADER_INCLUDES "")
 elseif(J3D_DIRECTX9)
     # Remove DX6 files.
     list(FILTER SOURCES EXCLUDE REGEX ".*DX6\\.c$")
+    list(FILTER SOURCES EXCLUDE REGEX "/SDL/|/Posix/")
 
     # Collect shader files
     set(SHADER_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Win95/DX9/Shaders")
@@ -23,6 +25,9 @@ elseif(J3D_DIRECTX9)
     file(GLOB SHADER_INCLUDES
         "${SHADER_DIR}/*.hlsli"
     )
+elseif(J3D_GLES)
+    # Native build (SDL3, OpenGL ES 3): no DirectX, DirectPlay or Win32 console; SDL/ and Posix/ replace the rest
+    list(FILTER SOURCES EXCLUDE REGEX ".*DX[69]\\.c$|/stdComm\\.c$|/stdConsole\\.c$|/General/stdPlatform\\.c$")
 endif()
 
 # Make project target
@@ -32,10 +37,10 @@ add_library(${PROJECT_NAME} STATIC ${SOURCES} ${HEADERS} ${SHADERS} ${SHADER_INC
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/..)
 
 # Link libraries
-target_link_libraries(${PROJECT_NAME} PUBLIC 
-    j3dcore
-    Winmm # timeGetTime
-)
+target_link_libraries(${PROJECT_NAME} PUBLIC j3dcore)
+if (WIN32)
+    target_link_libraries(${PROJECT_NAME} PUBLIC Winmm) # timeGetTime
+endif()
 
 set(EXTRA_LIBS
     jansson::jansson
@@ -93,7 +98,13 @@ if (WIN32)
     )
 endif()
 
+if (J3D_GLES)
+    target_link_libraries(${PROJECT_NAME} PUBLIC ${EXTRA_LIBS} SDL3::SDL3)
+endif()
+
+if (WIN32)
 target_link_options(${PROJECT_NAME} INTERFACE "/SAFESEH:NO") # due to DirectX 6.1 libs
+endif()
 
 # Organize source files in Visual Studio
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCES} ${HEADERS} ${SHADERS} ${SHADER_INCLUDES} ${GENERATED_HEADERS})

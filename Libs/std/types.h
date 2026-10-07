@@ -12,6 +12,7 @@
 #define D3D_DEBUG_INFO // TODO: comment out when done
 #endif
 #include <d3d9.h>
+#elif defined(J3D_GLES) // Native build (SDL3, OpenGL ES 3)
 #else
 #error "Unsupported GAPI"
 #endif
@@ -83,6 +84,45 @@ typedef struct sD3DTLVERTEX
 
 // The FVF format for D3DTLVERTEX
 #define D3DTLVERTEX_FVF (D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_SPECULAR | D3DFVF_TEX1)
+
+#elif defined(J3D_GLES) // Native build (OpenGL ES 3): same names and layout as the DirectX 9 build
+#define DPID_ALLPLAYERS   0
+#define DPSEND_GUARANTEED 0x00000001
+#define DPERR_GENERIC     E_FAIL
+typedef DWORD DPID;
+
+typedef DWORD D3DCOLOR;
+#define D3DCOLOR_ARGB(a, r, g, b) ((D3DCOLOR)((((a)&0xff)<<24)|(((r)&0xff)<<16)|(((g)&0xff)<<8)|((b)&0xff)))
+#define D3DCOLOR_RGBA(r, g, b, a) D3DCOLOR_ARGB(a, r, g, b)
+#define D3DCOLOR_XRGB(r, g, b) D3DCOLOR_ARGB(0xff, r, g, b)
+#define D3DCOLOR_COLORVALUE(r, g, b, a) \
+     D3DCOLOR_RGBA((DWORD)((r)*255.f),(DWORD)((g)*255.f),(DWORD)((b)*255.f),(DWORD)((a)*255.f))
+#define D3DRGBA D3DCOLOR_COLORVALUE
+#define RGBA_MAKE D3DCOLOR_ARGB
+#define D3DRGB(r, g , b) \
+     D3DCOLOR_XRGB((DWORD)((r)*255.f),(DWORD)((g)*255.f),(DWORD)((b)*255.f))
+
+typedef struct sStdGLCaps { int maxTextureSize; } tSysDisplayDeviceCaps;
+typedef struct sStdGLDevice tSysDisplayDevice;
+typedef struct sStdGLCaps tSysDevice3DDesc;
+typedef struct sStdGLDevice tSysDevice3D;
+typedef uint32_t tSysPixelFormat; // GL internal format
+typedef struct sStdGLSurfaceDesc { uint32_t width; uint32_t height; } tSysSurfaceDesc;
+typedef struct sStdGLSurface tSysSurface;
+typedef struct sStdGLTexture tSysTexture;
+typedef void* LPDDCOLORKEY;
+
+typedef struct sD3DTLVERTEX
+{
+    float sx;
+    float sy;
+    float sz;
+    float rhw;
+    D3DCOLOR color;
+    D3DCOLOR specular;
+    float tu;
+    float tv;
+} D3DTLVERTEX, * LPD3DTLVERTEX;
 
 #endif // J3D_DIRECTX6
 

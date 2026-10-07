@@ -3370,6 +3370,7 @@ void JonesHud_MenuActivateItem(void)
         case JONESHUD_MENU_HELP: // help
             // TODO: Help menu item is not put in place in ResetMenuitems
             //       so this scope could be skipped
+#ifdef _WIN32 // the help file opens in an external program on Windows only
             if ( JonesHud_hProcessHelp )
             {
                 DWORD exitCode;
@@ -3382,6 +3383,7 @@ void JonesHud_MenuActivateItem(void)
             }
 
             JonesHud_hProcessHelp = JonesHud_OpenHelp(JonesHud_hProcessHelp);
+#endif
             dlgResult = 2;
             break;
 
@@ -4297,6 +4299,7 @@ HANDLE J3DAPI JonesHud_OpenHelp(HANDLE process)
     char* pFilename = stdUtil_ToAString(pwString);
     char aPath[128] = { 0 };
     stdConfig_GetString(SITH_CFG_INSTALLPATH, aPath, sizeof(aPath), "");
+#ifdef _WIN32
     if ( pFilename && strlen(aPath) )
     {
         SHELLEXECUTEINFOA execInfo = { 0 };
@@ -4309,6 +4312,7 @@ HANDLE J3DAPI JonesHud_OpenHelp(HANDLE process)
         ShellExecuteExA(&execInfo);
         hProcess = execInfo.hProcess;
     }
+#endif
 
     if ( pFilename )
     {
