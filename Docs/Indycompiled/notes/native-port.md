@@ -112,3 +112,41 @@ needed to build it.
   run e.g. `INDY_SMOKE_PROC=IndyStandalone.exe Scripts/indy/smoke.sh 60 Resource/IndyStandalone.exe 1`, or
   `INDY_SWEEP_EXE=IndyStandalone.exe Scripts/indy/level_sweep.sh`. A/B tests need the hook build.
 - **Next:** resources from our own files (Stage 5 replaces the dialogs anyway), then a native link.
+
+
+## Native Linux build (Stage 5, 2026-10-07)
+
+`cmake --preset linux-i686 && cmake --build Build/linux-i686` builds `Build/linux-i686/Jones3D/Jones3D`: the engine
+with SDL3 and OpenGL ES 3, no Wine, no Indy3D.exe. 32-bit first (clang `-m32`, lib32 libraries), so struct layouts and
+savegames match the Windows build. Written for upstream (OpenJones3D): module `CMakeLists.txt` files pick the native
+sources (`J3D_GLES`), Win32-only code is guarded with `_WIN32`, no INDY markers in new files.
+
+How the platform layer is built:
+- **Types and CRT:** `j3dcore/j3dwin32.h` (Win32 types, constants, `sscanf_s`, 16-bit wide strings, path resolution
+  with case-insensitive lookup for `fopen`); `cmake/compat/native/` maps `<Windows.h>`, `<dinput.h>`, `<dsound.h>`,
+  `<Xinput.h>` to it. `-fshort-wchar` keeps `wchar_t` 16-bit; `-fno-builtin-wcs*` stops clang from calling glibc's
+  32-bit wide functions for recognized loops (that corrupted the heap).
+- **Window:** `wkernelSDL.c` turns SDL events into the WM_* messages JonesMain's window procedures handle.
+- **Renderer:** `std/SDL/std3DGLES.c` is the DirectX 9 pipeline in GLSL ES (same shader math, alpha test 0/160,
+  blending, fog, 32-bit textures); `stdDisplaySDL.c` the display (back buffer = framebuffer, read back for movies).
+- **Sound:** `DriverDX9.c` unchanged on `DirectSoundSDL.c`, a DirectSound 8 subset as SDL3 software mixer (no
+  hardware 3D, so the driver mixes 3D sounds itself, as on Windows without it).
+- **Input:** `stdControlDX9.c` unchanged on `stdDInputSDL.c` (keyboard, mouse) and `stdXInputSDL.c` (gamepads).
+- **Movies:** `smushPlaySDL.c`. **Dialogs:** `jonesConfig.c` guards its 12 Win32 regions, `jonesConfigSDL.c`
+  answers them (exit leaves, game over restarts from the autosave, level end continues) until the engine draws them.
+  **No multiplayer** (`stdCommNull.c`), **no registry** (`wuRegistryNull.c`).
+
+Verified (headless, `Scripts/indy/smoke_native.sh`):
+- Intro movies, level 1 with textures, HUD text; Indy runs and turns with scripted input; autosave written.
+- World snapshot after loading level 1 equals the Windows standalone build under Wine: no word with plain values
+  differs (384 words differ only in the snapshot's pointer heuristic, which depends on the address space).
+- 300 simulated frames: render-only fields differ (resolution), plus one moving actor; likely the maths library
+  (msvcrt vs glibc `sin`/`cos`, last-bit differences). Bit-exact runs across platforms would need our own maths.
+- AddressSanitizer build: no errors over 45 s. Found and fixed `rdCache_SendFaceListToHardware` reading past the
+  face list (all platforms).
+
+Open:
+- Exit after SIGTERM sometimes aborts in Mesa's `XCloseDisplay` ("corrupted double-linked list"); not reproducible
+  with ASan or glibc's malloc checks, and not tied to the x87 setting. Next: Valgrind, or exit through the game menu.
+- Fullscreen mode switches time out under Xvfb (window mode is used); MSAA not yet (needs an FBO); dialogs are
+  stand-ins; touch input and the x86_64/arm64 build (64-bit cleanup) for Android.
