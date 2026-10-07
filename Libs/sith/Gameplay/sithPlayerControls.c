@@ -120,6 +120,7 @@ static int J3DAPI sithPlayerControls_ProcessEditorDebugControls(SithThing* pThin
 static int J3DAPI sithPlayerControls_ProcessDeadPlayer(SithThing* pThing, float secDeltaTime);
 static void J3DAPI sithPlayerControls_ProcessFallingMove(SithThing* pThing, float secDeltaTime);
 static void J3DAPI sithPlayerControls_ProcessSwimMove(SithThing* pThing, float secDeltaTime);
+static void sithPlayerControls_ProcessSwimMoveModern(SithThing* pThing, float secDeltaTime); // INDY(ENH-0005)
 static void J3DAPI sithPlayerControls_ProcessHangMove(SithThing* pThing, float secDeltaTime);
 static void J3DAPI sithPlayerControls_ProcessWeaponAim(SithThing* pThing, float secDeltaTime);
 
@@ -715,7 +716,7 @@ int J3DAPI sithPlayerControls_Process(SithThing* pPlayerThing, float secDeltaTim
             {
                 pPlayerThing->moveStatus = SITHPLAYERMOVE_SWIMIDLE;
                 sithPlayerControls_secSwimIdleTime = 0.0f;
-                sithPlayerControls_ProcessSwimMove(pPlayerThing, secDeltaTime);
+                sithPlayerControls_ProcessSwimMoveModern(pPlayerThing, secDeltaTime); // INDY(ENH-0005)
             }
             else
             {
@@ -742,7 +743,7 @@ int J3DAPI sithPlayerControls_Process(SithThing* pPlayerThing, float secDeltaTim
             break;
 
         case SITHPLAYERMOVE_SWIMIDLE:
-            sithPlayerControls_ProcessSwimMove(pPlayerThing, secDeltaTime);
+            sithPlayerControls_ProcessSwimMoveModern(pPlayerThing, secDeltaTime); // INDY(ENH-0005)
             break;
 
         case SITHPLAYERMOVE_JUMPFWD:
@@ -753,7 +754,7 @@ int J3DAPI sithPlayerControls_Process(SithThing* pPlayerThing, float secDeltaTim
             {
                 pPlayerThing->moveStatus = SITHPLAYERMOVE_SWIMIDLE;
                 sithPlayerControls_secSwimIdleTime = 0.0f;
-                sithPlayerControls_ProcessSwimMove(pPlayerThing, secDeltaTime);
+                sithPlayerControls_ProcessSwimMoveModern(pPlayerThing, secDeltaTime); // INDY(ENH-0005)
             }
             else
             {
@@ -1950,6 +1951,14 @@ void J3DAPI sithPlayerControls_ProcessFallingMove(SithThing* pThing, float secDe
         rdVector_Zero3(&pPhysics->thrust);
         rdVector_Zero3(&pPhysics->angularVelocity);
     }
+}
+
+// INDY(ENH-0005): swimming on the water surface with the camera-relative controls (indyModern decides when they apply)
+static void sithPlayerControls_ProcessSwimMoveModern(SithThing* pThing, float secDeltaTime)
+{
+    indyModern_Begin(pThing, secDeltaTime);
+    sithPlayerControls_ProcessSwimMove(pThing, secDeltaTime);
+    indyModern_End();
 }
 
 void J3DAPI sithPlayerControls_ProcessSwimMove(SithThing* pThing, float secDeltaTime)

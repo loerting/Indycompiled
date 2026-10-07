@@ -62,9 +62,10 @@ void J3DAPI indyModern_Begin(SithThing* pThing, float secDeltaTime)
     indyModern_bActive  = false;
     indyModern_secSinceUse += secDeltaTime;
 
+    const bool bSurfaceSwimming = pThing->moveStatus == SITHPLAYERMOVE_SWIMIDLE && (pThing->moveInfo.physics.flags & SITH_PF_ONWATERSURFACE) != 0;
     if ( !indyEnh_IsEnabled(INDY_ENH_MODERN_CONTROLS) || pThing != sithPlayer_g_pLocalPlayerThing
         || (pThing->moveStatus != SITHPLAYERMOVE_STILL && pThing->moveStatus != SITHPLAYERMOVE_WALKING
-            && pThing->moveStatus != SITHPLAYERMOVE_RUNNING) )
+            && pThing->moveStatus != SITHPLAYERMOVE_RUNNING && !bSurfaceSwimming) )
     {
         return;
     }

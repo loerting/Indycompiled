@@ -42,6 +42,14 @@ static size_t wkernel_numMessages = 0;
 void wkernel_InstallHooks(void) {}
 void wkernel_ResetGlobals(void) {}
 
+static bool wkernel_bModal;           // a native menu runs its own loop (wkernel_SetModal)
+static bool wkernel_bShutdownPending; // the window closed during it: shut down once the main loop ends
+
+void wkernel_SetModal(bool bModal)
+{
+    wkernel_bModal = bModal;
+}
+
 // As wkernel.c's main window procedure
 static void wkernel_Dispatch(UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -53,7 +61,11 @@ static void wkernel_Dispatch(UINT msg, WPARAM wParam, LPARAM lParam)
 
     if ( msg == WM_CLOSE )
     {
-        if ( wkernel_pfOnShutdown )
+        if ( wkernel_bModal )
+        {
+            wkernel_bShutdownPending = true; // the menu's caller still uses the game: shut down after the main loop
+        }
+        else if ( wkernel_pfOnShutdown )
         {
             wkernel_pfOnShutdown();
         }
@@ -257,6 +269,9 @@ int J3DAPI wkernel_Run(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPSTR lpCmd
         return -1;
     }
 
+#ifndef __ANDROID__
+    SDL_StartTextInput(wkernel_pWindow); // typed characters (WM_CHAR) for the console; on Android it would open the on-screen keyboard
+#endif
     stdWin95_SetWindow((HWND)wkernel_pWindow);
     stdWin95_SetInstance(hinstance);
 
@@ -276,6 +291,12 @@ int J3DAPI wkernel_Run(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPSTR lpCmd
         }
 
         result = wkernel_pfProcess();
+    }
+
+    if ( wkernel_bShutdownPending && wkernel_pfOnShutdown )
+    {
+        wkernel_bShutdownPending = false;
+        wkernel_pfOnShutdown();
     }
 
     SDL_DestroyWindow(wkernel_pWindow);

@@ -156,6 +156,7 @@ bool JonesMenu_Begin(void)
         stdDisplay_CaptureBackdrop(); // the game as it is now, behind the menu
     }
     indyTouch_SetUiMode(true);
+    wkernel_SetModal(true);
     return true;
 }
 
@@ -184,6 +185,7 @@ void JonesMenu_End(void)
         JonesMenu_bOpenedControls = false;
     }
     indyTouch_SetUiMode(false);
+    wkernel_SetModal(false);
     JonesMenu_bActive = false;
 }
 

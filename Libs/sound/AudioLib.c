@@ -632,10 +632,18 @@ int J3DAPI AudioLib_GetMouthPosition(uint8_t* pData, int position, uint8_t* pMou
     return result;
 }
 
+static const uint8_t* AudioLib_pSndDataEnd; // AudioLib_GenerateLipSyncBlock: end of the sound data
+
+// A 16-bit sample (the data may be misaligned: bByteOffset). Fixed: the loops read the next sample, up to two bytes past
+// the end of the data; there the original read whatever followed (it crashed on Android): missing bytes count as 0.
 static int16_t AudioLib_ReadSample(const uint8_t* p)
 {
+    if ( AudioLib_pSndDataEnd && p + sizeof(int16_t) > AudioLib_pSndDataEnd )
+    {
+        return p < AudioLib_pSndDataEnd ? (int16_t)p[0] : 0;
+    }
     int16_t v;
-    memcpy(&v, p, sizeof(v)); // the data may be misaligned (bByteOffset)
+    memcpy(&v, p, sizeof(v));
     return v;
 }
 
@@ -654,6 +662,7 @@ int J3DAPI AudioLib_GenerateLipSyncBlock(uint8_t* pOutData, const uint8_t* pSndD
         return 0;
     }
 
+    AudioLib_pSndDataEnd = pSndData + dataSize;
     if ( bByteOffset )
     {
         pSndData += 1;
@@ -791,6 +800,7 @@ int J3DAPI AudioLib_GenerateLipSyncBlock(uint8_t* pOutData, const uint8_t* pSndD
 
     int32_t numEntries = (int32_t)((pEntry - pOutData) >> 2) - 2;
     memcpy(pOutData + 4, &numEntries, 4);
+    AudioLib_pSndDataEnd = NULL;
     return numEntries * 4 + 8;
 }
 

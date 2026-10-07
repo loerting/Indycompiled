@@ -1283,6 +1283,9 @@ int JonesMain_ProcessGame(void)
             sithDrawScene();
             if ( bCinema4to3 )
             {
+                // the scene's faces still in the cache (transparent ones above all) are drawn inside the 4:3 frame too
+                rdCache_Flush();
+                rdCache_FlushAlpha();
                 JonesDisplay_SetCinemaFrame(false);
             }
             sithOverlayMap_Draw();

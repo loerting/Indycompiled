@@ -12,6 +12,10 @@
 #include <sith/World/sithWorld.h>
 #include <sith/Gameplay/sithTime.h>
 #include <Jones3D/Display/JonesHud.h>
+#include <Jones3D/Display/JonesHudConstants.h>
+#include <Jones3D/Main/JonesLevel.h>
+#include <Jones3D/Play/jonesCog.h>
+#include <sith/Engine/sithCamera.h>
 #include <std/General/std.h>
 #include <std/General/stdConfig.h>
 #include <std/General/stdFileUtil.h>
@@ -546,15 +550,181 @@ int J3DAPI jonesConfig_ShowGamePlayOptions(HWND hWnd)
     return JONESCONFIGSDL_CANCEL;
 }
 
+// The shop after a level (as jonesConfig_ShowStoreDialog): apItemsState[i] has the item's menu ID in the high word,
+// what Indy owns in bits 4..15 and whether it can be bought in bit 0; on return the low word is the number bought.
+static void jonesConfigSDL_RunShop(int* pBalance, int* apItemsState)
+{
+    int aOwned[STD_ARRAYLEN(JonesHud_aStoreItems)] = { 0 };
+    int aAvailable[STD_ARRAYLEN(JonesHud_aStoreItems)] = { 0 };
+    int numAvailable = 0;
+    for ( size_t i = 0; i < STD_ARRAYLEN(JonesHud_aStoreItems); ++i )
+    {
+        aAvailable[i] = (apItemsState[i] & 0xF) != 0;
+        aOwned[i]     = (apItemsState[i] & 0xFFF0) >> 4;
+        apItemsState[i] &= ~0xFFFF; // from here: the number bought
+        numAvailable += aAvailable[i];
+    }
+
+    int balance = *pBalance;
+    float scroll = 0.0f;
+    JonesMenu_SetFocus(0);
+    while ( JonesMenu_BeginFrame() )
+    {
+        const float u = JonesMenu_GetUnit(), w = JonesMenu_GetWidth(), h = JonesMenu_GetHeight();
+        const float panelW = fminf(w * 0.94f, 520.0f * u);
+        const JonesMenuRect panel = { (w - panelW) * 0.5f, 14.0f * u, panelW, h - 28.0f * u };
+        JonesMenu_Panel(&panel);
+        JonesMenu_Text(jonesConfigSDL_Text("JONES_STR_STORE", "Store"), w * 0.5f, panel.y + 10.0f * u, 24.0f, RDFONT_ALIGNCENTER, JONESMENU_TEXT_TITLE);
+
+        char aBalance[64] = { 0 };
+        STD_FORMAT(aBalance, "%s %d", jonesConfigSDL_Text(NULL, "Treasure value:"), balance);
+        JonesMenu_Text(aBalance, w * 0.5f, panel.y + 40.0f * u, 15.0f, RDFONT_ALIGNCENTER, JONESMENU_TEXT_NORMAL);
+
+        const float rowH = 50.0f * u, gap = 6.0f * u, minusW = 56.0f * u;
+        const float listTop = panel.y + 66.0f * u, listBottom = panel.y + panel.height - 66.0f * u;
+        const float contentH = (float)numAvailable * (rowH + gap);
+        scroll -= JonesMenu_TakeScroll();
+        scroll = fminf(fmaxf(scroll, 0.0f), fmaxf(0.0f, contentH - (listBottom - listTop)));
+
+        int buy = -1, giveBack = -1, row = 0;
+        for ( size_t i = 0; i < STD_ARRAYLEN(JonesHud_aStoreItems); ++i )
+        {
+            if ( !aAvailable[i] )
+            {
+                continue;
+            }
+
+            const int numBought = (uint16_t)apItemsState[i];
+            JonesMenuRect rect = { panel.x + 12.0f * u, listTop + (float)row * (rowH + gap) - scroll, panel.width - 24.0f * u, rowH };
+            ++row;
+            if ( rect.y < listTop - 0.5f || rect.y + rect.height > listBottom + 0.5f )
+            {
+                continue; // scrolled out of view
+            }
+
+            char aInfo[96] = { 0 };
+            if ( JonesHud_aStoreItems[i].menuID == JONESHUD_MENU_INVITEM_BONUSMAP )
+            {
+                STD_FORMAT(aInfo, "%d%s", JonesHud_aStoreItems[i].price, numBought ? "    +1" : "");
+            }
+            else
+            {
+                STD_FORMAT(aInfo, "%d    (%d)%s", JonesHud_aStoreItems[i].price, aOwned[i], numBought ? "" : "");
+                if ( numBought )
+                {
+                    char aCart[24] = { 0 };
+                    STD_FORMAT(aCart, "    +%d", numBought);
+                    stdUtil_StringCat(aInfo, sizeof(aInfo), aCart);
+                }
+            }
+
+            if ( numBought )
+            {
+                rect.width -= minusW + 8.0f * u;
+            }
+            if ( JonesMenu_Button(&rect, jonesConfigSDL_Text(JonesHud_aStoreItems[i].aClipName, JonesHud_aStoreItems[i].aClipName), aInfo) )
+            {
+                buy = (int)i;
+            }
+            if ( numBought )
+            {
+                const JonesMenuRect minus = { rect.x + rect.width + 8.0f * u, rect.y, minusW, rowH };
+                if ( JonesMenu_Button(&minus, "-", NULL) )
+                {
+                    giveBack = (int)i;
+                }
+            }
+        }
+
+        const JonesMenuRect done = { (w - 180.0f * u) * 0.5f, panel.y + panel.height - 58.0f * u, 180.0f * u, 48.0f * u };
+        const bool bDone = JonesMenu_Button(&done, jonesConfigSDL_Text(NULL, "Done"), NULL) || JonesMenu_IsBack();
+        JonesMenu_EndFrame();
+
+        if ( giveBack >= 0 )
+        {
+            apItemsState[giveBack] = ((uint16_t)apItemsState[giveBack] - 1) | (apItemsState[giveBack] & ~0xFFFF);
+            balance += JonesHud_aStoreItems[giveBack].price;
+        }
+        else if ( buy >= 0 )
+        {
+            const bool bMap = JonesHud_aStoreItems[buy].menuID == JONESHUD_MENU_INVITEM_BONUSMAP;
+            const char* apOk[] = { "OK" };
+            if ( balance < JonesHud_aStoreItems[buy].price )
+            {
+                jonesConfigSDL_RunChoice(jonesConfigSDL_Text("JONES_STR_STORE", "Store"),
+                    jonesConfigSDL_Text(bMap ? "JONES_STR_NOPERU" : "JONES_STR_CANTBUY1", "Not enough treasure."), apOk, 1, 0);
+            }
+            else if ( !(bMap && (uint16_t)apItemsState[buy]) ) // the map only once
+            {
+                if ( bMap )
+                {
+                    jonesConfigSDL_RunChoice(jonesConfigSDL_Text("JONES_STR_STORE", "Store"), jonesConfigSDL_Text("JONES_STR_PERU", ""), apOk, 1, 0);
+                }
+                apItemsState[buy] = ((uint16_t)apItemsState[buy] + 1) | (apItemsState[buy] & ~0xFFFF);
+                balance -= JonesHud_aStoreItems[buy].price;
+            }
+        }
+        else if ( bDone )
+        {
+            break;
+        }
+    }
+    *pBalance = balance;
+}
+
 int J3DAPI jonesConfig_ShowLevelCompletedDialog(HWND hWnd, int* pBalance, int* apItemsState, int a4, int elapsedTime, int qiPoints, int numFoundTrasures, int foundTrasureValue, int totalTreasureValue)
 {
     J3D_UNUSED(hWnd);
-    J3D_UNUSED(pBalance);
-    J3D_UNUSED(apItemsState);
     J3D_UNUSED(a4);
     STDLOG_STATUS("Level completed: time %d, IQ points %d, treasures %d (value %d of %d).\n",
         elapsedTime, qiPoints, numFoundTrasures, foundTrasureValue, totalTreasureValue);
-    return JONESCONFIGSDL_OK; // continue, nothing bought
+    if ( !JonesMenu_Begin() )
+    {
+        return JONESCONFIGSDL_OK; // continue, nothing bought
+    }
+
+    char aLevel[64] = { 0 };
+    jonesConfigSDL_GetLevelTitle(sithWorld_g_pCurrentWorld ? sithWorld_g_pCurrentWorld->aName : "", aLevel, sizeof(aLevel));
+
+    // As the dialog: hours in the high bits, minutes in the low byte
+    char aLines[5][96] = { 0 };
+    STD_FORMAT(aLines[0], "%s  %d:%02d", jonesConfigSDL_Text(NULL, "Time:"), elapsedTime >> 8, elapsedTime & 0xFF);
+    STD_FORMAT(aLines[1], "%s  %d", jonesConfigSDL_Text(NULL, "IQ points:"), qiPoints);
+    STD_FORMAT(aLines[2], "%s  %d", jonesConfigSDL_Text(NULL, "Treasures found:"), numFoundTrasures);
+    STD_FORMAT(aLines[3], "%s  %d", jonesConfigSDL_Text(NULL, "Value found:"), foundTrasureValue);
+    STD_FORMAT(aLines[4], "%s  %d", jonesConfigSDL_Text(NULL, "Total value:"), totalTreasureValue);
+
+    while ( JonesMenu_BeginFrame() )
+    {
+        const float u = JonesMenu_GetUnit(), w = JonesMenu_GetWidth(), h = JonesMenu_GetHeight();
+        const float panelW = fminf(w * 0.9f, 400.0f * u);
+        const JonesMenuRect panel = { (w - panelW) * 0.5f, h * 0.5f - 175.0f * u, panelW, 350.0f * u };
+        JonesMenu_Panel(&panel);
+        JonesMenu_Text(jonesConfigSDL_Text(NULL, "Level completed"), w * 0.5f, panel.y + 12.0f * u, 24.0f, RDFONT_ALIGNCENTER, JONESMENU_TEXT_TITLE);
+        JonesMenu_Text(aLevel, w * 0.5f, panel.y + 44.0f * u, 18.0f, RDFONT_ALIGNCENTER, JONESMENU_TEXT_TITLE);
+        for ( int i = 0; i < 5; ++i )
+        {
+            JonesMenu_Text(aLines[i], panel.x + 40.0f * u, panel.y + (90.0f + 32.0f * (float)i) * u, 16.0f, RDFONT_ALIGNLEFT, JONESMENU_TEXT_NORMAL);
+        }
+
+        const JonesMenuRect next = { (w - 200.0f * u) * 0.5f, panel.y + panel.height - 62.0f * u, 200.0f * u, 50.0f * u };
+        const bool bContinue = JonesMenu_Button(&next, jonesConfigSDL_Text(NULL, "Continue"), NULL);
+        JonesMenu_EndFrame();
+        if ( bContinue )
+        {
+            break;
+        }
+    }
+
+    // Then the shop, except after the bonus level (as the dialog)
+    const SithGameStatistics* pStatistics = sithGamesave_GetGameStatistics();
+    if ( !pStatistics || pStatistics->curLevelNum + 1 < JONESLEVEL_BONUSLEVELNUM )
+    {
+        jonesConfigSDL_RunShop(pBalance, apItemsState);
+    }
+
+    JonesMenu_End();
+    return JONESCONFIGSDL_OK;
 }
 
 int J3DAPI jonesConfig_ShowMessageDialog(HWND hWnd, const char* pTitle, const char* pText, int iconID)
@@ -587,7 +757,7 @@ int J3DAPI jonesConfig_ShowStatisticsDialog(HWND hWnd, SithGameStatistics* pStat
     return JONESCONFIGSDL_OK;
 }
 
-// Headless tests: INDY_MENU_TEST=load|save|gameover|exit opens that menu once, 5 s into the game (JonesMain calls this
+// Headless tests: INDY_MENU_TEST=load|save|gameover|exit|levelend opens that menu once, 5 s into the game (JonesMain calls this
 // every game frame); the result goes to the log
 void jonesConfigSDL_RunTestMenu(void)
 {
@@ -596,7 +766,8 @@ void jonesConfigSDL_RunTestMenu(void)
     {
         bDone = getenv("INDY_MENU_TEST") == NULL;
     }
-    if ( bDone || sithTime_g_msecGameTime < 5000 )
+    // in play: 5 s in and no cutscene running
+    if ( bDone || sithTime_g_msecGameTime < 5000 || sithCamera_g_pCurCamera == &sithCamera_g_aCameras[SITHCAMERA_CINEMACAMERANUM] )
     {
         return;
     }
@@ -616,6 +787,10 @@ void jonesConfigSDL_RunTestMenu(void)
     else if ( streq(pMenu, "exit") )
     {
         result = jonesConfig_ShowExitGameDialog(NULL, aPath);
+    }
+    else if ( streq(pMenu, "levelend") )
+    {
+        jonesCog_EndLevel(); // as the console's endlevel: the level's end with statistics and shop
     }
     else if ( streq(pMenu, "gameover") )
     {

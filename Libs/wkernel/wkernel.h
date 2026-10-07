@@ -15,6 +15,7 @@ WKERNELSHUTDOWNPROC J3DAPI wkernel_SetShutdownCallback(WKERNELSHUTDOWNPROC pfOnS
 void J3DAPI wkernel_SetWindowStyle(LONG dwNewLong);
 BOOL J3DAPI wkernel_SetWindowSize(int width, int height);
 void J3DAPI wkernel_SetWindowProc(WKERNELWNDPROC pfProc); // Window process
+void wkernel_SetModal(bool bModal); // native builds: a menu runs its own loop; closing the window then shuts down later
 int wkernel_PeekProcessEvents(void);
 int wkernel_ProcessEvents(void);
 
