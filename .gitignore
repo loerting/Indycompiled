@@ -70,3 +70,15 @@ Libs/std/Win95/DX9/Shaders/*.h
 
 # jetbrain folder
 .idea/__pycache__/
+
+# Android build (android/): build outputs, Gradle state, local SDK path, staged game data (android/app/build/gameassets)
+android/.gradle/
+android/.kotlin/
+android/build/
+android/app/build/
+android/app/.cxx/
+android/local.properties
+*.apk
+*.aab
+*.keystore
+*.jks

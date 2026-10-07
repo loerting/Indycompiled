@@ -1,0 +1,19 @@
+// Indycompiled Android build (see Scripts/indy/android_build.sh for the recipe).
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode = RepositoriesMode.FAIL_ON_PROJECT_REPOS
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.name = 'Indycompiled'
+include ':app'

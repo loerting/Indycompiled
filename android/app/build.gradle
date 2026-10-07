@@ -1,0 +1,94 @@
+// Indycompiled Android app: SDL3's Java glue (SDLActivity) + a native library "main" built with CMake.
+// See android/README.md.
+plugins {
+    id 'com.android.application'
+}
+
+// Vendored SDL3 (same tree as upstream's OpenGL branch). Its Java glue is compiled straight from there,
+// so the Java side always matches the C side (SDLActivity checks the versions at startup).
+def sdlDir = rootProject.file('../Libs/external/SDL3')
+
+// Game data staging dir (git-ignored, under build/). Scripts/android/pack_data.sh copies the game files
+// here before every build (task packGameData); everything in it is packed into the APK's assets/.
+def gameAssetsDir = layout.buildDirectory.dir('gameassets').get().asFile
+def gameDataDir = (project.findProperty('indy.gameData') ?: System.getenv('INDY_GAME_DATA') ?: '').toString()
+
+def abiList = (project.findProperty('indy.abis') ?: 'arm64-v8a,x86_64').toString()
+        .split(',').collect { it.trim() }.findAll { !it.isEmpty() }
+def ninjaJobs = (project.findProperty('indy.ninjaJobs') ?: '4').toString()
+
+android {
+    namespace = 'com.indycompiled.game'
+    compileSdk = 37
+    buildToolsVersion = '36.1.0'
+    ndkVersion = '29.0.14206865'
+
+    defaultConfig {
+        applicationId = 'com.indycompiled.game'
+        minSdk = 29
+        targetSdk = 37
+        versionCode = 1
+        versionName = '0.1-test'
+
+        ndk {
+            abiFilters.addAll(abiList)
+        }
+        externalNativeBuild {
+            cmake {
+                arguments += ['-DANDROID_STL=c++_static', "-DINDY_NINJA_JOBS=${ninjaJobs}".toString()]
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled = false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
+                    "${sdlDir}/android-project/app/proguard-rules.pro"
+            // Local builds only (never distributed): sign release with the debug key.
+            signingConfig = signingConfigs.debug
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path = file('jni/CMakeLists.txt')
+            version = '3.31.6'
+        }
+    }
+
+    sourceSets {
+        main {
+            java.srcDir("${sdlDir}/android-project/app/src/main/java")
+            assets.srcDir(gameAssetsDir)
+        }
+    }
+
+    // GOBs and SMUSH videos are read with random access (AAsset seek): keep them stored, not deflated.
+    androidResources {
+        noCompress += ['gob', 'GOB', 'snm', 'SNM']
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    lint {
+        abortOnError = false
+        checkReleaseBuilds = false
+    }
+}
+
+// Local recipe: copy the game data into the staging dir before anything is merged (never committed).
+// Data folder: -Pindy.gameData=<dir> or $INDY_GAME_DATA, default game/run/Resource of the checkout.
+def packGameData = tasks.register('packGameData', Exec) {
+    commandLine 'bash', rootProject.file('../Scripts/android/pack_data.sh').absolutePath, gameAssetsDir.absolutePath
+    if (!gameDataDir.isEmpty()) {
+        args gameDataDir
+    }
+}
+tasks.named('preBuild') { dependsOn packGameData }
+
+// The staging dir must exist at configuration time, even when nothing was packed.
+gameAssetsDir.mkdirs()

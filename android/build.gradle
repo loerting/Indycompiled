@@ -1,0 +1,5 @@
+// Top-level build file. Versions are pinned here and in gradle/wrapper/gradle-wrapper.properties;
+// bumping either needs one online build (android_build.sh --online), then it works offline again.
+plugins {
+    id 'com.android.application' version '9.4.1' apply false
+}

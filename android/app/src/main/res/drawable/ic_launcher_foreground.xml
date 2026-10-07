@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Placeholder launcher icon: a plain fedora on sand (108dp adaptive-icon canvas, 66dp safe zone). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- crown with the pinch at the top -->
+    <path
+        android:fillColor="#6B4423"
+        android:pathData="M38,64 L41,45 Q42,39 47,40 L54,43 L61,40 Q66,39 67,45 L70,64 Z" />
+    <!-- band -->
+    <path
+        android:fillColor="#2B1A0E"
+        android:pathData="M39.2,56 L68.8,56 L69.6,63 L38.4,63 Z" />
+    <!-- brim -->
+    <path
+        android:fillColor="#5A391D"
+        android:pathData="M24,65 a30,6.5 0 1,0 60,0 a30,6.5 0 1,0 -60,0 Z" />
+</vector>
