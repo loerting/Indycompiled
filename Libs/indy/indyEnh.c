@@ -78,6 +78,20 @@ static void indyEnh_Load(void)
         indyEnh_aEnabled[i] = stdConfig_Contains(aKey) ? stdConfig_GetBool(aKey, bDefault) : bDefault;
     }
 
+    // Tests: INDY_TOGGLES="key=0,key=1" overrides Jones.cfg without editing it
+    const char* pOverrides = getenv("INDY_TOGGLES");
+    for ( size_t i = 0; pOverrides && i < INDY_ENH_COUNT; i++ )
+    {
+        size_t len = strlen(indyEnh_aInfos[i].pKey);
+        for ( const char* p = strstr(pOverrides, indyEnh_aInfos[i].pKey); p; p = strstr(p + 1, indyEnh_aInfos[i].pKey) )
+        {
+            if ( (p == pOverrides || p[-1] == ',') && p[len] == '=' )
+            {
+                indyEnh_aEnabled[i] = p[len + 1] == '1';
+            }
+        }
+    }
+
     // 60: how most players have experienced the game (vsync on 60 Hz screens)
     float fps = stdConfig_GetFloat("indycompiled.turnRateFps", 60.0f);
     indyEnh_turnRateFps = fps < 15.0f ? 15.0f : fps > 240.0f ? 240.0f : fps;

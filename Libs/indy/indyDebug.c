@@ -7,6 +7,10 @@
 #include <stdlib.h>
 
 #include <sith/Dss/sithGamesave.h>
+#include <sith/Engine/sithPhysics.h>
+#include <sith/Gameplay/sithPlayer.h>
+#include <sith/World/sithThing.h>
+#include <rdroid/Math/rdVector.h>
 #include <sith/World/sithWorld.h>
 #include <std/General/stdUtil.h>
 #include <std/types.h>
@@ -310,6 +314,50 @@ static int indyDebug_simFrame;
 
 static void indyDebug_WriteWorld(void);
 
+static void indyDebug_EngageNearestAI(void)
+{
+    SithWorld* pWorld  = sithWorld_g_pCurrentWorld;
+    SithThing* pPlayer = sithPlayer_g_pLocalPlayerThing;
+    if ( !pWorld || !pPlayer )
+    {
+        return;
+    }
+
+    SithThing* pNearest = NULL;
+    float nearestDist   = 0.0f;
+    for ( int i = 0; i <= pWorld->lastThingIdx; i++ )
+    {
+        SithThing* pThing = &pWorld->aThings[i];
+        if ( pThing->type != SITH_THING_ACTOR || pThing->controlType != SITH_CT_AI || !pThing->controlInfo.aiControl.pLocal
+            || (pThing->flags & (SITH_TF_DYING | SITH_TF_DESTROYED)) != 0 || !pThing->pInSector )
+        {
+            continue;
+        }
+        float dist = rdVector_Dist3(&pThing->pos, &pPlayer->pos);
+        if ( !pNearest || dist < nearestDist )
+        {
+            pNearest    = pThing;
+            nearestDist = dist;
+        }
+    }
+    if ( !pNearest )
+    {
+        return;
+    }
+
+    // In front of the actor, facing it
+    float offset = pNearest->collide.size * 3.0f + pPlayer->collide.size;
+    rdVector_ScaleAdd3(&pPlayer->pos, &pNearest->orient.lvec, offset, &pNearest->pos);
+    pPlayer->orient = pNearest->orient;
+    rdVector_Neg3Acc(&pPlayer->orient.lvec);
+    rdVector_Neg3Acc(&pPlayer->orient.rvec);
+    sithThing_SetSector(pPlayer, pNearest->pInSector, /*bNotify=*/0);
+    if ( pPlayer->moveType == SITH_MT_PHYSICS && (pPlayer->moveInfo.physics.flags & SITH_PF_FLOORSTICK) != 0 )
+    {
+        sithPhysics_FindFloor(pPlayer, /*bNoThingStateUpdate=*/1);
+    }
+}
+
 void indyDebug_SimFrame(void)
 {
     static int dumpFrame = -1;
@@ -329,6 +377,13 @@ void indyDebug_SimFrame(void)
     if ( saveFrame > 0 && indyDebug_simFrame == saveFrame && pSaveFile )
     {
         sithGamesave_Save(pSaveFile, /*bOverwrite=*/1);
+    }
+
+    // AI A/B: at frame n, put the player in front of the nearest AI actor so combat code runs (deterministic)
+    const char* pEngage = getenv("INDY_SIM_ENGAGE");
+    if ( pEngage && indyDebug_simFrame == atoi(pEngage) )
+    {
+        indyDebug_EngageNearestAI();
     }
 
     // Restore A/B: load a savegame once at frame n (the level reopens; frames count from its start again)
