@@ -420,7 +420,11 @@ port: the app, touch controls, the APK and data recipe, and the test tooling tha
   enhancement-toggle changes, check that only the new functions differ, compile-check against the PR branch.
 - Queue: thing loading [#50](https://github.com/smlu/OpenJones3D/pull/50) ✅ opened, vehicle physics
   [#51](https://github.com/smlu/OpenJones3D/pull/51) ✅ opened, rdCache out-of-bounds read
-  [#52](https://github.com/smlu/OpenJones3D/pull/52) ✅ opened (found with ASan in the Linux build), then AudioLib, AI (AIUtil, AIInstinct, AIMove), DSS (savegames:
+  [#52](https://github.com/smlu/OpenJones3D/pull/52) ✅ opened (found with ASan in the Linux build), AudioLib
+  [#53](https://github.com/smlu/OpenJones3D/pull/53) ✅ opened (with the lip-sync over-read fix), cinematic camera
+  [#54](https://github.com/smlu/OpenJones3D/pull/54), COG stack shift [#55](https://github.com/smlu/OpenJones3D/pull/55),
+  JonesMain format strings [#56](https://github.com/smlu/OpenJones3D/pull/56) ✅ opened (2026-10-07), then FIX-0001/0002
+  for issues #10/#48 (as `J3D_QOL_IMPROVEMENTS`), AI (AIUtil, AIInstinct, AIMove), DSS (savegames:
   sithDSS, sithDSSThing, sithMulti), the SMUSH player, the standalone build, and the Linux port once it plays.
 
 ---
