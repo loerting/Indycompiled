@@ -1,0 +1,56 @@
+# Indycompiled: builds the native ports and the MinGW cross build. Compile only: no game data, no published binaries.
+# The Linux and MinGW builds run in an Arch Linux container, the toolchain the presets are written for (PROJECT.md).
+name: Indycompiled Build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  preset:
+    name: ${{ matrix.preset }}
+    runs-on: ubuntu-latest
+    container: archlinux:base-devel
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - preset: linux-x86_64
+            packages: libx11 libxext libxkbcommon wayland mesa alsa-lib libpulse
+          - preset: linux-i686
+            packages: lib32-glibc lib32-gcc-libs libx11 libxext libxkbcommon wayland mesa alsa-lib libpulse
+          - preset: mingw-dx9-release
+            packages: mingw-w64-gcc vkd3d
+          - preset: mingw-dx9-standalone
+            packages: mingw-w64-gcc vkd3d
+    steps:
+      - name: Install packages
+        run: |
+          printf '\n[multilib]\nInclude = /etc/pacman.d/mirrorlist\n' >> /etc/pacman.conf
+          pacman -Syu --noconfirm --needed git clang lld llvm cmake ninja python ${{ matrix.packages }}
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake --preset ${{ matrix.preset }}
+      - name: Build
+        run: cmake --build --preset ${{ matrix.preset }}
+
+  android:
+    name: android-arm64
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Ninja
+        run: sudo apt-get install -y ninja-build
+      - name: Configure
+        run: >
+          cmake -G Ninja -B Build/android-arm64
+          -DCMAKE_TOOLCHAIN_FILE="$ANDROID_NDK_LATEST_HOME/build/cmake/android.toolchain.cmake"
+          -DANDROID_ABI=arm64-v8a -DANDROID_PLATFORM=29 -DANDROID_STL=c++_static
+          -DCMAKE_BUILD_TYPE=RelWithDebInfo -DJONES3D_BUILD_PROGRAMS=OFF
+      - name: Build (libmain.so, libSDL3.so)
+        run: cmake --build Build/android-arm64 --target Jones3D_DLL SDL3-shared
