@@ -3,6 +3,7 @@
 
 #include <rdroid/Engine/rdPuppet.h>
 #include <rdroid/Engine/rdThing.h>
+#include <rdroid/Math/rdMath.h>
 #include <rdroid/Math/rdMatrix.h>
 #include <rdroid/Math/rdVector.h>
 #include <rdroid/Primitives/rdModel3.h>
@@ -309,7 +310,7 @@ void sithThing_InstallHooks(void)
     J3D_HOOKFUNC(sithThing_GetFreeThingIndex);
     J3D_HOOKFUNC(sithThing_ParseThingPlacement);
     J3D_HOOKFUNC(sithThing_CreateQuetzUserBlock);
-    //J3D_HOOKFUNC(sithThing_UpdateQuetzUserBlock);
+    J3D_HOOKFUNC(sithThing_UpdateQuetzUserBlock);
 }
 
 void sithThing_ResetGlobals(void)
@@ -1106,7 +1107,176 @@ done:
 
 void J3DAPI sithThing_UpdateQuetzUserBlock(SithThing* pThing)
 {
-    J3D_TRAMPOLINE_CALL(sithThing_UpdateQuetzUserBlock, pThing);
+    INDY_AB_ORIGINAL_VOID(sithThing_UpdateQuetzUserBlock, pThing);
+
+    if ( !sithThing_CreateQuetzUserBlock(pThing) )
+    {
+        return;
+    }
+
+    // The tail follows by the distance the head moved forward this frame.
+    // Note: The dot product is written out to keep the original's summation order.
+    rdVector3 moveDir;
+    rdVector_Normalize3(&moveDir, &pThing->moveInfo.physics.velocity);
+    float fwdDot  = (pThing->orient.lvec.y * moveDir.y + pThing->orient.lvec.z * moveDir.z) + pThing->orient.lvec.x * moveDir.x;
+    float advance = pThing->distanceMoved * STDMATH_CLAMP(fwdDot, 0.0f, 1.0f);
+
+    sithThing_prevQuetzAttachInfo = NULL;
+    sithThing_curQuetzAttachInfo  = pThing->userblock.pQuetz->aAttachInfos;
+
+    size_t attachNum     = 0;
+    int bBendDirChanged  = 0;
+    int bSameBendDir     = 0;
+    float firstBendAngle = 0.0f;
+    float sumBendAngle   = 0.0f;
+
+    SithThing* pPrevThing = pThing;
+    for ( SithThing* pSegment = pThing->pAttachedThing; pSegment; pSegment = pSegment->pNextAttachedThing )
+    {
+        if ( (pSegment->attach.flags & SITH_ATTACH_TAIL) == 0 )
+        {
+            continue;
+        }
+
+        SithQuetzAttachInfo* pInfo = sithThing_curQuetzAttachInfo;
+        pInfo->unknown10 = pInfo->unknown10 - advance;
+        float blend = STDMATH_CLAMP(pInfo->unknown10 / pInfo->unknown9, 0.0f, 1.0f);
+
+        // Segment orientation: blend between the previous and the next segment direction
+        rdVector3 offset = { 0.0f, pInfo->unknown0, 0.0f };
+        rdVector3 prevOffset;
+        rdMatrix_TransformVector34(&prevOffset, &offset, &pPrevThing->orient);
+        prevOffset.z = pInfo->unknown1 + prevOffset.z;
+
+        float prevWeight = 1.0f - blend;
+        rdVector3 lookDir;
+        lookDir.x = pInfo->vecDirection.x * prevWeight + pInfo->vecDirectionNextAttach.x * blend;
+        lookDir.y = pInfo->vecDirection.y * prevWeight + pInfo->vecDirectionNextAttach.y * blend;
+        lookDir.z = pInfo->vecDirection.z * prevWeight + pInfo->vecDirectionNextAttach.z * blend;
+        rdVector_Normalize3Acc(&lookDir);
+
+        // Note: BuildFromLook34 doesn't set the translation; the original copies its uninitialized local matrix into
+        //       the segment's orient, here the translation is zeroed.
+        rdMatrix34 orient;
+        rdVector_Zero3(&orient.dvec);
+        rdMatrix_BuildFromLook34(&orient, &lookDir);
+        rdMatrix_PreRotate34(&orient, &pInfo->vecUnknown11);
+        rdMatrix_Copy34(&pSegment->orient, &orient);
+
+        // Segment position: offset from the previous segment
+        offset.y = pInfo->unknown2;
+        rdVector3 segOffset;
+        rdMatrix_TransformVector34(&segOffset, &offset, &pSegment->orient);
+
+        rdVector3 newPos;
+        newPos.x = (segOffset.x + prevOffset.x) + pPrevThing->pos.x;
+        newPos.y = (segOffset.y + prevOffset.y) + pPrevThing->pos.y;
+        newPos.z = (segOffset.z + prevOffset.z) + pPrevThing->pos.z;
+
+        rdVector3 moveDelta;
+        rdVector_Sub3(&moveDelta, &newPos, &pSegment->pos);
+        rdVector_Scale3(&pSegment->moveInfo.physics.velocity, &moveDelta, sithTime_g_fps);
+        pSegment->moveInfo.physics.deltaVelocity = moveDelta;
+        pSegment->moveDir = moveDelta;
+
+        float moveDist = rdVector_Normalize3Acc(&moveDelta);
+        if ( moveDist != 0.0f )
+        {
+            // Move with the segment lifted along its up axis
+            rdVector3 liftedPos;
+            rdVector_ScaleAdd3(&liftedPos, &pSegment->orient.uvec, pInfo->unknown14, &pSegment->pos);
+            SithSector* pSector = sithCollision_FindSectorInRadius(pSegment->pInSector, &pSegment->pos, &liftedPos, 0.0f);
+            pSegment->pos = liftedPos;
+            sithThing_SetSector(pSegment, pSector, /*bNotify=*/1);
+
+            sithCollision_MoveThing(pSegment, &moveDelta, moveDist, 0x4);
+
+            pInfo = sithThing_curQuetzAttachInfo; // The original reads the global after the move
+            rdVector_ScaleAdd3(&liftedPos, &pSegment->orient.uvec, -pInfo->unknown14, &pSegment->pos);
+            pSector = sithCollision_FindSectorInRadius(pSegment->pInSector, &pSegment->pos, &liftedPos, 0.0f);
+            pSegment->pos = liftedPos;
+            sithThing_SetSector(pSegment, pSector, /*bNotify=*/1);
+            pInfo = sithThing_curQuetzAttachInfo;
+        }
+
+        // Restart the blend from the current directions
+        if ( blend <= 0.3f || (!sithThing_prevQuetzAttachInfo && pThing->userblock.pQuetz->unknown391) || bBendDirChanged )
+        {
+            pThing->userblock.pQuetz->unknown391 = 0;
+
+            float prevAngle = rdMath_DeltaAngleNormalized(&pInfo->vecDirection, &pInfo->vecDirectionNextAttach, &rdroid_g_zVector3);
+
+            pInfo->vecDirection   = pPrevThing->orient.lvec;
+            pInfo->vecDirection.z = 0.0f;
+            rdVector_Normalize3Acc(&pInfo->vecDirection);
+
+            pInfo->vecDirectionNextAttach   = pSegment->orient.lvec;
+            pInfo->vecDirectionNextAttach.z = 0.0f;
+            rdVector_Normalize3Acc(&pInfo->vecDirectionNextAttach);
+
+            float newAngle  = rdMath_DeltaAngleNormalized(&pInfo->vecDirection, &pInfo->vecDirectionNextAttach, &rdroid_g_zVector3);
+            bBendDirChanged = (prevAngle < 0.0f ? -1 : 1) != (newAngle < 0.0f ? -1 : 1);
+
+            float sinAngle, cosAngle;
+            if ( sithThing_prevQuetzAttachInfo )
+            {
+                stdMath_SinCos(sithThing_prevQuetzAttachInfo->vecUnknown11.pitch, &sinAngle, &cosAngle);
+                pInfo->unknown9 = cosAngle * fabsf(pInfo->unknown2);
+            }
+            else
+            {
+                pInfo->unknown9 = fabsf(pInfo->unknown0);
+            }
+
+            stdMath_SinCos(pInfo->vecUnknown11.pitch, &sinAngle, &cosAngle);
+            pInfo->unknown9 = cosAngle * fabsf(pInfo->unknown2) + pInfo->unknown9;
+
+            if ( sithThing_dword_5612B8 )
+            {
+                pInfo->unknown9 = ((float)attachNum * 0.07f + 1.0f) * pInfo->unknown9;
+            }
+
+            pInfo->unknown10 = pInfo->unknown9;
+        }
+
+        // Track if all segments bend to the same side
+        rdVector3 prevDirXY = { pPrevThing->orient.lvec.x, pPrevThing->orient.lvec.y, 0.0f };
+        rdVector_Normalize3Acc(&prevDirXY);
+        rdVector3 segDirXY = { pSegment->orient.lvec.x, pSegment->orient.lvec.y, 0.0f };
+        rdVector_Normalize3Acc(&segDirXY);
+
+        float bendAngle = rdMath_DeltaAngleNormalized(&prevDirXY, &segDirXY, &rdroid_g_zVector3);
+        if ( !sithThing_prevQuetzAttachInfo )
+        {
+            firstBendAngle = bendAngle;
+            sumBendAngle   = bendAngle;
+            bSameBendDir   = 1;
+        }
+        else
+        {
+            sumBendAngle = sumBendAngle + bendAngle;
+            if ( (firstBendAngle < 0.0f ? -1 : 1) != (bendAngle < 0.0f ? -1 : 1) )
+            {
+                bSameBendDir = 0;
+            }
+        }
+
+        sithThing_prevQuetzAttachInfo = sithThing_curQuetzAttachInfo;
+        sithThing_curQuetzAttachInfo++;
+        attachNum++;
+        pPrevThing = pSegment;
+    }
+
+    // Tail coiled to one side
+    sithThing_dword_5612B8 = 0;
+    if ( bSameBendDir )
+    {
+        float avgBendAngle = fabsf(sumBendAngle / (float)pThing->userblock.pQuetz->numAttachInfos);
+        if ( avgBendAngle > 25.0f )
+        {
+            sithThing_dword_5612B8 = 1;
+        }
+    }
 }
 
 int sithThing_Startup(void)
