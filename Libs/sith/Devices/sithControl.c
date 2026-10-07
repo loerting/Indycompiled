@@ -1,5 +1,6 @@
 #include "sithControl.h"
 #include <indy/indyModern.h> // INDY
+#include <indy/indyTouch.h> // INDY
 #include <j3dcore/j3dhook.h>
 
 #include <sith/Engine/sithCamera.h>
@@ -578,6 +579,17 @@ int J3DAPI sithControl_GetKey(SithControlFunction keyId, int* pState)
         }
     }
 
+    // INDY: touch controls (Android): buttons, taps, the stick as classic keys, menu swipes
+    int touchValue, touchPresses;
+    if ( indyTouch_GetKey(keyId, &touchValue, &touchPresses) )
+    {
+        value |= touchValue;
+        if ( pState )
+        {
+            *pState += touchPresses;
+        }
+    }
+
     return value;
 }
 
@@ -585,6 +597,7 @@ void sithControl_ReadControls(void)
 {
     SITH_ASSERTREL(bControlStartup && bControlOpen);
     stdControl_ReadControls();
+    indyTouch_BeginControlFrame(); // INDY: touch presses since the last frame
 }
 
 void sithControl_FinishRead(void)

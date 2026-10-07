@@ -1,6 +1,7 @@
 #include "indyCamera.h"
 #include "indyEnh.h"
 #include "indyModern.h"
+#include "indyTouch.h"
 
 #include <std/General/std.h>
 #include <std/Win95/stdControl.h>
@@ -81,6 +82,10 @@ void J3DAPI indyCamera_ApplyOrbit(rdVector3* pPYR, float secDeltaTime, bool bLoo
     float x, y;
     indyCamera_ReadRightStick(&x, &y);
 
+    // touch drag (Android): degrees, applied directly; while a finger drags, the camera doesn't swing back
+    float touchYaw, touchPitch;
+    const bool bTouchDrag = indyTouch_TakeCameraDelta(&touchYaw, &touchPitch);
+
     if ( indyModern_IsCameraWorldStable() )
     {
         // modern controls: the camera keeps its direction in the world while Indy turns
@@ -89,10 +94,10 @@ void J3DAPI indyCamera_ApplyOrbit(rdVector3* pPYR, float secDeltaTime, bool bLoo
             indyCamera_worldYaw       = heading + indyCamera_yaw;
             indyCamera_bWorldYawValid = true;
         }
-        if ( x != 0.0f || y != 0.0f )
+        if ( x != 0.0f || y != 0.0f || bTouchDrag )
         {
-            indyCamera_worldYaw -= x * fabsf(x) * INDY_CAMERA_YAW_SPEED * secDeltaTime;
-            indyCamera_pitch    += y * fabsf(y) * INDY_CAMERA_PITCH_SPEED * secDeltaTime;
+            indyCamera_worldYaw -= x * fabsf(x) * INDY_CAMERA_YAW_SPEED * secDeltaTime + touchYaw;
+            indyCamera_pitch    += y * fabsf(y) * INDY_CAMERA_PITCH_SPEED * secDeltaTime + touchPitch;
             indyCamera_pitch     = fminf(fmaxf(indyCamera_pitch, INDY_CAMERA_PITCH_MIN), INDY_CAMERA_PITCH_MAX);
         }
         else if ( bMoving && indyModern_IsStickAwayFromCamera() )
@@ -106,12 +111,12 @@ void J3DAPI indyCamera_ApplyOrbit(rdVector3* pPYR, float secDeltaTime, bool bLoo
         indyCamera_yaw      = remainderf(indyCamera_worldYaw - heading, 360.0f);
         indyCamera_secIdle  = 0.0f;
     }
-    else if ( x != 0.0f || y != 0.0f )
+    else if ( x != 0.0f || y != 0.0f || bTouchDrag )
     {
         indyCamera_bWorldYawValid = false;
         // squared response: fine control near the centre, full speed at the edge
-        indyCamera_yaw   -= x * fabsf(x) * INDY_CAMERA_YAW_SPEED * secDeltaTime; // stick right: camera swings right
-        indyCamera_pitch += y * fabsf(y) * INDY_CAMERA_PITCH_SPEED * secDeltaTime;
+        indyCamera_yaw   -= x * fabsf(x) * INDY_CAMERA_YAW_SPEED * secDeltaTime + touchYaw; // stick right: camera swings right
+        indyCamera_pitch += y * fabsf(y) * INDY_CAMERA_PITCH_SPEED * secDeltaTime + touchPitch;
         indyCamera_pitch  = fminf(fmaxf(indyCamera_pitch, INDY_CAMERA_PITCH_MIN), INDY_CAMERA_PITCH_MAX);
         indyCamera_yaw    = remainderf(indyCamera_yaw, 360.0f);
         indyCamera_secIdle = 0.0f;

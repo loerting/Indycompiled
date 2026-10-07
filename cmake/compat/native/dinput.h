@@ -253,6 +253,7 @@ extern const GUID IID_IDirectInput8;
 
 HRESULT DirectInput8Create(HINSTANCE hinst, DWORD version, REFIID riid, void* ppOut, void* pUnkOuter);
 HRESULT DInputSDL_Release(LPDIRECTINPUT8 pDI);
+void DInputSDL_SetVirtualKey(uint8_t dik, bool bDown); // keys pressed by software (touch controls), ORed into the keyboard
 HRESULT DInputSDL_EnumDevices(LPDIRECTINPUT8 pDI, DWORD devType, LPDIENUMDEVICESCALLBACK pfCallback, LPVOID pRef, DWORD flags);
 HRESULT DInputSDL_CreateDevice(LPDIRECTINPUT8 pDI, REFGUID guid, LPDIRECTINPUTDEVICE8* ppDevice, void* pUnkOuter);
 HRESULT DInputSDL_DeviceRelease(LPDIRECTINPUTDEVICE8 pDev);

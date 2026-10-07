@@ -67,6 +67,8 @@ void JonesHud_Close(void);
 
 void JonesHud_ToggleMenu(void);
 void J3DAPI JonesHud_EnableMenu(int bEnable);
+bool JonesHud_IsMenuOpen(void); // INDY
+void JonesHud_GetHealthIndicatorRect(float* pX, float* pY, float* pWidth, float* pHeight); // INDY
 int JonesHud_IsMenuEnabled(void);
 
 void JonesHud_Process(void);

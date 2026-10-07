@@ -5,6 +5,9 @@
 #include <std/Win95/stdWin95.h>
 
 #include <SDL3/SDL.h>
+#include <dinput.h>
+
+#include <indy/indyTouch.h> // INDY: touch controls
 
 #define WKERNEL_MAXTIMERS   8
 #define WKERNEL_MAXMESSAGES 64
@@ -73,6 +76,7 @@ static WPARAM wkernel_GetVirtualKey(SDL_Keycode key)
     switch ( key )
     {
         case SDLK_ESCAPE:    return VK_ESCAPE;
+        case SDLK_AC_BACK:   return VK_ESCAPE; // Android Back
         case SDLK_RETURN:    return VK_RETURN;
         case SDLK_KP_ENTER:  return VK_RETURN;
         case SDLK_SPACE:     return VK_SPACE;
@@ -102,10 +106,35 @@ static void wkernel_HandleEvent(const SDL_Event* pEvent)
             wkernel_Dispatch(WM_CLOSE, 0, 0);
             break;
 
+        case SDL_EVENT_FINGER_DOWN:
+        case SDL_EVENT_FINGER_MOTION:
+        case SDL_EVENT_FINGER_UP:
+        case SDL_EVENT_FINGER_CANCELED:
+        {
+            const IndyTouchEvent event = pEvent->type == SDL_EVENT_FINGER_DOWN ? INDY_TOUCH_DOWN
+                : (pEvent->type == SDL_EVENT_FINGER_MOTION ? INDY_TOUCH_MOTION : INDY_TOUCH_UP);
+            indyTouch_OnFinger(event, (uint64_t)pEvent->tfinger.fingerID, pEvent->tfinger.x, pEvent->tfinger.y, (uint32_t)SDL_GetTicks());
+        } break;
+
+        case SDL_EVENT_GAMEPAD_BUTTON_DOWN:
+            indyTouch_OnOtherInput(); // the touch overlay hides while a gamepad is used
+            break;
+
+        case SDL_EVENT_GAMEPAD_AXIS_MOTION:
+            if ( pEvent->gaxis.value > 16000 || pEvent->gaxis.value < -16000 )
+            {
+                indyTouch_OnOtherInput();
+            }
+            break;
+
         case SDL_EVENT_KEY_DOWN:
         case SDL_EVENT_KEY_UP:
         {
             WPARAM vk = wkernel_GetVirtualKey(pEvent->key.key);
+            if ( pEvent->type == SDL_EVENT_KEY_DOWN && vk && pEvent->key.key != SDLK_AC_BACK )
+            {
+                indyTouch_OnOtherInput(); // a keyboard (not the phone's Back or volume buttons)
+            }
             if ( !vk )
             {
                 break;
@@ -201,6 +230,11 @@ int J3DAPI wkernel_Run(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPSTR lpCmd
         return -1;
     }
 
+    // INDY: touch controls get the finger events; no mouse clicks or motion made up from them (they would turn Indy)
+    SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
+    SDL_SetHint(SDL_HINT_ANDROID_TRAP_BACK_BUTTON, "1"); // Android Back: Escape (menu), not leaving the app
+    indyTouch_SetKeyFunc(DInputSDL_SetVirtualKey);
+
     if ( !SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_GAMEPAD) )
     {
         fprintf(stderr, "ERROR: wkernel_Run: SDL_Init failed: %s\n", SDL_GetError());
@@ -280,6 +314,7 @@ int wkernel_PeekProcessEvents(void)
     {
         wkernel_HandleEvent(&event);
     }
+    indyTouch_Update((uint32_t)SDL_GetTicks()); // INDY: releases the touch controls' key pulses
 
     if ( !wkernel_bQuit )
     {

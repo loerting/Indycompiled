@@ -1089,6 +1089,20 @@ void J3DAPI JonesHud_EnableMenu(int bEnable)
     JonesHud_bMenuEnabled = bEnable;
 }
 
+// INDY: touch controls (indyTouch): whether the menu strip is open, and where the health indicator is (pixels)
+bool JonesHud_IsMenuOpen(void)
+{
+    return (JonesHud_hudState & 0x01) != 0;
+}
+
+void JonesHud_GetHealthIndicatorRect(float* pX, float* pY, float* pWidth, float* pHeight)
+{
+    *pX      = JonesHud_healthIndRect.x;
+    *pY      = JonesHud_healthIndRect.y;
+    *pWidth  = JonesHud_healthIndRect.width;
+    *pHeight = JonesHud_healthIndRect.height;
+}
+
 int JonesHud_IsMenuEnabled(void)
 {
     return JonesHud_bMenuEnabled;

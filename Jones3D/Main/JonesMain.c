@@ -2,6 +2,7 @@
 #include <indy/indyDebug.h> // INDY
 #include <indy/indyDiff.h> // INDY
 #include <indy/indyEnh.h> // INDY
+#include <indy/indyTouch.h> // INDY
 #include <j3dcore/j3dhook.h>
 
 #include <Jones3D/Gui/JonesDialog.h>
@@ -1280,6 +1281,15 @@ int JonesMain_ProcessGame(void)
             // below 3 function calls could be part of rdFinishFrame
             rdCache_Flush();
             rdCache_FlushAlpha();
+
+            // INDY: touch controls (Android): the overlay on top, and the game state the gestures depend on
+            IndyTouchFrame touchFrame = { 0 };
+            stdDisplay_GetBackBufferSize(&touchFrame.width, &touchFrame.height);
+            touchFrame.bMenuOpen  = JonesHud_IsMenuOpen();
+            touchFrame.bCinematic = sithCamera_g_pCurCamera == &sithCamera_g_aCameras[SITHCAMERA_CINEMACAMERANUM];
+            JonesHud_GetHealthIndicatorRect(&touchFrame.hudX, &touchFrame.hudY, &touchFrame.hudWidth, &touchFrame.hudHeight);
+            indyTouch_Frame(&touchFrame);
+
             std3D_EndScene();
         }
 

@@ -1,6 +1,7 @@
 #include "indyModern.h"
 #include "indyCamera.h"
 #include "indyEnh.h"
+#include "indyTouch.h"
 
 #include <sith/Gameplay/sithPlayer.h>
 #include <sith/Gameplay/sithPlayerActions.h>
@@ -25,9 +26,14 @@ static float indyModern_magnitude;
 static float indyModern_stickAngle; // stick direction relative to the camera (degrees, 0 = away from the camera)
 static float indyModern_secSinceUse = 1e9f;
 
-// Left stick of the first gamepad that has it deflected: x right, y up, -1..1
+// Left stick of the first gamepad that has it deflected, or the touch stick: x right, y up, -1..1
 static void indyModern_ReadLeftStick(float* pX, float* pY)
 {
+    if ( indyTouch_GetStick(pX, pY) )
+    {
+        return;
+    }
+
     *pX = *pY = 0.0f;
     for ( int joyNum = 0; joyNum < (int)stdControl_GetNumJoysticks(); joyNum++ )
     {

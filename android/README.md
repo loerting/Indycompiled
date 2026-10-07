@@ -3,8 +3,19 @@
 Debug APK for arm64-v8a (phones) and x86_64 (emulator): the whole game. Gradle builds the engine with its own
 CMake project (top-level `CMakeLists.txt`, `cmake/native.cmake`) as `libmain.so`, next to SDL3's `libSDL3.so`;
 SDL3's `SDLActivity` loads both and runs the game's `SDL_main` (`Jones3D/main.c`). Platform layer as on Linux
-(SDL3, OpenGL ES 3); Android-only: `Libs/std/SDL/stdAndroidSDL.c` (game data, below). No touch controls yet: a
-gamepad or keyboard is needed to play.
+(SDL3, OpenGL ES 3); Android-only: `Libs/std/SDL/stdAndroidSDL.c` (game data, below).
+
+## Touch controls
+
+`Libs/indy/indyTouch.c` (fed by `wkernelSDL.c`, drawn by `JonesMain.c` after the HUD):
+- Left half: a floating stick where the thumb lands; camera-relative movement (ENH-0005), full push runs. While
+  climbing or swimming it acts as the classic keys.
+- Right half: drag turns the camera (ENH-0002); a tap attacks; a quick flick down toggles crouching.
+- Buttons: Jump, Action (held while touched), Menu (top right). A tap on the health indicator opens the menu too.
+- In the menu (the game's own strip: inventory, save, load, options): swipe to move, tap to select, Menu or Back
+  closes it. Android Back is Escape.
+- The overlay hides while a keyboard or gamepad is used, and comes back on the next touch.
+- Tests on the PC: `INDY_TOUCH_OVERLAY=1` shows the overlay without a touch screen.
 
 ## Requirements
 

@@ -44,11 +44,17 @@ static DWORD DInputSDL_sequence;
 static bool DInputSDL_bWatching;
 
 static uint8_t DInputSDL_aScancodeToDik[SDL_SCANCODE_COUNT];
+static bool DInputSDL_aVirtualKeys[256]; // DIK codes held by software (touch controls: Enter, Escape)
+
+void DInputSDL_SetVirtualKey(uint8_t dik, bool bDown)
+{
+    DInputSDL_aVirtualKeys[dik] = bDown;
+}
 
 static void DInputSDL_InitKeyMap(void)
 {
     static const struct { SDL_Scancode sc; uint8_t dik; } aMap[] = {
-        { SDL_SCANCODE_ESCAPE, DIK_ESCAPE }, { SDL_SCANCODE_1, DIK_1 }, { SDL_SCANCODE_2, DIK_2 }, { SDL_SCANCODE_3, DIK_3 },
+        { SDL_SCANCODE_ESCAPE, DIK_ESCAPE }, { SDL_SCANCODE_AC_BACK, DIK_ESCAPE } /* Android Back */, { SDL_SCANCODE_1, DIK_1 }, { SDL_SCANCODE_2, DIK_2 }, { SDL_SCANCODE_3, DIK_3 },
         { SDL_SCANCODE_4, DIK_4 }, { SDL_SCANCODE_5, DIK_5 }, { SDL_SCANCODE_6, DIK_6 }, { SDL_SCANCODE_7, DIK_7 },
         { SDL_SCANCODE_8, DIK_8 }, { SDL_SCANCODE_9, DIK_9 }, { SDL_SCANCODE_0, DIK_0 }, { SDL_SCANCODE_MINUS, DIK_MINUS },
         { SDL_SCANCODE_EQUALS, DIK_EQUALS }, { SDL_SCANCODE_BACKSPACE, DIK_BACK }, { SDL_SCANCODE_TAB, DIK_TAB },
@@ -293,6 +299,10 @@ HRESULT DInputSDL_DeviceGetDeviceState(LPDIRECTINPUTDEVICE8 pDev, DWORD size, LP
         if ( size < 256 ) return DIERR_INVALIDPARAM;
         uint8_t* pState = (uint8_t*)pData;
         memset(pState, 0, 256);
+        for ( int dik = 0; dik < 256; ++dik )
+        {
+            if ( DInputSDL_aVirtualKeys[dik] ) pState[dik] = 0x80;
+        }
         if ( !SDL_GetKeyboardFocus() ) return DI_OK; // foreground device
         int numKeys = 0;
         const bool* aKeys = SDL_GetKeyboardState(&numKeys);
