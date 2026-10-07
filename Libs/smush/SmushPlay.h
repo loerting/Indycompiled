@@ -3,6 +3,7 @@
 
 #include <j3dcore/j3d.h>
 #include <std/types.h>
+#include <sound/Driver.h> // INDY: tDirectSound
 
 J3D_EXTERN_C_START
 
@@ -50,28 +51,25 @@ typedef struct sSmushBitmap
     int unknown22;
 } SmushBitmap;
 
+// INDY: the player is implemented in C (SmushPlay.c, smushDecoder.c, smushPlayWin32.c) instead of trampolines into
+// the exe's statically linked SMUSH library
 
-inline int J3DAPI SmushPlay_SysStartup(HWND hwnd, tDirectSound* pDSound)
-{
-    return J3D_TRAMPOLINE_CALL(SmushPlay_SysStartup, hwnd, pDSound);
-}
+// Called for every picture of the movie; a nonzero return value stops the movie
+typedef int (__cdecl* SmushBlitFunc)(const SmushBitmap* pBitmap, int frameNum);
 
-inline void SmushPlay_SysShutdown(void)
-{
-    J3D_TRAMPOLINE_CALL(SmushPlay_SysShutdown);
-}
+// Starts the player's audio output on the game's DirectSound object (NULL: own object). Returns 1.
+int J3DAPI SmushPlay_SysStartup(HWND hwnd, tDirectSound* pDSound);
+void SmushPlay_SysShutdown(void);
 
-inline void J3DAPI SmushPlay_SetGlobalVolume(size_t volume)
-{
-    J3D_TRAMPOLINE_CALL(SmushPlay_SetGlobalVolume, volume);
-}
+// Volume 0-127 of the movie audio, used from the next SmushPlay_PlayMovie on
+void J3DAPI SmushPlay_SetGlobalVolume(size_t volume);
 
-inline int J3DAPI SmushPlay_PlayMovie(const char* pFilename, int a1, int a3, int a4, int a5, int width, int height, int a8, int a9, int(__cdecl* pBlit)(const SmushBitmap* pBitmap, int a2), int a11, int a12, int a13)
-{
-    return J3D_TRAMPOLINE_CALL(SmushPlay_PlayMovie, pFilename, a1, a3, a4, a5, width, height, a8, a9, pBlit, a11, a12, a13);
-}
+// Plays a SMUSH movie numLoops times (0: not at all) at fps frames per second (0: 15); pfBlit gets each picture
+// as RGB565. flags: 2 = never drop late pictures. width and height, a8 and a9 and the stream parameters only
+// matter for the original's own rendering and file streaming, which the game doesn't use.
+// Returns 1 if the movie could be opened (also when stopped by pfBlit), else 0.
+int J3DAPI SmushPlay_PlayMovie(const char* pFilename, int fps, int flags, int unused4, int unused5, int width, int height, int a8, int a9, SmushBlitFunc pfBlit, int numLoops, int streamParam1, int streamParam2);
 
 J3D_EXTERN_C_END
-
 
 #endif // SMUSHPLAY_H
