@@ -22,6 +22,9 @@ bash android/gradlew -p android assembleDebug
 adb install -r android/app/build/outputs/apk/debug/app-debug.apk
 ```
 
+Test without a phone: `Scripts/android/test_emulator.sh` boots the x86_64 AVD headless, installs and starts the
+APK, and saves screenshots at about 3 s and 10 s plus the logcat to `game/screens/android-<timestamp>/`.
+
 Options: `-Pindy.abis=arm64-v8a` (one ABI only), `-Pindy.ninjaJobs=N` (native compile jobs, default 4).
 
 ## Game data: local recipe only
