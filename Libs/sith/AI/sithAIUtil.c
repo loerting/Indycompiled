@@ -2827,3 +2827,25 @@ int J3DAPI sithAIUtil_CanSeeTarget(const SithAIControlBlock* pLocal, SithThing* 
 
     return sithAIUtil_RandFraction() < chance;
 }
+
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals of this module, with the exe's initial values
+float sithAIUtil_thingsInViewFovY;
+size_t sithAIUtil_numVisitedSectors;
+SithAIWaypointLayerFlag sithAIUtil_activeWpntLayer;
+size_t sithAIUtil_numThingsInView;
+rdVector3 sithAIUtil_vec_585490;
+SithAIControlBlock* sithAIUtil_pMkPointCurLocal;
+rdVector3 sithAIUtil_mkPointCurPYR;
+float sithAIUtil_thingsInViewFovX;
+SithAIWaypointOwner sithAIUtil_aWpntOwners[10];
+SithThing** sithAIUtil_aThingsInView;
+SithAIWaypointDistance sithAIUtil_aWpntDistances[60];
+int sithAIUtil_sizeThingsInView;
+rdVector3 sithAIUtil_vec_585718;
+float sithAIUtil_maxDistanceToThingsInView;
+int sithAIUtil_thingInViewTypeMask;
+SithAIWaypoint sithAIUtil_aAIWpnts[60];
+float sithAIUtil_secLastUpdate;
+int sithAIUtil_mkPoinCurFlags;
+int sithAIUtil_g_bRenderAIWpnts;
+#endif

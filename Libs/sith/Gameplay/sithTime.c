@@ -127,3 +127,13 @@ int J3DAPI sithTime_IsPaused()
 {
     return sithTime_g_bPaused;
 }
+
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals of this module, with the exe's initial values
+uint32_t sithTime_g_frameTime;
+float sithTime_g_frameTimeFlex;
+float sithTime_g_fps;
+uint32_t sithTime_g_msecGameTime;
+float sithTime_g_secGameTime;
+uint32_t sithTime_g_clockTime;
+int sithTime_g_bPaused;
+#endif

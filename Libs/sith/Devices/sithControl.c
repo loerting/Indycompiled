@@ -989,3 +989,7 @@ const SithControlBinding* J3DAPI sithControl_GetFunctionBindings(SithControlFunc
     *pNumBindings = aControlBindings[functionId].numBindings;
     return aControlBindings[functionId].aBindings;
 }
+
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals of this module, with the exe's initial values
+int sithControl_g_controlOptions;
+#endif

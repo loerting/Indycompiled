@@ -5668,3 +5668,13 @@ void J3DAPI sithPlayerControls_ProcessSlideDownMove(SithThing* pThing, float sec
     sithPuppet_PlayMode(pThing, SITHPUPPETSUBMODE_LEAPLEFT, NULL);
     sithPlayerControls_bJumpKeyActive = true;
 }
+
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals of this module, with the exe's initial values
+int sithPlayerControls_g_bCutsceneMode;
+
+// For sithAIMove (SITHAIMOVE_PROCESSWEAPONAIM): the hook build reaches the file-local function through the exe
+void J3DAPI sithPlayerControls_ProcessWeaponAimForAI(SithThing* pThing, float secDeltaTime)
+{
+    sithPlayerControls_ProcessWeaponAim(pThing, secDeltaTime);
+}
+#endif

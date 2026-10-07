@@ -360,3 +360,10 @@ void J3DAPI jonesCog_EnableIndicatrors(bool bEnable)
         JonesHud_SetFadeHealthHUD(0, 0);
     }
 }
+
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals of this module, with the exe's initial values
+int jonesCog_g_bShowHealthHUD;
+int jonesCog_g_bMenuVisible;
+int jonesCog_g_bEnableGamesave;
+int jonesCog_g_dword_17EFFCC;
+#endif

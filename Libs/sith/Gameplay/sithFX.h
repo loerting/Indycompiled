@@ -12,6 +12,12 @@
 
 J3D_EXTERN_C_START
 
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals are ours (defined in sithFX.c)
+extern int sithFX_g_lastChalkMarkNum;
+extern SithThing* sithFX_g_aChalkMarks[10];
+extern size_t sithFX_g_numChalkMarks;
+#endif
+
 #define sithFX_g_lastChalkMarkNum J3D_DECL_FAR_VAR(sithFX_g_lastChalkMarkNum, int)
 // extern int sithFX_g_lastChalkMarkNum ;
 

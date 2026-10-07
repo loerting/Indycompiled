@@ -9,6 +9,10 @@
 
 J3D_EXTERN_C_START
 
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals are ours (defined in sithEvent.c)
+extern SithEvent* sithEvent_g_pFirstQueuedEvent;
+#endif
+
 #define sithEvent_g_pFirstQueuedEvent J3D_DECL_FAR_VAR(sithEvent_g_pFirstQueuedEvent, SithEvent*)
 // extern SithEvent *sithEvent_g_pFirstQueuedEvent;
 

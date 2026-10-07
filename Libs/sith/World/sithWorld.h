@@ -16,6 +16,13 @@ J3D_EXTERN_C_START
 #define SITHWORLD_IS_STATICINDEX(idx) ((idx & SITH_STATICRESOURCE_INDEXMASK) != 0)
 
 
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals are ours (defined in sithWorld.c)
+extern SithWorld* sithWorld_g_pCurrentWorld;
+extern SithWorld* sithWorld_g_pStaticWorld;
+extern SithWorld* sithWorld_g_pLastLoadedWorld;
+extern int sithWorld_g_bLoading;
+#endif
+
 #define sithWorld_g_pCurrentWorld J3D_DECL_FAR_VAR(sithWorld_g_pCurrentWorld, SithWorld*)
 // extern SithWorld *sithWorld_g_pCurrentWorld;
 

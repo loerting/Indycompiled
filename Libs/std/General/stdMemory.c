@@ -593,3 +593,7 @@ void* J3DAPI stdMemory_BlockAlloc(size_t size)
     pHeader->pBlock = NULL;
     return STDMEMORYBLOCK_ZONE_GETDATA(pHeader);
 }
+
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals of this module, with the exe's initial values
+tMemoryState stdMemory_g_curState;
+#endif

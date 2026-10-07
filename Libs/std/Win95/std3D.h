@@ -18,6 +18,11 @@
 
 J3D_EXTERN_C_START
 
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals are ours (defined in std3DX9.c and std3DX6.c)
+extern float std3D_g_fogDensity;
+extern size_t std3D_g_maxVertices;
+#endif
+
 #define std3D_g_fogDensity J3D_DECL_FAR_VAR(std3D_g_fogDensity, float)
 // extern float std3D_g_fogDensity ;
 

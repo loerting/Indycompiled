@@ -3199,9 +3199,9 @@ void J3DAPI sithAIMove_UpdateMardukTail(SithThing* pThing, float secDeltaTime)
 
 static void sithAIMove_ProcessWeaponAim(SithThing* pThing, float secDeltaTime)
 {
-    // TODO(native): sithPlayerControls_ProcessWeaponAim is file-local in sithPlayerControls.c; call it through the exe
-    // entry point, which is hooked to the C version (or runs the original with INDY_NOHOOK)
-    J3D_CALLFUNCFAR(sithPlayerControls_ProcessWeaponAim_ADDR, sithPlayerControls_ProcessWeaponAim_TYPE, pThing, secDeltaTime);
+    // sithPlayerControls_ProcessWeaponAim is file-local in sithPlayerControls.c: the hook build calls it through the
+    // exe entry point, the standalone build through a wrapper (sithAIMove.h)
+    SITHAIMOVE_PROCESSWEAPONAIM(pThing, secDeltaTime);
 }
 
 static float sithAIMove_GetTurnStep(const SithThing* pThing, float angle, float secDeltaTime)
@@ -3330,3 +3330,10 @@ static bool sithAIMove_PlayStrike(SithThing* pThing, SithQuetzStrike* pStrike, c
 
     return true;
 }
+
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals of this module, with the exe's initial values
+float sithAIMove_g_flt_585464;
+float sithAIMove_g_flt_585468;
+float sithAIMove_g_flt_58546C;
+float sithAIMove_g_flt_585470;
+#endif

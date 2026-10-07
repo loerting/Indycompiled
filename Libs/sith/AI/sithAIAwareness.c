@@ -230,3 +230,7 @@ int J3DAPI sithAIAwareness_CreateEvent(SithSector* pSector, const rdVector3* pos
     numEvents++;
     return 1;
 }
+
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals of this module, with the exe's initial values
+SithAIAwarenessSector* sithAIAwareness_g_aSectors;
+#endif

@@ -2753,13 +2753,13 @@ void J3DAPI JonesMain_LoadSettings(StdDisplayEnvironment* pDisplayEnv, JonesStat
 
 int J3DAPI JonesMain_ShowDevDialog(HWND hWnd, JonesState* pConfig)
 {
-    HINSTANCE hInstance = (HINSTANCE)GetWindowLongPtr(hWnd, GWL_HINSTANCE);
+    HINSTANCE hInstance = STDWIN95_RESOURCES((HINSTANCE)GetWindowLongPtr(hWnd, GWL_HINSTANCE)); // INDY: Stage 4
     return DialogBoxParam(hInstance, (LPCSTR)101, hWnd, JonesMain_DevDialogProc, (LPARAM)pConfig);
 }
 
 int J3DAPI JonesMain_ShowDisplayOptions(HWND hWnd, JonesState* pState)
 {
-    HINSTANCE hInstance = (HINSTANCE)GetWindowLongPtr(hWnd, GWL_HINSTANCE);
+    HINSTANCE hInstance = STDWIN95_RESOURCES((HINSTANCE)GetWindowLongPtr(hWnd, GWL_HINSTANCE)); // INDY: Stage 4
     return DialogBoxParam(hInstance, (LPCSTR)106, hWnd, JonesMain_DevDialogProc, (LPARAM)pState);
 }
 
@@ -3358,3 +3358,8 @@ bool J3DAPI JonesMain_CurDisplaySupportsBPP(const JonesDisplaySettings* pSetting
 
     return false;
 }
+
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals of this module, with the exe's initial values
+char JonesMain_g_aErrorBuffer[1024] = "Unknown error";
+HANDLE JonesMain_g_mainMutex;
+#endif

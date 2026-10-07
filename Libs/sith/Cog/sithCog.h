@@ -13,6 +13,11 @@ J3D_EXTERN_C_START
 #define SITHCOG_NORETURNVALUE      -9999
 #define SITHCOG_GLOBALSYMBOLSTARTID SITHCOGSCRIPT_MAXSYMREFS
 
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals are ours (defined in sithCog.c)
+extern SithCogSymbolTable* sithCog_g_pSymbolTable;
+extern SithCog* sithCog_g_pMasterCog;
+#endif
+
 #define sithCog_g_pSymbolTable J3D_DECL_FAR_VAR(sithCog_g_pSymbolTable, SithCogSymbolTable*)
 // extern SithCogSymbolTable *sithCog_g_pSymbolTable;
 

@@ -481,7 +481,7 @@ int J3DAPI JonesDialog_ShowDialog(LPCSTR lpTemplateName, HWND hWnd, DLGPROC lpDi
     JonesDialogGameState state;
     int v9;
 
-    hInstance = (HINSTANCE)GetWindowLongPtr(hWnd, GWL_HINSTANCE);
+    hInstance = STDWIN95_RESOURCES((HINSTANCE)GetWindowLongPtr(hWnd, GWL_HINSTANCE)); // INDY: Stage 4
     if ( !JonesMain_HasStarted() )
     {
         return DialogBoxParam(hInstance, lpTemplateName, hWnd, lpDialogFunc, dwInitParam);

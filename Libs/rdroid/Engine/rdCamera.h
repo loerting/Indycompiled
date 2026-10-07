@@ -10,6 +10,12 @@ J3D_EXTERN_C_START
 #define RDCAMERA_FOVMIN   5.0f
 #define RDCAMERA_FOVMAX 179.0f
 
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals are ours (defined in rdCamera.c)
+extern rdVector3 rdCamera_g_camPYR;
+extern rdCamera* rdCamera_g_pCurCamera;
+extern rdMatrix34 rdCamera_g_camMatrix;
+#endif
+
 // Current camera orientation
 #define rdCamera_g_camPYR J3D_DECL_FAR_VAR(rdCamera_g_camPYR, rdVector3)
 // extern rdVector3 rdCamera_g_camPYR;

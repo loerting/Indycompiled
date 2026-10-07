@@ -1547,3 +1547,10 @@ error:
 
     return 1;
 }
+
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals of this module, with the exe's initial values
+SithWorld* sithWorld_g_pCurrentWorld;
+SithWorld* sithWorld_g_pStaticWorld;
+SithWorld* sithWorld_g_pLastLoadedWorld;
+int sithWorld_g_bLoading;
+#endif

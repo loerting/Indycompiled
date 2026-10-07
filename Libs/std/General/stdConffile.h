@@ -28,6 +28,11 @@ typedef struct sStdConffileEntry
 static_assert(sizeof(StdConffileEntry) == 4100, "sizeof(StdConffileEntry) == 4100");
 
 
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals are ours (defined in stdConffile.c)
+extern StdConffileEntry stdConffile_g_entry;
+extern char* stdConffile_g_aLine;
+#endif
+
 #define stdConffile_g_entry J3D_DECL_FAR_VAR(stdConffile_g_entry, StdConffileEntry)
 // extern StdConffileEntry stdConffile_g_entry;
 

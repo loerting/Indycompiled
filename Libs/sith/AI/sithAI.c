@@ -1172,3 +1172,9 @@ void sithAI_ResetAllAIs(void)
         sithAI_FreeAI(aiNum);
     }
 }
+
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals of this module, with the exe's initial values
+int sithAI_g_bOpen;
+SithAIControlBlock sithAI_g_aControlBlocks[256];
+int sithAI_g_lastUsedAIIndex;
+#endif

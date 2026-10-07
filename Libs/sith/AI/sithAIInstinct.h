@@ -43,5 +43,10 @@ void J3DAPI sithAIInstinct_sub_494FF0(const SithThing* pThing, float sideMove);
 void sithAIInstinct_InstallHooks(void);
 void sithAIInstinct_ResetGlobals(void);
 
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals are ours (defined in sithAIInstinct.c)
+// used only by sithAIInstinct.c
+extern float sithAIInstinct_flt_539AB8;
+#endif
+
 J3D_EXTERN_C_END
 #endif // SITH_SITHAIINSTINCT_H

@@ -930,3 +930,10 @@ const char* J3DAPI sithGetLevelSaveFilename(size_t levelNum)
     stdMemory_Free(pLevelName);
     return sith_aLevelNdsFileNameBuf;
 }
+
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals of this module, with the exe's initial values
+tHostServices* sith_g_pHS;
+size_t sithMain_g_frameNumber;
+SithMode sithMain_g_sith_mode;
+size_t sithMain_g_curRenderTick;
+#endif

@@ -9,6 +9,11 @@
 
 J3D_EXTERN_C_START
 
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals are ours (defined in JonesMain.c)
+extern char JonesMain_g_aErrorBuffer[1024];
+extern HANDLE JonesMain_g_mainMutex;
+#endif
+
 #define JonesMain_g_aErrorBuffer J3D_DECL_FAR_ARRAYVAR(JonesMain_g_aErrorBuffer, char(*)[1024])
 // extern char JonesMain_g_aErrorBuffer[1024] ;
 

@@ -137,5 +137,16 @@ float sithPhysics_CalcWheelRotationAngle(const SithThing* pThing, float wheelRad
     return rotDelta;
 }
 
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals are ours (defined in sithPhysics.c)
+// used only by sithPhysics.c
+extern float sithPhysics_flt_538D04;
+extern int sithPhysics_dword_538D2C;
+extern int sithPhysics_dword_538D30;
+extern int sithPhysics_bJeepMoveFx;
+extern int sithPhysics_dword_538D38;
+extern int sithPhysics_dword_58540C;
+extern float sithPhysics_flt_585410;
+#endif
+
 J3D_EXTERN_C_END
 #endif // SITH_SITHPHYSICS_H

@@ -2002,7 +2002,7 @@ BOOL CALLBACK jonesConfig_MessageDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam,
 
 void J3DAPI jonesConfig_InitMessageDialogIcon(HWND hWnd, JonesMessageDialogData* pData)
 {
-    HINSTANCE hInstance = (HINSTANCE)GetWindowLongPtr(hWnd, GWL_HINSTANCE);
+    HINSTANCE hInstance = STDWIN95_RESOURCES((HINSTANCE)GetWindowLongPtr(hWnd, GWL_HINSTANCE)); // INDY: Stage 4
     if ( pData )
     {
         HANDLE hImage = LoadImage(hInstance, MAKEINTRESOURCE(pData->iconID), IMAGE_ICON, 64, 64, LR_DEFAULTCOLOR);
@@ -3651,7 +3651,7 @@ int J3DAPI jonesConfig_GetSaveGameFilePath(HWND hWnd, char* pOutFilePath)
     OPENFILENAME ofn = { 0 };
     ofn.lStructSize   = sizeof(OPENFILENAME);
     ofn.hwndOwner     = hWnd;
-    ofn.hInstance     = (HINSTANCE)GetWindowLongPtr(hWnd, GWL_HINSTANCE);
+    ofn.hInstance     = STDWIN95_RESOURCES((HINSTANCE)GetWindowLongPtr(hWnd, GWL_HINSTANCE)); // INDY: Stage 4
 
     char aFilterStr[128] = { 0 };
     STD_FORMAT(aFilterStr, aFileterStr, "(.nds)");
@@ -4124,7 +4124,7 @@ int J3DAPI jonesConfig_GetLoadGameFilePath(HWND hWnd, char* pDestNdsPath)
     OPENFILENAME ofn      = { 0 };
     ofn.lStructSize       = sizeof(OPENFILENAME);
     ofn.hwndOwner         = hWnd;
-    ofn.hInstance         = (HINSTANCE)GetWindowLongPtr(hWnd, GWL_HINSTANCE);
+    ofn.hInstance         = STDWIN95_RESOURCES((HINSTANCE)GetWindowLongPtr(hWnd, GWL_HINSTANCE)); // INDY: Stage 4
     ofn.lpstrFilter       = aFilterStr;
     ofn.lpstrCustomFilter = NULL;
 
@@ -9492,7 +9492,7 @@ int J3DAPI jonesConfig_StoreInitItemIcons(HWND hWnd, tStoreCartState* pCart)
         return 0;
     }
 
-    HINSTANCE hInstance = (HINSTANCE)GetWindowLongPtr(hWnd, GWL_HINSTANCE);
+    HINSTANCE hInstance = STDWIN95_RESOURCES((HINSTANCE)GetWindowLongPtr(hWnd, GWL_HINSTANCE)); // INDY: Stage 4
     int result = hInstance != NULL;
     for ( size_t i = 0; i < STD_ARRAYLEN(JonesHud_aStoreItems); ++i )
     {

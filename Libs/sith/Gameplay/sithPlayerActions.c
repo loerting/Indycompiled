@@ -3035,3 +3035,16 @@ void J3DAPI sithPlayerActions_MoveToCrawlPosition(SithThing* pThing)
         }
     }
 }
+
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals of this module, with the exe's initial values
+int sithPlayerActions_g_jewelFlyingPuppetTrackNum = -1;
+SithSurface* sithPlayerActions_g_pCurLedgeSurface;
+rdFace* sithPlayerActions_g_pCurLedgeThingModelFace;
+rdModel3* sithPlayerActions_g_pCurLedgeThingModel;
+SithThing* sithPlayerActions_g_pPlasma;
+int sithPlayerActions_g_bJewelFlying;
+int sithPlayerActions_g_bPlayerInvisible;
+SithSurface* sithPlayerActions_g_pChalkWriteSurf;
+rdVector3 sithPlayerActions_g_chalkWritePos;
+SithSector* sithPlayerActions_g_pChalkWriteSector;
+#endif

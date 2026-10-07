@@ -214,3 +214,7 @@ void J3DAPI sithEvent_AddEvent(SithEvent* pEvent)
 
     pEvent->pNextEvent = pNextEvent;
 }
+
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals of this module, with the exe's initial values
+SithEvent* sithEvent_g_pFirstQueuedEvent;
+#endif

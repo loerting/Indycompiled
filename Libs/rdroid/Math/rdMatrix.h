@@ -12,6 +12,10 @@
 
 J3D_EXTERN_C_START
 
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals are ours (defined in rdMatrix.c)
+extern const rdMatrix34 rdroid_g_identMatrix34;
+#endif
+
 #define rdroid_g_identMatrix34 J3D_DECL_FAR_VAR(rdroid_g_identMatrix34, const rdMatrix34)
 // extern const rdMatrix34 rdroid_g_identMatrix34 ;
 

@@ -9,6 +9,15 @@
 
 J3D_EXTERN_C_START
 
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals are ours (defined in sithInventory.c)
+extern int sithInventory_g_bInitInventory;
+extern int sithInventory_g_bSendDeactivateMessage;
+extern int sithInventory_g_dword_56B750;
+extern int sithInventory_g_dword_56B754;
+extern SithInventoryType sithInventory_g_aTypes[SITHINVENTORY_MAXTYPES];
+extern SithInventoryUnknown sithInventory_g_aUnknown[20];
+#endif
+
 #define sithInventory_g_bInitInventory J3D_DECL_FAR_VAR(sithInventory_g_bInitInventory, int)
 // extern int sithInventory_g_bInitInventory ;
 

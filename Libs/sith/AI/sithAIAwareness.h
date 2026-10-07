@@ -13,6 +13,10 @@ J3D_EXTERN_C_START
 #define SITHAIAWARENESS_NUMTYPES  4u
 #define SITHAIAWARENESS_MAXEVENTS 32u
 
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals are ours (defined in sithAIAwareness.c)
+extern SithAIAwarenessSector* sithAIAwareness_g_aSectors;
+#endif
+
 #define sithAIAwareness_g_aSectors J3D_DECL_FAR_VAR(sithAIAwareness_g_aSectors, SithAIAwarenessSector*)
 // extern SithAIAwarenessSector *sithAIAwareness_g_aSectors;
 

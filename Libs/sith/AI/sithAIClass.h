@@ -8,6 +8,10 @@
 
 J3D_EXTERN_C_START
 
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals are ours (defined in sithAIClass.c)
+extern tHashTable* sithAIClass_g_pHashtable;
+#endif
+
 #define sithAIClass_g_pHashtable J3D_DECL_FAR_VAR(sithAIClass_g_pHashtable, tHashTable*)
 // extern tHashTable *sithAIClass_g_pHashtable;
 

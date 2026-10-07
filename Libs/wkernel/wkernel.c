@@ -230,18 +230,18 @@ int J3DAPI wkernel_CreateWindow(HINSTANCE hInstance, int nShowCmd, LPCSTR lpWind
     wndcls.style         = 0;
 
     // Added: Load app icon from resource
-    wndcls.hIcon = LoadIcon(hInstance, MAKEINTRESOURCEA(IDI_APPICON));
+    wndcls.hIcon = LoadIcon(STDWIN95_RESOURCES(hInstance), MAKEINTRESOURCEA(IDI_APPICON));
     if ( !wndcls.hIcon )
     {
-        wndcls.hIcon = LoadIcon(hInstance, "APPICON");
+        wndcls.hIcon = LoadIcon(STDWIN95_RESOURCES(hInstance), "APPICON");
         if ( !wndcls.hIcon ) {
             wndcls.hIcon = LoadIcon(NULL, (LPCSTR)IDI_APPLICATION);
         }
     }
-    wndcls.hIconSm = LoadIcon(hInstance, MAKEINTRESOURCEA(IDI_APPICON));
+    wndcls.hIconSm = LoadIcon(STDWIN95_RESOURCES(hInstance), MAKEINTRESOURCEA(IDI_APPICON));
     if ( !wndcls.hIconSm )
     {
-        wndcls.hIconSm = LoadIcon(hInstance, "APPICON");
+        wndcls.hIconSm = LoadIcon(STDWIN95_RESOURCES(hInstance), "APPICON");
         if ( !wndcls.hIconSm ) {
             wndcls.hIconSm = LoadIcon(NULL, (LPCSTR)IDI_APPLICATION);
         }

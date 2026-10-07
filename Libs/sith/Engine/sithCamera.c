@@ -1492,3 +1492,19 @@ SithCameraState sithCamera_GetCameraStateFlags(void)
 {
     return sithCamera_g_stateFlags;
 }
+
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals of this module, with the exe's initial values
+SithCamera* sithCamera_g_pCurCamera;
+int sithCamera_g_bExtCameraLookMode;
+rdVector3 sithCamera_g_camSpot;
+SithCamera sithCamera_g_aCameras[7];
+int sithCamera_g_bCurCameraSet;
+SithCameraState sithCamera_g_stateFlags;
+size_t sithCamera_g_curCycleCamNum;
+rdVector3 sithCamera_g_vecCameraPosOffset;
+rdVector3 sithCamera_g_vecCameraAngleOffset;
+float sithCamera_g_cameraPosDelta;
+float sithCamera_g_cameraAngleDelta;
+rdMatrix34 sithCamera_g_orbCamOrient;
+rdVector3 sithCamera_g_camLookSpot;
+#endif

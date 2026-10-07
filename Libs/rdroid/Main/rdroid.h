@@ -61,6 +61,13 @@ J3D_EXTERN_C_START
 #define RD_ASSERTREL(condition) \
     J3D_ASSERTREL(condition, rdroid_g_pHS )
 
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals are ours (defined in rdroid.c)
+extern rdLightMode rdroid_g_curLightingMode;
+extern tHostServices* rdroid_g_pHS;
+extern rdGeometryMode rdroid_g_curGeometryMode;
+extern rdRoidFlags rdroid_g_curRenderOptions;
+#endif
+
 #define rdroid_g_curLightingMode J3D_DECL_FAR_VAR(rdroid_g_curLightingMode, rdLightMode)
 // extern rdLightMode rdroid_g_curLightingMode;
 

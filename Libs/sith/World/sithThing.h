@@ -132,5 +132,12 @@ void J3DAPI sithThing_UpdateQuetzUserBlock(SithThing* pThing);
 void sithThing_InstallHooks(void);
 void sithThing_ResetGlobals(void);
 
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals are ours (defined in sithThing.c)
+// used only by sithThing.c
+extern SithQuetzAttachInfo* sithThing_prevQuetzAttachInfo;
+extern SithQuetzAttachInfo* sithThing_curQuetzAttachInfo;
+extern int sithThing_dword_5612B8;
+#endif
+
 J3D_EXTERN_C_END
 #endif // SITH_SITHTHING_H

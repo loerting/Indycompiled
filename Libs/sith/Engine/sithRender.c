@@ -1500,3 +1500,14 @@ int sithRender_MakeScreenShot(void)
     stdFnames_MakePath(aFilePath, sizeof(aFilePath), pDir, aFilename);
     return stdDisplay_SaveScreen(aFilePath);
 }
+
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals of this module, with the exe's initial values
+float sithRender_g_fogDensity = 100.0f;
+size_t sithRender_g_numDrawnThings;
+size_t sithRender_g_numArchPolys;
+size_t sithRender_g_numAlphaArchPolys;
+size_t sithRender_g_numThingPolys;
+size_t sithRender_g_numAlphaThingPoly;
+size_t sithRender_g_numVisibleAdjoins;
+size_t sithRender_g_numVisibleSectors;
+#endif

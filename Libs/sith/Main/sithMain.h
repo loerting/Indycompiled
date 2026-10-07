@@ -59,6 +59,13 @@ J3D_EXTERN_C_START
 #define SITH_CFG_GAMEPLAY_DIFFICULTY  "gameplay.difficulty"
 
 
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals are ours (defined in sithMain.c)
+extern tHostServices* sith_g_pHS;
+extern size_t sithMain_g_frameNumber;
+extern SithMode sithMain_g_sith_mode;
+extern size_t sithMain_g_curRenderTick;
+#endif
+
 #define sith_g_pHS J3D_DECL_FAR_VAR(sith_g_pHS, tHostServices*)
 // extern tHostServices *sith_g_pHS;
 

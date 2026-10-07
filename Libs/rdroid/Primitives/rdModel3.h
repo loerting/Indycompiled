@@ -13,6 +13,11 @@ J3D_EXTERN_C_START
 #define RDMODEL3_MAX_FACES         16384 // Changed: Was 1528
 #define RDMODEL3_MAX_FACE_VERTICES RDCACHE_MAXFACEVERTICES 
 
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals are ours (defined in rdModel3.c)
+extern int rdModel3_g_numDrawnFaces;
+extern int rdModel3_g_numDrawnAlphaFaces;
+#endif
+
 #define rdModel3_g_numDrawnFaces J3D_DECL_FAR_VAR(rdModel3_g_numDrawnFaces, int)
 // extern int rdModel3_g_numDrawnFaces;
 
