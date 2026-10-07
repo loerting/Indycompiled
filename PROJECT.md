@@ -362,7 +362,7 @@ Without these two rules, 124 address collisions slipped through. Some of them ev
 - **Use a private repo, not GitHub's fork button**: forks of public repos can't be private. Clone upstream, rename that remote to `upstream`, and add your private remote as `origin`.
 - This folder isn't empty, so set it up with `git init` + `git remote add upstream …` + `git fetch` + `git checkout -b main upstream/develop`.
 
-- **Nothing gets pushed anywhere public.** Commit locally as often as useful. A private remote is fine once you set one up; a public one waits for your explicit decision.
+- **Nothing gets pushed anywhere public.** Commit locally as often as useful. Since 2026-10-07 the private GitHub repo [loerting/Indycompiled](https://github.com/loerting/Indycompiled) (remote `private`) holds `main` and the work branches as a backup; a public one waits for your explicit decision. Commits use the GitHub noreply address only (the history was rewritten on 2026-10-07 to remove the private address).
 
 ### 7.2 Layout
 
@@ -406,6 +406,21 @@ All of that stays in the git-ignored `game/` folder (`game/review/`, `game/ghidr
 Fine to commit: our own code and docs, and the address map. Its names come from upstream, and addresses and hashes are facts, not copyrighted content.
 
 If the fork is ever published, AGPL-3.0 applies to it as a whole, and upstream's license and notices stay in place.
+
+### 7.5 What goes upstream (decided 2026-10-07)
+
+**OpenJones3D** is the native Jones3D (re)implementation: reimplemented functions, the build without Indy3D.exe, the native
+Linux port (SDL3, OpenGL ES 3) and bug fixes go upstream as PRs from the public fork `loerting/OpenJones3D`, one module
+at a time, each on a branch cut from `upstream/develop` (worktree `Build/upstream-pr`). **Indycompiled** is the Android
+port: the app, touch controls, the APK and data recipe, and the test tooling that needs the original exe stay here.
+
+- New native-port code is written in upstream style from the start: no INDY markers, files in the upstream module
+  folders (`*SDL.c`, `Libs/std/SDL/`, `Libs/std/Posix/`), module `CMakeLists.txt` files choose sources via `J3D_GLES`/`WIN32`.
+- Preparing a PR: copy the file from `main`, remove `INDY_AB_ORIGINAL*` lines, INDY comments, `J3D_STANDALONE` blocks and
+  enhancement-toggle changes, check that only the new functions differ, compile-check against the PR branch.
+- Queue: thing loading [#50](https://github.com/smlu/OpenJones3D/pull/50) ✅ opened, vehicle physics
+  [#51](https://github.com/smlu/OpenJones3D/pull/51) ✅ opened, then AudioLib, AI (AIUtil, AIInstinct, AIMove), DSS (savegames:
+  sithDSS, sithDSSThing, sithMulti), the SMUSH player, the standalone build, and the Linux port once it plays.
 
 ---
 
