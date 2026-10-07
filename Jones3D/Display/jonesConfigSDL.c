@@ -281,6 +281,65 @@ static bool jonesConfigSDL_PickSaveToLoad(char* pDestNdsPath)
     return true;
 }
 
+// Native start menu (JonesMain_Startup): continue from the newest save, load one, or start a new game. True with the
+// save to load in pNdsPath; false for a new game. No menu without saves.
+bool jonesConfigSDL_ShowStartMenu(char* pNdsPath)
+{
+    const size_t numSaves = jonesConfigSDL_ListSaves(/*bWithAutosaves=*/true);
+    if ( !numSaves || !JonesMenu_Begin() )
+    {
+        return false;
+    }
+
+    bool bLoad = false;
+    for ( ;; )
+    {
+        int chosen = -1;
+        if ( !JonesMenu_BeginFrame() )
+        {
+            break;
+        }
+
+        const float u = JonesMenu_GetUnit(), w = JonesMenu_GetWidth(), h = JonesMenu_GetHeight();
+        JonesMenu_Text("Indiana Jones", w * 0.5f, h * 0.12f, 34.0f, RDFONT_ALIGNCENTER, JONESMENU_TEXT_TITLE);
+        JonesMenu_Text(jonesConfigSDL_Text(NULL, "and the Infernal Machine"), w * 0.5f, h * 0.12f + 40.0f * u, 18.0f, RDFONT_ALIGNCENTER, JONESMENU_TEXT_TITLE);
+
+        const float buttonW = fminf(w * 0.8f, 300.0f * u), buttonH = 54.0f * u, x = (w - buttonW) * 0.5f;
+        char aContinue[160] = { 0 };
+        STD_FORMAT(aContinue, "%s,  %s", jonesConfigSDL_aSaves[0].aTitle, jonesConfigSDL_aSaves[0].aInfo);
+        const JonesMenuRect continueRect = { x, h * 0.42f, buttonW, buttonH };
+        const JonesMenuRect loadRect     = { x, continueRect.y + buttonH + 10.0f * u, buttonW, buttonH };
+        const JonesMenuRect newRect      = { x, loadRect.y + buttonH + 10.0f * u, buttonW, buttonH };
+        if ( JonesMenu_Button(&continueRect, jonesConfigSDL_Text(NULL, "Continue"), aContinue) ) chosen = 0;
+        if ( JonesMenu_Button(&loadRect, jonesConfigSDL_Text("JONES_STR_LOADGM", "Load Game"), NULL) ) chosen = 1;
+        if ( JonesMenu_Button(&newRect, jonesConfigSDL_Text(NULL, "New game"), NULL) ) chosen = 2;
+        JonesMenu_EndFrame();
+
+        if ( chosen == 0 )
+        {
+            stdUtil_StringCopy(pNdsPath, JONESCONFIG_GAMESAVE_FILEPATHSIZE, jonesConfigSDL_aSaves[0].aPath);
+            bLoad = true;
+            break;
+        }
+        if ( chosen == 1 && jonesConfigSDL_PickSaveToLoad(pNdsPath) )
+        {
+            bLoad = true;
+            break;
+        }
+        if ( chosen == 2 )
+        {
+            break;
+        }
+        if ( chosen == 1 )
+        {
+            jonesConfigSDL_ListSaves(/*bWithAutosaves=*/true); // the load menu reused the list
+        }
+    }
+
+    JonesMenu_End();
+    return bLoad;
+}
+
 int J3DAPI jonesConfig_GetLoadGameFilePath(HWND hWnd, char* pDestNdsPath)
 {
     J3D_UNUSED(hWnd);

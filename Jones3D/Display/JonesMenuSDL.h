@@ -24,8 +24,9 @@ typedef enum eJonesMenuTextStyle
     JONESMENU_TEXT_DIM,
 } JonesMenuTextStyle;
 
-// A menu session; false when there is no display yet (callers fall back). End waits until the confirm and back keys
-// are released, so the game doesn't take them as its own input.
+// A menu session (over the dimmed game frame, or black before a level is loaded); false when there is no display yet
+// (callers fall back). End waits until the confirm and back keys are released, so the game doesn't take them as its own
+// input.
 bool JonesMenu_Begin(void);
 void JonesMenu_End(void);
 

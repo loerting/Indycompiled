@@ -649,6 +649,14 @@ int J3DAPI JonesMain_Startup(const char* lpCmdLine)
 
     // Finish playing intro video, now load static resource level
 
+#ifndef _WIN32
+    // INDY: native start menu: continue from the newest save or load one (no level intro first), or start a new game
+    if ( JonesMain_state.startMode != JONES_STARTMODE_LOADGAME && jonesConfigSDL_ShowStartMenu(JonesMain_aNdsFilename) )
+    {
+        JonesMain_state.startMode = JONES_STARTMODE_LOADGAME;
+    }
+#endif
+
     // Set load screen for loading static world
     if ( JonesMain_state.startMode == JONES_STARTMODE_LOADGAME )
     {

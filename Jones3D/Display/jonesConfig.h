@@ -42,6 +42,7 @@ int J3DAPI jonesConfig_GetSaveGameFilePath(HWND hWnd, char* pOutFilePath); // sa
 int J3DAPI jonesConfig_GetLoadGameFilePath(HWND hWnd, char* pDestNdsPath); // load game dialog
 #ifndef _WIN32
 void jonesConfigSDL_RunTestMenu(void); // INDY: headless tests (INDY_MENU_TEST)
+bool jonesConfigSDL_ShowStartMenu(char* pNdsPath); // INDY: native start menu (continue, load, new game)
 #endif
 
 int J3DAPI jonesConfig_ShowGamePlayOptions(HWND hWnd);

@@ -23,6 +23,8 @@
 #define JONESMENU_RELEASE_WAIT_MSEC  600u
 
 static bool JonesMenu_bActive;
+static bool JonesMenu_bBackdrop; // the game frame behind the menu (else black: e.g. the start menu)
+static bool JonesMenu_bOpenedControls; // the start menu runs before the game opens the controls
 static rdFont* JonesMenu_pFont;
 static float JonesMenu_width, JonesMenu_height;
 
@@ -120,9 +122,9 @@ bool JonesMenu_Begin(void)
 {
     uint32_t width = 0, height = 0;
     stdDisplay_GetBackBufferSize(&width, &height);
-    if ( JonesMenu_bActive || !stdDisplay_IsOpen() || !width || !height || !sithWorld_g_pCurrentWorld )
+    if ( JonesMenu_bActive || !stdDisplay_IsOpen() || !width || !height )
     {
-        return false; // no game frame to show (e.g. loading a game at startup)
+        return false; // no display yet
     }
 
     if ( !JonesMenu_pFont )
@@ -142,7 +144,17 @@ bool JonesMenu_Begin(void)
     JonesMenu_bShowFocus = false;
     JonesMenu_stickDir = 0;
 
-    stdDisplay_CaptureBackdrop(); // the game as it is now, behind the menu
+    JonesMenu_bOpenedControls = !stdControl_IsOpen();
+    if ( JonesMenu_bOpenedControls )
+    {
+        stdControl_Open();
+    }
+
+    JonesMenu_bBackdrop = sithWorld_g_pCurrentWorld != NULL;
+    if ( JonesMenu_bBackdrop )
+    {
+        stdDisplay_CaptureBackdrop(); // the game as it is now, behind the menu
+    }
     indyTouch_SetUiMode(true);
     return true;
 }
@@ -166,6 +178,11 @@ void JonesMenu_End(void)
         SDL_Delay(10);
     }
 
+    if ( JonesMenu_bOpenedControls )
+    {
+        stdControl_Close();
+        JonesMenu_bOpenedControls = false;
+    }
     indyTouch_SetUiMode(false);
     JonesMenu_bActive = false;
 }
@@ -195,7 +212,14 @@ bool JonesMenu_BeginFrame(void)
     std3D_ClearZBuffer();
     rdCache_AdvanceFrame();
     std3D_StartScene();
-    stdDisplay_DrawBackdrop(0.3f);
+    if ( JonesMenu_bBackdrop )
+    {
+        stdDisplay_DrawBackdrop(0.3f);
+    }
+    else
+    {
+        stdDisplay_BackBufferFill(0, NULL);
+    }
     rdFont_SetKeepAspect(true);
     JonesMenu_numFocusable = 0;
     return true;
