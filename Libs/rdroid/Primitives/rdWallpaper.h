@@ -14,6 +14,7 @@ void J3DAPI rdWallpaper_Draw(const rdWallpaper* pWallpaper);
 rdWallLine* J3DAPI rdWallpaper_NewWallLine(float startX, float startY, float endX, float endY, const rdVector4* pColor);
 void J3DAPI rdWallpaper_FreeWallLine(rdWallLine* pWallLine);
 void J3DAPI rdWallpaper_DrawWallLine(const rdWallLine* pLine, float progress);
+void J3DAPI rdWallpaper_SetKeepAspect(bool bKeepAspect); // INDY: ENH-0006
 
 // Helper hooking functions
 void rdWallpaper_InstallHooks(void);

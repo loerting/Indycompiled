@@ -333,8 +333,16 @@ int J3DAPI JonesDisplay_Open(JonesDisplaySettings* pSettings)
     // INDY: ENH-0006: on screens wider than 4:3, cutscenes show the centred 4:3 part of the picture, as they were made
     // (wider, their fade plates and framing leave the sides uncovered). The widescreen projection keeps the vertical
     // field of view, so that part is exactly the original 4:3 view.
-    JonesDisplay_bCinema4to3 = indyEnh_IsEnabled(INDY_ENH_CUTSCENES_4TO3) && width * 3 > height * 4 + 3;
+    JonesDisplay_bCinema4to3 = JonesDisplay_IsWiderThan4to3();
     return 0;
+}
+
+// INDY: ENH-0006: whether 4:3 content gets a centred 4:3 frame (enabled, and the back buffer is wider than 4:3)
+bool JonesDisplay_IsWiderThan4to3(void)
+{
+    uint32_t width, height;
+    stdDisplay_GetBackBufferSize(&width, &height);
+    return indyEnh_IsEnabled(INDY_ENH_FRAMES_4TO3) && width * 3 > height * 4 + 3;
 }
 
 // INDY: ENH-0006: whether the current camera shows the 4:3 frame (JonesMain clears the bars and clips the scene)
@@ -392,6 +400,7 @@ void J3DAPI JonesDisplay_OpenLoadScreen(const char* pMatFilePath, float wlStartX
     }
 
     stdDisplay_DisableVSync(true); // Added: This will speed up loading since it will not sync to screen refresh rate allowing higher fps
+    rdWallpaper_SetKeepAspect(JonesDisplay_IsWiderThan4to3()); // INDY: ENH-0006, the loading map in a 4:3 frame
     JonesDisplay_pWallpaper = rdWallpaper_New(pMatFilePath);
     JonesDisplay_pWallLine  = rdWallpaper_NewWallLine(wlStartX, wlStartY, wlEndX, wlEndY, &JonesDisplay_wallLineColor);
 
@@ -459,6 +468,11 @@ void J3DAPI JonesDisplay_UpdateLoadProgress(float progress)
     // Draw background images
     if ( JonesDisplay_pWallpaper )
     {
+        if ( JonesDisplay_IsWiderThan4to3() ) // INDY: ENH-0006, black bars beside the 4:3 map
+        {
+            stdDisplay_BackBufferFill(0, NULL);
+        }
+
         if ( progress == 100.0f && (!JonesDisplay_loadScreenState || JonesDisplay_loadScreenState > 0 && JonesDisplay_bUpdateLoadScreen) )
         {
             // Progress completed, increment background image mats cells to show load completed state

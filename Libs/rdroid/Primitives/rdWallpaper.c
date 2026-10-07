@@ -12,6 +12,29 @@
 #include <std/General/stdUtil.h>
 #include <std/Win95/stdDisplay.h>
 
+// INDY: ENH-0006: the wallpaper (loading map) keeps its 4:3 aspect on wider screens, centred
+static bool rdWallpaper_bKeepAspect = false;
+
+void J3DAPI rdWallpaper_SetKeepAspect(bool bKeepAspect)
+{
+    rdWallpaper_bKeepAspect = bKeepAspect;
+}
+
+// Scale from the 640x480 reference to the back buffer, and the left edge of the picture
+static void rdWallpaper_GetScale(float* pScaleX, float* pScaleY, float* pOffsetX)
+{
+    uint32_t width, height;
+    stdDisplay_GetBackBufferSize(&width, &height);
+    *pScaleX  = (float)width / RD_REF_WIDTH;
+    *pScaleY  = (float)height / RD_REF_HEIGHT;
+    *pOffsetX = 0.0f;
+    if ( rdWallpaper_bKeepAspect && *pScaleX > *pScaleY )
+    {
+        *pScaleX  = *pScaleY;
+        *pOffsetX = ((float)width - RD_REF_WIDTH * *pScaleY) / 2.0f;
+    }
+}
+
 #define RDWALLPAPER_NUMMATS        6u 
 #define RDWALLPAPER_LINE_THICKNESS 6.0f
 
@@ -75,10 +98,8 @@ void J3DAPI rdWallpaper_Free(rdWallpaper* pWallpaper)
 
 void J3DAPI rdWallpaper_Draw(const rdWallpaper* pWallpaper)
 {
-    uint32_t height, width;
-    stdDisplay_GetBackBufferSize(&width, &height);
-    float swidth  = (float)width / RD_REF_WIDTH;
-    float sheight = (float)height / RD_REF_HEIGHT;
+    float swidth, sheight, offsetX; // INDY: ENH-0006
+    rdWallpaper_GetScale(&swidth, &sheight, &offsetX);
 
     rdCamera_SetCurrent(pWallpaper->pCamera);
 
@@ -104,7 +125,7 @@ void J3DAPI rdWallpaper_Draw(const rdWallpaper* pWallpaper)
         switch ( matNum )
         {
             case 0u: // left top
-                pCurVert->sx  = 0.0f;
+                pCurVert->sx  = 0.0f + offsetX;
                 pCurVert->sy  = 0.0f;
                 pCurVert->sz  = RD_FIXEDPOINT_RHW_SCALE_X5; // 0.00015259022
                 pCurVert->rhw = RD_FIXEDPOINT_RHW_SCALE_X5;
@@ -112,7 +133,7 @@ void J3DAPI rdWallpaper_Draw(const rdWallpaper* pWallpaper)
                 pCurVert->tv  = 0.0f;
                 ++pCurVert;
 
-                pCurVert->sx  = 256.0f * swidth;
+                pCurVert->sx  = 256.0f * swidth + offsetX;
                 pCurVert->sy  = 0.0f;
                 pCurVert->sz  = RD_FIXEDPOINT_RHW_SCALE_X5;
                 pCurVert->rhw = RD_FIXEDPOINT_RHW_SCALE_X5;
@@ -120,7 +141,7 @@ void J3DAPI rdWallpaper_Draw(const rdWallpaper* pWallpaper)
                 pCurVert->tv  = 0.0f;
                 ++pCurVert;
 
-                pCurVert->sx  = 256.0f * swidth;
+                pCurVert->sx  = 256.0f * swidth + offsetX;
                 pCurVert->sy  = 256.0f * sheight;
                 pCurVert->sz  = RD_FIXEDPOINT_RHW_SCALE_X5;
                 pCurVert->rhw = RD_FIXEDPOINT_RHW_SCALE_X5;
@@ -128,7 +149,7 @@ void J3DAPI rdWallpaper_Draw(const rdWallpaper* pWallpaper)
                 pCurVert->tv  = 1.0f;
                 ++pCurVert;
 
-                pCurVert->sx  = 0.0f;
+                pCurVert->sx  = 0.0f + offsetX;
                 pCurVert->sy  = 256.0f * sheight;
                 pCurVert->sz  = RD_FIXEDPOINT_RHW_SCALE_X5;
                 pCurVert->rhw = RD_FIXEDPOINT_RHW_SCALE_X5;
@@ -137,7 +158,7 @@ void J3DAPI rdWallpaper_Draw(const rdWallpaper* pWallpaper)
                 break;
 
             case 1u: // top middle
-                pCurVert->sx  = 256.0f * swidth;
+                pCurVert->sx  = 256.0f * swidth + offsetX;
                 pCurVert->sy  = 0.0f;
                 pCurVert->sz  = RD_FIXEDPOINT_RHW_SCALE_X5;
                 pCurVert->rhw = RD_FIXEDPOINT_RHW_SCALE_X5;
@@ -145,7 +166,7 @@ void J3DAPI rdWallpaper_Draw(const rdWallpaper* pWallpaper)
                 pCurVert->tv  = 0.0f;
                 ++pCurVert;
 
-                pCurVert->sx  = 512.0f * swidth;
+                pCurVert->sx  = 512.0f * swidth + offsetX;
                 pCurVert->sy  = 0.0f;
                 pCurVert->sz  = RD_FIXEDPOINT_RHW_SCALE_X5;
                 pCurVert->rhw = RD_FIXEDPOINT_RHW_SCALE_X5;
@@ -153,7 +174,7 @@ void J3DAPI rdWallpaper_Draw(const rdWallpaper* pWallpaper)
                 pCurVert->tv  = 0.0f;
                 ++pCurVert;
 
-                pCurVert->sx  = 512.0f * swidth;
+                pCurVert->sx  = 512.0f * swidth + offsetX;
                 pCurVert->sy  = 256.0f * sheight;
                 pCurVert->sz  = RD_FIXEDPOINT_RHW_SCALE_X5;
                 pCurVert->rhw = RD_FIXEDPOINT_RHW_SCALE_X5;
@@ -161,7 +182,7 @@ void J3DAPI rdWallpaper_Draw(const rdWallpaper* pWallpaper)
                 pCurVert->tv  = 1.0f;
                 ++pCurVert;
 
-                pCurVert->sx  = 256.0f * swidth;
+                pCurVert->sx  = 256.0f * swidth + offsetX;
                 pCurVert->sy  = 256.0f * sheight;
                 pCurVert->sz  = RD_FIXEDPOINT_RHW_SCALE_X5;
                 pCurVert->rhw = RD_FIXEDPOINT_RHW_SCALE_X5;
@@ -170,7 +191,7 @@ void J3DAPI rdWallpaper_Draw(const rdWallpaper* pWallpaper)
                 break;
 
             case 2u: // top right
-                pCurVert->sx  = 512.0f * swidth;
+                pCurVert->sx  = 512.0f * swidth + offsetX;
                 pCurVert->sy  = 0.0f;
                 pCurVert->sz  = RD_FIXEDPOINT_RHW_SCALE_X5;
                 pCurVert->rhw = RD_FIXEDPOINT_RHW_SCALE_X5;
@@ -178,7 +199,7 @@ void J3DAPI rdWallpaper_Draw(const rdWallpaper* pWallpaper)
                 pCurVert->tv  = 0.0f;
                 ++pCurVert;
 
-                pCurVert->sx  = 640.0f * swidth;
+                pCurVert->sx  = 640.0f * swidth + offsetX;
                 pCurVert->sy  = 0.0f;
                 pCurVert->sz  = RD_FIXEDPOINT_RHW_SCALE_X5;
                 pCurVert->rhw = RD_FIXEDPOINT_RHW_SCALE_X5;
@@ -186,7 +207,7 @@ void J3DAPI rdWallpaper_Draw(const rdWallpaper* pWallpaper)
                 pCurVert->tv  = 0.0f;
                 ++pCurVert;
 
-                pCurVert->sx  = 640.0f * swidth;
+                pCurVert->sx  = 640.0f * swidth + offsetX;
                 pCurVert->sy  = 256.0f * sheight;
                 pCurVert->sz  = RD_FIXEDPOINT_RHW_SCALE_X5;
                 pCurVert->rhw = RD_FIXEDPOINT_RHW_SCALE_X5;
@@ -194,7 +215,7 @@ void J3DAPI rdWallpaper_Draw(const rdWallpaper* pWallpaper)
                 pCurVert->tv  = 1.0f;
                 ++pCurVert;
 
-                pCurVert->sx  = 512.0f * swidth;
+                pCurVert->sx  = 512.0f * swidth + offsetX;
                 pCurVert->sy  = 256.0f * sheight;
                 pCurVert->sz  = RD_FIXEDPOINT_RHW_SCALE_X5;
                 pCurVert->rhw = RD_FIXEDPOINT_RHW_SCALE_X5;
@@ -203,7 +224,7 @@ void J3DAPI rdWallpaper_Draw(const rdWallpaper* pWallpaper)
                 break;
 
             case 3u:// bottom left
-                pCurVert->sx  = 0.0f;
+                pCurVert->sx  = 0.0f + offsetX;
                 pCurVert->sy  = 256.0f * sheight;
                 pCurVert->sz  = RD_FIXEDPOINT_RHW_SCALE_X5;
                 pCurVert->rhw = RD_FIXEDPOINT_RHW_SCALE_X5;
@@ -211,7 +232,7 @@ void J3DAPI rdWallpaper_Draw(const rdWallpaper* pWallpaper)
                 pCurVert->tv  = 0.0f;
                 ++pCurVert;
 
-                pCurVert->sx  = 256.0f * swidth;
+                pCurVert->sx  = 256.0f * swidth + offsetX;
                 pCurVert->sy  = 256.0f * sheight;
                 pCurVert->sz  = RD_FIXEDPOINT_RHW_SCALE_X5;
                 pCurVert->rhw = RD_FIXEDPOINT_RHW_SCALE_X5;
@@ -219,7 +240,7 @@ void J3DAPI rdWallpaper_Draw(const rdWallpaper* pWallpaper)
                 pCurVert->tv  = 0.0f;
                 ++pCurVert;
 
-                pCurVert->sx  = 256.0f * swidth;
+                pCurVert->sx  = 256.0f * swidth + offsetX;
                 pCurVert->sy  = 480.0f * sheight;
                 pCurVert->sz  = RD_FIXEDPOINT_RHW_SCALE_X5;
                 pCurVert->rhw = RD_FIXEDPOINT_RHW_SCALE_X5;
@@ -227,7 +248,7 @@ void J3DAPI rdWallpaper_Draw(const rdWallpaper* pWallpaper)
                 pCurVert->tv  = 0.875f;
                 ++pCurVert;
 
-                pCurVert->sx  = 0.0f;
+                pCurVert->sx  = 0.0f + offsetX;
                 pCurVert->sy  = 480.0f * sheight;
                 pCurVert->sz  = RD_FIXEDPOINT_RHW_SCALE_X5;
                 pCurVert->rhw = RD_FIXEDPOINT_RHW_SCALE_X5;
@@ -236,7 +257,7 @@ void J3DAPI rdWallpaper_Draw(const rdWallpaper* pWallpaper)
                 break;
 
             case 4u: // bottom middle
-                pCurVert->sx  = 256.0f * swidth;
+                pCurVert->sx  = 256.0f * swidth + offsetX;
                 pCurVert->sy  = 256.0f * sheight;
                 pCurVert->sz  = RD_FIXEDPOINT_RHW_SCALE_X5;
                 pCurVert->rhw = RD_FIXEDPOINT_RHW_SCALE_X5;
@@ -244,7 +265,7 @@ void J3DAPI rdWallpaper_Draw(const rdWallpaper* pWallpaper)
                 pCurVert->tv  = 0.0f;
                 ++pCurVert;
 
-                pCurVert->sx  = 512.0f * swidth;
+                pCurVert->sx  = 512.0f * swidth + offsetX;
                 pCurVert->sy  = 256.0f * sheight;
                 pCurVert->sz  = RD_FIXEDPOINT_RHW_SCALE_X5;
                 pCurVert->rhw = RD_FIXEDPOINT_RHW_SCALE_X5;
@@ -252,7 +273,7 @@ void J3DAPI rdWallpaper_Draw(const rdWallpaper* pWallpaper)
                 pCurVert->tv  = 0.0f;
                 ++pCurVert;
 
-                pCurVert->sx  = 512.0f * swidth;
+                pCurVert->sx  = 512.0f * swidth + offsetX;
                 pCurVert->sy  = 480.0f * sheight;
                 pCurVert->sz  = RD_FIXEDPOINT_RHW_SCALE_X5;
                 pCurVert->rhw = RD_FIXEDPOINT_RHW_SCALE_X5;
@@ -260,7 +281,7 @@ void J3DAPI rdWallpaper_Draw(const rdWallpaper* pWallpaper)
                 pCurVert->tv  = 0.875f; // (480 - 256) / 256
                 ++pCurVert;
 
-                pCurVert->sx  = 256.0f * swidth;
+                pCurVert->sx  = 256.0f * swidth + offsetX;
                 pCurVert->sy  = 480.0f * sheight;
                 pCurVert->sz  = RD_FIXEDPOINT_RHW_SCALE_X5;
                 pCurVert->rhw = RD_FIXEDPOINT_RHW_SCALE_X5;
@@ -269,7 +290,7 @@ void J3DAPI rdWallpaper_Draw(const rdWallpaper* pWallpaper)
                 break;
 
             case 5u: // bottom right
-                pCurVert->sx  = 512.0f * swidth;
+                pCurVert->sx  = 512.0f * swidth + offsetX;
                 pCurVert->sy  = 256.0f * sheight;
                 pCurVert->sz  = RD_FIXEDPOINT_RHW_SCALE_X5;
                 pCurVert->rhw = RD_FIXEDPOINT_RHW_SCALE_X5;
@@ -277,7 +298,7 @@ void J3DAPI rdWallpaper_Draw(const rdWallpaper* pWallpaper)
                 pCurVert->tv  = 0.0f;
                 ++pCurVert;
 
-                pCurVert->sx  = 640.0f * swidth;
+                pCurVert->sx  = 640.0f * swidth + offsetX;
                 pCurVert->sy  = 256.0f * sheight;
                 pCurVert->sz  = RD_FIXEDPOINT_RHW_SCALE_X5;
                 pCurVert->rhw = RD_FIXEDPOINT_RHW_SCALE_X5;
@@ -285,7 +306,7 @@ void J3DAPI rdWallpaper_Draw(const rdWallpaper* pWallpaper)
                 pCurVert->tv  = 0.0f;
                 ++pCurVert;
 
-                pCurVert->sx  = 640.0f * swidth;
+                pCurVert->sx  = 640.0f * swidth + offsetX;
                 pCurVert->sy  = 480.0f * sheight;
                 pCurVert->sz  = RD_FIXEDPOINT_RHW_SCALE_X5;
                 pCurVert->rhw = RD_FIXEDPOINT_RHW_SCALE_X5;
@@ -293,7 +314,7 @@ void J3DAPI rdWallpaper_Draw(const rdWallpaper* pWallpaper)
                 pCurVert->tv  = 0.875f; // (480 - 256) / 256
                 ++pCurVert;
 
-                pCurVert->sx  = 512.0f * swidth;
+                pCurVert->sx  = 512.0f * swidth + offsetX;
                 pCurVert->sy  = 480.0f * sheight;
                 pCurVert->sz  = RD_FIXEDPOINT_RHW_SCALE_X5;
                 pCurVert->rhw = RD_FIXEDPOINT_RHW_SCALE_X5;
@@ -385,11 +406,8 @@ void J3DAPI rdWallpaper_DrawWallLine(const rdWallLine* pLine, float progress)
         rdVector_Copy4(&pPoly->aVertIntensities[i], &pLine->color);
     }
 
-    uint32_t width, height;
-    stdDisplay_GetBackBufferSize(&width, &height);
-
-    float swidth    = (float)width / RD_REF_WIDTH;
-    float sheight   = (float)height / RD_REF_HEIGHT;
+    float swidth, sheight, offsetX; // INDY: ENH-0006
+    rdWallpaper_GetScale(&swidth, &sheight, &offsetX);
     float thickness = RDWALLPAPER_LINE_THICKNESS * swidth;
 
     // Calculate end point based on progress
@@ -456,7 +474,7 @@ void J3DAPI rdWallpaper_DrawWallLine(const rdWallLine* pLine, float progress)
         LPD3DTLVERTEX pCurVert = pPoly->aVertices;
 
         // top left
-        pCurVert->sx  = pLine->startX * swidth + deltaX;
+        pCurVert->sx  = pLine->startX * swidth + deltaX + offsetX;
         pCurVert->sy  = pLine->startY * sheight - deltaY;
         pCurVert->sz  = 0.0f;
         pCurVert->rhw = 0.00001f;
@@ -465,7 +483,7 @@ void J3DAPI rdWallpaper_DrawWallLine(const rdWallLine* pLine, float progress)
         ++pCurVert;
 
         // top right
-        pCurVert->sx  = (pLine->startX + endX) * swidth + deltaX;
+        pCurVert->sx  = (pLine->startX + endX) * swidth + deltaX + offsetX;
         pCurVert->sy  = (pLine->startY + endY) * sheight - deltaY;
         pCurVert->sz  = 0.0f;
         pCurVert->rhw = 0.00001f;
@@ -474,7 +492,7 @@ void J3DAPI rdWallpaper_DrawWallLine(const rdWallLine* pLine, float progress)
         ++pCurVert;
 
         // bottom right
-        pCurVert->sx  = (pLine->startX + endX) * swidth - deltaX;
+        pCurVert->sx  = (pLine->startX + endX) * swidth - deltaX + offsetX;
         pCurVert->sy  = (pLine->startY + endY) * sheight + deltaY;
         pCurVert->sz  = 0.0f;
         pCurVert->rhw = 0.00001f;
@@ -483,7 +501,7 @@ void J3DAPI rdWallpaper_DrawWallLine(const rdWallLine* pLine, float progress)
         ++pCurVert;
 
         // bottom left
-        pCurVert->sx  = pLine->startX * swidth - deltaX;
+        pCurVert->sx  = pLine->startX * swidth - deltaX + offsetX;
         pCurVert->sy  = pLine->startY * sheight + deltaY;
         pCurVert->sz  = 0.0f;
         pCurVert->rhw = 0.00001f;

@@ -29,7 +29,7 @@ static const IndyEnhInfo indyEnh_aInfos[INDY_ENH_COUNT] = {
     [INDY_ENH_QUICK_DIRECTION]    = { "ENH-0003", "quickDirectionChange", INDY_KIND_ENH },
     [INDY_ENH_SKIP_INTRO]         = { "ENH-0004", "skipIntro", INDY_KIND_ENH },
     [INDY_ENH_MODERN_CONTROLS]    = { "ENH-0005", "modernControls", INDY_KIND_ENH }, // played with a pad 2026-10-07
-    [INDY_ENH_CUTSCENES_4TO3]     = { "ENH-0006", "cutscenes4to3", INDY_KIND_ENH },
+    [INDY_ENH_FRAMES_4TO3]        = { "ENH-0006", "frames4to3", INDY_KIND_ENH },
 };
 
 static bool indyEnh_bLoaded;

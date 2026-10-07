@@ -162,6 +162,18 @@ J3DNORETURN void J3DAPI JonesMain_Assert(const char* pErrorText, const char* pSr
 int J3DAPI JonesMain_IntroWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, int* pRetValue);
 void J3DAPI JonesMain_IntroHandleWMLButtonUp(HWND hwnd, uint16_t curPosX, uint16_t curPosY, WPARAM mvk);
 void J3DAPI JonesMain_IntroHandleWMKeydown(HWND hwnd, WPARAM vk, int a3, uint16_t repreatCount, uint16_t exkeyflags);
+// INDY: ENH-0006: on wider screens the movie keeps its aspect ratio, centred; the columns beside it are cleared black
+static void JonesMain_GetMovieColumns(const SmushBitmap* pBitmap, uint32_t width, uint32_t height, uint32_t* pLeft, uint32_t* pDstWidth)
+{
+    *pLeft     = 0;
+    *pDstWidth = width;
+    if ( indyEnh_IsEnabled(INDY_ENH_FRAMES_4TO3) && pBitmap->height && (uint64_t)width * pBitmap->height > (uint64_t)height * pBitmap->width )
+    {
+        *pDstWidth = (uint32_t)((uint64_t)height * pBitmap->width / pBitmap->height);
+        *pLeft     = (width - *pDstWidth) / 2;
+    }
+}
+
 int J3DAPI JonesMain_IntroMovieBlt565(const SmushBitmap* pBitmap, int a2);
 int J3DAPI JonesMain_IntroMovieBlt555(const SmushBitmap* pBitmap, int a2);
 int J3DAPI JonesMain_IntroMovieBlt32(const SmushBitmap* pBitmap, int a2);
@@ -2289,6 +2301,9 @@ int J3DAPI JonesMain_IntroMovieBlt565(const SmushBitmap* pBitmap, int a2)
 
     stdDisplay_LockBackBuffer(&pSurface, &width, &height, &pitch);
 
+    uint32_t dstLeft, dstWidth; // INDY: ENH-0006
+    JonesMain_GetMovieColumns(pBitmap, width, height, &dstLeft, &dstWidth);
+
     pRow = (uint8_t*)pSurface;
     pPixels = (uint8_t*)pBitmap->pPixels;
     curHeight = 0;
@@ -2297,19 +2312,22 @@ int J3DAPI JonesMain_IntroMovieBlt565(const SmushBitmap* pBitmap, int a2)
     {
         curWidth = 0;
         pCurPixelIn = pPixels;
-        pCurPixelOut = (uint16_t*)pRow;
+        pCurPixelOut = (uint16_t*)pRow + dstLeft;
+        memset(pRow, 0, dstLeft * sizeof(uint16_t));
 
-        for ( j = 0; j < width; ++j )
+        for ( j = 0; j < dstWidth; ++j )
         {
             *pCurPixelOut++ = *(uint16_t*)pCurPixelIn;
 
             curWidth += pBitmap->width;
-            while ( (int)curWidth >= (int)width )
+            while ( (int)curWidth >= (int)dstWidth )
             {
-                curWidth -= width;
+                curWidth -= dstWidth;
                 pCurPixelIn += pBitmap->pixelSize;
             }
         }
+
+        memset(pCurPixelOut, 0, (width - dstLeft - dstWidth) * sizeof(uint16_t));
 
         pRow += pitch;
 
@@ -2363,6 +2381,9 @@ int J3DAPI JonesMain_IntroMovieBlt555(const SmushBitmap* pBitmap, int a2)
 
     stdDisplay_LockBackBuffer(&pSurface, &width, &height, &pitch);
 
+    uint32_t dstLeft, dstWidth; // INDY: ENH-0006
+    JonesMain_GetMovieColumns(pBitmap, width, height, &dstLeft, &dstWidth);
+
     pRow = (uint8_t*)pSurface;
     pPixels = (uint8_t*)pBitmap->pPixels;
     curHeight = 0;
@@ -2371,19 +2392,22 @@ int J3DAPI JonesMain_IntroMovieBlt555(const SmushBitmap* pBitmap, int a2)
     {
         curWidth = 0;
         pCurPixelIn = pPixels;
-        pCurPixelOut = (uint16_t*)pRow;
+        pCurPixelOut = (uint16_t*)pRow + dstLeft;
+        memset(pRow, 0, dstLeft * sizeof(uint16_t));
 
-        for ( j = 0; j < width; ++j )
+        for ( j = 0; j < dstWidth; ++j )
         {
             *pCurPixelOut++ = *(uint16_t*)&JonesMain_aIntroMovieColorTable[2 * *(uint16_t*)pCurPixelIn];
 
             curWidth += pBitmap->width;
-            while ( (int)curWidth >= (int)width )
+            while ( (int)curWidth >= (int)dstWidth )
             {
-                curWidth -= width;
+                curWidth -= dstWidth;
                 pCurPixelIn += pBitmap->pixelSize;
             }
         }
+
+        memset(pCurPixelOut, 0, (width - dstLeft - dstWidth) * sizeof(uint16_t));
 
         pRow += pitch;
 
@@ -2437,6 +2461,9 @@ int J3DAPI JonesMain_IntroMovieBlt32(const SmushBitmap* pBitmap, int a2)
 
     stdDisplay_LockBackBuffer(&pSurface, &width, &height, &pitch);
 
+    uint32_t dstLeft, dstWidth; // INDY: ENH-0006
+    JonesMain_GetMovieColumns(pBitmap, width, height, &dstLeft, &dstWidth);
+
     pRow = (uint8_t*)pSurface;
     pPixels = (uint8_t*)pBitmap->pPixels;
     curHeight = 0;
@@ -2445,19 +2472,22 @@ int J3DAPI JonesMain_IntroMovieBlt32(const SmushBitmap* pBitmap, int a2)
     {
         curWidth = 0;
         pCurPixelIn = pPixels;
-        pCurPixelOut = (uint32_t*)pRow;
+        pCurPixelOut = (uint32_t*)pRow + dstLeft;
+        memset(pRow, 0, dstLeft * sizeof(uint32_t));
 
-        for ( j = 0; j < width; ++j )
+        for ( j = 0; j < dstWidth; ++j )
         {
             *pCurPixelOut++ = *(uint32_t*)&JonesMain_aIntroMovieColorTable[4 * *(uint16_t*)pCurPixelIn];
 
             curWidth += pBitmap->width;
-            while ( (int)curWidth >= (int)width )
+            while ( (int)curWidth >= (int)dstWidth )
             {
-                curWidth -= width;
+                curWidth -= dstWidth;
                 pCurPixelIn += pBitmap->pixelSize;
             }
         }
+
+        memset(pCurPixelOut, 0, (width - dstLeft - dstWidth) * sizeof(uint32_t));
 
         pRow += pitch;
 

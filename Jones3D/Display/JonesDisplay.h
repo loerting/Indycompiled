@@ -39,6 +39,7 @@ void JonesDisplay_Shutdown(void);
 
 int J3DAPI JonesDisplay_Open(JonesDisplaySettings* pSettings);
 void JonesDisplay_Close(void);
+bool JonesDisplay_IsWiderThan4to3(void); // INDY: ENH-0006
 bool JonesDisplay_IsCinema4to3(void); // INDY: ENH-0006
 void JonesDisplay_SetCinemaFrame(bool bEnable); // INDY: ENH-0006
 
