@@ -18,14 +18,14 @@ typedef struct sStdConffileArg
     const char* argName;
     const char* argValue;
 } StdConffileArg;
-static_assert(sizeof(StdConffileArg) == 8, "sizeof(StdConffileArg) == 8");
+J3D_ASSERT_SIZE32(StdConffileArg, 8);
 
 typedef struct sStdConffileEntry
 {
     size_t numArgs;
     StdConffileArg aArgs[STDCONFILE_MAXARGS];
 } StdConffileEntry;
-static_assert(sizeof(StdConffileEntry) == 4100, "sizeof(StdConffileEntry) == 4100");
+J3D_ASSERT_SIZE32(StdConffileEntry, 4100);
 
 
 #ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals are ours (defined in stdConffile.c)
@@ -84,6 +84,9 @@ void stdConffile_ResetGlobals(void);
  *       where the size may be 1 when using `%c` to read a single character.
  */
 // INDY: static inline. MSVC merges plain C "inline" copies across files; C99 compilers emit one per file
+#if defined(__GNUC__) && !defined(_WIN32) // scanf format checks (native builds; %s/%c/%[ take an extra size argument)
+__attribute__((format(scanf, 1, 2)))
+#endif
 static inline int stdConffile_ScanLine(const char* pFormat, ...)
 {
     if ( !stdConffile_ReadLine() ) {

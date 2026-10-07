@@ -72,14 +72,14 @@ typedef struct sCndWorld
     uint32_t aSurfaces;
     uint32_t numSectors;
     uint32_t aSectors;
-    size_t numAIClasses;
-    size_t sizeAIClasses;
+    uint32_t numAIClasses; // Altered: was size_t, 4 bytes on disk
+    uint32_t sizeAIClasses; // Altered: was size_t, 4 bytes on disk
     uint32_t aAIClasses;
     uint32_t numModels;
     uint32_t sizeModels;
     uint32_t aModels;
-    size_t numSprites;
-    size_t sizeSprites;
+    uint32_t numSprites; // Altered: was size_t, 4 bytes on disk
+    uint32_t sizeSprites; // Altered: was size_t, 4 bytes on disk
     uint32_t aSprites;
     uint32_t numKeyframes;
     uint32_t sizeKeyframes;
@@ -841,8 +841,8 @@ void J3DAPI sithWorld_GetMemoryUsage(const SithWorld* pWorld, size_t(*aMemUsed)[
     SITH_ASSERTREL(aMemUsed && aCount);
     SITH_ASSERTREL(pWorld);
 
-    memset(aMemUsed, 0, sizeof(*aMemUsed)); static_assert(sizeof(*aMemUsed) == 0x44, "");
-    memset(aCount, 0, sizeof(*aCount)); static_assert(sizeof(*aCount) == 0x44, "");
+    memset(aMemUsed, 0, sizeof(*aMemUsed)); J3D_ASSERT_SIZE32(*aMemUsed, 0x44);
+    memset(aCount, 0, sizeof(*aCount)); J3D_ASSERT_SIZE32(*aCount, 0x44);
 
     (*aCount)[0] = pWorld->numMaterials;
     for ( size_t i = 0; i < pWorld->numMaterials; ++i )
@@ -884,7 +884,7 @@ void J3DAPI sithWorld_GetMemoryUsage(const SithWorld* pWorld, size_t(*aMemUsed)[
     (*aCount)[7] = pWorld->numCogs;
     for ( size_t i = 0; i < pWorld->numCogs; ++i )
     {
-        (*aMemUsed)[7] += sizeof(SithCogSymbol) * pWorld->aCogs[i].pSymbolTable->numUsedSymbols + sizeof(SithCog) + sizeof(SithCogSymbolTable); static_assert((sizeof(SithCog) + sizeof(SithCogSymbolTable)) == 0x5100, "");
+        (*aMemUsed)[7] += sizeof(SithCogSymbol) * pWorld->aCogs[i].pSymbolTable->numUsedSymbols + sizeof(SithCog) + sizeof(SithCogSymbolTable); J3D_ASSERT_SIZE32(SithCog, 0x5100 - sizeof(SithCogSymbolTable));
     }
 
     (*aCount)[10] = pWorld->numModels;
@@ -1197,7 +1197,7 @@ int J3DAPI sithWorld_ReadGeoresourceText(SithWorld* pWorld, int bSkip)
     sithWorld_UpdateLoadProgress(50.0f);
 
     size_t numVerts;
-    int nRead =  stdConffile_ScanLine(" world vertices %d", &numVerts);
+    int nRead =  stdConffile_ScanLine(" world vertices %" J3D_SCN_SIZE, &numVerts);
     if ( nRead != 1 )
     {
         if ( nRead < 0 )
@@ -1230,7 +1230,7 @@ int J3DAPI sithWorld_ReadGeoresourceText(SithWorld* pWorld, int bSkip)
     pWorld->numVertices = numVerts;
 
     size_t numTexVerts;
-    if ( nRead = stdConffile_ScanLine(" world texture vertices %d", &numTexVerts), nRead != 1 )
+    if ( nRead = stdConffile_ScanLine(" world texture vertices %" J3D_SCN_SIZE, &numTexVerts), nRead != 1 )
     {
         if ( nRead < 0 )
         {
@@ -1326,6 +1326,77 @@ int J3DAPI sithWorld_ReadGeoresourceBinary(tFileHandle fh, SithWorld* pWorld)
     nRead = sizeof(rdVector2) * pWorld->numTexVertices;
     pWorld->aTexVerticies = (rdVector2*)STDMALLOC(nRead);
     return !pWorld->aTexVerticies || sith_g_pHS->pFileRead(fh, pWorld->aTexVerticies, nRead) != nRead;
+}
+
+// Copies a CND world header into the world, as reading it over the world's first bytes did in the 32-bit original
+// (the pointer fields hold the file's values, 0; the section readers set them)
+static void sithWorld_CopyCndWorld(SithWorld* pWorld, const CndWorld* pCnd)
+{
+    memcpy(pWorld->aCopyright, pCnd->aCopyright, sizeof(pWorld->aCopyright));
+    memcpy(pWorld->aName, pCnd->aName, sizeof(pWorld->aName));
+    pWorld->state            = pCnd->state;
+    pWorld->version          = pCnd->version;
+    pWorld->gravity          = pCnd->gravity;
+    pWorld->ceilingSkyHeight = pCnd->ceilingSkyHeight;
+    pWorld->horizonDistance  = pCnd->horizonDistance;
+    pWorld->horizonSkyOffset = pCnd->horizonSkyOffset;
+    pWorld->ceilingSkyOffset = pCnd->ceilingSkyOffset;
+    memcpy(pWorld->distancesLOD, pCnd->distancesLOD, sizeof(pWorld->distancesLOD));
+    pWorld->fog = pCnd->fog;
+
+#define SITHWORLD_CNDPTR(type, value) ((type)(uintptr_t)(value))
+    pWorld->numSounds                     = pCnd->numSounds;
+    pWorld->numMaterials                  = pCnd->numMaterials;
+    pWorld->sizeMaterials                 = pCnd->sizeMaterials;
+    pWorld->aMaterials                    = SITHWORLD_CNDPTR(rdMaterial*, pCnd->aMaterials);
+    pWorld->apMatArray                    = SITHWORLD_CNDPTR(rdMaterial**, pCnd->apMatArray);
+    pWorld->numVertices                   = pCnd->numVertices;
+    pWorld->aVertices                     = SITHWORLD_CNDPTR(rdVector3*, pCnd->aVertices);
+    pWorld->aTransformedVertices          = SITHWORLD_CNDPTR(rdVector3*, pCnd->aTransformedVertices);
+    pWorld->aVertexRenderTickIds          = SITHWORLD_CNDPTR(uint32_t*, pCnd->aVertexRenderTickIds);
+    pWorld->numTexVertices                = pCnd->numTexVertices;
+    pWorld->aTexVerticies                 = SITHWORLD_CNDPTR(rdVector2*, pCnd->aTexVerticies);
+    pWorld->aVertDynamicLights            = SITHWORLD_CNDPTR(rdVector4*, pCnd->aVertDynamicLights);
+    pWorld->aVertDynamicLightsRenderTicks = SITHWORLD_CNDPTR(uint32_t*, pCnd->aVertDynamicLightsRenderTicks);
+    pWorld->numAdjoins                    = pCnd->numAdjoins;
+    pWorld->aAdjoins                      = SITHWORLD_CNDPTR(SithSurfaceAdjoin*, pCnd->aAdjoins);
+    pWorld->numSurfaces                   = pCnd->numSurfaces;
+    pWorld->aSurfaces                     = SITHWORLD_CNDPTR(SithSurface*, pCnd->aSurfaces);
+    pWorld->numSectors                    = pCnd->numSectors;
+    pWorld->aSectors                      = SITHWORLD_CNDPTR(SithSector*, pCnd->aSectors);
+    pWorld->numAIClasses                  = pCnd->numAIClasses;
+    pWorld->sizeAIClasses                 = pCnd->sizeAIClasses;
+    pWorld->aAIClasses                    = SITHWORLD_CNDPTR(SithAIClass*, pCnd->aAIClasses);
+    pWorld->numModels                     = pCnd->numModels;
+    pWorld->sizeModels                    = pCnd->sizeModels;
+    pWorld->aModels                       = SITHWORLD_CNDPTR(rdModel3*, pCnd->aModels);
+    pWorld->numSprites                    = pCnd->numSprites;
+    pWorld->sizeSprites                   = pCnd->sizeSprites;
+    pWorld->aSprites                      = SITHWORLD_CNDPTR(rdSprite3*, pCnd->aSprites);
+    pWorld->numKeyframes                  = pCnd->numKeyframes;
+    pWorld->sizeKeyframes                 = pCnd->sizeKeyframes;
+    pWorld->aKeyframes                    = SITHWORLD_CNDPTR(rdKeyframe*, pCnd->aKeyframes);
+    pWorld->numPuppetClasses              = pCnd->numPuppetClasses;
+    pWorld->sizePuppetClasses             = pCnd->sizePuppetClasses;
+    pWorld->aPuppetClasses                = SITHWORLD_CNDPTR(SithPuppetClass*, pCnd->aPuppetClasses);
+    pWorld->numSoundClasses               = pCnd->numSoundClasses;
+    pWorld->sizeSoundClasses              = pCnd->sizeSoundClasses;
+    pWorld->aSoundClasses                 = SITHWORLD_CNDPTR(SithSoundClass*, pCnd->aSoundClasses);
+    pWorld->numCogScripts                 = pCnd->numCogScripts;
+    pWorld->sizeCogScripts                = pCnd->sizeCogScripts;
+    pWorld->aCogScripts                   = SITHWORLD_CNDPTR(SithCogScript*, pCnd->aCogScripts);
+    pWorld->numCogs                       = pCnd->numCogs;
+    pWorld->sizeCogs                      = pCnd->sizeCogs;
+    pWorld->aCogs                         = SITHWORLD_CNDPTR(SithCog*, pCnd->aCogs);
+    pWorld->numThingTemplates             = pCnd->numThingTemplates;
+    pWorld->sizeThingTemplates            = pCnd->sizeThingTemplates;
+    pWorld->aThingTemplates               = SITHWORLD_CNDPTR(SithThing*, pCnd->aThingTemplates);
+    pWorld->numThings                     = pCnd->numThings;
+    pWorld->lastThingIdx                  = pCnd->lastThingIdx;
+    pWorld->aThings                       = SITHWORLD_CNDPTR(SithThing*, pCnd->aThings);
+    pWorld->sizePVS                       = pCnd->sizePVS;
+    pWorld->aPVS                          = SITHWORLD_CNDPTR(uint8_t*, pCnd->aPVS);
+#undef SITHWORLD_CNDPTR
 }
 
 int J3DAPI sithWorld_WriteEntryBinary(SithWorld* pWorld, const char* pFilename)
@@ -1476,12 +1547,13 @@ int J3DAPI sithWorld_LoadEntryBinary(SithWorld* pWorld, const char* pFilePath)
     sithWorld_UpdateLoadProgress(progress);
 
     // Read world header
-    // TODO: CndWorld object shouldn't be read directly to pWorld due to SithWorld struct having pointer types.
-    //       Read CndWorld object to temp CndWorld and copy filed by field to pWorld
-    if ( sith_g_pHS->pFileRead(fh, pWorld, sizeof(CndWorld)) != sizeof(CndWorld) )
+    // Fixed: Read into CndWorld and copy field by field; SithWorld has pointers and size_t fields (64-bit builds)
+    CndWorld cndWorld;
+    if ( sith_g_pHS->pFileRead(fh, &cndWorld, sizeof(CndWorld)) != sizeof(CndWorld) )
     {
         goto error;
     }
+    sithWorld_CopyCndWorld(pWorld, &cndWorld);
 
     curPos = sith_g_pHS->pFileTell(fh);
     progress = (float)curPos / endPos;
@@ -1521,6 +1593,7 @@ int J3DAPI sithWorld_LoadEntryBinary(SithWorld* pWorld, const char* pFilePath)
 
         if ( aBinarySectionParsers[i].pfRead(fh, pWorld) )
         {
+            SITHLOG_ERROR("Error reading section '%s' of '%s'.\n", aCurSection, pFilePath); // Added
             goto error;
         }
 

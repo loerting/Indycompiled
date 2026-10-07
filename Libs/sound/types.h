@@ -103,7 +103,25 @@ typedef struct sSoundInfo
     uint32_t bCompressed;
     uint32_t idx;
 } SoundInfo;
-static_assert(sizeof(SoundInfo) == 48, "sizeof(SoundInfo) == 48"); // Note the size must stay 48 bytes due to bank serialization to CND file
+J3D_ASSERT_SIZE32(SoundInfo, 48); // On disk (CND sound banks) as SoundInfoDisk
+
+// SoundInfo as stored in CND files and savegames: its 32-bit layout in fixed-width types
+typedef struct sSoundInfoDisk
+{
+    uint32_t hSnd;
+    uint32_t bankNum;
+    uint32_t filePathOffset;
+    uint32_t nameOffset;
+    uint32_t dataOffset;
+    uint32_t lipSyncData; // a pointer at run time; 0 in files
+    uint32_t sampleRate;
+    uint32_t sempleBitSize;
+    uint32_t numChannels;
+    uint32_t dataSize;
+    uint32_t bCompressed;
+    uint32_t idx;
+} SoundInfoDisk;
+static_assert(sizeof(SoundInfoDisk) == 48, "sizeof(SoundInfoDisk) == 48");
 
 typedef struct sSoundChannel
 {

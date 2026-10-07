@@ -54,6 +54,137 @@ static SithGameStatistics sithGamesave_gameStatistics;
 
 static tVBuffer* sithGamesave_pThumbnailImage;
 static int sithGamesave_bThumbnail;
+
+// The savegame header on disk: NdsHeader's 32-bit layout in fixed-width types, so savegames are the same on every
+// platform. NdsHeader itself has size_t fields and a COG value union with a pointer.
+typedef struct sNdsLevelStatisticDisk
+{
+    uint32_t elapsedTime;
+    uint32_t numFoundTreasures;
+    uint32_t numSeenHints;
+    int32_t difficultyPenalty;
+    uint32_t curElapsedSec;
+    uint32_t numIQUpdates;
+    int32_t levelStartIQPoints;
+    int32_t iqPoints;
+} NdsLevelStatisticDisk;
+static_assert(sizeof(NdsLevelStatisticDisk) == 32, "sizeof(NdsLevelStatisticDisk) == 32");
+
+typedef struct sNdsCogValueDisk
+{
+    int32_t type;
+    uint8_t val[12]; // int, float or vector; pointer, string and symbol id values are saved as 0
+} NdsCogValueDisk;
+static_assert(sizeof(NdsCogValueDisk) == 16, "sizeof(NdsCogValueDisk) == 16");
+
+typedef struct sNdsHeaderDisk
+{
+    int32_t version;
+    char aDate[64];
+    char aLevelFilename[128];
+    char aPreviousLevelFilename[128];
+    uint32_t msecGameTime;
+    int32_t curLevelNum;
+    int32_t totalIQPoints;
+    int32_t foundTreasureValue;
+    int32_t numFoundTreasures;
+    NdsLevelStatisticDisk aLevelStatistic[17];
+    NdsLevelStatisticDisk totalLevelStats;
+    int32_t bThumbnail;
+    int32_t perflevel;
+    NdsCogValueDisk aCogGlobalValues[16];
+    uint32_t localPlayerNum;
+} NdsHeaderDisk;
+static_assert(sizeof(NdsHeaderDisk) == 1188, "sizeof(NdsHeaderDisk) == 1188");
+
+static void sithGamesave_StatisticToDisk(NdsLevelStatisticDisk* pDst, const SithLevelStatistic* pSrc)
+{
+    pDst->elapsedTime        = pSrc->elapsedTime;
+    pDst->numFoundTreasures  = (uint32_t)pSrc->numFoundTreasures;
+    pDst->numSeenHints       = (uint32_t)pSrc->numSeenHints;
+    pDst->difficultyPenalty  = pSrc->difficultyPenalty;
+    pDst->curElapsedSec      = pSrc->curElapsedSec;
+    pDst->numIQUpdates       = (uint32_t)pSrc->numIQUpdates;
+    pDst->levelStartIQPoints = pSrc->levelStartIQPoints;
+    pDst->iqPoints           = pSrc->iqPoints;
+}
+
+static void sithGamesave_StatisticFromDisk(SithLevelStatistic* pDst, const NdsLevelStatisticDisk* pSrc)
+{
+    pDst->elapsedTime        = pSrc->elapsedTime;
+    pDst->numFoundTreasures  = pSrc->numFoundTreasures;
+    pDst->numSeenHints       = pSrc->numSeenHints;
+    pDst->difficultyPenalty  = pSrc->difficultyPenalty;
+    pDst->curElapsedSec      = pSrc->curElapsedSec;
+    pDst->numIQUpdates       = pSrc->numIQUpdates;
+    pDst->levelStartIQPoints = pSrc->levelStartIQPoints;
+    pDst->iqPoints           = pSrc->iqPoints;
+}
+
+// Returns 0 on success, as stdConffile_Write
+static int sithGamesave_WriteHeader(const NdsHeader* pHeader)
+{
+    NdsHeaderDisk disk;
+    memset(&disk, 0, sizeof(disk));
+    disk.version = pHeader->version;
+    memcpy(disk.aDate, pHeader->aDate, sizeof(disk.aDate));
+    memcpy(disk.aLevelFilename, pHeader->aLevelFilename, sizeof(disk.aLevelFilename));
+    memcpy(disk.aPreviousLevelFilename, pHeader->aPreviousLevelFilename, sizeof(disk.aPreviousLevelFilename));
+    disk.msecGameTime       = pHeader->msecGameTime;
+    disk.curLevelNum        = pHeader->gameStatistics.curLevelNum;
+    disk.totalIQPoints      = pHeader->gameStatistics.totalIQPoints;
+    disk.foundTreasureValue = pHeader->gameStatistics.foundTreasureValue;
+    disk.numFoundTreasures  = pHeader->gameStatistics.numFoundTreasures;
+    for ( size_t i = 0; i < STD_ARRAYLEN(disk.aLevelStatistic); ++i )
+    {
+        sithGamesave_StatisticToDisk(&disk.aLevelStatistic[i], &pHeader->gameStatistics.aLevelStatistic[i]);
+    }
+    sithGamesave_StatisticToDisk(&disk.totalLevelStats, &pHeader->gameStatistics.totalLevelStats);
+    disk.bThumbnail = pHeader->bThumbnail;
+    disk.perflevel  = pHeader->perflevel;
+    for ( size_t i = 0; i < STD_ARRAYLEN(disk.aCogGlobalValues); ++i )
+    {
+        disk.aCogGlobalValues[i].type = pHeader->aCogGlobalValues[i].type;
+        memcpy(disk.aCogGlobalValues[i].val, &pHeader->aCogGlobalValues[i].val, sizeof(disk.aCogGlobalValues[i].val));
+    }
+    disk.localPlayerNum = pHeader->localPlayerNum;
+    return stdConffile_Write(&disk, sizeof(disk));
+}
+
+// Returns non-zero on success, as stdConffile_Read
+static int sithGamesave_ReadHeader(NdsHeader* pHeader)
+{
+    NdsHeaderDisk disk;
+    if ( !stdConffile_Read(&disk, sizeof(disk)) )
+    {
+        return 0;
+    }
+
+    memset(pHeader, 0, sizeof(NdsHeader));
+    pHeader->version = disk.version;
+    memcpy(pHeader->aDate, disk.aDate, sizeof(pHeader->aDate));
+    memcpy(pHeader->aLevelFilename, disk.aLevelFilename, sizeof(pHeader->aLevelFilename));
+    memcpy(pHeader->aPreviousLevelFilename, disk.aPreviousLevelFilename, sizeof(pHeader->aPreviousLevelFilename));
+    pHeader->msecGameTime                      = disk.msecGameTime;
+    pHeader->gameStatistics.curLevelNum        = disk.curLevelNum;
+    pHeader->gameStatistics.totalIQPoints      = disk.totalIQPoints;
+    pHeader->gameStatistics.foundTreasureValue = disk.foundTreasureValue;
+    pHeader->gameStatistics.numFoundTreasures  = disk.numFoundTreasures;
+    for ( size_t i = 0; i < STD_ARRAYLEN(disk.aLevelStatistic); ++i )
+    {
+        sithGamesave_StatisticFromDisk(&pHeader->gameStatistics.aLevelStatistic[i], &disk.aLevelStatistic[i]);
+    }
+    sithGamesave_StatisticFromDisk(&pHeader->gameStatistics.totalLevelStats, &disk.totalLevelStats);
+    pHeader->bThumbnail = disk.bThumbnail;
+    pHeader->perflevel  = disk.perflevel;
+    for ( size_t i = 0; i < STD_ARRAYLEN(disk.aCogGlobalValues); ++i )
+    {
+        pHeader->aCogGlobalValues[i].type = (SithCogValueType)disk.aCogGlobalValues[i].type;
+        memcpy(&pHeader->aCogGlobalValues[i].val, disk.aCogGlobalValues[i].val, sizeof(disk.aCogGlobalValues[i].val));
+    }
+    pHeader->localPlayerNum = disk.localPlayerNum;
+    return 1;
+}
 static HBITMAP sithGamesave_hBmpThumbnail;
 
 static SithGameSaveCallback sithGamesave_pfSaveGameCallback;
@@ -498,7 +629,7 @@ int J3DAPI sithGamesave_RestoreFile(const char* pFilename, int bNotify)
 
     // Read nds file header
     NdsHeader header;
-    if ( !stdConffile_Read(&header, sizeof(NdsHeader)) )
+    if ( !sithGamesave_ReadHeader(&header) )
     {
         SITHLOG_ERROR("RESTORE: header read failed!\n");
         goto error;
@@ -752,13 +883,13 @@ int J3DAPI sithGamesave_SaveFile(const char* pFilename)
     header.localPlayerNum = sithPlayer_g_playerNum;
 
     // Write header to file
-    int bError = stdConffile_Write(&header, sizeof(NdsHeader));
+    int bError = sithGamesave_WriteHeader(&header);
     if ( bError )
     {
         goto error;
     }
 
-    sithGamesave_aNdsSaveSectionSizes[0] = sizeof(NdsHeader);
+    sithGamesave_aNdsSaveSectionSizes[0] = sizeof(NdsHeaderDisk);
 
     // Write thumbnail
     bError = sithGamesave_WriteThumbnail(fh);
@@ -1003,7 +1134,7 @@ HBITMAP J3DAPI sithGamesave_LoadThumbnail(const char* pFilename)
 
     // Read nds file header
     NdsHeader header;
-    if ( !stdConffile_Read(&header, sizeof(NdsHeader)) )
+    if ( !sithGamesave_ReadHeader(&header) )
     {
         goto error;
     }
@@ -1116,7 +1247,7 @@ const char* sithGamesave_GetLastFilename(void)
 int J3DAPI sithGamesave_LoadLevelFilename(const char* pNdsFilePath, char* pDestFilename)
 {
     NdsHeader header;
-    if ( !stdConffile_OpenMode(pNdsFilePath, "rb") || !stdConffile_Read(&header, sizeof(NdsHeader)) || (stdConffile_Close(), header.version != SITHSAVEGAME_FILEVERSION) )
+    if ( !stdConffile_OpenMode(pNdsFilePath, "rb") || !sithGamesave_ReadHeader(&header) || (stdConffile_Close(), header.version != SITHSAVEGAME_FILEVERSION) )
     {
         stdConffile_Close();
         return 1;

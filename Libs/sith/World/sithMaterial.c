@@ -169,7 +169,7 @@ int J3DAPI sithMaterial_ReadMaterialsListText(SithWorld* pWorld, int bSkip)
 
     int nRead = 0;
     size_t  numMaterials;
-    if ( nRead = stdConffile_ScanLine(" world materials %d", &numMaterials), nRead != 1 )
+    if ( nRead = stdConffile_ScanLine(" world materials %" J3D_SCN_SIZE, &numMaterials), nRead != 1 )
     {
         if ( nRead < 0 )
         {
@@ -337,7 +337,8 @@ int J3DAPI sithMaterial_WriteMaterialsListBinary(tFileHandle fh, const SithWorld
     }
 
     // Write material section to CND file
-    size_t nWritten = sith_g_pHS->pFileWrite(fh, &sizePixelBuffers, sizeof(uint32_t));  // pixeldata buffer size
+    const uint32_t sizePixelBuffers32 = (uint32_t)sizePixelBuffers; // Fixed: 4 bytes on disk (size_t is 8 on 64-bit)
+    size_t nWritten = sith_g_pHS->pFileWrite(fh, &sizePixelBuffers32, sizeof(uint32_t));  // pixeldata buffer size
     if ( nWritten == sizeof(uint32_t) )
     {
         // Write mat infos
@@ -433,12 +434,13 @@ int J3DAPI sithMaterial_ReadMaterialsListBinary(tFileHandle fh, SithWorld* pWorl
     STD_ZEROMEM(aMatInfos, sizeInfos);
 
     // Read the size of pixeldata buffer from CND file
-    size_t sizePixelBuffers;
-    size_t nRead = sith_g_pHS->pFileRead(fh, &sizePixelBuffers, sizeof(uint32_t));
+    uint32_t sizePixelBuffers32; // Fixed: 4 bytes on disk; was read into the low half of a size_t (64-bit)
+    size_t nRead = sith_g_pHS->pFileRead(fh, &sizePixelBuffers32, sizeof(uint32_t));
     if ( nRead != sizeof(uint32_t) )
     {
         goto error;
     }
+    size_t sizePixelBuffers = sizePixelBuffers32;
 
     // Alloc pixeldata buffer
     aPixelBuffers = (uint8_t*)STDMALLOC(sizePixelBuffers);

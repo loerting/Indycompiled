@@ -24,7 +24,7 @@ typedef struct sStdInputDevice
     LPDIRECTINPUTDEVICE8 pDIDevice;
     DIDEVCAPS diDevCaps;
 } StdInputDevice;
-static_assert(sizeof(StdInputDevice) == 48, "sizeof(StdInputDevice) == 48");
+J3D_ASSERT_SIZE32(StdInputDevice, 48);
 
 typedef struct sStdControlJoystickDevice
 {
@@ -32,7 +32,7 @@ typedef struct sStdControlJoystickDevice
     LPDIRECTINPUTDEVICE8 pDIDevice;
     DIDEVCAPS caps;
 } StdControlJoystickDevice;
-static_assert(sizeof(StdControlJoystickDevice) == 628, "sizeof(StdControlJoystickDevice) == 628");
+J3D_ASSERT_SIZE32(StdControlJoystickDevice, 628);
 
 typedef struct sStdControlXInputDevice
 {

@@ -62,7 +62,10 @@
         STDMEMORYBLOCK_ZONE_GETPREVOFFSET((hdr)->size)))
 
 // Memory block related constants
+// The zone allocator is 32-bit only (16-bit offsets in its headers); 64-bit builds allocate every block on the heap
+#ifdef J3D_32BIT
 static_assert(sizeof(void*) == 4, "stdMemory: Only 32-bit system supported");
+#endif
 
 #define STDMEMORYBLOCK_MAXBLOCKS        8456      // Number could represent targeted 256 MB memory pool. As 8456 * 31744 = 268435456 bytes (~256 MiB)
 #define STDMEMORYBLOCK_ALLOC_THRESHOLD  4096     // Maximum allocation size to go into zone blocks (maybe to fit system page size?)
@@ -71,10 +74,14 @@ static_assert(sizeof(void*) == 4, "stdMemory: Only 32-bit system supported");
 #define STDMEMORYBLOCK_ZONE_MAXDATASIZE 31728    // Available memory per zone
 
 #define STDMEMORYBLOCK_ZONE_INITIALBLOCKSIZE (STDMEMORYBLOCK_ZONE_CALCBLOCKSIZE(STDMEMORYBLOCK_ZONE_MAXDATASIZE))    // Zone size + one header
+#ifdef J3D_32BIT
 static_assert(STDMEMORYBLOCK_ZONE_INITIALBLOCKSIZE == 31736, "STDMEMORYBLOCK_ZONE_INITIALBLOCKSIZE must be 31736 bytes");
+#endif
 
 #define STDMEMORYBLOCK_ZONE_ALLOCSIZE       (STDMEMORYBLOCK_ZONE_INITIALBLOCKSIZE + sizeof(tMemoryBlockHeader))    // Total allocated size when allocating a zone heap data
+#ifdef J3D_32BIT
 static_assert(STDMEMORYBLOCK_ZONE_ALLOCSIZE == 31744, "STDMEMORYBLOCK_ZONE_ALLOCSIZE must be 31744 bytes");
+#endif
 
 // Module vars
 static bool bStartup = false;
@@ -317,7 +324,9 @@ void* J3DAPI stdMemory_BlockMalloc(size_t size)
         return NULL;
     }
 
+#ifdef J3D_32BIT
     if ( size > STDMEMORYBLOCK_ALLOC_THRESHOLD )
+#endif
     {
         // Allocate memory normally on heap
         return stdMemory_BlockAlloc(size);

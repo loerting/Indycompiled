@@ -82,8 +82,7 @@ Totals:
 
 - **Stage 3:** done; no engine function runs in the exe.
 - **Exe globals:** done in the standalone build (below).
-- **64-bit layout:** 204 `static_assert(sizeof…)` checks in 28 files assume a 32-bit struct layout. arm64 needs
-  on-disk structs separated from runtime structs.
+- **64-bit layout:** done (below, "64-bit build").
 
 
 ## Standalone build (Stage 4, first slice)
@@ -149,4 +148,23 @@ Open:
 - Exit after SIGTERM sometimes aborts in Mesa's `XCloseDisplay` ("corrupted double-linked list"); not reproducible
   with ASan or glibc's malloc checks, and not tied to the x87 setting. Next: Valgrind, or exit through the game menu.
 - Fullscreen mode switches time out under Xvfb (window mode is used); MSAA not yet (needs an FBO); dialogs are
-  stand-ins; touch input and the x86_64/arm64 build (64-bit cleanup) for Android.
+  stand-ins; touch input and the arm64 build for Android.
+
+## 64-bit build (Stage 6, 2026-10-07)
+
+`cmake --preset linux-x86_64 && cmake --build Build/linux-x86_64` builds the same game as a 64-bit program, the
+groundwork for arm64. The file formats stay the 32-bit ones:
+- **Size checks:** the runtime structs' `static_assert(sizeof…)` checks became `J3D_ASSERT_SIZE32(type, size)` (checked
+  on 32-bit only). On-disk records get a fixed-size twin that is checked on every platform: `CndWorld` (counts as
+  `uint32_t`, copied into `SithWorld`), `NdsHeaderDisk`/`NdsLevelStatisticDisk`/`NdsCogValueDisk` (savegame header),
+  `SoundInfoDisk` (sound bank export).
+- **Counts on disk:** `size_t` reads and writes of counts and sizes (materials, surfaces, sectors, PVS, sound handles)
+  go through `uint32_t`. Text formats: `sscanf` into `size_t` uses `"%" J3D_SCN_SIZE` (`"d"`/`"zd"`), and
+  `sscanf_s`/`stdConffile_ScanLine` carry `format(scanf)` attributes, so the compiler flags any mismatch.
+- **Memory:** the zone allocator's block layout assumes 32-bit headers, so 64-bit builds use the heap for blocks.
+- **COG VM:** symbol ids are read as `intValue` (not the pointer member); the stack-overflow shift uses `memmove`.
+
+Verified: with `INDY_FIXED_FRAME_MS=33` the COG opcode traces of the i686 and x86_64 builds are identical (every opcode
+and the top of the stack, 5,000+ instructions through the level 1 intro), and the level-start savegame has the same
+size and layout (differences: uninitialized bytes in the header's COG values, as in the original, and float last bits).
+

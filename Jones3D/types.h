@@ -268,7 +268,7 @@ typedef struct sJonesResource
     size_t numGobFiles;
     Gob* aGobFiles[32];
 } JonesResource;
-static_assert(sizeof(JonesResource) == 260, "sizeof(JonesResource) == 164");
+J3D_ASSERT_SIZE32(JonesResource, 260);
 
 typedef struct sJonesFileHandle
 {
@@ -326,7 +326,7 @@ typedef struct sJonesDisplaySettings
     int bClearBackBuffer;
     float fogDensity;
 } JonesDisplaySettings;
-static_assert(sizeof(JonesDisplaySettings) == 56, "sizeof(JonesDisplaySettings) == 56");
+J3D_ASSERT_SIZE32(JonesDisplaySettings, 56);
 
 typedef struct sJonesSoundSettings
 {
@@ -350,7 +350,7 @@ typedef struct sJonesState
     JonesSoundSettings soundSettings;
     JonesDisplaySettings displaySettings;
 } JonesState;
-static_assert(sizeof(JonesState) == 512, "sizeof(JonesState) == 512");
+J3D_ASSERT_SIZE32(JonesState, 512);
 
 typedef struct sJonesResourcesOld
 {
@@ -411,7 +411,7 @@ typedef struct sJonesControlsScheme
     size_t aActions[JONESCONTROL_ACTION_NUMACTIONS][JONESCONTROL_ACTION_BINDARRAYSIZE];
     char aName[128];
 } JonesControlsScheme;
-static_assert(sizeof(JonesControlsScheme) == 1464, "sizeof(JonesControlsScheme) == 1464");
+J3D_ASSERT_SIZE32(JonesControlsScheme, 1464);
 
 typedef struct sJonesControlsConfig
 {
@@ -422,7 +422,7 @@ typedef struct sJonesControlsConfig
     int selectedShemeIdx; // cane be -1
     JonesControlsScheme* aSchemes;
 } JonesControlsConfig;
-static_assert(sizeof(JonesControlsConfig) == 24, "sizeof(JonesControlsConfig) == 24");
+J3D_ASSERT_SIZE32(JonesControlsConfig, 24);
 
 typedef struct sStoreItem
 {
@@ -501,7 +501,7 @@ typedef struct sJonesDialogFontInfo
     float fontScaleY;
     int dialogID;
 } JonesDialogFontInfo;
-static_assert(sizeof(JonesDialogFontInfo) == 24, "sizeof(JonesDialogFontInfo) == 24");
+J3D_ASSERT_SIZE32(JonesDialogFontInfo, 24);
 
 typedef struct sGameSaveMsgBoxData
 {

@@ -589,8 +589,7 @@ void J3DAPI sithCogExec_PushStack(SithCog* pCog, SithCogSymbolValue* pValue)
     if ( pCog->stackSize >= STD_ARRAYLEN(pCog->stack) ) // Fixed: Added GE check (was EQ) to make absolutely sure the stack doesn't exceed
     {
         SITHLOG_ERROR("Stack overflow in script %s.  Bottom element discarded.\n", pCog->pScript->aName);
-        STD_COPYMEM(pCog->stack, &pCog->stack[1], (STD_ARRAYLEN(pCog->stack) - 1) * sizeof(SithCogSymbolValue));
-        static_assert((STD_ARRAYLEN(pCog->stack) - 1) * sizeof(SithCogSymbolValue) == 4080, "STD_ARRAYLEN(pCog->stack) - 1 * sizeof(SithCogSymbolValue) == 4080");
+        memmove(pCog->stack, &pCog->stack[1], (STD_ARRAYLEN(pCog->stack) - 1) * sizeof(SithCogSymbolValue)); // Fixed: the ranges overlap, memmove instead of memcpy
         --pCog->stackSize; /// TODO: make sure the call stack size is STD_ARRAYLEN(pCog->stack) - 1
     }
 
@@ -1032,7 +1031,7 @@ SithCogSymbolValue* J3DAPI sithCogExec_GetPointerValue(SithCogSymbolValue* pDest
     pDest->type = SITHCOG_VALUE_POINTER;
     if ( pValue->type == SITHCOG_VALUE_SYMBOLID )
     {
-        SithCogSymbol* pSymbol = sithCogParse_GetSymbolByID(pCog->pSymbolTable, (unsigned int)pValue->val.pointerValue);
+        SithCogSymbol* pSymbol = sithCogParse_GetSymbolByID(pCog->pSymbolTable, (unsigned int)pValue->val.intValue); // Fixed: the id is an int (was read through pointerValue)
         SITH_ASSERTREL(pSymbol != NULL);
         if ( pSymbol->value.type == SITHCOG_VALUE_POINTER )
         {

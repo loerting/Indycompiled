@@ -508,7 +508,7 @@ Each stage gets a milestone tag: `s1-linux-build`, `s2-modded`, `s4-standalone`,
 | **3 Completion** ✅ (code and A/B, 2026-10-07; playthrough open) | No more original functions | AI, DSS, physics, AudioLib, sithThing (§3.2), reverse engineered on the v1.2 exe in Ghidra with the names from the address map. Multiplayer stubbed. Every hook in the map is `verified`. | `analyze.py` reports 100%, excluding the stubs. A full playthrough including save/load. |
 | **4 Standalone** ✅ (2026-10-07; dialog templates and icons still read from Indy3D.exe as a data file until Stage 5) | No more original exe | All global variables defined in our code. Injection removed. | The game starts and plays with `Indy3D.exe` deleted (still a Windows build, under Wine) |
 | **5 Platform layer** | No more Win32 | Merge upstream's OpenGL/SDL3 renderer. Input and audio move to SDL3. Engine-drawn menus replace the Win32 dialogs. The registry goes; `Jones.cfg` takes over. May overlap with Stage 4. | No Win32 or DirectX calls outside one platform file. Still runs under Wine. |
-| **6 Native Linux** 🐧 | No more Wine | Linux i686 build, then the 64-bit cleanup and an x86_64 build | A native x86_64 binary plays the whole game |
+| **6 Native Linux** 🐧 (i686 and x86_64 build and play level 1, 2026-10-07; playthrough open) | No more Wine | Linux i686 build, then the 64-bit cleanup and an x86_64 build | A native x86_64 binary plays the whole game |
 | **7 Android** 📱 | Play on a phone | NDK, OpenGL ES 3.0 variant, touch overlay, importing game data through the Storage Access Framework, app lifecycle | A full playthrough on a phone |
 
 ---

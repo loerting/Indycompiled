@@ -91,6 +91,22 @@
 //       In this case define macro as: #define J3D_ENUM_TYPE(x) : x
 #define J3D_ENUM_TYPE( x )
 
+// Size of a runtime struct in the 32-bit original (pointers, size_t): checked in 32-bit builds only.
+// On-disk records use fixed-width types and plain static_assert, so they are checked everywhere.
+#ifdef J3D_32BIT
+#   define J3D_ASSERT_SIZE32(type, size) static_assert(sizeof(type) == (size), "sizeof(" #type ") == " #size)
+#else
+#   define J3D_ASSERT_SIZE32(type, size) static_assert(1, "")
+#endif
+
+// scanf conversion for size_t destinations: "d" as in the 32-bit original (same format strings on Windows),
+// "zd" where size_t is wider than int
+#ifdef J3D_32BIT
+#   define J3D_SCN_SIZE "d"
+#else
+#   define J3D_SCN_SIZE "zd"
+#endif
+
 #define J3DMIN(a, b) (((a) < (b)) ? (a) : (b))
 #define J3DMAX(a, b) (((a) > (b)) ? (a) : (b))
 

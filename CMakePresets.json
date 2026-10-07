@@ -52,6 +52,18 @@
         "JONES3D_BUILD_PROGRAMS": "OFF",
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
       }
+    },
+    {
+      "name": "linux-x86_64",
+      "displayName": "Native Linux, 64-bit (clang), SDL3 + OpenGL ES 3",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/Build/${presetName}",
+      "toolchainFile": "${sourceDir}/cmake/toolchains/linux-x86_64-clang.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "JONES3D_BUILD_PROGRAMS": "OFF",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
     }
   ],
   "buildPresets": [
@@ -70,6 +82,10 @@
     {
       "name": "linux-i686",
       "configurePreset": "linux-i686"
+    },
+    {
+      "name": "linux-x86_64",
+      "configurePreset": "linux-x86_64"
     }
   ]
 }

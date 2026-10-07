@@ -515,7 +515,7 @@ typedef size_t rsize_t;
 size_t J3D_strnlen_s(const char* s, size_t n);
 int J3D_strncat_s(char* d, size_t n, const char* s, size_t c);
 int J3D_vsscanf_s(const char* str, const char* fmt, va_list args);
-int J3D_sscanf_s(const char* str, const char* fmt, ...);
+int J3D_sscanf_s(const char* str, const char* fmt, ...) __attribute__((format(scanf, 2, 3)));
 int J3D_fopen_s(FILE** pf, const char* name, const char* mode);
 FILE* J3D_fopen(const char* name, const char* mode);
 #define J3D_MAX_PATH 1024

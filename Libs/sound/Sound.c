@@ -111,7 +111,7 @@ static size_t soundbank_lastImportedBankNum;
 static uint8_t Sound_loadBuffer[10000];
 
 // Soundbank vars
-static size_t Sound_handleEntropy;
+static uint32_t Sound_handleEntropy; // Altered: was size_t; handles are 32-bit and saved as 4 bytes
 
 // Loaded sound data buffer vars
 static size_t Sound_cacheBlockSize          = 0x200000;
@@ -147,7 +147,7 @@ uint32_t Sound_GetEntropyFromChannelHandle(tSoundChannelHandle handle); // Added
 size_t J3DAPI Sound_GetFreeCache(size_t bankNum, size_t requiredSize);
 void J3DAPI Sound_IncreaseFreeCache(size_t bankNum, size_t nSize);
 size_t J3DAPI Sound_WriteSoundFilepathToBank(size_t bankNum, const char* pName, size_t len);
-size_t Sound_GetDeltaTime(void);
+uint32_t Sound_GetDeltaTime(void);
 
 uint8_t* J3DAPI Sound_GetSoundBufferData(tSysSoundBuffer* pSndBuf, size_t* pDataSize, uint32_t* pbCompressed);
 int J3DAPI Sound_MemFileSeek(tFileHandle fh, int offset, int origin);
@@ -1006,7 +1006,7 @@ tSoundHandle J3DAPI Sound_Load(const char* pFilepath, uint32_t* sndIdx)
     size_t bankNum = SOUNDBANK_NORMAL_NUM;
     if ( sndIdx && *sndIdx == SOUND_LOADSTATICIDXMASK )
     {
-        sndIdx = (uint32_t*)sndIdx[1]; // The actual index is stored in the second parameter
+        sndIdx = (uint32_t*)((const uintptr_t*)sndIdx)[1]; // The actual index is stored in the second parameter; Fixed: pointer-sized (64-bit)
         bankNum = SOUNDBANK_STATIC_NUM;
     }
 
@@ -1243,11 +1243,11 @@ tSoundHandle J3DAPI Sound_Load(const char* pFilepath, uint32_t* sndIdx)
 
 tSoundHandle J3DAPI Sound_LoadStatic(const char* pFilename, uint32_t* sndIdx)
 {
-    uint32_t aSndIdx[2];
+    uintptr_t aSndIdx[2]; // Fixed: pointer-sized, holds a pointer (64-bit)
     aSndIdx[0] = SOUND_LOADSTATICIDXMASK;
-    aSndIdx[1] = (uint32_t)sndIdx;
+    aSndIdx[1] = (uintptr_t)sndIdx;
 
-    tSoundHandle hSnd = Sound_Load(pFilename, aSndIdx);
+    tSoundHandle hSnd = Sound_Load(pFilename, (uint32_t*)aSndIdx);
     soundbank_lastImportedBankNum = SOUNDBANK_STATIC_NUM;
     return hSnd;
 }
@@ -1363,7 +1363,7 @@ int J3DAPI Sound_SkipSoundFileSection(tFileHandle fh)
         return 0;
     }
 
-    Sound_pHS->pFileSeek(fh, sizeof(SoundInfo) * numSounds, 1); // skip sound info list
+    Sound_pHS->pFileSeek(fh, sizeof(SoundInfoDisk) * numSounds, 1); // skip sound info list
     Sound_pHS->pFileSeek(fh, sizeData, 1);         // skip sound data list
     Sound_pHS->pFileSeek(fh, sizeof(uint32_t), 1); // skip next handle
     return 1;
@@ -3127,21 +3127,34 @@ void Sound_StopAllNonStaticSounds(void)
 int J3DAPI Sound_ExportBank(tFileHandle fh, size_t bankNum)
 {
     // Write num sound infos
-    if ( Sound_pHS->pFileWrite(fh, &soundbank_aNumSounds[bankNum], sizeof(uint32_t)) != sizeof(uint32_t) )
+    // Altered: counts are 4 bytes on disk, written from uint32_t on every platform
+    const uint32_t numSounds = (uint32_t)soundbank_aNumSounds[bankNum];
+    if ( Sound_pHS->pFileWrite(fh, &numSounds, sizeof(uint32_t)) != sizeof(uint32_t) )
     {
         return 0;
     }
 
     // Write sound data size
-    if ( Sound_pHS->pFileWrite(fh, &soundbank_aUsedCacheSizes[bankNum], sizeof(uint32_t)) != sizeof(uint32_t) )
+    const uint32_t usedCacheSize = (uint32_t)soundbank_aUsedCacheSizes[bankNum];
+    if ( Sound_pHS->pFileWrite(fh, &usedCacheSize, sizeof(uint32_t)) != sizeof(uint32_t) )
     {
         return 0;
     }
 
     // Write sound infos
-    if ( Sound_pHS->pFileWrite(fh, soundbank_apSoundInfos[bankNum], sizeof(SoundInfo) * soundbank_aNumSounds[bankNum]) != sizeof(SoundInfo) * soundbank_aNumSounds[bankNum] )
+    // Altered: one SoundInfoDisk per sound (the 32-bit layout)
+    for ( size_t i = 0; i < soundbank_aNumSounds[bankNum]; ++i )
     {
-        return 0;
+        const SoundInfo* pInfo = &soundbank_apSoundInfos[bankNum][i];
+        const SoundInfoDisk disk = {
+            pInfo->hSnd, pInfo->bankNum, pInfo->filePathOffset, pInfo->nameOffset, pInfo->dataOffset,
+            (uint32_t)(uintptr_t)pInfo->pLipSyncData, pInfo->sampleRate, pInfo->sempleBitSize, pInfo->numChannels,
+            pInfo->dataSize, pInfo->bCompressed, pInfo->idx
+        };
+        if ( Sound_pHS->pFileWrite(fh, &disk, sizeof(disk)) != sizeof(disk) )
+        {
+            return 0;
+        }
     }
 
     // Write sound data
@@ -3159,7 +3172,9 @@ int J3DAPI Sound_ImportBank(tFileHandle fh, size_t bankNum)
     Sound_Reset(bankNum == SOUNDBANK_STATIC_NUM);
 
     // Read num sound infos
-    Sound_ReadFile(fh, &soundbank_aNumSounds[bankNum], sizeof(uint32_t));
+    uint32_t numSounds = 0; // Altered: counts are 4 bytes on disk
+    Sound_ReadFile(fh, &numSounds, sizeof(uint32_t));
+    soundbank_aNumSounds[bankNum] = numSounds;
 
     // Allocate sound info cache
     if ( soundbank_aSizeSounds[bankNum] < soundbank_aNumSounds[bankNum] )
@@ -3180,7 +3195,9 @@ int J3DAPI Sound_ImportBank(tFileHandle fh, size_t bankNum)
     }
 
     // Read sound data size
-    Sound_ReadFile(fh, &soundbank_aUsedCacheSizes[bankNum], sizeof(uint32_t));
+    uint32_t usedCacheSize = 0;
+    Sound_ReadFile(fh, &usedCacheSize, sizeof(uint32_t));
+    soundbank_aUsedCacheSizes[bankNum] = usedCacheSize;
 
     // Allocate sound data cache
     if ( soundbank_aCacheSizes[bankNum] < soundbank_aUsedCacheSizes[bankNum] )
@@ -3200,7 +3217,24 @@ int J3DAPI Sound_ImportBank(tFileHandle fh, size_t bankNum)
     }
 
     // Read sound infos, sound data and next handle
-    Sound_ReadFile(fh, soundbank_apSoundInfos[bankNum], sizeof(SoundInfo) * soundbank_aNumSounds[bankNum]);
+    for ( size_t i = 0; i < soundbank_aNumSounds[bankNum]; ++i ) // Altered: one SoundInfoDisk per sound (the 32-bit layout)
+    {
+        SoundInfoDisk disk;
+        Sound_ReadFile(fh, &disk, sizeof(disk));
+        SoundInfo* pInfo      = &soundbank_apSoundInfos[bankNum][i];
+        pInfo->hSnd           = disk.hSnd;
+        pInfo->bankNum        = disk.bankNum;
+        pInfo->filePathOffset = disk.filePathOffset;
+        pInfo->nameOffset     = disk.nameOffset;
+        pInfo->dataOffset     = disk.dataOffset;
+        pInfo->pLipSyncData   = (uint8_t*)(uintptr_t)disk.lipSyncData;
+        pInfo->sampleRate     = disk.sampleRate;
+        pInfo->sempleBitSize  = disk.sempleBitSize;
+        pInfo->numChannels    = disk.numChannels;
+        pInfo->dataSize       = disk.dataSize;
+        pInfo->bCompressed    = disk.bCompressed;
+        pInfo->idx            = disk.idx;
+    }
     Sound_ReadFile(fh, soundbank_apSoundCache[bankNum], soundbank_aUsedCacheSizes[bankNum]);
     Sound_ReadFile(fh, &Sound_handleEntropy, sizeof(uint32_t));
 

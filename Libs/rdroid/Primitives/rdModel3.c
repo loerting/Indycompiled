@@ -178,7 +178,7 @@ int J3DAPI rdModel3_LoadEntry(const char* pFilename, rdModel3* pModel3)
     }
 
     size_t numMats = 0;
-    if ( nRead = stdConffile_ScanLine(" materials %d", &numMats), nRead != 1 )
+    if ( nRead = stdConffile_ScanLine(" materials %" J3D_SCN_SIZE, &numMats), nRead != 1 )
     {
         if ( nRead < 0 )
         {
@@ -198,7 +198,7 @@ int J3DAPI rdModel3_LoadEntry(const char* pFilename, rdModel3* pModel3)
         for ( size_t i = 0; i < numMats; ++i )
         {
             size_t entryNum;
-            if ( nRead = stdConffile_ScanLine(" %d: %s", &entryNum, std_g_genBuffer, (rsize_t)sizeof(std_g_genBuffer)), nRead != 2 )
+            if ( nRead = stdConffile_ScanLine(" %" J3D_SCN_SIZE ": %s", &entryNum, std_g_genBuffer, (rsize_t)sizeof(std_g_genBuffer)), nRead != 2 )
             {
                 if ( nRead < 0 )
                 {
@@ -234,7 +234,7 @@ int J3DAPI rdModel3_LoadEntry(const char* pFilename, rdModel3* pModel3)
         goto syntax_error;
     }
 
-    if ( stdConffile_ScanLine(" geosets %d", &pModel3->numGeos) != 1 )
+    if ( stdConffile_ScanLine(" geosets %" J3D_SCN_SIZE, &pModel3->numGeos) != 1 )
     {
         goto syntax_error;
     }
@@ -254,7 +254,7 @@ int J3DAPI rdModel3_LoadEntry(const char* pFilename, rdModel3* pModel3)
             goto syntax_error;
         }
 
-        if ( nRead = stdConffile_ScanLine(" meshes %d", &pGeo->numMeshes), nRead != 1 )
+        if ( nRead = stdConffile_ScanLine(" meshes %" J3D_SCN_SIZE, &pGeo->numMeshes), nRead != 1 )
         {
             if ( nRead < 0 )
             {
@@ -333,7 +333,7 @@ int J3DAPI rdModel3_LoadEntry(const char* pFilename, rdModel3* pModel3)
             // Read mesh vertices
 
             size_t numVerts = 0;
-            if ( nRead = stdConffile_ScanLine(" vertices %d", &numVerts), nRead != 1 )
+            if ( nRead = stdConffile_ScanLine(" vertices %" J3D_SCN_SIZE, &numVerts), nRead != 1 )
             {
                 if ( nRead < 0 )
                 {
@@ -420,7 +420,7 @@ int J3DAPI rdModel3_LoadEntry(const char* pFilename, rdModel3* pModel3)
             // Read UV vertices
 
             size_t numTexVerts = 0;
-            if ( nRead = stdConffile_ScanLine(" texture vertices %d", &numTexVerts), nRead != 1 )
+            if ( nRead = stdConffile_ScanLine(" texture vertices %" J3D_SCN_SIZE, &numTexVerts), nRead != 1 )
             {
                 if ( nRead < 0 )
                 {
@@ -492,7 +492,7 @@ int J3DAPI rdModel3_LoadEntry(const char* pFilename, rdModel3* pModel3)
             // Read mesh faces
 
             size_t numFaces = 0;
-            if ( nRead = stdConffile_ScanLine(" faces %d", &numFaces), nRead != 1 )
+            if ( nRead = stdConffile_ScanLine(" faces %" J3D_SCN_SIZE, &numFaces), nRead != 1 )
             {
                 if ( nRead < 0 )
                 {
@@ -756,7 +756,7 @@ int J3DAPI rdModel3_LoadEntry(const char* pFilename, rdModel3* pModel3)
     }
 
     size_t numNodes = 0;
-    if ( nRead = stdConffile_ScanLine(" hierarchy nodes %d", &numNodes), nRead != 1 )
+    if ( nRead = stdConffile_ScanLine(" hierarchy nodes %" J3D_SCN_SIZE, &numNodes), nRead != 1 )
     {
         if ( nRead < 0 )
         {
@@ -785,7 +785,7 @@ int J3DAPI rdModel3_LoadEntry(const char* pFilename, rdModel3* pModel3)
         int flags, parentIdx, childIdx, siblingIdx;
         if ( sscanf_s(
             stdConffile_g_aLine,
-            " %d: %x %x %d %d %d %d %d %f %f %f %f %f %f %f %f %f %s",
+            " %" J3D_SCN_SIZE ": %x %x %d %d %d %d %" J3D_SCN_SIZE " %f %f %f %f %f %f %f %f %f %s",
             &entryNum,
             &flags,
             &pNode->type,

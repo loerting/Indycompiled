@@ -100,7 +100,7 @@ typedef struct sJonesAssignKeyDialogData
     int listID;
     int bLocked;
 } JonesAssignKeyDialogData;
-static_assert(sizeof(JonesAssignKeyDialogData) == 276, "sizeof(JonesAssignKeyDialogData) == 276");
+J3D_ASSERT_SIZE32(JonesAssignKeyDialogData, 276);
 
 typedef struct sJonesReAssignKeyDialogData
 {
