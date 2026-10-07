@@ -12,7 +12,9 @@ static DWORD XInputSDL_aPacket[XUSER_MAX_COUNT];
 
 static SDL_Gamepad* XInputSDL_GetGamepad(DWORD userIndex)
 {
-    if ( userIndex >= XUSER_MAX_COUNT ) return NULL;
+    static int bDisabled = -1; // INDY_NO_GAMEPAD=1: no gamepads (headless tests must not drive a real controller)
+    if ( bDisabled < 0 ) bDisabled = SDL_getenv("INDY_NO_GAMEPAD") != NULL;
+    if ( bDisabled || userIndex >= XUSER_MAX_COUNT ) return NULL;
 
     SDL_Gamepad* pPad = XInputSDL_apGamepads[userIndex];
     if ( pPad && SDL_GamepadConnected(pPad) ) return pPad;

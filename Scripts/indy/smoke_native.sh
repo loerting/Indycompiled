@@ -3,6 +3,7 @@
 # directory of its own (game data linked from game/run, its own config and SaveGames, so the Wine install and your
 # config stay untouched). Screenshots every INDY_SMOKE_INTERVAL seconds (default 10); Escape after each to skip movies.
 # INDY_SMOKE_ACTIONS="<second>:<xdotool command>;..." as in smoke.sh. Other INDY_* debug variables pass through.
+# INDY_NATIVE_WRAPPER: command line to run the game under, e.g. "valgrind --log-file=vg.txt".
 # Usage: Scripts/indy/smoke_native.sh [seconds=40] [binary=Build/linux-i686/Jones3D/Jones3D] [game args...]
 # Output: game/screens/native-<timestamp>/ (shot-<t>s.png, stdout.log, stderr.log, JonesLog.txt)
 set -uo pipefail
@@ -21,10 +22,11 @@ for d in KeySets Install; do ln -sfn "$G/$d" "$RUN/$d"; done
 [[ -f "$RUN/Resource/Jones.cfg" ]] || cp "$G/Resource/Jones.cfg.bak-20261006" "$RUN/Resource/Jones.cfg" # the original defaults
 
 export SDL_AUDIO_DRIVER=${SDL_AUDIO_DRIVER:-dummy}
+export INDY_NO_GAMEPAD=${INDY_NO_GAMEPAD:-1} # never drive (or rumble) a real controller from a test
 xvfb-run -a -s "-screen 0 ${INDY_SMOKE_SCREEN:-1024x768}x24" bash -s -- "$RUN" "$bin" "$secs" "$OUT" "$@" <<'INNER'
 run="$1"; bin="$2"; secs="$3"; out="$4"; shift 4
 cd "$run/Resource"
-"$bin" "$@" >"$out/stdout.log" 2>"$out/stderr.log" &
+${INDY_NATIVE_WRAPPER:-} "$bin" "$@" >"$out/stdout.log" 2>"$out/stderr.log" &
 pid=$!
 declare -A actions
 IFS=';' read -ra parts <<< "${INDY_SMOKE_ACTIONS:-}"
