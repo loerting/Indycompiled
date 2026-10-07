@@ -23,6 +23,7 @@ typedef enum eIndyEnh
     INDY_ENH_QUICK_DIRECTION    = 6, // ENH-0003: reversing doesn't wait for the stop animation (input grace period)
     INDY_ENH_SKIP_INTRO         = 7, // ENH-0004: no intro video at game start
     INDY_ENH_MODERN_CONTROLS    = 8, // ENH-0005: camera-relative left stick (modern controls)
+    INDY_ENH_CUTSCENES_4TO3     = 9, // ENH-0006: cinematic camera in a centred 4:3 frame on wider screens
     INDY_ENH_COUNT
 } IndyEnh;
 

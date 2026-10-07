@@ -78,6 +78,8 @@ static GLuint std3D_program;
 static GLint std3D_locViewport, std3D_locTex, std3D_locFogParams, std3D_locFogColor, std3D_locAlphaRef;
 static GLuint std3D_vao, std3D_vbo, std3D_ibo, std3D_sampler;
 static size_t std3D_vboPos, std3D_iboPos; // next free entry in the ring buffers
+static bool std3D_bScissor;               // std3D_SetScissor
+static GLint std3D_aScissor[4];           // x, y (bottom-left origin), width, height
 
 // Draw queue: rdCache sends a draw per face list, about 2400 a frame and most of them a face or two. std3D_DrawRenderList
 // queues them with their vertices and indices; std3D_FlushDraws uploads all with one mapping each and replays them in
@@ -245,10 +247,23 @@ static void std3D_ApplyFog(void)
 }
 
 // The fixed state, as std3DX9.c's std3D_InitRenderState; also restored after the display module used GL
+static void std3D_ApplyScissor(void)
+{
+    if ( std3D_bScissor )
+    {
+        glEnable(GL_SCISSOR_TEST);
+        glScissor(std3D_aScissor[0], std3D_aScissor[1], std3D_aScissor[2], std3D_aScissor[3]);
+    }
+    else
+    {
+        glDisable(GL_SCISSOR_TEST);
+    }
+}
+
 static void std3D_SetupGLState(void)
 {
     glViewport(0, 0, (GLsizei)stdDisplay_g_backBuffer.rasterInfo.width, (GLsizei)stdDisplay_g_backBuffer.rasterInfo.height);
-    glDisable(GL_SCISSOR_TEST);
+    std3D_ApplyScissor();
     glDisable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
@@ -967,6 +982,21 @@ void J3DAPI std3D_SetFog(float red, float green, float blue, float startDepth, f
     {
         std3D_bFogActive = (std3D_renderState & STD3D_RS_FOG_ENABLED) != 0 && std3D_bRenderFog;
         std3D_ApplyFog();
+    }
+}
+
+void J3DAPI std3D_SetScissor(int bEnable, uint32_t x, uint32_t y, uint32_t width, uint32_t height)
+{
+    std3D_FlushDraws();
+    std3D_bScissor    = bEnable != 0;
+    std3D_aScissor[0] = (GLint)x;
+    std3D_aScissor[1] = (GLint)stdDisplay_g_backBuffer.rasterInfo.height - (GLint)(y + height);
+    std3D_aScissor[2] = (GLint)width;
+    std3D_aScissor[3] = (GLint)height;
+    if ( std3D_bOpen )
+    {
+        std3D_PrepareDraw();
+        std3D_ApplyScissor();
     }
 }
 

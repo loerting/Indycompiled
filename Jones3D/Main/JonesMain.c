@@ -1244,14 +1244,23 @@ int JonesMain_ProcessGame(void)
         rdCache_AdvanceFrame();
 
         // TODO: Refactor and enable viewport clearing in std3D instead
-        if ( JonesMain_state.displaySettings.bClearBackBuffer )
+        if ( JonesMain_state.displaySettings.bClearBackBuffer || JonesDisplay_IsCinema4to3() ) // INDY: ENH-0006, black bars
         {
             stdDisplay_BackBufferFill(0, 0);
         }
 
         if ( !std3D_StartScene() )
         {
+            const bool bCinema4to3 = JonesDisplay_IsCinema4to3(); // INDY: ENH-0006, cutscenes in a centred 4:3 frame
+            if ( bCinema4to3 )
+            {
+                JonesDisplay_SetCinemaFrame(true);
+            }
             sithDrawScene();
+            if ( bCinema4to3 )
+            {
+                JonesDisplay_SetCinemaFrame(false);
+            }
             sithOverlayMap_Draw();
             JonesMain_PrintQuickSave();
             JonesHud_Process();

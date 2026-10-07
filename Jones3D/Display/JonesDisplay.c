@@ -23,6 +23,8 @@
 #include <std/General/stdUtil.h>
 #include <std/Win95/std3D.h>
 #include <std/Win95/stdControl.h>
+
+#include <indy/indyEnh.h> // INDY
 #include <std/Win95/stdDisplay.h>
 
 #include <wkernel/wkernel.h>
@@ -31,6 +33,7 @@ static size_t JonesDisplay_primaryDisplayNum  = 1;
 static uint32_t JonesDisplay_backBufferWidth  = 0; // Added: init to 0
 static uint32_t JonesDisplay_backBufferHeight = 0;
 static rdCanvas* JonesDisplay_pCanvas         = NULL;
+static bool JonesDisplay_bCinema4to3         = false; // INDY: ENH-0006, the cinematic camera shows a centred 4:3 frame
 static bool JonesDisplay_bDualMonitor         = false; // Added: init to false
 
 // Load screen vars
@@ -326,7 +329,27 @@ int J3DAPI JonesDisplay_Open(JonesDisplaySettings* pSettings)
     }
 
     sithCamera_Open(JonesDisplay_pCanvas, displayMode.aspectRatio);
+
+    // INDY: ENH-0006: on screens wider than 4:3, cutscenes show the centred 4:3 part of the picture, as they were made
+    // (wider, their fade plates and framing leave the sides uncovered). The widescreen projection keeps the vertical
+    // field of view, so that part is exactly the original 4:3 view.
+    JonesDisplay_bCinema4to3 = indyEnh_IsEnabled(INDY_ENH_CUTSCENES_4TO3) && width * 3 > height * 4 + 3;
     return 0;
+}
+
+// INDY: ENH-0006: whether the current camera shows the 4:3 frame (JonesMain clears the bars and clips the scene)
+bool JonesDisplay_IsCinema4to3(void)
+{
+    return JonesDisplay_bCinema4to3 && sithCamera_g_pCurCamera == &sithCamera_g_aCameras[SITHCAMERA_CINEMACAMERANUM];
+}
+
+// INDY: ENH-0006: clips the 3D scene to the centred 4:3 frame, or not
+void JonesDisplay_SetCinemaFrame(bool bEnable)
+{
+    uint32_t width, height;
+    stdDisplay_GetBackBufferSize(&width, &height);
+    const uint32_t width43 = (height * 4 + 1) / 3;
+    std3D_SetScissor(bEnable, (width - width43) / 2, 0, width43, height);
 }
 
 void JonesDisplay_Close(void)
@@ -338,6 +361,7 @@ void JonesDisplay_Close(void)
     }
 
     JonesDisplay_pCanvas = NULL;
+
 }
 
 void J3DAPI JonesDisplay_EnableDualMonitor(int bEnable)

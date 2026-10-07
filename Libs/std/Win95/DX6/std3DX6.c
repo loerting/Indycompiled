@@ -1734,6 +1734,15 @@ void J3DAPI std3D_SetFog(float red, float green, float blue, float startDepth, f
     }
 }
 
+void J3DAPI std3D_SetScissor(int bEnable, uint32_t x, uint32_t y, uint32_t width, uint32_t height) // INDY: no clipping on DirectX 6
+{
+    J3D_UNUSED(bEnable);
+    J3D_UNUSED(x);
+    J3D_UNUSED(y);
+    J3D_UNUSED(width);
+    J3D_UNUSED(height);
+}
+
 void std3D_ClearZBuffer(void)
 {
     if ( std3D_lpD3DViewPort )

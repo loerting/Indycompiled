@@ -1783,6 +1783,21 @@ void J3DAPI std3D_SetFog(float red, float green, float blue, float startDepth, f
     }
 }
 
+// INDY: clips drawing to a rectangle of the back buffer (ENH-0006, 4:3 cutscenes)
+void J3DAPI std3D_SetScissor(int bEnable, uint32_t x, uint32_t y, uint32_t width, uint32_t height)
+{
+    if ( !std3D_pD3Device )
+    {
+        return;
+    }
+    if ( bEnable )
+    {
+        RECT rect = { (LONG)x, (LONG)y, (LONG)(x + width), (LONG)(y + height) };
+        IDirect3DDevice9_SetScissorRect(std3D_pD3Device, &rect);
+    }
+    IDirect3DDevice9_SetRenderState(std3D_pD3Device, D3DRS_SCISSORTESTENABLE, bEnable ? TRUE : FALSE);
+}
+
 void std3D_ClearZBuffer(void)
 {
     if ( std3D_pD3Device )

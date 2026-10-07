@@ -71,6 +71,7 @@ int J3DAPI std3D_SetProjection(float fov, float nearPlane, float farPlane);
 void J3DAPI std3D_EnableFog(int bEnabled, float density);
 void J3DAPI std3D_SetFog(float red, float green, float blue, float startDepth, float endDepth);
 void std3D_ClearZBuffer(void);
+void J3DAPI std3D_SetScissor(int bEnable, uint32_t x, uint32_t y, uint32_t width, uint32_t height); // INDY: back buffer pixels, top-left origin
 
 StdDisplayEnvironment* J3DAPI std3D_BuildDisplayEnvironment();
 void J3DAPI std3D_FreeDisplayEnvironment(StdDisplayEnvironment* pEnv);
