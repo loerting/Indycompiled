@@ -468,7 +468,8 @@ void J3DAPI rdFont_DrawTextLineEx(const char* pText, float x, float y, float z, 
                 double nextPosX = (double)pFont->aGlyphs[curChar].baselineOriginX * swidth * fontScale + curPosX; // Altered: Added multiply by fontScale
                 if ( nextPosX >= 0.0f )
                 {
-                    if ( RD_REF_WIDTH * swidth >= nextPosX && curPosX >= 0.0f && RD_REF_WIDTH * swidth >= curPosX )
+                    // INDY: in menus (keep aspect) swidth is the height's scale: clip at the screen's width
+                    if ( (rdFont_bKeepAspect ? (double)width : RD_REF_WIDTH * swidth) >= nextPosX && curPosX >= 0.0f && (rdFont_bKeepAspect ? (double)width : RD_REF_WIDTH * swidth) >= curPosX )
                     {
                         rdFont_DrawCharScaled(curChar, (float)curPosX, (float)curPosY, z, pFont, fontSizePt);
                     }
@@ -540,7 +541,8 @@ void J3DAPI rdFont_DrawTextLineClippedEx(const char* pText, float x, float y, fl
                 double nextPosX = (double)pFont->aGlyphs[curChar].baselineOriginX * swidth * fontScale + curPosX; // Altered: Added multiply by fontScale
                 if ( nextPosX >= 0.0f )
                 {
-                    if ( RD_REF_WIDTH * swidth >= nextPosX && curPosX >= 0.0f && RD_REF_WIDTH * swidth >= curPosX
+                    // INDY: in menus (keep aspect) swidth is the height's scale: clip at the screen's width
+                    if ( (rdFont_bKeepAspect ? (double)width : RD_REF_WIDTH * swidth) >= nextPosX && curPosX >= 0.0f && (rdFont_bKeepAspect ? (double)width : RD_REF_WIDTH * swidth) >= curPosX
                         && curPosY >= 0 && RD_REF_HEIGHT * sheight >= curPosY )
                     {
                         rdFont_DrawCharScaled(curChar, (float)curPosX, (float)curPosY, z, pFont, fontSizePt);
