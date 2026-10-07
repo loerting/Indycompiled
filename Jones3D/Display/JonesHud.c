@@ -6,8 +6,8 @@
 
 #include <Jones3D/Display/jonesConfig.h>
 #include <Jones3D/Display/JonesReticle.h>
-#include <Jones3D/Main/jonesLevel.h>
-#include <Jones3D/Main/jonesMain.h>
+#include <Jones3D/Main/JonesLevel.h>
+#include <Jones3D/Main/JonesMain.h>
 #include <Jones3D/Main/jonesString.h>
 #include <Jones3D/Play/jonesCog.h>
 #include <Jones3D/Play/jonesInventory.h>
