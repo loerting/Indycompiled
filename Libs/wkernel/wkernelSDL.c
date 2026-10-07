@@ -207,7 +207,14 @@ int J3DAPI wkernel_Run(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPSTR lpCmd
         return -1;
     }
 
-    // The display module sets the size and mode and creates the GL context
+    // The display module sets the size and mode and creates the GL context: OpenGL ES 3.0 with depth and stencil,
+    // chosen here because the window's pixel format depends on it
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+    SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
     wkernel_pWindow = SDL_CreateWindow(lpWindowName, 640, 480, SDL_WINDOW_OPENGL | SDL_WINDOW_HIDDEN);
     if ( !wkernel_pWindow )
     {

@@ -18,6 +18,11 @@ add_subdirectory("${CMAKE_SOURCE_DIR}/Libs/external/SDL3" "${CMAKE_BINARY_DIR}/S
 add_compile_options(
     -fms-extensions -fno-strict-aliasing -fwrapv    # MSVC semantics the engine relies on
     -fshort-wchar # 16-bit wchar_t: the Windows layout of structs and savegames (wide functions: std/Posix/stdCrtCompat.c)
+    # The C library's wide functions take 32-bit wchar_t: the compiler must not call them, e.g. for a loop it
+    # recognizes as wcslen
+    -fno-builtin-wcslen -fno-builtin-wcsnlen -fno-builtin-wcscmp -fno-builtin-wcsncmp -fno-builtin-wcschr
+    -fno-builtin-wcsrchr -fno-builtin-wcsstr -fno-builtin-wcscpy -fno-builtin-wcsncpy -fno-builtin-wcscat
+    -fno-builtin-wmemchr -fno-builtin-wmemcmp -fno-builtin-wmemcpy -fno-builtin-wmemmove -fno-builtin-wmemset
     "$<$<COMPILE_LANGUAGE:C>:SHELL:-include ${CMAKE_SOURCE_DIR}/cmake/compat/indy_prelude.h>"
     -Wno-microsoft -Wno-pragma-pack -Wno-unknown-pragmas -Wno-ignored-attributes
     -Wno-error=incompatible-pointer-types -Wno-error=incompatible-function-pointer-types
