@@ -224,7 +224,7 @@ static void indyTouch_FingerDown(IndyTouchFinger* pFinger)
         }
         else if ( button == INDY_TOUCH_BUTTON_ACTION )
         {
-            ++indyTouch_aPendingPresses[SITHCONTROL_ACTIVATE];
+            ++indyTouch_aPendingPresses[SITHCONTROL_ACT2]; // the game's action key (Ctrl): use, grab, attack
         }
     }
     else if ( indyTouch_frame.bMenuOpen )
@@ -342,7 +342,7 @@ static void indyTouch_FingerUp(IndyTouchFinger* pFinger)
         case INDY_TOUCH_ROLE_CAMERA:
             if ( bTap )
             {
-                indyTouch_Pulse(SITHCONTROL_FIRE1); // attack
+                indyTouch_Pulse(SITHCONTROL_ACT2); // attack (the action key fires a drawn weapon)
             }
             else if ( msec <= INDY_TOUCH_FLICK_MSEC && dy >= INDY_TOUCH_FLICK_DIST * h && dy > 2.0f * fabsf(dx) )
             {
@@ -483,8 +483,8 @@ bool J3DAPI indyTouch_GetKey(SithControlFunction function, int* pValue, int* pNu
             value |= indyTouch_IsButtonHeld(INDY_TOUCH_BUTTON_JUMP);
             break;
 
-        case SITHCONTROL_ACTIVATE:
-            value |= indyTouch_IsButtonHeld(INDY_TOUCH_BUTTON_ACTION);
+        case SITHCONTROL_ACT2:
+            value |= indyTouch_IsButtonHeld(INDY_TOUCH_BUTTON_ACTION); // held: grab a block and push/pull with the stick
             break;
 
         case SITHCONTROL_FORWARD:

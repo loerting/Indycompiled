@@ -4,7 +4,8 @@
 //
 // Left half: a floating stick appears where the thumb lands; it drives the modern, camera-relative movement
 // (ENH-0005), and climbing/swimming through the classic keys. Right half: dragging orbits the camera (ENH-0002), a tap
-// attacks, a quick flick down toggles crouching. Buttons: Jump, Action (held as long as touched) and Menu; a tap on
+// attacks, a quick flick down toggles crouching. Buttons: Jump, Action (the game's action key ACT2, held as long as
+// touched: use, pick up, hold a block while the stick pushes or pulls it) and Menu; a tap on
 // the health indicator opens the menu too. In the HUD menu (the game's inventory/system strip) swipes move through
 // it, a tap selects, the Menu button closes it. The overlay hides while a keyboard or gamepad is used.
 //
