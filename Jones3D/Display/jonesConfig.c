@@ -32,6 +32,7 @@
 #include <std/General/std.h>
 #include <std/General/stdBmp.h>
 #include <std/General/stdConfig.h>
+#include <std/General/stdFileUtil.h>
 #include <std/General/stdFnames.h>
 #include <std/General/stdMemory.h>
 #include <std/General/stdUtil.h>
@@ -1178,6 +1179,7 @@ int jonesConfig_Startup(void)
         return 1;
     }
 
+#ifdef _WIN32 // dialog icons (GDI bitmaps)
     for ( size_t i = 0; i < STD_ARRAYLEN(jonesConfig_apDialogIcons); ++i )
     {
         char aIconPath[128];
@@ -1195,6 +1197,7 @@ int jonesConfig_Startup(void)
             return 0;
         }
     }
+#endif
 
     if ( !jonesConfig_InitKeySetsPath() )
     {
@@ -1947,6 +1950,7 @@ void J3DAPI jonesConfig_ControlToString(size_t controlId, char* pDest)
     }
 }
 
+#ifdef _WIN32 // Win32 dialogs; native builds: jonesConfigSDL.c
 int J3DAPI jonesConfig_ShowMessageDialog(HWND hWnd, const char* pTitle, const char* pText, int iconID)
 {
     GetWindowLongPtr(hWnd, GWL_HINSTANCE); // ???
@@ -2157,6 +2161,7 @@ void J3DAPI jonesConfig_MessageDialog_HandleWM_COMMAND(HWND hDlg, int nResult)
         EndDialog(hDlg, nResult);
     }
 }
+#endif // _WIN32
 
 JonesControlsScheme* jonesConfig_LoadActiveControlScheme(void)
 {
@@ -3075,6 +3080,7 @@ void J3DAPI jonesConfig_BindJoystickControl(SithControlFunction functionId, size
     }
 }
 
+#ifdef _WIN32 // Win32 dialogs; native builds: jonesConfigSDL.c
 HFONT J3DAPI jonesConfig_InitDialog(HWND hWnd, HFONT hFont, int dlgID)
 {
     JonesDialogFontInfo fontInfo;
@@ -3524,6 +3530,7 @@ void J3DAPI jonesConfig_SetWindowFontAndPosition(HWND hCtrl, JonesDialogFontInfo
         }
     }
 }
+#endif // _WIN32
 
 void J3DAPI jonesConfig_GetWindowScreenRect(HWND hWnd, LPRECT lpRect)
 {
@@ -3542,6 +3549,7 @@ void J3DAPI jonesConfig_GetWindowScreenRect(HWND hWnd, LPRECT lpRect)
     lpRect->bottom = point.y;
 }
 
+#ifdef _WIN32 // Win32 dialogs; native builds: jonesConfigSDL.c
 void J3DAPI jonesConfig_SetDialogTitleAndPosition(HWND hWnd, JonesDialogFontInfo* pDlgFontInfo)
 {
     if ( pDlgFontInfo->dialogID != 154 && pDlgFontInfo->dialogID != 159 && pDlgFontInfo->dialogID != JONESCONFIG_NOFONTSCALEMASK )// if not load/save dialogs
@@ -4916,6 +4924,7 @@ void J3DAPI jonesConfig_GamePlayOptions_HandleWM_COMMAND(HWND hDlg, uint16_t con
         EndDialog(hDlg, controlID);
     }
 }
+#endif // _WIN32
 
 void J3DAPI jonesConfig_EnableMouseControl(int bEnable)
 {
@@ -5049,6 +5058,7 @@ JonesControlsScheme* J3DAPI jonesConfig_CloneControlSchemesList(JonesControlsSch
     return aNewSchemes;
 }
 
+#ifdef _WIN32 // Win32 dialogs; native builds: jonesConfigSDL.c
 int J3DAPI jonesConfig_ShowControlOptions(HWND hWnd)
 {
     if ( !jonesConfig_ControlOptions_InitControlsConfig() )
@@ -5093,6 +5103,7 @@ int J3DAPI jonesConfig_ShowControlOptions(HWND hWnd)
 
     return result;
 }
+#endif // _WIN32
 
 int jonesConfig_ControlOptions_InitControlsConfig(void)
 {
@@ -5117,6 +5128,7 @@ int jonesConfig_ControlOptions_InitControlsConfig(void)
     }
 }
 
+#ifdef _WIN32 // Win32 dialogs; native builds: jonesConfigSDL.c
 int J3DAPI jonesConfig_ControlOptions_LoadAllControlSchemes(JonesControlsConfig* pConfig)
 {
     char aCurDir[128] = { 0 };
@@ -5162,6 +5174,41 @@ int J3DAPI jonesConfig_ControlOptions_LoadAllControlSchemes(JonesControlsConfig*
     SetCurrentDirectory(aCurDir);
     return 0;
 }
+#else
+int J3DAPI jonesConfig_ControlOptions_LoadAllControlSchemes(JonesControlsConfig* pConfig)
+{
+    FindFileData* pFind = stdFileUtil_NewFind(jonesConfig_aKeySetsDirPath, 3, "kfg");
+    if ( !pFind )
+    {
+        return 1;
+    }
+
+    tFoundFileInfo fileInfo;
+    while ( stdFileUtil_FindNext(pFind, &fileInfo) )
+    {
+        if ( (pConfig->numSchemes % 10) == 0 )
+        {
+            pConfig->aSchemes = (JonesControlsScheme*)STDREALLOC(pConfig->aSchemes, sizeof(JonesControlsScheme) * (pConfig->numSchemes + 10));
+        }
+
+        if ( !pConfig->aSchemes )
+        {
+            stdFileUtil_DisposeFind(pFind);
+            return 0;
+        }
+
+        char aPath[128];
+        STD_MAKEPATH(aPath, jonesConfig_aKeySetsDirPath, fileInfo.aName);
+        if ( jonesConfig_LoadControlScheme(aPath, &pConfig->aSchemes[pConfig->numSchemes]) )
+        {
+            ++pConfig->numSchemes;
+        }
+    }
+
+    stdFileUtil_DisposeFind(pFind);
+    return 1;
+}
+#endif // _WIN32
 
 int J3DAPI jonesConfig_ControlOptions_SetAllDefaultControlSchemes(JonesControlsConfig* pConfig)
 {
@@ -5189,6 +5236,7 @@ int J3DAPI jonesConfig_ControlOptions_SetAllDefaultControlSchemes(JonesControlsC
     return 1;
 }
 
+#ifdef _WIN32 // Win32 dialogs; native builds: jonesConfigSDL.c
 INT_PTR CALLBACK jonesConfig_ControlOptionsDialogProc(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 {
     if ( umsg == WM_DESTROY )
@@ -5787,6 +5835,7 @@ void J3DAPI jonesConfig_ControlOptions_EditSelectedScheme(HWND hDlg, JonesContro
         }
     }
 }
+#endif // _WIN32
 
 JonesControlsScheme* J3DAPI jonesConfig_GetDefaultControlScheme(JonesControlsConfig* pConfig)
 {
@@ -5821,6 +5870,7 @@ JonesControlsScheme* J3DAPI jonesConfig_GetDefaultControlScheme(JonesControlsCon
     return NULL;
 }
 
+#ifdef _WIN32 // Win32 dialogs; native builds: jonesConfigSDL.c
 void J3DAPI jonesConfig_ControlOptions_CreateNewScheme(HWND hDlg, JonesControlsConfig* pConfig, JonesControlsScheme* pNewScheme)
 {
     // Show dialog for user to enter new scheme filename
@@ -6703,6 +6753,7 @@ int J3DAPI jonesConfig_ShowAssignKeyDialog(HWND hWnd, JonesAssignKeyDialogData* 
 
     return mapKeyDlgResult;
 }
+#endif // _WIN32
 
 int J3DAPI jonesConfig_AssignKey_CheckBindForKey(JonesControlsScheme* pScheme, size_t keyControlID, size_t* pFunctionId, int listID, size_t* pOffset)
 {
@@ -6747,6 +6798,7 @@ int J3DAPI jonesConfig_AssignKey_CheckBindForKey(JonesControlsScheme* pScheme, s
     return -1;
 }
 
+#ifdef _WIN32 // Win32 dialogs; native builds: jonesConfigSDL.c
 INT_PTR CALLBACK jonesConfig_AssignKeyDlgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     if ( uMsg > WM_INITDIALOG )
@@ -6958,6 +7010,7 @@ void J3DAPI jonesConfig_AssignControlKey_ReadKey(HWND hWnd)
         }
     }
 }
+#endif // _WIN32
 
 int J3DAPI jonesConfig_AssignControlKey_ReadJoyAxisKey(JonesAssignKeyDialogData* pData)
 {
@@ -7030,6 +7083,7 @@ int J3DAPI jonesConfig_AssignControlKey_ReadJoyAxisKey(JonesAssignKeyDialogData*
     return 0;
 }
 
+#ifdef _WIN32 // Win32 dialogs; native builds: jonesConfigSDL.c
 void J3DAPI jonesConfig_AssignKeyDlg_HandleWM_COMMAND(HWND hWnd, int ctrlID)
 {
     if ( ctrlID == 2 )
@@ -7513,6 +7567,7 @@ int J3DAPI jonesConfig_InitDisplaySettingsDialog(HWND hDlg, int a2, JonesDisplay
     SetWindowLongPtr(hDlg, DWL_USER, (LONG_PTR)pData);
     return 1;
 }
+#endif // _WIN32
 
 int J3DAPI jonesConfig_DisplaySettings_GetVideoModeNum(const JonesDisplaySettingsVideoMode* pVideoMode, const char* pText, size_t numVideoModes)
 {
@@ -7533,6 +7588,7 @@ int J3DAPI jonesConfig_DisplaySettings_GetVideoModeNum(const JonesDisplaySetting
     return i;
 }
 
+#ifdef _WIN32 // Win32 dialogs; native builds: jonesConfigSDL.c
 void J3DAPI jonesConfig_DisplaySettings_HandleWM_COMMAND(HWND hWnd, int ctrlID, LPARAM a3, int notifyCode)
 {
     J3D_UNUSED(a3);
@@ -8395,6 +8451,7 @@ INT_PTR CALLBACK jonesConfig_GameOverDialogProc(HWND hWnd, UINT uMsg, WPARAM wPa
         return 0;
     }
 }
+#endif // _WIN32
 
 void J3DAPI jonesConfig_LoadGameGetLastSavedGamePath(char* pPath, unsigned int size)
 {
@@ -8461,6 +8518,7 @@ void J3DAPI jonesConfig_LoadGameGetLastSavedGamePath(char* pPath, unsigned int s
     }
 }
 
+#ifdef _WIN32 // Win32 dialogs; native builds: jonesConfigSDL.c
 int J3DAPI jonesConfig_GameOverDialogInit(HWND hDlg, int a2, GameOverDialogData* pData)
 {
     J3D_UNUSED(a2);
@@ -8806,12 +8864,14 @@ int J3DAPI jonesConfig_sub_40D100(int a1, HWND hWnd, int a3, int a4)
 
     return result;
 }
+#endif // _WIN32
 
 void jonesConfig_UpdateCurrentLevelNum(void)
 {
     jonesConfig_gameStatistics_curLevelNum = JonesMain_GetCurrentLevelNum();
 }
 
+#ifdef _WIN32 // Win32 dialogs; native builds: jonesConfigSDL.c
 int J3DAPI jonesConfig_DrawImageOnDialogItem(HWND hDlg, HDC hdcWnd, HDC hdcCtrl, int nIDDlgItem, HBITMAP hImage, HBITMAP hMask)
 {
     RECT rect;
@@ -9961,3 +10021,4 @@ int J3DAPI jonesConfig_InsertCD_HandleWM_COMMAND(HWND hWnd, int nResult)
 
     return cdNum;
 }
+#endif // _WIN32

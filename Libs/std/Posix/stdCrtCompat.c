@@ -475,6 +475,20 @@ DWORD J3D_GetTickCount(void)
     return (DWORD)((uint64_t)ts.tv_sec * 1000u + (uint64_t)ts.tv_nsec / 1000000u);
 }
 
+BOOL J3D_QueryPerformanceCounter(LARGE_INTEGER* pCount)
+{
+    struct timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    pCount->QuadPart = (LONGLONG)ts.tv_sec * 1000000000LL + ts.tv_nsec;
+    return TRUE;
+}
+
+BOOL J3D_QueryPerformanceFrequency(LARGE_INTEGER* pFreq)
+{
+    pFreq->QuadPart = 1000000000LL;
+    return TRUE;
+}
+
 void J3D_GetLocalTime(SYSTEMTIME* pTime)
 {
     struct timespec ts;
@@ -510,4 +524,39 @@ BOOL J3D_GetComputerName(LPSTR pBuffer, LPDWORD pSize)
     pBuffer[*pSize - 1] = 0;
     *pSize = (DWORD)strlen(pBuffer);
     return TRUE;
+}
+
+// SearchPath: looks for pFileName (plus pExtension if the name has none) in pPath only; the found path keeps the
+// engine's spelling with '\\' separators, so it can be passed on to fopen again.
+DWORD J3D_SearchPath(LPCSTR pPath, LPCSTR pFileName, LPCSTR pExtension, DWORD bufferLength, LPSTR pBuffer, LPSTR* ppFilePart)
+{
+    char aName[J3D_MAX_PATH];
+    if ( !pFileName ) return 0;
+    const char* pBase = strrchr(pFileName, '\\');
+    pBase = pBase ? pBase + 1 : pFileName;
+    bool bHasExt = strchr(pBase, '.') != NULL;
+    if ( pPath && *pPath )
+    {
+        size_t len = strlen(pPath);
+        bool bSep  = pPath[len - 1] == '\\' || pPath[len - 1] == '/';
+        snprintf(aName, sizeof(aName), "%s%s%s%s", pPath, bSep ? "" : "\\", pFileName, (!bHasExt && pExtension) ? pExtension : "");
+    }
+    else
+    {
+        snprintf(aName, sizeof(aName), "%s%s", pFileName, (!bHasExt && pExtension) ? pExtension : "");
+    }
+
+    char aResolved[J3D_MAX_PATH];
+    struct stat st;
+    if ( stat(J3D_ResolvePath(aName, aResolved, sizeof(aResolved)), &st) != 0 ) return 0;
+
+    size_t len = strlen(aName);
+    if ( !pBuffer || bufferLength <= len ) return (DWORD)(len + 1);
+    memcpy(pBuffer, aName, len + 1);
+    if ( ppFilePart )
+    {
+        char* pSep = strrchr(pBuffer, '\\');
+        *ppFilePart = pSep ? pSep + 1 : pBuffer;
+    }
+    return (DWORD)len;
 }

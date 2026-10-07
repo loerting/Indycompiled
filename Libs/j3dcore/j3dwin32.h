@@ -159,6 +159,19 @@ typedef LRESULT (CALLBACK* WNDPROC)(HWND, UINT, WPARAM, LPARAM);
 typedef INT_PTR (CALLBACK* DLGPROC)(HWND, UINT, WPARAM, LPARAM);
 typedef UINT_PTR (CALLBACK* LPOFNHOOKPROC)(HWND, UINT, WPARAM, LPARAM);
 typedef struct tagOFNA* LPOPENFILENAMEA;
+typedef LPOPENFILENAMEA LPOPENFILENAME;
+typedef struct _ABC
+{
+    int abcA;
+    UINT abcB;
+    int abcC;
+} ABC;
+typedef struct tagTEXTMETRICA
+{
+    LONG tmHeight, tmAscent, tmDescent, tmInternalLeading, tmExternalLeading, tmAveCharWidth, tmMaxCharWidth, tmWeight,
+        tmOverhang, tmDigitizedAspectX, tmDigitizedAspectY;
+    BYTE tmFirstChar, tmLastChar, tmDefaultChar, tmBreakChar, tmItalic, tmUnderlined, tmStruckOut, tmPitchAndFamily, tmCharSet;
+} TEXTMETRICA;
 
 #define TRUE  1
 #define FALSE 0
@@ -448,12 +461,20 @@ BOOL J3D_GetComputerName(LPSTR pBuffer, LPDWORD pSize);
 #define CloseHandle J3D_CloseHandle
 #define GetComputerName J3D_GetComputerName
 #define GetComputerNameA J3D_GetComputerName
+DWORD J3D_SearchPath(LPCSTR pPath, LPCSTR pFileName, LPCSTR pExtension, DWORD bufferLength, LPSTR pBuffer, LPSTR* ppFilePart);
+#define SearchPath J3D_SearchPath
+#define SearchPathA J3D_SearchPath
 
 // Time
 DWORD J3D_GetTickCount(void);
 void J3D_GetLocalTime(SYSTEMTIME* pTime);
 void J3D_Sleep(DWORD msec);
+BOOL J3D_QueryPerformanceCounter(LARGE_INTEGER* pCount); // nanoseconds
+BOOL J3D_QueryPerformanceFrequency(LARGE_INTEGER* pFreq);
+#define QueryPerformanceCounter J3D_QueryPerformanceCounter
+#define QueryPerformanceFrequency J3D_QueryPerformanceFrequency
 #define GetTickCount J3D_GetTickCount
+#define ExitProcess(code) exit((int)(code))
 #define GetLocalTime J3D_GetLocalTime
 #define Sleep J3D_Sleep
 

@@ -1,7 +1,9 @@
 #include "indyDebug.h"
 
 #include <Windows.h>
+#ifdef _WIN32
 #include <tlhelp32.h>
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,6 +26,7 @@
 // where an external debugger can't attach (Wine WoW64). Resolve exe addresses with Scripts/indy/rti_v12.csv and DLL
 // addresses with addr2line (image base 0x10000000).
 
+#ifdef _WIN32 // the sampler suspends threads through the Win32 API
 static uintptr_t indyDebug_dllBase, indyDebug_dllEnd;
 
 static void indyDebug_ModuleRange(HMODULE hModule, uintptr_t* pBase, uintptr_t* pEnd)
@@ -115,20 +118,28 @@ static DWORD WINAPI indyDebug_SamplerThread(LPVOID pParam)
     return 0;
 }
 
+#endif
+
 void indyDebug_Startup(HMODULE hDll)
 {
+#ifndef _WIN32
+    (void)hDll;
+    return;
+#endif
     const char* pInterval = getenv("INDY_SAMPLE_THREADS");
     if ( !pInterval || atoi(pInterval) <= 0 )
     {
         return;
     }
 
+#ifdef _WIN32
     indyDebug_ModuleRange(hDll, &indyDebug_dllBase, &indyDebug_dllEnd);
     HANDLE hThread = CreateThread(NULL, 0, indyDebug_SamplerThread, (LPVOID)(uintptr_t)(atoi(pInterval) * 1000), 0, NULL);
     if ( hThread )
     {
         CloseHandle(hThread);
     }
+#endif
 }
 
 void indyDebug_FrameCap(void)
@@ -226,9 +237,47 @@ static void indyDebug_AddWorldArrays(const SithWorld* pWorld, const char* pPrefi
     #undef INDY_ADD
 }
 
+#ifndef _WIN32
+// Native builds: the process's writable anonymous mappings (heap, mmap), read from /proc/self/maps once per snapshot
+typedef struct sIndyMapRange { uintptr_t start, end; } IndyMapRange;
+static IndyMapRange indyDebug_aMaps[4096];
+static int indyDebug_numMaps = -1;
+
+static void indyDebug_LoadMaps(void)
+{
+    indyDebug_numMaps = 0;
+    FILE* pMaps = fopen("/proc/self/maps", "r");
+    if ( !pMaps ) return;
+    char aLine[512];
+    while ( fgets(aLine, sizeof(aLine), pMaps) && indyDebug_numMaps < (int)STD_ARRAYLEN(indyDebug_aMaps) )
+    {
+        unsigned long long start, end, offset, inode;
+        char perms[8], dev[16], aPath[256] = { 0 };
+        if ( sscanf(aLine, "%llx-%llx %7s %llx %15s %llu %255s", &start, &end, perms, &offset, dev, &inode, aPath) < 6 ) continue;
+        bool bAnon = inode == 0 && (aPath[0] == 0 || strcmp(aPath, "[heap]") == 0);
+        if ( perms[0] == 'r' && perms[1] == 'w' && bAnon )
+        {
+            indyDebug_aMaps[indyDebug_numMaps++] = (IndyMapRange){ (uintptr_t)start, (uintptr_t)end };
+        }
+    }
+    fclose(pMaps);
+}
+#endif
+
 // true if [p, p+size) is committed, readable process memory outside loaded images (heap or mapped)
 static bool indyDebug_IsHeapMemory(uintptr_t p, size_t size)
 {
+#ifndef _WIN32
+    if ( indyDebug_numMaps < 0 ) indyDebug_LoadMaps();
+    for ( int i = 0; i < indyDebug_numMaps; i++ )
+    {
+        if ( p >= indyDebug_aMaps[i].start && p < indyDebug_aMaps[i].end )
+        {
+            return p >= 0x10000 && p + size <= indyDebug_aMaps[i].end;
+        }
+    }
+    return false;
+#else
     MEMORY_BASIC_INFORMATION mbi;
     if ( p < 0x10000 || !VirtualQuery((const void*)p, &mbi, sizeof(mbi)) )
     {
@@ -239,6 +288,7 @@ static bool indyDebug_IsHeapMemory(uintptr_t p, size_t size)
         return false;
     }
     return p + size <= (uintptr_t)mbi.BaseAddress + mbi.RegionSize;
+#endif
 }
 
 static void indyDebug_DumpCanonical(FILE* pFile, const uint8_t* pData, size_t size, int depth);
@@ -415,6 +465,9 @@ void indyDebug_DumpWorld(void)
 
 static void indyDebug_WriteWorld(void)
 {
+#ifndef _WIN32
+    indyDebug_numMaps = -1; // the heap may have grown since the last snapshot
+#endif
     const char* pPath = getenv("INDY_DUMP_WORLD");
     const SithWorld* pWorld = sithWorld_g_pCurrentWorld;
     if ( !pPath || !pWorld )

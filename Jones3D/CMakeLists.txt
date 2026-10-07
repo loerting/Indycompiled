@@ -18,8 +18,8 @@ list(REMOVE_ITEM JONES3D_DLL_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/sha256.h")
 if (WIN32)
     list(FILTER JONES3D_DLL_SOURCES EXCLUDE REGEX "SDL\\.c$|/main\\.c$")
 else()
-    # Native build: dialogs and the entry point have SDL versions
-    list(FILTER JONES3D_DLL_SOURCES EXCLUDE REGEX "/jonesConfig\\.c$|/JonesDialog\\.c$|/dllmain\\.c$")
+    # Native build: the Win32 dialog host and the entry point have SDL versions (jonesConfig.c guards its dialogs)
+    list(FILTER JONES3D_DLL_SOURCES EXCLUDE REGEX "/JonesDialog\\.c$|/dllmain\\.c$")
 endif()
 
 # Jones3D EXE sources

@@ -37,8 +37,9 @@ endif()
 
 function(_indy_native_fixup)
     file(GLOB indy_sources "${CMAKE_SOURCE_DIR}/Libs/indy/*.c")
-    list(FILTER indy_sources EXCLUDE REGEX "(indyDiff|indyDisplayDX9|indyDebug)\\.c$") # exe code, DirectX 9, Win32
+    list(FILTER indy_sources EXCLUDE REGEX "(indyDiff|indyDisplayDX9)\\.c$") # exe code, DirectX 9
     target_sources(Jones3D_DLL PRIVATE ${indy_sources} "${INDY_GEN}/indy_inline_externals.c")
     target_link_libraries(Jones3D_DLL PRIVATE m)
+    target_compile_definitions(Jones3D_DLL PRIVATE INDY_NATIVE_DEBUG) # main.c starts indyDebug
 endfunction()
 cmake_language(DEFER DIRECTORY "${CMAKE_SOURCE_DIR}" CALL _indy_native_fixup)
