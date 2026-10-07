@@ -67,6 +67,8 @@ static uint32_t indyTouch_msecNow;
 
 static float indyTouch_stickX, indyTouch_stickY; // stick centre (pixels); follows the thumb past the rim
 static float indyTouch_camYaw, indyTouch_camPitch;
+static bool indyTouch_bMenuTap;                  // a tap in the HUD menu, for JonesHud (indyTouch_TakeMenuTap)
+static float indyTouch_menuTapX, indyTouch_menuTapY;
 
 static uint32_t indyTouch_aPulseUntil[SITHCONTROL_MAXFUNCTIONS];
 static int indyTouch_aPendingPresses[SITHCONTROL_MAXFUNCTIONS];
@@ -353,7 +355,10 @@ static void indyTouch_FingerUp(IndyTouchFinger* pFinger)
         case INDY_TOUCH_ROLE_MENU:
             if ( bTap && pFinger->numMenuSteps == 0 )
             {
-                indyTouch_PressKey(DIK_RETURN); // select the item
+                // JonesHud selects the tapped item, or uses it when it is selected already
+                indyTouch_bMenuTap  = true;
+                indyTouch_menuTapX  = pFinger->downX;
+                indyTouch_menuTapY  = pFinger->downY;
             }
             break;
 
@@ -443,6 +448,18 @@ bool indyTouch_GetStick(float* pX, float* pY)
         }
     }
     return false;
+}
+
+bool indyTouch_TakeMenuTap(float* pX, float* pY)
+{
+    if ( !indyTouch_bMenuTap )
+    {
+        return false;
+    }
+    indyTouch_bMenuTap = false;
+    *pX = indyTouch_menuTapX;
+    *pY = indyTouch_menuTapY;
+    return true;
 }
 
 bool indyTouch_TakeCameraDelta(float* pYaw, float* pPitch)

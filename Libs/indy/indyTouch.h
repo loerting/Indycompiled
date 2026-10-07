@@ -7,7 +7,7 @@
 // attacks, a quick flick down toggles crouching. Buttons: Jump, Action (the game's action key ACT2, held as long as
 // touched: use, pick up, hold a block while the stick pushes or pulls it) and Menu; a tap on
 // the health indicator opens the menu too. In the HUD menu (the game's inventory/system strip) swipes move through
-// it, a tap selects, the Menu button closes it. The overlay hides while a keyboard or gamepad is used.
+// it, a tap on an item selects it and a tap on the selected item uses it (JonesHud), the Menu button closes it. The overlay hides while a keyboard or gamepad is used.
 //
 // The platform layer (wkernelSDL.c) passes finger events in and injects keys (Enter, Escape); the game reads the stick,
 // camera drag and control functions; JonesMain draws the overlay after the HUD.
@@ -39,6 +39,9 @@ void indyTouch_Update(uint32_t msecTime);
 void indyTouch_BeginControlFrame(void);
 bool indyTouch_GetStick(float* pX, float* pY);
 bool indyTouch_TakeCameraDelta(float* pYaw, float* pPitch);
+
+// JonesHud's menu: a tap since the last call (back buffer pixels)
+bool indyTouch_TakeMenuTap(float* pX, float* pY);
 
 // sithControl_GetKey: the touch state of a control function, ORed with its bindings (*pValue pressed now, *pNumPressed
 // presses this frame); false when touch doesn't drive it

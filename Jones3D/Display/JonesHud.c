@@ -1,4 +1,5 @@
 #include "JonesHud.h"
+#include <indy/indyTouch.h> // INDY
 #include "JonesHudConstants.h"
 
 #include <j3dcore/j3dhook.h>
@@ -152,6 +153,12 @@ static size_t JonesHud_msecMenuItemMoveDuration = 250u;
 static size_t JonesHud_msecMenuItemMoveCurDuration; // Altered: removed initialization
 
 static JonesHudMenuItem* JonesHud_apMenuItems[JONESHUD_MAX_MENU_ITEMS] = { NULL };
+
+// INDY: touch controls: where the menu items were drawn last frame (screen pixels), and the item a tap asked for
+static bool JonesHud_aTouchItemShown[JONESHUD_MAX_MENU_ITEMS];
+static float JonesHud_aTouchItemX[JONESHUD_MAX_MENU_ITEMS], JonesHud_aTouchItemY[JONESHUD_MAX_MENU_ITEMS];
+static int JonesHud_touchTargetItemId = -1;
+static uint32_t JonesHud_msecTouchTargetEnd;
 
 static tSoundChannelHandle JonesHud_hCurSndChannel;
 static tSoundChannelHandle JonesHud_hSndChannelMusic = SOUND_INVALIDHANDLE;
@@ -2249,6 +2256,98 @@ void J3DAPI JonesHud_Draw(const rdMaterial* pMaterial, const JonesHudRect* rect,
     }
 }
 
+// INDY: touch controls: the drawn item nearest to a tap (within reach), or -1
+static int JonesHud_FindTouchedItem(float x, float y)
+{
+    uint32_t width, height;
+    stdDisplay_GetBackBufferSize(&width, &height);
+    float bestDist = 0.12f * (float)height;
+    int bestId     = -1;
+    for ( int i = 0; i < JONESHUD_MAX_MENU_ITEMS; ++i )
+    {
+        if ( JonesHud_aTouchItemShown[i] && JonesHud_apMenuItems[i] )
+        {
+            const float dist = hypotf(JonesHud_aTouchItemX[i] - x, JonesHud_aTouchItemY[i] - y);
+            if ( dist < bestDist )
+            {
+                bestDist = dist;
+                bestId   = i;
+            }
+        }
+    }
+    return bestId;
+}
+
+// INDY: touch controls: one menu move toward the tapped item (in the selected column, or along the bottom row), once
+// the previous move finished; the move functions themselves wait for running animations
+static void JonesHud_TouchStepTowardTarget(void)
+{
+    JonesHudMenuItem* pCur = JonesHud_pCurSelectedMenuItem;
+    if ( JonesHud_touchTargetItemId < 0 || (int32_t)(JonesHud_msecTime - JonesHud_msecTouchTargetEnd) > 0
+        || (pCur && pCur->id == JonesHud_touchTargetItemId) )
+    {
+        JonesHud_touchTargetItemId = -1;
+        return;
+    }
+    if ( (JonesHud_hudState & 0x04) != 0 || (JonesHud_hudState & 0x08) != 0 )
+    {
+        return; // a column is moving
+    }
+    if ( !pCur )
+    {
+        JonesHud_MenuMoveRight(); // nothing selected yet: select the first item
+        return;
+    }
+
+    // above the selected item, in its column
+    const JonesHudMenuItem* pItem = pCur;
+    for ( int n = 0; n < JONESHUD_MAX_MENU_ITEMS && pItem->nextUpItemId != -1 && JonesHud_apMenuItems[pItem->nextUpItemId]; ++n )
+    {
+        pItem = JonesHud_apMenuItems[pItem->nextUpItemId];
+        if ( pItem == pCur )
+        {
+            break;
+        }
+        if ( pItem->id == JonesHud_touchTargetItemId )
+        {
+            if ( (JonesHud_hudState & 0x02) == 0 )
+            {
+                JonesHud_MenuMoveUp();
+            }
+            return;
+        }
+    }
+
+    // along the bottom row
+    for ( int dir = 0; dir < 2; ++dir )
+    {
+        pItem = pCur;
+        for ( int n = 0; n < JONESHUD_MAX_MENU_ITEMS; ++n )
+        {
+            const int nextId = dir == 0 ? pItem->nextRightItemId : pItem->nextLeftItemId;
+            if ( nextId == -1 || !JonesHud_apMenuItems[nextId] || JonesHud_apMenuItems[nextId] == pCur )
+            {
+                break;
+            }
+            pItem = JonesHud_apMenuItems[nextId];
+            if ( pItem->id == JonesHud_touchTargetItemId )
+            {
+                if ( dir == 0 )
+                {
+                    JonesHud_MenuMoveRight();
+                }
+                else
+                {
+                    JonesHud_MenuMoveLeft();
+                }
+                return;
+            }
+        }
+    }
+
+    JonesHud_touchTargetItemId = -1; // not reachable from here
+}
+
 void JonesHud_ProcessInventoryMenu(void)
 {
     // Added: Re start playing menu theme music if not already playing
@@ -2263,6 +2362,29 @@ void JonesHud_ProcessInventoryMenu(void)
 
     int bActivateKeyPressed;
     JonesHud_UpdateItem(JonesHud_pMenuItemLinkedList);
+
+    // INDY: touch controls: a tap on an item selects it (step by step), a tap on the selected item uses it
+    float touchX, touchY;
+    if ( indyTouch_TakeMenuTap(&touchX, &touchY) )
+    {
+        const int touchedId = JonesHud_FindTouchedItem(touchX, touchY);
+        if ( touchedId >= 0 && JonesHud_pCurSelectedMenuItem && touchedId == JonesHud_pCurSelectedMenuItem->id )
+        {
+            if ( (JonesHud_hudState & 0x04) == 0 && (JonesHud_hudState & 0x08) == 0 && (JonesHud_hudState & 0x02) == 0 )
+            {
+                JonesHud_touchTargetItemId = -1;
+                JonesHud_MenuActivateItem();
+                JonesHud_RenderMenuItems(JonesHud_pMenuItemLinkedList);
+                return;
+            }
+        }
+        else if ( touchedId >= 0 )
+        {
+            JonesHud_touchTargetItemId  = touchedId;
+            JonesHud_msecTouchTargetEnd = JonesHud_msecTime + 3000; // give up if it can't be reached
+        }
+    }
+    JonesHud_TouchStepTowardTarget();
 
     if ( (JonesHud_hudState & 0x04) == 0 && (JonesHud_hudState & 0x08) == 0 )
     {
@@ -2309,6 +2431,7 @@ void JonesHud_ProcessInventoryMenu(void)
         }
     }
 
+    memset(JonesHud_aTouchItemShown, 0, sizeof(JonesHud_aTouchItemShown)); // INDY: refilled by JonesHud_RenderMenuItem
     JonesHud_RenderMenuItems(JonesHud_pMenuItemLinkedList);
 }
 
@@ -3029,6 +3152,20 @@ void J3DAPI JonesHud_RenderMenuItem(JonesHudMenuItem* pItem)
         vecIconRadiusScale.y = vecIconRadiusScale.z;
         vecIconRadiusScale.x = vecIconRadiusScale.z;
         rdMatrix_PostScale34(&placement, &vecIconRadiusScale);
+
+        // INDY: touch controls: remember where the item is on screen
+        if ( pItem->id >= 0 && pItem->id < JONESHUD_MAX_MENU_ITEMS )
+        {
+            rdMatrix34 touchOrient = rdroid_g_identMatrix34;
+            touchOrient.dvec = pItem->pos;
+            rdMatrix34 touchView;
+            rdMatrix_Multiply34(&touchView, &touchOrient, &rdCamera_g_pCurCamera->viewMatrix);
+            rdVector3 touchScreen;
+            rdCamera_PerspProject(&touchScreen, &touchView.dvec);
+            JonesHud_aTouchItemShown[pItem->id] = true;
+            JonesHud_aTouchItemX[pItem->id]     = touchScreen.x;
+            JonesHud_aTouchItemY[pItem->id]     = touchScreen.y;
+        }
 
         rdVector3 vecScale;
         vecScale.z = JonesHud_aDfltMenuItemOrients[pItem->id].scale * JonesHud_itemAspectScaleSize; // Added: Multiply scale by aspect ratio scale
