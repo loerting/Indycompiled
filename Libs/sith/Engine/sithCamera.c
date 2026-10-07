@@ -1090,6 +1090,11 @@ LABEL_76:
     memcpy(&curCamPos, &pCamera->orient.dvec, sizeof(curCamPos));
 
 LABEL_102:
+    if ( pThing1 == sithPlayer_g_pLocalPlayerThing && indyCamera_IsTouchDrag() )
+    {
+        pCamera->posInterpState = -1; // INDY: touch drag moves the camera directly (no catching up after the finger stops)
+    }
+
     switch ( pCamera->posInterpState )
     {
         case -1:

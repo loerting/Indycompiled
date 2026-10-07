@@ -21,6 +21,7 @@
 #define INDY_CAMERA_TRAIL_RATE   1.5f // modern controls: rate (per second) at which the camera trails behind Indy
 
 static float indyCamera_yaw, indyCamera_pitch;
+static bool indyCamera_bTouchDrag; // a finger drags the camera (touch controls)
 static float indyCamera_secIdle;
 static float indyCamera_worldYaw;         // modern controls: camera direction in the world
 static bool indyCamera_bWorldYawValid;
@@ -63,10 +64,16 @@ bool indyCamera_GetViewHeading(float* pHeading)
     return GetTickCount() - indyCamera_viewFrame < 500;
 }
 
+bool indyCamera_IsTouchDrag(void)
+{
+    return indyCamera_bTouchDrag && indyEnh_IsEnabled(INDY_ENH_RIGHT_STICK_CAMERA);
+}
+
 void J3DAPI indyCamera_ApplyOrbit(rdVector3* pPYR, float secDeltaTime, bool bLookMode, bool bMoving, float heading)
 {
     indyCamera_viewFrame   = GetTickCount();
     indyCamera_viewHeading = heading;
+    indyCamera_bTouchDrag  = false;
     if ( !indyEnh_IsEnabled(INDY_ENH_RIGHT_STICK_CAMERA) )
     {
         return;
@@ -85,6 +92,7 @@ void J3DAPI indyCamera_ApplyOrbit(rdVector3* pPYR, float secDeltaTime, bool bLoo
     // touch drag (Android): degrees, applied directly; while a finger drags, the camera doesn't swing back
     float touchYaw, touchPitch;
     const bool bTouchDrag = indyTouch_TakeCameraDelta(&touchYaw, &touchPitch);
+    indyCamera_bTouchDrag = bTouchDrag;
 
     if ( indyModern_IsCameraWorldStable() )
     {

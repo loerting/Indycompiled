@@ -19,5 +19,8 @@ void J3DAPI indyCamera_ApplyOrbit(rdVector3* pPYR, float secDeltaTime, bool bLoo
 // the external camera didn't run for the local player recently (first person, cutscene camera).
 bool indyCamera_GetViewHeading(float* pHeading);
 
+// True while a finger drags the camera (touch controls): the camera then follows the finger without its usual delay
+bool indyCamera_IsTouchDrag(void);
+
 J3D_EXTERN_C_END
 #endif // INDY_INDYCAMERA_H
