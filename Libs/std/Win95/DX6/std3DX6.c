@@ -2323,3 +2323,8 @@ bool std3D_IsMSAASupported(void)
 {
     return false;
 }
+
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals of this module, with the exe's initial values
+float std3D_g_fogDensity = 1.0f;
+size_t std3D_g_maxVertices;
+#endif

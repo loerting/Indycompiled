@@ -127,3 +127,10 @@ void J3DAPI rdSetLightingMode(rdLightMode mode)
 {
     rdroid_g_curLightingMode = mode;
 }
+
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals of this module, with the exe's initial values
+rdLightMode rdroid_g_curLightingMode;
+tHostServices* rdroid_g_pHS;
+rdGeometryMode rdroid_g_curGeometryMode;
+rdRoidFlags rdroid_g_curRenderOptions;
+#endif

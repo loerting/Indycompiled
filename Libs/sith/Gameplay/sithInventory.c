@@ -800,3 +800,12 @@ void J3DAPI sithInventory_SetSwimmingInventory(SithThing* pThing, int bItemsAvai
         sithInventory_SetInventoryDisabled(pThing, typeId, bItemsAvailable == 0);
     }
 }
+
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals of this module, with the exe's initial values
+int sithInventory_g_bInitInventory = 1;
+int sithInventory_g_bSendDeactivateMessage;
+int sithInventory_g_dword_56B750;
+int sithInventory_g_dword_56B754;
+SithInventoryType sithInventory_g_aTypes[SITHINVENTORY_MAXTYPES];
+SithInventoryUnknown sithInventory_g_aUnknown[20];
+#endif

@@ -425,3 +425,28 @@ int J3DAPI sithMulti_GetPlayerIndexByID(DPID playerID)
 
     return -1;
 }
+
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals of this module, with the exe's initial values
+size_t sithMulti_tickRate = 70;
+int sithMulti_numUpdatedSurfaces;
+int sithMulti_lastUpdateIdx;
+int sithMulti_playerWelcomeState;
+int sithMulti_numUpdatedSectors;
+int sithMulti_aRemovedStaticThings[256];
+unsigned int sithMulti_curWelcomePlayerNum;
+int sithMulti_numUpdatedThings;
+int sithMulti_quitGameState;
+int sithMulti_checksum;
+int sithMulti_bWelcomingPlayer;
+DPID sithMulti_newPlayerId;
+int sithMulti_bSyncScores;
+SithMultiNewPlayerJoinedCallback sithMulti_pfNewPlayerJoinedCallback;
+unsigned int sithMulti_msecPingStartTime;
+unsigned int sithMulti_msecQuitGameTime;
+int sithMulti_numRemovedStaticThings;
+unsigned int sithMulti_msecLastSyncScoreTime;
+unsigned int sithMulti_msecWelcomeUpdateInterval;
+int sithMulti_dword_17F10EC;
+DPID sithMulti_g_serverId;
+SithMessage sithMulti_g_message;
+#endif

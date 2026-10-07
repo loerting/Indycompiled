@@ -9,6 +9,29 @@
 
 J3D_EXTERN_C_START
 
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals are ours (defined in sithAIUtil.c)
+extern int sithAIUtil_g_bRenderAIWpnts;
+// used only by sithAIUtil.c
+extern float sithAIUtil_thingsInViewFovY;
+extern size_t sithAIUtil_numVisitedSectors;
+extern SithAIWaypointLayerFlag sithAIUtil_activeWpntLayer;
+extern size_t sithAIUtil_numThingsInView;
+extern rdVector3 sithAIUtil_vec_585490;
+extern SithAIControlBlock* sithAIUtil_pMkPointCurLocal;
+extern rdVector3 sithAIUtil_mkPointCurPYR;
+extern float sithAIUtil_thingsInViewFovX;
+extern SithAIWaypointOwner sithAIUtil_aWpntOwners[10];
+extern SithThing** sithAIUtil_aThingsInView;
+extern SithAIWaypointDistance sithAIUtil_aWpntDistances[60];
+extern int sithAIUtil_sizeThingsInView;
+extern rdVector3 sithAIUtil_vec_585718;
+extern float sithAIUtil_maxDistanceToThingsInView;
+extern int sithAIUtil_thingInViewTypeMask;
+extern SithAIWaypoint sithAIUtil_aAIWpnts[60];
+extern float sithAIUtil_secLastUpdate;
+extern int sithAIUtil_mkPoinCurFlags;
+#endif
+
 #define sithAIUtil_g_bRenderAIWpnts J3D_DECL_FAR_VAR(sithAIUtil_g_bRenderAIWpnts, int)
 // extern int sithAIUtil_g_bRenderAIWpnts;
 

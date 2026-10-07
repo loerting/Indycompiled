@@ -9,6 +9,10 @@ J3D_EXTERN_C_START
 
 #define MAX_CLIP_VERTICIES 80u
 
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals are ours (defined in rdClip.c)
+extern int rdClip_g_faceStatus;
+#endif
+
 #define rdClip_g_faceStatus J3D_DECL_FAR_VAR(rdClip_g_faceStatus, int)
 // extern int rdClip_g_faceStatus;
 

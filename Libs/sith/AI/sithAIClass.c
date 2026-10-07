@@ -387,3 +387,7 @@ void J3DAPI sithAIClass_CacheRemove(const SithAIClass* pClass)
     SITH_ASSERTREL(sithAIClass_g_pHashtable != NULL);
     stdHashtbl_Remove(sithAIClass_g_pHashtable, pClass->aName);
 }
+
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals of this module, with the exe's initial values
+tHashTable* sithAIClass_g_pHashtable;
+#endif

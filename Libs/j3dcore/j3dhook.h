@@ -7,6 +7,35 @@
 #include <string.h> // INDY: strstr
 #include <j3dcore/j3d.h>
 
+#ifdef J3D_STANDALONE
+/**
+* INDY: Stage 4 (CMake option JONES3D_STANDALONE). Jones3D.exe is the game itself: Indy3D.exe's code is never loaded,
+* so nothing is hooked, nothing is called through the exe, and the exe's globals are our own C objects. A variable
+* declared as `#define name J3D_DECL_FAR_VAR(name, type)` names the object `name` itself (a macro doesn't expand its
+* own name again); the module's header declares it extern and its .c file defines it with the exe's initial value.
+* J3D_TRAMPOLINE_CALL and J3D_CALLFUNCFAR are left undefined, so a remaining call into the exe doesn't compile.
+*/
+#define J3D_HOOKFUNC(func) ((void)(func))
+#define INDY_AB_ORIGINAL(func, ...) do {} while ( 0 )
+#define INDY_AB_ORIGINAL_VOID(func, ...) do {} while ( 0 )
+#define J3D_DECL_FAR_VAR(var_name, var_type) var_name
+#define J3D_DECL_FAR_ARRAYVAR(var_name, var_type) var_name
+#define J3D_EXE_FUNC(func_name, func_type) ((func_type)NULL)
+
+static inline bool J3DHookIsSkipped(const char* pName)
+{
+    (void)pName;
+    return false;
+}
+
+static inline bool J3DHookFunction(intptr_t pFuncAddr, void* pHookFunc)
+{
+    (void)pFuncAddr;
+    (void)pHookFunc;
+    return false;
+}
+#else // INDY: hook build (Jones3D.dll injected into Indy3D.exe v1.2)
+
 /**
 * @brief Macro calls a function at a far address.
 *
@@ -29,6 +58,9 @@
 */
 #define J3D_TRAMPOLINE_CALL(func_name, ...) \
     J3D_CALLFUNCFAR(func_name##_ADDR, func_name##_TYPE, ##__VA_ARGS__)
+
+// INDY: the exe's entry point of a function, as a function pointer (NULL in the standalone build: no exe)
+#define J3D_EXE_FUNC(func_name, func_type) ((func_type)(func_name##_ADDR))
 
 /**
 * @brief Redirects the original function to a specified hook function.
@@ -132,6 +164,7 @@ static inline bool J3DHookIsSkipped(const char* pName)
 */
 #define J3D_DECL_FAR_ARRAYVAR(var_name, var_type) \
     (*(var_type)(var_name##_ADDR))
+#endif // J3D_STANDALONE
 
 J3D_EXTERN_C_START
 
@@ -174,6 +207,7 @@ inline bool J3DEndHookContext(J3DHookContext* pCtx)
     return VirtualProtect((LPVOID)pCtx->startAddress, pCtx->size, pCtx->oldProtect, &temp);
 }
 
+#ifndef J3D_STANDALONE
 /**
  * @brief Installs hook on function to redirect all calls to the new function
  *
@@ -205,6 +239,7 @@ static bool J3DHookFunction(intptr_t pFuncAddr, void* pHookFunc)
 
     return true;
 }
+#endif // J3D_STANDALONE
 
 J3D_EXTERN_C_END
 #endif //JONES3D_HOOK_H

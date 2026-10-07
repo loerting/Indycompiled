@@ -26,5 +26,15 @@ int J3DAPI AudioLib_WVSMUncompressBlock(uint8_t* pOutBuffer, const uint8_t* pInB
 void AudioLib_InstallHooks(void);
 void AudioLib_ResetGlobals(void);
 
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals are ours (defined in AudioLib.c)
+// used only by AudioLib.c
+extern const int16_t AudioLib_aStepTable[89];
+extern const uint8_t AudioLib_aStepBits[89];
+extern const int8_t* AudioLib_aIndexTableTable[8];
+extern int16_t AudioLib_aDeltaTable[64];
+extern int16_t AudioLib_word_14E4928[5632];
+extern int AudioLib_bDeltaTableInitialized;
+#endif
+
 J3D_EXTERN_C_END
 #endif // SOUND_AUDIOLIB_H

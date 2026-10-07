@@ -528,3 +528,9 @@ bool rdCamera_sub_506861(void)
 {
     return rdCamera_dword_5E10E8;
 }
+
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals of this module, with the exe's initial values
+rdVector3 rdCamera_g_camPYR;
+rdCamera* rdCamera_g_pCurCamera;
+rdMatrix34 rdCamera_g_camMatrix;
+#endif

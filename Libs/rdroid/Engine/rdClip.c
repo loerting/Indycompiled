@@ -4096,3 +4096,7 @@ void J3DAPI rdClip_VerticesToPlane(rdCacheProcEntry* pProcFace, const rdVector3*
         pOutVert->tv = aTexVerts[i].y;
     }
 }
+
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals of this module, with the exe's initial values
+int rdClip_g_faceStatus;
+#endif

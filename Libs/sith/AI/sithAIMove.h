@@ -9,6 +9,13 @@
 
 J3D_EXTERN_C_START
 
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals are ours (defined in sithAIMove.c)
+extern float sithAIMove_g_flt_585464;
+extern float sithAIMove_g_flt_585468;
+extern float sithAIMove_g_flt_58546C;
+extern float sithAIMove_g_flt_585470;
+#endif
+
 #define sithAIMove_g_flt_585464 J3D_DECL_FAR_VAR(sithAIMove_g_flt_585464, float)
 // extern float sithAIMove_g_flt_585464;
 
@@ -74,6 +81,16 @@ void J3DAPI sithAIMove_UpdateMardukTail(SithThing* pThing, float secDeltaTime);
 // Helper hooking functions
 void sithAIMove_InstallHooks(void);
 void sithAIMove_ResetGlobals(void);
+
+// INDY: aims the weapon with sithPlayerControls_ProcessWeaponAim, which is file-local in sithPlayerControls.c. The hook
+// build calls it through its exe entry point (hooked to the C version, or the original with INDY_NOHOOK).
+#ifdef J3D_STANDALONE
+void J3DAPI sithPlayerControls_ProcessWeaponAimForAI(SithThing* pThing, float secDeltaTime); // sithPlayerControls.c
+#  define SITHAIMOVE_PROCESSWEAPONAIM(pThing, secDeltaTime) sithPlayerControls_ProcessWeaponAimForAI(pThing, secDeltaTime)
+#else
+#  define SITHAIMOVE_PROCESSWEAPONAIM(pThing, secDeltaTime) \
+    J3D_TRAMPOLINE_CALL(sithPlayerControls_ProcessWeaponAim, pThing, secDeltaTime)
+#endif
 
 J3D_EXTERN_C_END
 #endif // SITH_SITHAIMOVE_H

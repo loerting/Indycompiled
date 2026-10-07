@@ -32,6 +32,16 @@ J3D_EXTERN_C_START
     J3D_ASSERTREL(condition, std_g_pHS)
 
 
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals are ours (defined in std.c)
+extern const char std_g_aEmptyString[8];
+extern char std_g_genBuffer[2048];
+extern tHostServices* std_g_pHS;
+// used only by std.c
+extern int16_t word_183962C;
+extern int16_t word_1839630;
+extern int16_t word_183962E;
+#endif
+
 #define std_g_aEmptyString J3D_DECL_FAR_ARRAYVAR(std_g_aEmptyString, const char(*)[8])
 // extern const char std_g_aEmptyString[8];
 

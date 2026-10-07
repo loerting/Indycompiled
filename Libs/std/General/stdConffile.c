@@ -437,3 +437,8 @@ void stdConffile_PopStack(void)
         STD_COPYMEM(&stdConffile_g_entry, &aEntryStack[stackLevel], sizeof(stdConffile_g_entry));
     }
 }
+
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals of this module, with the exe's initial values
+StdConffileEntry stdConffile_g_entry;
+char* stdConffile_g_aLine;
+#endif

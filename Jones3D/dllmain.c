@@ -150,6 +150,7 @@ bool InstallHooks(void);
 bool ResetGlobals(void);
 static bool RemoveDirect3D3ResolutionCap(void);
 
+#ifndef J3D_STANDALONE // INDY: Stage 4, standalone Jones3D.exe starts in WinMain (end of file)
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD  dwReason, LPVOID lpReserved)
 {
     J3D_UNUSED(hModule);
@@ -207,6 +208,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  dwReason, LPVOID lpReserved)
     }
     return TRUE;
 }
+#endif // J3D_STANDALONE
 
 int Startup(const char* aCmd)
 {
@@ -237,6 +239,7 @@ int WINAPI Indy3D_WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lp
     return -1;
 }
 
+#ifndef J3D_STANDALONE // INDY: Stage 4, nothing to hook and no exe globals to reset
 bool InstallHooks(void)
 {
     J3DHookContext ctx;
@@ -521,6 +524,7 @@ bool ResetGlobals(void)
 
     return J3DEndHookContext(&ctx);
 }
+#endif // J3D_STANDALONE
 
 void* memfind(const void* l, size_t l_len, const void* s, size_t s_len)
 {
@@ -591,3 +595,39 @@ bool RemoveDirect3D3ResolutionCap(void)
     return true;
 }
 #endif
+
+#ifdef J3D_STANDALONE
+/**
+ * INDY: Stage 4. Jones3D.exe is the game itself: it does what DllMain and Indy3D.exe's startup code did in the hook
+ * build, without hooks or ResetGlobals (the exe's globals are our own C objects, defined with the exe's initial
+ * values). Indy3D.exe is only loaded as a data file, for its dialog templates and icons (stdWin95_GetResourceModule).
+ */
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
+{
+    indyDebug_Startup(hInstance); // debug aids, only active when their environment variable is set
+    SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+
+    // x87 precision as under Indy3D.exe's runtime (53 bits, the Windows default); MinGW's startup code selects 64 bits
+    _controlfp(_PC_53, _MCW_PC);
+
+#ifdef J3D_DIRECTX6
+    if ( !RemoveDirect3D3ResolutionCap() )
+    {
+        printf("WARNING: Failed to remove Direct3D3 cap on width/height of DirectDrawSurface!\n");
+    }
+#endif
+
+    HMODULE hResources = LoadLibraryExA("Indy3D.exe", NULL, LOAD_LIBRARY_AS_DATAFILE | LOAD_LIBRARY_AS_IMAGE_RESOURCE);
+    if ( !hResources )
+    {
+        MessageBox(NULL, "Indy3D.exe (v1.2) must be next to Jones3D.exe: the game's dialogs and icons are read from it.",
+            "Jones3D", MB_ICONERROR | MB_OK);
+        return 1;
+    }
+
+    stdWin95_SetResourceModule(hResources);
+    int result = Indy3D_WinMain(hInstance, hPrevInstance, lpCmdLine, nShowCmd);
+    FreeLibrary(hResources);
+    return result;
+}
+#endif // J3D_STANDALONE

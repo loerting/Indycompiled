@@ -80,8 +80,35 @@ Totals:
 
 ## Blockers for a native link
 
-- **Stage 3:** about 210 functions still run in the exe (`Scripts/indy/progress.py`).
-- **Exe globals:** 118 `J3D_DECL_FAR_VAR` globals live in exe memory. They need C definitions with their initial
-  values from the exe's `.data`.
+- **Stage 3:** done; no engine function runs in the exe.
+- **Exe globals:** done in the standalone build (below).
 - **64-bit layout:** 204 `static_assert(sizeof…)` checks in 28 files assume a 32-bit struct layout. arm64 needs
   on-disk structs separated from runtime structs.
+
+
+## Standalone build (Stage 4, first slice)
+
+`cmake --preset mingw-dx9-standalone` (option `JONES3D_STANDALONE`, default OFF) builds `Jones3D.exe` as the game
+itself: no injection, no hooks, none of Indy3D.exe's code. Still a Windows build, run under Wine. No host exe is
+needed to build it.
+
+- **Globals:** in the standalone build `J3D_DECL_FAR_VAR(name, type)` expands to `name` (a macro doesn't expand its
+  own name again), so `#define name J3D_DECL_FAR_VAR(...)` names a real C object. Each of the 174 former exe globals
+  (118 in headers, 56 file-local) is declared `extern` in its module's header and defined at the end of the owning
+  `.c`, with the exe's initial value (only 19 are not zero), all under `#ifdef J3D_STANDALONE`. `ResetGlobals` is not
+  called. AudioLib's step-index table pointers became C tables.
+- **Hook build unchanged:** nothing is inserted before code in a `.c` file, so `__LINE__` (asserts, logs, `STDMALLOC`)
+  doesn't move. `.text`, `.rdata`, `.data` and `.reloc` of `Jones3D.dll` are byte-identical; only debug info differs.
+  `J3D_STANDALONE` is a compile definition, not part of the generated `j3d.h`, which both build directories share.
+- **Other exe uses:** `J3D_TRAMPOLINE_CALL`/`J3D_CALLFUNCFAR` are undefined in standalone, so any call into the exe
+  fails to compile. `sithAIMove` reaches `sithPlayerControls_ProcessWeaponAim` through a wrapper
+  (`SITHAIMOVE_PROCESSWEAPONAIM`); `sithDSS`'s vanilla puppet callbacks are `NULL` (`J3D_EXE_FUNC`); `indyRand` uses
+  its own seed; `indyDiff` isn't built.
+- **Resources:** `WinMain` (end of `dllmain.c`) loads `Indy3D.exe` with `LOAD_LIBRARY_AS_DATAFILE |
+  LOAD_LIBRARY_AS_IMAGE_RESOURCE`; dialogs, icons and file dialog templates use it through `STDWIN95_RESOURCES()`.
+  Nothing is extracted. Indy3D.exe therefore still has to sit next to the game, but none of its code runs.
+- **x87 precision:** `WinMain` sets 53-bit precision, as under Indy3D.exe; MinGW's startup code selects 64 bits.
+- **Testing:** copy `Build/mingw-dx9-standalone/Jones3D/Jones3D.exe` into `game/run/Resource` under another name and
+  run e.g. `INDY_SMOKE_PROC=IndyStandalone.exe Scripts/indy/smoke.sh 60 Resource/IndyStandalone.exe 1`, or
+  `INDY_SWEEP_EXE=IndyStandalone.exe Scripts/indy/level_sweep.sh`. A/B tests need the hook build.
+- **Next:** resources from our own files (Stage 5 replaces the dialogs anyway), then a native link.

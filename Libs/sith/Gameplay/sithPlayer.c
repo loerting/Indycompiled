@@ -641,3 +641,19 @@ void J3DAPI sithPlayer_IMPEndFiring(int fireType)
         sithPlayer_g_impFireType = SITHPLAYER_IMPFIRE_OFF;
     }
 }
+
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals of this module, with the exe's initial values
+int sithPlayer_g_bPlayerInPor = 1;
+int sithPlayer_g_impFireType = SITHPLAYER_IMPFIRE_OFF;
+size_t sithPlayer_g_playerNum;
+size_t sithPlayer_g_numPlayers;
+SithThing* sithPlayer_g_pLocalPlayerThing;
+SithPlayer* sithPlayer_g_pLocalPlayer;
+int sithPlayer_g_bPlayerInvulnerable;
+int sithPlayer_g_bInAetheriumSector;
+int sithPlayer_g_bGuybrush;
+int sithPlayer_g_curLevelNum;
+int sithPlayer_g_bBonusMapBought;
+SithPlayer sithPlayer_g_aPlayers[SITHPLAYER_MAX_PLAYERS];
+float sithPlayer_g_impState;
+#endif

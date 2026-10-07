@@ -1419,3 +1419,47 @@ int J3DAPI AudioLib_WVSMCompressBlock(uint8_t* pOutBuffer, const uint8_t* pInBuf
 
     return compressedSize;
 }
+
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals of this module, with the exe's initial values
+const int16_t AudioLib_aStepTable[89] = {
+    7,     8,     9,     10,    11,    12,    13,    14,    16,    17,    19,    21,    23,    25,    28,    31,
+    34,    37,    41,    45,    50,    55,    60,    66,    73,    80,    88,    97,    107,   118,   130,   143,
+    157,   173,   190,   209,   230,   253,   279,   307,   337,   371,   408,   449,   494,   544,   598,   658,
+    724,   796,   876,   963,   1060,  1166,  1282,  1411,  1552,  1707,  1878,  2066,  2272,  2499,  2749,  3024,
+    3327,  3660,  4026,  4428,  4871,  5358,  5894,  6484,  7132,  7845,  8630,  9493,  10442, 11487, 12635, 13899,
+    15289, 16818, 18500, 20350, 22385, 24623, 27086, 29794, 32767
+};
+
+const uint8_t AudioLib_aStepBits[89] = {
+    4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+    4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7,
+    7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7
+};
+
+// Step index change per code, for 2 to 7 bits per sample (the exe's tables at 0x0050A1A0..0x0050A29F); the second
+// half (sign bit set) repeats the first
+#define AUDIOLIB_INDEX2 -1, 4
+#define AUDIOLIB_INDEX3 -1, -1, 2, 6
+#define AUDIOLIB_INDEX4 -1, -1, -1, -1, 1, 2, 4, 6
+#define AUDIOLIB_INDEX5 -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 2, 2, 4, 5, 6
+#define AUDIOLIB_INDEX6 -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, \
+                         1, 1, 1, 1, 1, 2, 2, 2, 2, 4, 4, 4, 5, 5, 6, 6
+#define AUDIOLIB_INDEX7 -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, \
+                        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, \
+                         1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6
+static const int8_t AudioLib_aIndex2Bit[4]   = { AUDIOLIB_INDEX2, AUDIOLIB_INDEX2 };
+static const int8_t AudioLib_aIndex3Bit[8]   = { AUDIOLIB_INDEX3, AUDIOLIB_INDEX3 };
+static const int8_t AudioLib_aIndex4Bit[16]  = { AUDIOLIB_INDEX4, AUDIOLIB_INDEX4 };
+static const int8_t AudioLib_aIndex5Bit[32]  = { AUDIOLIB_INDEX5, AUDIOLIB_INDEX5 };
+static const int8_t AudioLib_aIndex6Bit[64]  = { AUDIOLIB_INDEX6, AUDIOLIB_INDEX6 };
+static const int8_t AudioLib_aIndex7Bit[128] = { AUDIOLIB_INDEX7, AUDIOLIB_INDEX7 };
+
+const int8_t* AudioLib_aIndexTableTable[8] = {
+    NULL, NULL, AudioLib_aIndex2Bit, AudioLib_aIndex3Bit, AudioLib_aIndex4Bit, AudioLib_aIndex5Bit, AudioLib_aIndex6Bit,
+    AudioLib_aIndex7Bit
+};
+
+int16_t AudioLib_aDeltaTable[64];
+int16_t AudioLib_word_14E4928[5632];
+int AudioLib_bDeltaTableInitialized;
+#endif

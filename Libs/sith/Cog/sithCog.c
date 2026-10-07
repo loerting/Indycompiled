@@ -2263,3 +2263,8 @@ int J3DAPI sithCog_IsThingLinked(const SithThing* pThing)
 
     return 0;
 }
+
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals of this module, with the exe's initial values
+SithCogSymbolTable* sithCog_g_pSymbolTable;
+SithCog* sithCog_g_pMasterCog;
+#endif

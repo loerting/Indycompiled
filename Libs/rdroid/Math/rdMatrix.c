@@ -523,3 +523,12 @@ void J3DAPI rdMatrix_TransformPointList34(const rdMatrix34* mat, const rdVector3
         ++aDest;
     }
 }
+
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals of this module, with the exe's initial values
+const rdMatrix34 rdroid_g_identMatrix34 = {
+    { { 1.0f }, { 0.0f }, { 0.0f } },
+    { { 0.0f }, { 1.0f }, { 0.0f } },
+    { { 0.0f }, { 0.0f }, { 1.0f } },
+    { { 0.0f }, { 0.0f }, { 0.0f } }
+};
+#endif

@@ -9,6 +9,16 @@
 
 J3D_EXTERN_C_START
 
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals are ours (defined in sithTime.c)
+extern uint32_t sithTime_g_frameTime;
+extern float sithTime_g_frameTimeFlex;
+extern float sithTime_g_fps;
+extern uint32_t sithTime_g_msecGameTime;
+extern float sithTime_g_secGameTime;
+extern uint32_t sithTime_g_clockTime;
+extern int sithTime_g_bPaused;
+#endif
+
 #define sithTime_g_frameTime J3D_DECL_FAR_VAR(sithTime_g_frameTime, uint32_t)
 // extern unsigned int sithTime_g_frameTime;
 

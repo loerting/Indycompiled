@@ -33,6 +33,10 @@ J3D_EXTERN_C_START
 #define STDREALLOC(data, size) \
     stdMemory_Realloc((data), (size), J3D_FILE, __LINE__)
 
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals are ours (defined in stdMemory.c)
+extern tMemoryState stdMemory_g_curState;
+#endif
+
 #define stdMemory_g_curState J3D_DECL_FAR_VAR(stdMemory_g_curState, tMemoryState)
 // extern tMemoryState stdMemory_g_curState;
 

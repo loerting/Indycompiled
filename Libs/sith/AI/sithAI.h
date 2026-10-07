@@ -11,6 +11,12 @@
 
 J3D_EXTERN_C_START
 
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals are ours (defined in sithAI.c)
+extern int sithAI_g_bOpen;
+extern SithAIControlBlock sithAI_g_aControlBlocks[256];
+extern int sithAI_g_lastUsedAIIndex;
+#endif
+
 #define sithAI_g_bOpen J3D_DECL_FAR_VAR(sithAI_g_bOpen, int)
 // extern int sithAI_g_bOpen;
 

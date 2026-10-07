@@ -683,3 +683,8 @@ int JonesConsole_RemoveExpired(void)
     JonesConsole_nextIndex = nextIdx;
     return bFound;
 }
+
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals of this module, with the exe's initial values
+int JonesConsole_g_bVisible;
+int JonesConsole_g_bStarted;
+#endif

@@ -9,6 +9,13 @@
 
 J3D_EXTERN_C_START
 
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals are ours (defined in jonesCog.c)
+extern int jonesCog_g_bShowHealthHUD;
+extern int jonesCog_g_bMenuVisible;
+extern int jonesCog_g_bEnableGamesave;
+extern int jonesCog_g_dword_17EFFCC;
+#endif
+
 #define jonesCog_g_bShowHealthHUD J3D_DECL_FAR_VAR(jonesCog_g_bShowHealthHUD, int)
 // extern int jonesCog_g_bShowHealthHUD;
 

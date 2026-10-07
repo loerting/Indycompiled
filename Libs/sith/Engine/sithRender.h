@@ -35,6 +35,17 @@ typedef enum eSithRenderThingTraversal
                                                                                   // max number of collected things - SITHRENDER_MAX_VISIBLE_THING_SECTORS
                                                                                   // The new default distance - 60m was determined based on the light flickering issue in Babylon level (court yard)
 
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals are ours (defined in sithRender.c)
+extern float sithRender_g_fogDensity;
+extern size_t sithRender_g_numDrawnThings;
+extern size_t sithRender_g_numArchPolys;
+extern size_t sithRender_g_numAlphaArchPolys;
+extern size_t sithRender_g_numThingPolys;
+extern size_t sithRender_g_numAlphaThingPoly;
+extern size_t sithRender_g_numVisibleAdjoins;
+extern size_t sithRender_g_numVisibleSectors;
+#endif
+
 #define sithRender_g_fogDensity J3D_DECL_FAR_VAR(sithRender_g_fogDensity, float)
 // extern float sithRender_g_fogDensity ;
 

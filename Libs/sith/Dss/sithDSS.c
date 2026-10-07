@@ -31,7 +31,7 @@
 #include <std/General/stdMemory.h>
 #include <std/General/stdUtil.h>
 
-#define VANILLACB(callback) ((rdPuppetTrackCallback)(callback##_ADDR))
+#define VANILLACB(callback) J3D_EXE_FUNC(callback, rdPuppetTrackCallback) // INDY: NULL standalone (Stage 4)
 
 // Index of pElem in aArray, computed like the original: the signed byte distance divided by the element size.
 // The distance doesn't have to be a multiple of the element size (e.g. a ledge face of another mesh than the first).

@@ -55,3 +55,17 @@ const GUID* J3DAPI stdWin95_GetGuid(void)
 {
     return &stdWin95_guid;
 }
+
+#ifdef J3D_STANDALONE // INDY: Stage 4, the module that holds the resources (Indy3D.exe, loaded as a data file)
+static HMODULE stdWin95_hResourceModule = NULL;
+
+void stdWin95_SetResourceModule(HMODULE hModule)
+{
+    stdWin95_hResourceModule = hModule;
+}
+
+HINSTANCE stdWin95_GetResourceModule(void)
+{
+    return stdWin95_hResourceModule;
+}
+#endif

@@ -24,10 +24,17 @@
       "inherits": "mingw-base",
       "displayName": "DirectX 9 renderer, release with debug info",
       "cacheVariables": { "CMAKE_BUILD_TYPE": "RelWithDebInfo", "JONES3D_USE_DIRECTX9": "ON" }
+    },
+    {
+      "name": "mingw-dx9-standalone",
+      "inherits": "mingw-base",
+      "displayName": "DirectX 9 renderer, release with debug info, standalone Jones3D.exe (no Indy3D.exe code)",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "RelWithDebInfo", "JONES3D_USE_DIRECTX9": "ON", "JONES3D_STANDALONE": "ON" }
     }
   ],
   "buildPresets": [
     { "name": "mingw-dx9-debug", "configurePreset": "mingw-dx9-debug" },
-    { "name": "mingw-dx9-release", "configurePreset": "mingw-dx9-release" }
+    { "name": "mingw-dx9-release", "configurePreset": "mingw-dx9-release" },
+    { "name": "mingw-dx9-standalone", "configurePreset": "mingw-dx9-standalone" }
   ]
 }

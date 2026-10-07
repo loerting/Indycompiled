@@ -3391,3 +3391,7 @@ static float sithAIInstinct_GetSpeed(const SithThing* pThing)
     const rdVector3* pVelocity = &pThing->moveInfo.physics.velocity;
     return sqrtf(pVelocity->x * pVelocity->x + pVelocity->y * pVelocity->y + pVelocity->z * pVelocity->z);
 }
+
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals of this module, with the exe's initial values
+float sithAIInstinct_flt_539AB8 = 1.0f;
+#endif

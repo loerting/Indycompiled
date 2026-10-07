@@ -15,6 +15,22 @@ J3D_EXTERN_C_START
 
 #define SITHPLAYER_IMPFIRE_OFF -1
 
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals are ours (defined in sithPlayer.c)
+extern int sithPlayer_g_bPlayerInPor;
+extern int sithPlayer_g_impFireType;
+extern size_t sithPlayer_g_playerNum;
+extern size_t sithPlayer_g_numPlayers;
+extern SithThing* sithPlayer_g_pLocalPlayerThing;
+extern SithPlayer* sithPlayer_g_pLocalPlayer;
+extern int sithPlayer_g_bPlayerInvulnerable;
+extern int sithPlayer_g_bInAetheriumSector;
+extern int sithPlayer_g_bGuybrush;
+extern int sithPlayer_g_curLevelNum;
+extern int sithPlayer_g_bBonusMapBought;
+extern SithPlayer sithPlayer_g_aPlayers[SITHPLAYER_MAX_PLAYERS];
+extern float sithPlayer_g_impState;
+#endif
+
 #define sithPlayer_g_bPlayerInPor J3D_DECL_FAR_VAR(sithPlayer_g_bPlayerInPor, int)
 // extern int sithPlayer_g_bPlayerInPor ;
 

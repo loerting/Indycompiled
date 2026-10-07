@@ -4961,3 +4961,13 @@ void J3DAPI sithPhysics_UpdateJeepFx(SithThing* pThing, SithVehicleEngineFxState
         }
     }
 }
+
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals of this module, with the exe's initial values
+float sithPhysics_flt_538D04 = 0.60000002f;
+int sithPhysics_dword_538D2C = 1;
+int sithPhysics_dword_538D30 = 1;
+int sithPhysics_bJeepMoveFx = 1;
+int sithPhysics_dword_538D38 = 1;
+int sithPhysics_dword_58540C;
+float sithPhysics_flt_585410;
+#endif

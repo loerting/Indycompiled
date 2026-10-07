@@ -1990,3 +1990,8 @@ void J3DAPI rdModel3_BendJoint(rdThing* pThing, size_t jointNum, const rdVector3
 
     rdVector_SmoothDamp3Acc(curPYR, targetPYR, rate, secDeltaTime);
 }
+
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals of this module, with the exe's initial values
+int rdModel3_g_numDrawnFaces;
+int rdModel3_g_numDrawnAlphaFaces;
+#endif

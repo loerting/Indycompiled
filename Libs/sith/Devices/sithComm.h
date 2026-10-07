@@ -17,6 +17,12 @@ typedef enum eSithMessageStream
     SITHMESSAGE_STREAM_ALL  = 0xFF,
 } SithMessageStream;
 
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals are ours (defined in sithComm.c)
+extern DPID sithMessage_g_localPlayerId;
+extern SithMessageStream sithMessage_g_outputstream;
+extern SithMessageStream sithMessage_g_inputstream;
+#endif
+
 #define sithMessage_g_localPlayerId J3D_DECL_FAR_VAR(sithMessage_g_localPlayerId, DPID)
 // extern DPID sithMessage_g_localPlayerId;
 

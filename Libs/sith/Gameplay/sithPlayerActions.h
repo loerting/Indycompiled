@@ -9,6 +9,19 @@
 
 J3D_EXTERN_C_START
 
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals are ours (defined in sithPlayerActions.c)
+extern int sithPlayerActions_g_jewelFlyingPuppetTrackNum;
+extern SithSurface* sithPlayerActions_g_pCurLedgeSurface;
+extern rdFace* sithPlayerActions_g_pCurLedgeThingModelFace;
+extern rdModel3* sithPlayerActions_g_pCurLedgeThingModel;
+extern SithThing* sithPlayerActions_g_pPlasma;
+extern int sithPlayerActions_g_bJewelFlying;
+extern int sithPlayerActions_g_bPlayerInvisible;
+extern SithSurface* sithPlayerActions_g_pChalkWriteSurf;
+extern rdVector3 sithPlayerActions_g_chalkWritePos;
+extern SithSector* sithPlayerActions_g_pChalkWriteSector;
+#endif
+
 #define sithPlayerActions_g_jewelFlyingPuppetTrackNum J3D_DECL_FAR_VAR(sithPlayerActions_g_jewelFlyingPuppetTrackNum, int)
 // extern int sithPlayerActions_g_jewelFlyingPuppetTrackNum ;
 

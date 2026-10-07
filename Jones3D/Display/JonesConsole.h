@@ -12,6 +12,11 @@ J3D_EXTERN_C_START
 
 #define JONESCONSOLE_FRAMERATEID 102u
 
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals are ours (defined in JonesConsole.c)
+extern int JonesConsole_g_bVisible;
+extern int JonesConsole_g_bStarted;
+#endif
+
 #define JonesConsole_g_bVisible J3D_DECL_FAR_VAR(JonesConsole_g_bVisible, int)
 // extern int JonesConsole_g_bVisible;
 

@@ -12,30 +12,39 @@ set(INDY_O0_SOURCES "" CACHE STRING "Debug aid: source globs (repo-relative) com
 
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
 
-# --- host exe ---------------------------------------------------------------------------------------------
-if(NOT EXISTS "${INDY_HOST_EXE}")
-    message(FATAL_ERROR "Host exe not found: ${INDY_HOST_EXE} (set INDY_HOST_EXE)")
-endif()
-file(SHA256 "${INDY_HOST_EXE}" _indy_hash)
-if(NOT _indy_hash STREQUAL INDY_HOST_EXE_SHA256)
-    message(FATAL_ERROR "${INDY_HOST_EXE} is not Indy3D.exe v1.2 (sha256 ${_indy_hash})")
-endif()
-add_compile_definitions(INDY_HOST_EXE_SHA256="${INDY_HOST_EXE_SHA256}") # launcher hash check (exemain.cpp)
+# --- Stage 4: standalone Jones3D.exe -------------------------------------------------------------------------
+# ON: Jones3D.exe is the game itself. Indy3D.exe's code is never loaded: no injection, no hooks, the exe's globals are
+# our own (j3dhook.h). Indy3D.exe is only read at run time, as a data file, for its dialog and icon resources.
+# The define is a compile definition rather than part of the generated j3d.h, which both build directories share.
+option(JONES3D_STANDALONE "Jones3D.exe is the game, without Indy3D.exe's code (still a Windows build)" OFF)
+if(JONES3D_STANDALONE)
+    add_compile_definitions(J3D_STANDALONE)
+else()
+    # --- host exe ---------------------------------------------------------------------------------------------
+    if(NOT EXISTS "${INDY_HOST_EXE}")
+        message(FATAL_ERROR "Host exe not found: ${INDY_HOST_EXE} (set INDY_HOST_EXE)")
+    endif()
+    file(SHA256 "${INDY_HOST_EXE}" _indy_hash)
+    if(NOT _indy_hash STREQUAL INDY_HOST_EXE_SHA256)
+        message(FATAL_ERROR "${INDY_HOST_EXE} is not Indy3D.exe v1.2 (sha256 ${_indy_hash})")
+    endif()
+    add_compile_definitions(INDY_HOST_EXE_SHA256="${INDY_HOST_EXE_SHA256}") # launcher hash check (exemain.cpp)
 
-# --- v1.2 address headers (generated at configure time; regenerated when the map changes) ------------------
-execute_process(
-    COMMAND "${Python3_EXECUTABLE}" -I "${INDY_ROOT}/Scripts/indy/gen_rti_headers.py"
-            "${INDY_ROOT}" "${INDY_ADDRESS_MAP}" "${INDY_HOST_EXE}" "${INDY_GEN}/rti"
-    RESULT_VARIABLE _indy_rc OUTPUT_VARIABLE _indy_out ERROR_VARIABLE _indy_err
-    OUTPUT_STRIP_TRAILING_WHITESPACE)
-if(NOT _indy_rc EQUAL 0)
-    message(FATAL_ERROR "gen_rti_headers.py failed: ${_indy_err}")
+    # --- v1.2 address headers (generated at configure time; regenerated when the map changes) ------------------
+    execute_process(
+        COMMAND "${Python3_EXECUTABLE}" -I "${INDY_ROOT}/Scripts/indy/gen_rti_headers.py"
+                "${INDY_ROOT}" "${INDY_ADDRESS_MAP}" "${INDY_HOST_EXE}" "${INDY_GEN}/rti"
+        RESULT_VARIABLE _indy_rc OUTPUT_VARIABLE _indy_out ERROR_VARIABLE _indy_err
+        OUTPUT_STRIP_TRAILING_WHITESPACE)
+    if(NOT _indy_rc EQUAL 0)
+        message(FATAL_ERROR "gen_rti_headers.py failed: ${_indy_err}")
+    endif()
+    message(STATUS "${_indy_out}")
+    file(GLOB _indy_rti_sources "${INDY_ROOT}/Libs/*/RTI/addresses.h")
+    set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
+        "${INDY_ADDRESS_MAP}" "${INDY_ROOT}/Scripts/indy/gen_rti_headers.py" ${_indy_rti_sources}
+        "${INDY_ROOT}/Jones3D/RTI/addresses.h" "${INDY_ROOT}/Libs/smush/SmushPlay.h")
 endif()
-message(STATUS "${_indy_out}")
-file(GLOB _indy_rti_sources "${INDY_ROOT}/Libs/*/RTI/addresses.h")
-set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
-    "${INDY_ADDRESS_MAP}" "${INDY_ROOT}/Scripts/indy/gen_rti_headers.py" ${_indy_rti_sources}
-    "${INDY_ROOT}/Jones3D/RTI/addresses.h" "${INDY_ROOT}/Libs/smush/SmushPlay.h")
 
 # external definitions for upstream's header inline functions (MSVC vs. C99 inline semantics)
 execute_process(
@@ -107,6 +116,9 @@ function(_indy_fixup_targets)
 
     # our own module (PROJECT.md §7.2): enhancement toggles and other Indycompiled code
     file(GLOB indy_sources "${INDY_ROOT}/Libs/indy/*.c")
+    if(JONES3D_STANDALONE)
+        list(FILTER indy_sources EXCLUDE REGEX "indyDiff\\.c$") # differential tests run the exe's code
+    endif()
     target_sources(Jones3D_DLL PRIVATE ${indy_sources})
 
     # debug aid: compile the listed targets without optimisation (e.g. to bisect optimisation-only bugs)
@@ -125,10 +137,12 @@ function(_indy_fixup_targets)
 
     # the launcher injects "Jones3D.dll" (MinGW would name it libJones3D.dll)
     set_target_properties(Jones3D_DLL PROPERTIES PREFIX "" IMPORT_PREFIX "")
-    # the launcher is a Unicode program with wmain() (Visual Studio's "Unicode" character set)
-    target_compile_definitions(Jones3D PRIVATE UNICODE)
-    target_link_options(Jones3D PRIVATE -municode)
-    set_property(TARGET Jones3D APPEND PROPERTY LINK_LIBRARIES pthread)  # MinGW's static libstdc++ is built on winpthreads
+    if(NOT JONES3D_STANDALONE) # standalone: no launcher, Jones3D_DLL is Jones3D.exe
+        # the launcher is a Unicode program with wmain() (Visual Studio's "Unicode" character set)
+        target_compile_definitions(Jones3D PRIVATE UNICODE)
+        target_link_options(Jones3D PRIVATE -municode)
+        set_property(TARGET Jones3D APPEND PROPERTY LINK_LIBRARIES pthread)  # MinGW's static libstdc++ is built on winpthreads
+    endif()
 
     # DirectX 9 shaders: vkd3d-compiler instead of Visual Studio's fxc (PROJECT.md §5.3)
     if(J3D_DIRECTX9)

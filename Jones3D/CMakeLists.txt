@@ -20,6 +20,9 @@ list(REMOVE_ITEM JONES3D_DLL_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/sha256.h")
 set(JONES3D_EXE_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/exemain.cpp")
 
 # Create the executable and DLL targets
+if(JONES3D_STANDALONE) # INDY: Stage 4, the game itself is Jones3D.exe (target name kept, cmake/indy.cmake uses it)
+add_executable(Jones3D_DLL WIN32 ${JONES3D_DLL_SOURCES} ${JONES3D_DLL_HEADERS})
+else() # INDY
 add_executable(Jones3D ${JONES3D_EXE_SOURCES} )
 add_library(Jones3D_DLL SHARED ${JONES3D_DLL_SOURCES} ${JONES3D_DLL_HEADERS})
 
@@ -31,6 +34,7 @@ target_compile_definitions(Jones3D PRIVATE _UNICODE )
 
 # Set DPI awareness
 set_property(TARGET Jones3D PROPERTY VS_DPI_AWARE "PerMonitor")
+endif() # INDY
 
 # Rename the DLL target output
 set_target_properties(Jones3D_DLL PROPERTIES OUTPUT_NAME "Jones3D")

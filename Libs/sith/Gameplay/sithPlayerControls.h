@@ -11,6 +11,10 @@
 
 J3D_EXTERN_C_START
 
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals are ours (defined in sithPlayerControls.c)
+extern int sithPlayerControls_g_bCutsceneMode;
+#endif
+
 #define sithPlayerControls_g_bCutsceneMode J3D_DECL_FAR_VAR(sithPlayerControls_g_bCutsceneMode, int)
 // extern int sithPlayerControls_g_bCutsceneMode;
 

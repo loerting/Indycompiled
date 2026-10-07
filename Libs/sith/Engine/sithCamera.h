@@ -25,6 +25,22 @@ J3D_EXTERN_C_START
 #define SITHCAMERA_ATTENUATIONMIN 0.4f
 #define SITHCAMERA_ATTENUATIONMAX 0.8f
 
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals are ours (defined in sithCamera.c)
+extern SithCamera* sithCamera_g_pCurCamera;
+extern int sithCamera_g_bExtCameraLookMode;
+extern rdVector3 sithCamera_g_camSpot;
+extern SithCamera sithCamera_g_aCameras[7];
+extern int sithCamera_g_bCurCameraSet;
+extern SithCameraState sithCamera_g_stateFlags;
+extern size_t sithCamera_g_curCycleCamNum;
+extern rdVector3 sithCamera_g_vecCameraPosOffset;
+extern rdVector3 sithCamera_g_vecCameraAngleOffset;
+extern float sithCamera_g_cameraPosDelta;
+extern float sithCamera_g_cameraAngleDelta;
+extern rdMatrix34 sithCamera_g_orbCamOrient;
+extern rdVector3 sithCamera_g_camLookSpot;
+#endif
+
 #define sithCamera_g_pCurCamera J3D_DECL_FAR_VAR(sithCamera_g_pCurCamera, SithCamera*)
 // extern SithCamera *sithCamera_g_pCurCamera;
 

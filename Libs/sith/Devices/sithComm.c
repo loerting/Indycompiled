@@ -497,3 +497,9 @@ int J3DAPI sithMessage_FileWrite(const SithMessage* pMessage)
 
     return stdConffile_Write(pMessage->data, pMessage->length) != 0;
 }
+
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals of this module, with the exe's initial values
+DPID sithMessage_g_localPlayerId;
+SithMessageStream sithMessage_g_outputstream;
+SithMessageStream sithMessage_g_inputstream;
+#endif

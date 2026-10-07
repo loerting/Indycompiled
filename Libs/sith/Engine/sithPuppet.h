@@ -30,6 +30,10 @@ J3D_EXTERN_C_START
 
 #define SITHPUPPET_CFG_CNDWORLDKEYFRAMES_LOADEXTERNAL "engine.world.cnd.keyframes.loadExternal"
 
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals are ours (defined in sithPuppet.c)
+extern int sithPuppet_g_bPlayerLeapForward;
+#endif
+
 #define sithPuppet_g_bPlayerLeapForward J3D_DECL_FAR_VAR(sithPuppet_g_bPlayerLeapForward, int)
 // extern int sithPuppet_g_bPlayerLeapForward;
 

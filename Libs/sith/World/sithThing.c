@@ -4505,3 +4505,9 @@ int J3DAPI sithThing_CreateQuetzUserBlock(SithThing* pThing)
 
     return 1;
 }
+
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals of this module, with the exe's initial values
+SithQuetzAttachInfo* sithThing_prevQuetzAttachInfo;
+SithQuetzAttachInfo* sithThing_curQuetzAttachInfo;
+int sithThing_dword_5612B8;
+#endif

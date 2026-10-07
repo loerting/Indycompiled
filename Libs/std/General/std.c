@@ -256,3 +256,12 @@ int J3DAPI stdFileSeek(tFileHandle fh, int offset, int origin)
 {
     return fseek((FILE*)fh, offset, origin);
 }
+
+#ifdef J3D_STANDALONE // INDY: Stage 4, the exe's globals of this module, with the exe's initial values
+int16_t word_183962C;
+int16_t word_1839630;
+int16_t word_183962E;
+const char std_g_aEmptyString[8];
+char std_g_genBuffer[2048];
+tHostServices* std_g_pHS;
+#endif
