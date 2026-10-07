@@ -397,7 +397,7 @@ Indycompiled/
 
 ### 7.4 Publication safety
 
-You may publish the fork one day, so the repository must stay clean from the start. **Never commit**:
+The repository is public since 2026-10-07 (https://github.com/loerting/Indycompiled): every push publishes. **Never commit**:
 - game files or extracted assets (textures, models, levels, sounds, videos);
 - bytes of the original exe, or Ghidra/decompiler output dumps (pseudo-C, listings, exported databases);
 - anything copied out of the game's manual or help files.
@@ -406,7 +406,7 @@ All of that stays in the git-ignored `game/` folder (`game/review/`, `game/ghidr
 
 Fine to commit: our own code and docs, and the address map. Its names come from upstream, and addresses and hashes are facts, not copyrighted content.
 
-If the fork is ever published, AGPL-3.0 applies to it as a whole, and upstream's license and notices stay in place.
+AGPL-3.0 applies to the fork as a whole, and upstream's license and notices stay in place.
 
 ### 7.5 What goes upstream (decided 2026-10-07)
 
@@ -424,7 +424,8 @@ port: the app, touch controls, the APK and data recipe, and the test tooling tha
   [#52](https://github.com/smlu/OpenJones3D/pull/52) ✅ opened (found with ASan in the Linux build), AudioLib
   [#53](https://github.com/smlu/OpenJones3D/pull/53) ✅ opened (with the lip-sync over-read fix), cinematic camera
   [#54](https://github.com/smlu/OpenJones3D/pull/54), COG stack shift [#55](https://github.com/smlu/OpenJones3D/pull/55),
-  JonesMain format strings [#56](https://github.com/smlu/OpenJones3D/pull/56) ✅ opened (2026-10-07), then FIX-0001/0002
+  JonesMain format strings [#56](https://github.com/smlu/OpenJones3D/pull/56) ✅ opened (2026-10-07), include file name
+  case (13 includes that only resolve on case-insensitive file systems; found by CI), then FIX-0001/0002
   for issues #10/#48 (as `J3D_QOL_IMPROVEMENTS`), AI (AIUtil, AIInstinct, AIMove), DSS (savegames:
   sithDSS, sithDSSThing, sithMulti), the SMUSH player, the standalone build, and the Linux port once it plays.
 
@@ -481,6 +482,7 @@ Each stage gets a milestone tag: `s1-linux-build`, `s2-modded`, `s4-standalone`,
 | Check | When |
 |---|---|
 | Build both renderer configs (DX9 and DX6), with QOL on and off | Every change to the build or to upstream files |
+| CI (`.github/workflows/indycompiled.yml`): `linux-x86_64`, `linux-i686`, `mingw-dx9-standalone` in an Arch container, Android arm64 `libmain.so` with the runner's NDK; compile only, on ext4 (catches include case) | Every push |
 | `Scripts/analyze.py` progress report | After each `port` |
 | Smoke test: start a level from the command line under Wine and check the log | Every build (scripted) |
 | Savegame round trip (save, reload, compare) | Every change to DSS or savegame code |
