@@ -1,5 +1,6 @@
 # Indycompiled: builds the native ports and the MinGW cross build. Compile only: no game data, no published binaries.
 # The Linux and MinGW builds run in an Arch Linux container, the toolchain the presets are written for (PROJECT.md).
+# mingw-dx9-release/-debug aren't built: they link against the original Indy3D.exe, which isn't public.
 name: Indycompiled Build
 
 on:
@@ -24,8 +25,6 @@ jobs:
             packages: libx11 libxext libxkbcommon wayland mesa alsa-lib libpulse
           - preset: linux-i686
             packages: lib32-glibc lib32-gcc-libs libx11 libxext libxkbcommon wayland mesa alsa-lib libpulse
-          - preset: mingw-dx9-release
-            packages: mingw-w64-gcc vkd3d
           - preset: mingw-dx9-standalone
             packages: mingw-w64-gcc vkd3d
     steps:
