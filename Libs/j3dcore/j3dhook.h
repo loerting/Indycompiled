@@ -85,6 +85,9 @@ static inline bool J3DHookFunction(intptr_t pFuncAddr, void* pHookFunc)
 */
 static inline bool J3DHookIsSkipped(const char* pName)
 {
+#ifdef _MSC_VER
+#pragma warning(suppress : 4996) // getenv: only read
+#endif
     const char* pList = getenv("INDY_NOHOOK");
     if ( !pList )
     {

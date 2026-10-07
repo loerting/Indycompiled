@@ -324,7 +324,9 @@ void SmushPlatform_Wait(uint32_t usec)
 
 void* SmushPlatform_OpenFile(const char* pFilename)
 {
-    return fopen(pFilename, "rb");
+    FILE* pFile = NULL;
+    fopen_s(&pFile, pFilename, "rb");
+    return pFile;
 }
 
 size_t SmushPlatform_ReadFile(void* pFile, void* pBuffer, size_t size)
