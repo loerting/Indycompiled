@@ -305,9 +305,6 @@ typedef struct sFindFileData
     int nFoundFiles;
     char aSearchFilter[128];
     HANDLE handle;
-#ifdef __ANDROID__
-    size_t nextAsset; // stdFileUtil_FindNext: after the folder, the APK's assets in it (std/SDL/stdAndroidSDL.c)
-#endif
 } FindFileData;
 J3D_ASSERT_SIZE32(FindFileData, 140);
 

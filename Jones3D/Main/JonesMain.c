@@ -1540,7 +1540,7 @@ int J3DAPI JonesMain_EnsureLevelFileEx(const char* pFilename, bool bFindAll, cha
     if ( bFindAll && pFoundFilename )
     {
         const char* pCurExt = stdFnames_FindExt(aPath);
-        if ( streqi(pCurExt, "cnd") )
+        if ( pCurExt && streqi(pCurExt, "cnd") ) // Fixed: a name without extension crashed
         {
             // Fixed: Use bounded extension replacement for the fixed-size path buffer.
             stdFnames_ChangeExtEx(aPath, STD_ARRAYLEN(aPath), "ndy");
@@ -3318,7 +3318,11 @@ void J3DAPI JonesMain_DevDialogUpdateRadioButtons(HWND hDlg, const JonesState* p
 int J3DAPI JonesMain_ShowDevDialog(HWND hWnd, JonesState* pConfig)
 {
     J3D_UNUSED(hWnd);
-    J3D_UNUSED(pConfig);
+    if ( !pConfig->aCurLevelFilename[0] ) // no gameplay.startLevel: start a new game, as the launcher does
+    {
+        JonesMain_curLevelNum = JONESLEVEL_FIRSTLEVELNUM;
+        STD_STRCPY(pConfig->aCurLevelFilename, JonesMain_aCndLevelLoadInfos[JonesMain_curLevelNum].pFilename);
+    }
     return 1; // start the game
 }
 

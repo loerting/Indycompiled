@@ -141,6 +141,23 @@ int stdAndroid_PrepareDataDir(void)
     freopen("stderr.txt", "w", stderr);
     setvbuf(stderr, NULL, _IOLBF, 0);
 
+    // Apps get no environment: the debug variables (INDY_*) can be put into Resource/indy_env.txt, NAME=VALUE per line
+    FILE* pEnv = (fopen)("indy_env.txt", "r");
+    if ( pEnv )
+    {
+        char aLine[512];
+        while ( fgets(aLine, sizeof(aLine), pEnv) )
+        {
+            aLine[strcspn(aLine, "\r\n")] = 0;
+            char* pEq = SDL_strchr(aLine, '=');
+            if ( !pEq || aLine[0] == '#' ) continue;
+            *pEq = 0;
+            setenv(aLine, pEq + 1, 1);
+            fprintf(stderr, "indy_env.txt: %s=%s\n", aLine, pEq + 1);
+        }
+        fclose(pEnv);
+    }
+
     if ( stdAndroid_LoadIndex() )
     {
         return 0; // the game reports the missing data itself

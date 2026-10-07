@@ -10,6 +10,8 @@
 #ifndef _WIN32
 #include <dirent.h>
 #include <fnmatch.h>
+#include <stdlib.h>
+#include <strings.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #endif
@@ -143,14 +145,102 @@ int J3DAPI stdFileUtil_FindNext(FindFileData* ffData, tFoundFileInfo* pFileInfo)
 }
 
 #else // native builds: dirent; aSearchFilter is "<dir>\\<pattern>", matched case-insensitively
+// The names come sorted case-insensitively, as NTFS lists them on Windows; readdir's order is arbitrary. The order
+// matters: JonesFile searches the GOBs in it, and CD1.GOB and CD2.GOB hold different versions of some files.
+typedef struct sStdFileUtilFindList
+{
+    size_t numEntries;
+    size_t nextEntry;
+    tFoundFileInfo aEntries[];
+} StdFileUtilFindList;
+
+static int stdFileUtil_CompareFound(const void* pA, const void* pB)
+{
+    return strcasecmp(((const tFoundFileInfo*)pA)->aName, ((const tFoundFileInfo*)pB)->aName);
+}
+
+static bool stdFileUtil_AddFound(StdFileUtilFindList** ppList, size_t* pCapacity, const char* pName, time_t lastChanged, bool bIsDirectory)
+{
+    if ( (*ppList)->numEntries == *pCapacity )
+    {
+        size_t newCapacity = *pCapacity ? *pCapacity * 2 : 32;
+        StdFileUtilFindList* pNew = (StdFileUtilFindList*)realloc(*ppList, sizeof(StdFileUtilFindList) + newCapacity * sizeof(tFoundFileInfo));
+        if ( !pNew ) return false;
+        *ppList    = pNew;
+        *pCapacity = newCapacity;
+    }
+
+    tFoundFileInfo* pInfo = &(*ppList)->aEntries[(*ppList)->numEntries++];
+    STD_STRCPY(pInfo->aName, pName);
+    pInfo->lastChanged  = (uint32_t)lastChanged;
+    pInfo->bIsDirectory = bIsDirectory;
+    return true;
+}
+
+static StdFileUtilFindList* stdFileUtil_ListDir(const char* pSearchFilter)
+{
+    char aDir[J3D_MAX_PATH];
+    const char* pPattern = "*";
+    STD_STRCPY(aDir, pSearchFilter);
+    char* pSep = strrchr(aDir, '\\');
+    if ( !pSep ) pSep = strrchr(aDir, '/');
+    if ( pSep )
+    {
+        *pSep = 0;
+        pPattern = pSearchFilter + (pSep - aDir) + 1;
+    }
+    else
+    {
+        pPattern = pSearchFilter;
+        STD_STRCPY(aDir, ".");
+    }
+
+    char aResolved[J3D_MAX_PATH];
+    J3D_ResolvePath(aDir, aResolved, sizeof(aResolved));
+
+    StdFileUtilFindList* pList = (StdFileUtilFindList*)calloc(1, sizeof(StdFileUtilFindList));
+    if ( !pList ) return NULL;
+    size_t capacity = 0;
+
+    // "*.*" matches every name on Windows, also names without a dot
+    bool bAll = streq(pPattern, "*.*") || streq(pPattern, "*");
+    DIR* pDir = opendir(aResolved);
+    if ( pDir )
+    {
+        struct dirent* pEntry;
+        while ( (pEntry = readdir(pDir)) != NULL )
+        {
+            if ( bAll || fnmatch(pPattern, pEntry->d_name, FNM_CASEFOLD) == 0 )
+            {
+                char aPath[J3D_MAX_PATH];
+                snprintf(aPath, sizeof(aPath), "%s/%s", aResolved, pEntry->d_name);
+                struct stat st;
+                bool bStat = stat(aPath, &st) == 0;
+                if ( !stdFileUtil_AddFound(&pList, &capacity, pEntry->d_name, bStat ? st.st_mtime : 0, bStat && S_ISDIR(st.st_mode)) ) break;
+            }
+        }
+        closedir(pDir);
+    }
+
+#ifdef __ANDROID__
+    // And the game data read in place from the APK (GOBs, movies)
+    size_t nextAsset = 0;
+    const char* pName;
+    while ( (pName = stdAndroid_NextAsset(aResolved, &nextAsset)) != NULL )
+    {
+        if ( (bAll || fnmatch(pPattern, pName, FNM_CASEFOLD) == 0) && !stdFileUtil_AddFound(&pList, &capacity, pName, 0, false) ) break;
+    }
+#endif
+
+    qsort(pList->aEntries, pList->numEntries, sizeof(tFoundFileInfo), stdFileUtil_CompareFound);
+    return pList;
+}
+
 void J3DAPI stdFileUtil_DisposeFind(FindFileData* ffData)
 {
     if ( ffData )
     {
-        if ( ffData->handle )
-        {
-            closedir((DIR*)ffData->handle);
-        }
+        free(ffData->handle);
         stdMemory_Free(ffData);
     }
 }
@@ -162,63 +252,19 @@ int J3DAPI stdFileUtil_FindNext(FindFileData* ffData, tFoundFileInfo* pFileInfo)
         return 0;
     }
 
-    char aDir[J3D_MAX_PATH];
-    const char* pPattern = "*";
-    STD_STRCPY(aDir, ffData->aSearchFilter);
-    char* pSep = strrchr(aDir, '\\');
-    if ( !pSep ) pSep = strrchr(aDir, '/');
-    if ( pSep )
-    {
-        *pSep = 0;
-        pPattern = ffData->aSearchFilter + (pSep - aDir) + 1;
-    }
-    else
-    {
-        pPattern = ffData->aSearchFilter;
-        STD_STRCPY(aDir, ".");
-    }
-
-    char aResolved[J3D_MAX_PATH];
-    J3D_ResolvePath(aDir, aResolved, sizeof(aResolved));
     if ( ffData->nFoundFiles++ == 0 )
     {
-        ffData->handle = opendir(aResolved);
+        ffData->handle = stdFileUtil_ListDir(ffData->aSearchFilter);
     }
 
-    // "*.*" matches every name on Windows, also names without a dot
-    bool bAll = streq(pPattern, "*.*") || streq(pPattern, "*");
-    struct dirent* pEntry;
-    while ( ffData->handle && (pEntry = readdir((DIR*)ffData->handle)) != NULL )
+    StdFileUtilFindList* pList = (StdFileUtilFindList*)ffData->handle;
+    if ( !pList || pList->nextEntry >= pList->numEntries )
     {
-        if ( bAll || fnmatch(pPattern, pEntry->d_name, FNM_CASEFOLD) == 0 )
-        {
-            char aPath[J3D_MAX_PATH];
-            snprintf(aPath, sizeof(aPath), "%s/%s", aResolved, pEntry->d_name);
-            struct stat st;
-            bool bStat = stat(aPath, &st) == 0;
-
-            STD_STRCPY(pFileInfo->aName, pEntry->d_name);
-            pFileInfo->lastChanged  = bStat ? st.st_mtime : 0;
-            pFileInfo->bIsDirectory = bStat && S_ISDIR(st.st_mode);
-            return 1;
-        }
+        return 0;
     }
 
-#ifdef __ANDROID__
-    // Then the game data read in place from the APK (GOBs, movies)
-    const char* pName;
-    while ( (pName = stdAndroid_NextAsset(aResolved, &ffData->nextAsset)) != NULL )
-    {
-        if ( bAll || fnmatch(pPattern, pName, FNM_CASEFOLD) == 0 )
-        {
-            STD_STRCPY(pFileInfo->aName, pName);
-            pFileInfo->lastChanged  = 0;
-            pFileInfo->bIsDirectory = false;
-            return 1;
-        }
-    }
-#endif
-    return 0;
+    *pFileInfo = pList->aEntries[pList->nextEntry++];
+    return 1;
 }
 
 #endif

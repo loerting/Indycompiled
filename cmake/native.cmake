@@ -31,6 +31,8 @@ add_subdirectory("${CMAKE_SOURCE_DIR}/Libs/external/SDL3" "${CMAKE_BINARY_DIR}/S
 
 add_compile_options(
     -fms-extensions -fno-strict-aliasing -fwrapv    # MSVC semantics the engine relies on
+    -fsigned-char # char is signed with MSVC; arm64 defaults to unsigned
+    -ffp-contract=off # no fused multiply-add (arm64): the same float results as on x86
     -fshort-wchar # 16-bit wchar_t: the Windows layout of structs and savegames (wide functions: std/Posix/stdCrtCompat.c)
     # The C library's wide functions take 32-bit wchar_t: the compiler must not call them, e.g. for a loop it
     # recognizes as wcslen

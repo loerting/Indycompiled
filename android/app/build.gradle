@@ -43,6 +43,15 @@ android {
     }
 
     buildTypes {
+        debug {
+            // The engine compiled with optimizations (-O2 -g): a -O0 build plays at a few frames per second.
+            // The APK stays debuggable (run-as, logs).
+            externalNativeBuild {
+                cmake {
+                    arguments += ['-DCMAKE_BUILD_TYPE=RelWithDebInfo']
+                }
+            }
+        }
         release {
             minifyEnabled = false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),

@@ -48,7 +48,11 @@ for ((t = 1; t <= secs; t++)); do
         [[ "${INDY_SMOKE_NOKEYS:-0}" == 1 ]] || xdotool key Escape 2>/dev/null || true
     fi
 done
-if kill -0 $pid 2>/dev/null; then echo "ALIVE after ${secs}s"; kill $pid; fi
+if kill -0 $pid 2>/dev/null; then
+    echo "ALIVE after ${secs}s"; kill $pid
+    for ((i = 0; i < 10 && $(kill -0 $pid 2>/dev/null && echo 1 || echo 0); i++)); do sleep 0.5; done
+    kill -0 $pid 2>/dev/null && { echo "still alive (assert dialog?): SIGKILL"; kill -9 $pid; }
+fi
 wait $pid; echo "exit code $?"
 INNER
 cp "$RUN/Resource/JonesLog.txt" "$OUT/" 2>/dev/null
