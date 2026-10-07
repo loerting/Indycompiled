@@ -26,7 +26,7 @@ void J3DAPI sithAIMove_UpdateMineCar(SithAIControlBlock* pLocal, float secDeltaT
 void J3DAPI sithAIMove_sub_4958B0(SithAIControlBlock* pLocal, float secDeltatTime);
 void J3DAPI sithAIMove_sub_495CD0(SithAIControlBlock* pLocal, float secDeltaTime);
 void J3DAPI sithAIMove_sub_4961A0(SithAIControlBlock* pLocal);
-double J3DAPI sithAIMove_sub_496200(SithAIControlBlock* pLocal, const rdVector3* a2, rdVector3* a3);
+double J3DAPI sithAIMove_sub_496200(SithAIControlBlock* pLocal, rdVector3* pStartPos, rdVector3* pEndPos);
 int J3DAPI sithAIMove_sub_496550(SithAIControlBlock* pLocal, float secDeltaTime);
 int J3DAPI sithAIMove_sub_4966D0(SithAIControlBlock* pLocal, float secDeltaTime);
 int J3DAPI sithAIMove_sub_496820(SithAIControlBlock* pLocal, float secDeltaTime);
@@ -55,10 +55,10 @@ void J3DAPI sithAIMove_ResetAILook(SithAIControlBlock* pLocal);
 
 void J3DAPI sithAIMove_UpdateBoss(SithAIControlBlock* pLocal, float secDeltaTime);
 void J3DAPI sithAIMove_sub_499090(SithAIControlBlock* pLocal, float secDeltaTime);
-void J3DAPI sithAIMove_sub_4996C0(SithAIControlBlock* pLocal, float a2);
-void J3DAPI sithAIMove_sub_499A80(SithAIControlBlock* pLocal, float* pDestAngle, float* a3, float* a4, float* a5);
+void J3DAPI sithAIMove_sub_4996C0(SithAIControlBlock* pLocal, float secDeltaTime);
+void J3DAPI sithAIMove_sub_499A80(SithAIControlBlock* pLocal, float* pTargetYaw, float* pJoint1Pitch, float* pJoint2YawDelta, float* pJoint2PitchDelta);
 void J3DAPI sithAIMove_sub_499CA0(SithAIControlBlock* pLocal, float secDeltaTime);
-void J3DAPI sithAIMove_sub_49A020(SithAIControlBlock* pLocal, float* angle, float* a3, float* a4, float* a5);
+void J3DAPI sithAIMove_sub_49A020(SithAIControlBlock* pLocal, float* pTargetYaw, float* pJoint1Pitch, float* pJoint2YawDelta, float* pJoint2PitchDelta);
 void J3DAPI sithAIMove_sub_49A1B0(SithAIControlBlock* pLocal, float secDeltaTime);
 void J3DAPI sithAIMove_sub_49A450(SithAIControlBlock* pLocal, float secDeltaTime);
 void J3DAPI sithAIMove_sub_49A630(SithAIControlBlock* pLocal, float secDeltaTime);
