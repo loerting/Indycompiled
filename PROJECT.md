@@ -419,7 +419,8 @@ port: the app, touch controls, the APK and data recipe, and the test tooling tha
 - Preparing a PR: copy the file from `main`, remove `INDY_AB_ORIGINAL*` lines, INDY comments, `J3D_STANDALONE` blocks and
   enhancement-toggle changes, check that only the new functions differ, compile-check against the PR branch.
 - Queue: thing loading [#50](https://github.com/smlu/OpenJones3D/pull/50) ✅ opened, vehicle physics
-  [#51](https://github.com/smlu/OpenJones3D/pull/51) ✅ opened, then AudioLib, AI (AIUtil, AIInstinct, AIMove), DSS (savegames:
+  [#51](https://github.com/smlu/OpenJones3D/pull/51) ✅ opened, rdCache out-of-bounds read
+  [#52](https://github.com/smlu/OpenJones3D/pull/52) ✅ opened (found with ASan in the Linux build), then AudioLib, AI (AIUtil, AIInstinct, AIMove), DSS (savegames:
   sithDSS, sithDSSThing, sithMulti), the SMUSH player, the standalone build, and the Linux port once it plays.
 
 ---
