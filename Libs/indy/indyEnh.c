@@ -30,6 +30,7 @@ static const IndyEnhInfo indyEnh_aInfos[INDY_ENH_COUNT] = {
     [INDY_ENH_SKIP_INTRO]         = { "ENH-0004", "skipIntro", INDY_KIND_ENH },
     [INDY_ENH_MODERN_CONTROLS]    = { "ENH-0005", "modernControls", INDY_KIND_ENH }, // played with a pad 2026-10-07
     [INDY_ENH_FRAMES_4TO3]        = { "ENH-0006", "frames4to3", INDY_KIND_ENH },
+    [INDY_FIX_CLEAR_FRAME]        = { "FIX-0005", "clearFrame", INDY_KIND_FIX },
 };
 
 static bool indyEnh_bLoaded;

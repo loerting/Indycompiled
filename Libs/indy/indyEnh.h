@@ -24,6 +24,7 @@ typedef enum eIndyEnh
     INDY_ENH_SKIP_INTRO         = 7, // ENH-0004: no intro video at game start
     INDY_ENH_MODERN_CONTROLS    = 8, // ENH-0005: camera-relative left stick (modern controls)
     INDY_ENH_FRAMES_4TO3        = 9, // ENH-0006: 4:3 content (cutscenes, loading map, movies) in a centred 4:3 frame
+    INDY_FIX_CLEAR_FRAME        = 10, // FIX-0005: clear the frame before drawing (no smearing where nothing is drawn)
     INDY_ENH_COUNT
 } IndyEnh;
 

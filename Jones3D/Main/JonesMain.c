@@ -1257,7 +1257,8 @@ int JonesMain_ProcessGame(void)
         rdCache_AdvanceFrame();
 
         // TODO: Refactor and enable viewport clearing in std3D instead
-        if ( JonesMain_state.displaySettings.bClearBackBuffer || JonesDisplay_IsCinema4to3() ) // INDY: ENH-0006, black bars
+        // INDY: FIX-0005 (black where nothing is drawn, e.g. the camera inside a wall), ENH-0006 (black bars)
+        if ( JonesMain_state.displaySettings.bClearBackBuffer || indyEnh_IsEnabled(INDY_FIX_CLEAR_FRAME) || JonesDisplay_IsCinema4to3() )
         {
             stdDisplay_BackBufferFill(0, 0);
         }
