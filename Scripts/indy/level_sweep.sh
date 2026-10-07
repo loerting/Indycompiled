@@ -4,6 +4,7 @@
 # Exercises much more engine code than one level, so it also catches address-map errors.
 #
 # Usage: Scripts/indy/level_sweep.sh [seconds per level=60] [levels="1 2 ... 17"]
+# INDY_SWEEP_EXE=<exe in game/run/Resource> runs that exe directly, e.g. the standalone build (Stage 4) copied there.
 # Output: game/screens/sweep-<timestamp>/ (per level: log, Wine log, end screenshot) and summary.md
 set -uo pipefail
 
@@ -17,7 +18,11 @@ log="$ROOT/game/run/Resource/JonesLog.txt"
 printf '| level | alive | loaded | engine errors | wine err | end screenshot colours |\n|---|---|---|---|---|---|\n' > "$out/summary.md"
 for lvl in $levels; do
     rm -f "$log" "$ROOT/game/run/Resource/JonesError.txt"
-    result=$(INDY_SMOKE_PROC=Indy3D.exe "$ROOT/Scripts/indy/smoke.sh" "$secs" Resource/Jones3D.exe Indy3D.exe "$lvl" 2>&1)
+    if [[ -n "${INDY_SWEEP_EXE:-}" ]]; then
+        result=$(INDY_SMOKE_PROC="$INDY_SWEEP_EXE" "$ROOT/Scripts/indy/smoke.sh" "$secs" "Resource/$INDY_SWEEP_EXE" "$lvl" 2>&1)
+    else
+        result=$(INDY_SMOKE_PROC=Indy3D.exe "$ROOT/Scripts/indy/smoke.sh" "$secs" Resource/Jones3D.exe Indy3D.exe "$lvl" 2>&1)
+    fi
     alive=$(grep -q '^ALIVE' <<< "$result" && echo yes || echo NO)
     wlog=$(sed -n 's/^log: //p' <<< "$result")
     shot=$(ls -t "$ROOT"/game/screens/smoke-*-end.png | head -1)
