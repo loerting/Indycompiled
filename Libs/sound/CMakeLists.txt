@@ -11,8 +11,8 @@ elseif(J3D_DIRECTX9)
     # Remove DX6 files.
     list(FILTER SOURCES EXCLUDE REGEX ".*DX6\\.c$|SDL\\.c$")
 elseif(J3D_GLES)
-    # Native build: SDL3 audio
-    list(FILTER SOURCES EXCLUDE REGEX ".*DX[69]\\.c$")
+    # Native build: the DirectSound 9 driver on DirectSoundSDL.c (SDL3 audio)
+    list(FILTER SOURCES EXCLUDE REGEX ".*DX6\\.c$")
 endif()
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES} ${HEADERS})

@@ -8,10 +8,8 @@ J3D_EXTERN_C_START
 
 #if defined (J3D_DIRECTX6)
 typedef IDirectSound tDirectSound;
-#elif defined (J3D_DIRECTX9)
+#elif defined (J3D_DIRECTX9) || defined(J3D_GLES) // native builds: DirectSound on SDL3 (DirectSoundSDL.c)
 typedef IDirectSound8 tDirectSound;
-#elif defined(J3D_GLES) // SDL3 audio
-typedef void tDirectSound;
 #else
 #error "Unsuported system sound API. Please define J3D_DIRECTX6 or J3D_DIRECTX9 in your project."
 #endif
