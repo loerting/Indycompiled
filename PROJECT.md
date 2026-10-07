@@ -428,6 +428,11 @@ port: the app, touch controls, the APK and data recipe, and the test tooling tha
   case (13 includes that only resolve on case-insensitive file systems; found by CI), then FIX-0001/0002
   for issues #10/#48 (as `J3D_QOL_IMPROVEMENTS`), AI (AIUtil, AIInstinct, AIMove), DSS (savegames:
   sithDSS, sithDSSThing, sithMulti), the SMUSH player, the standalone build, and the Linux port once it plays.
+- Review (smlu, 2026-10-07): reimplementations are to follow the **debug build** of Indy3D.exe (less optimized, has the
+  full multiplayer code), not v1.2 release; we don't have it (asked on #51). #50 and #53: smlu has his own versions and
+  pushes them first; then rebase and keep only what's missing (#53: the lip-sync over-read fix). #51: cross-check against
+  the debug build and add test cases to his upcoming test framework. #54/#55: review changes done. #49: he tests it
+  against the redesigned HUD. Our comments on upstream go without the Claude Code signature.
 
 ---
 
