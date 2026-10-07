@@ -40,6 +40,9 @@ int J3DAPI jonesConfig_ShowMessageDialog(HWND hWnd, const char* pTitle, const ch
 
 int J3DAPI jonesConfig_GetSaveGameFilePath(HWND hWnd, char* pOutFilePath); // save game dialog
 int J3DAPI jonesConfig_GetLoadGameFilePath(HWND hWnd, char* pDestNdsPath); // load game dialog
+#ifndef _WIN32
+void jonesConfigSDL_RunTestMenu(void); // INDY: headless tests (INDY_MENU_TEST)
+#endif
 
 int J3DAPI jonesConfig_ShowGamePlayOptions(HWND hWnd);
 void J3DAPI jonesConfig_EnableMouseControl(int bEnable);

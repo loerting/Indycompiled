@@ -5,7 +5,8 @@
 // Left half: a floating stick appears where the thumb lands; it drives the modern, camera-relative movement
 // (ENH-0005), and climbing/swimming through the classic keys. Right half: dragging orbits the camera (ENH-0002), a tap
 // attacks, a quick flick down toggles crouching. Buttons: Jump, Action (the game's action key ACT2, held as long as
-// touched: use, pick up, hold a block while the stick pushes or pulls it) and Menu; a tap on
+// touched: use, pick up, hold a block while the stick pushes or pulls it), Put away (only while Indy holds a weapon or
+// item: the weapon toggle) and Menu; a tap on
 // the health indicator opens the menu too. In the HUD menu (the game's inventory/system strip) swipes move through
 // it, a tap on an item selects it and a tap on the selected item uses it (JonesHud), the Menu button closes it. The overlay hides while a keyboard or gamepad is used.
 //
@@ -43,6 +44,13 @@ bool indyTouch_TakeCameraDelta(float* pYaw, float* pPitch);
 // JonesHud's menu: a tap since the last call (back buffer pixels)
 bool indyTouch_TakeMenuTap(float* pX, float* pY);
 
+// Native menus (JonesMenuSDL.c): fingers only tap and scroll; the overlay isn't drawn. Taps and scrolling (pixels,
+// positive: the finger moved down) since the last call; where a finger is down (pressed look)
+void indyTouch_SetUiMode(bool bUiMode);
+bool indyTouch_TakeUiTap(float* pX, float* pY);
+float indyTouch_TakeUiScroll(void);
+bool indyTouch_GetUiPointer(float* pX, float* pY);
+
 // sithControl_GetKey: the touch state of a control function, ORed with its bindings (*pValue pressed now, *pNumPressed
 // presses this frame); false when touch doesn't drive it
 bool J3DAPI indyTouch_GetKey(SithControlFunction function, int* pValue, int* pNumPressed);
@@ -53,6 +61,7 @@ typedef struct sIndyTouchFrame
     uint32_t height;
     bool bMenuOpen;  // the HUD menu (inventory) is open
     bool bCinematic; // a cutscene: no movement controls
+    bool bHolding;   // Indy holds a weapon or item: the put-away button shows
     float hudX;      // health indicator (pixels): a tap opens the menu
     float hudY;
     float hudWidth;

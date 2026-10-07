@@ -29,6 +29,8 @@
 #include <sith/Devices/sithSound.h>
 #include <sith/Devices/sithSoundMixer.h>
 #include <sith/Engine/sithCamera.h>
+#include <sith/Gameplay/sithInventory.h> // INDY: touch controls
+#include <sith/Gameplay/sithPlayer.h> // INDY: touch controls
 #include <sith/Engine/sithRender.h>
 #include <sith/Gameplay/sithOverlayMap.h>
 #include <sith/Gameplay/sithTime.h>
@@ -1288,10 +1290,14 @@ int JonesMain_ProcessGame(void)
             stdDisplay_GetBackBufferSize(&touchFrame.width, &touchFrame.height);
             touchFrame.bMenuOpen  = JonesHud_IsMenuOpen();
             touchFrame.bCinematic = sithCamera_g_pCurCamera == &sithCamera_g_aCameras[SITHCAMERA_CINEMACAMERANUM];
+            touchFrame.bHolding   = sithPlayer_g_pLocalPlayerThing && sithInventory_GetCurrentWeapon(sithPlayer_g_pLocalPlayerThing) != SITHWEAPON_NO_WEAPON;
             JonesHud_GetHealthIndicatorRect(&touchFrame.hudX, &touchFrame.hudY, &touchFrame.hudWidth, &touchFrame.hudHeight);
             indyTouch_Frame(&touchFrame);
 
             std3D_EndScene();
+#ifndef _WIN32
+            jonesConfigSDL_RunTestMenu(); // INDY: headless tests (INDY_MENU_TEST)
+#endif
         }
 
         JonesMain_PrintFramerate();

@@ -33,6 +33,7 @@ void J3DAPI rdFont_Free(rdFont* pFont);
 
 void J3DAPI rdFont_SetFontColorDiffuse(const rdFontColor apColor); // Added
 void J3DAPI rdFont_SetFontColor(const rdFontColor apColor);
+void J3DAPI rdFont_SetKeepAspect(bool bKeepAspect); // INDY: uniform glyph scaling (native menus)
 rdFontColor* rdFont_DuplicateFontColor(void); // Added
 
 // Returns normalized X in screen pixels that can be used in draw line funcs

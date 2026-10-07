@@ -1,5 +1,6 @@
 // Indycompiled: touch controls (Android). See indyTouch.h.
 #include "indyTouch.h"
+#include "indyDraw.h"
 
 #include <sith/Devices/sithControl.h>
 #include <std/General/std.h>
@@ -34,6 +35,7 @@ typedef enum eIndyTouchRole
     INDY_TOUCH_ROLE_BUTTON,
     INDY_TOUCH_ROLE_MENU,
     INDY_TOUCH_ROLE_HUD,
+    INDY_TOUCH_ROLE_UI, // native menus: taps and scrolling only
 } IndyTouchRole;
 
 typedef enum eIndyTouchButton
@@ -41,6 +43,7 @@ typedef enum eIndyTouchButton
     INDY_TOUCH_BUTTON_JUMP,
     INDY_TOUCH_BUTTON_ACTION,
     INDY_TOUCH_BUTTON_MENU,
+    INDY_TOUCH_BUTTON_HOLSTER, // put away what Indy holds
     INDY_TOUCH_BUTTON_COUNT
 } IndyTouchButton;
 
@@ -68,6 +71,9 @@ static uint32_t indyTouch_msecNow;
 static float indyTouch_stickX, indyTouch_stickY; // stick centre (pixels); follows the thumb past the rim
 static float indyTouch_camYaw, indyTouch_camPitch;
 static bool indyTouch_bMenuTap;                  // a tap in the HUD menu, for JonesHud (indyTouch_TakeMenuTap)
+static bool indyTouch_bUiMode;                   // native menus (indyTouch_SetUiMode)
+static bool indyTouch_bUiTap;
+static float indyTouch_uiTapX, indyTouch_uiTapY, indyTouch_uiScroll;
 static float indyTouch_menuTapX, indyTouch_menuTapY;
 
 static uint32_t indyTouch_aPulseUntil[SITHCONTROL_MAXFUNCTIONS];
@@ -94,6 +100,9 @@ static void indyTouch_GetButton(IndyTouchButton button, float* pX, float* pY, fl
         case INDY_TOUCH_BUTTON_ACTION:
             *pX = w - 0.42f * h; *pY = h - 0.13f * h; *pRadius = 0.085f * h;
             break;
+        case INDY_TOUCH_BUTTON_HOLSTER:
+            *pX = w - 0.33f * h; *pY = h - 0.36f * h; *pRadius = 0.06f * h;
+            break;
         default: // menu
             *pX = w - 0.09f * h; *pY = 0.10f * h; *pRadius = 0.06f * h;
             break;
@@ -104,7 +113,7 @@ static bool indyTouch_HitButton(float x, float y, IndyTouchButton* pButton)
 {
     for ( int i = 0; i < INDY_TOUCH_BUTTON_COUNT; ++i )
     {
-        if ( indyTouch_frame.bMenuOpen && i != INDY_TOUCH_BUTTON_MENU )
+        if ( (indyTouch_frame.bMenuOpen && i != INDY_TOUCH_BUTTON_MENU) || (i == INDY_TOUCH_BUTTON_HOLSTER && !indyTouch_frame.bHolding) )
         {
             continue;
         }
@@ -216,7 +225,12 @@ static void indyTouch_FingerDown(IndyTouchFinger* pFinger)
 {
     const float w = (float)indyTouch_frame.width;
     IndyTouchButton button;
-    if ( indyTouch_HitButton(pFinger->x, pFinger->y, &button) )
+    if ( indyTouch_bUiMode )
+    {
+        pFinger->role = INDY_TOUCH_ROLE_UI;
+        pFinger->camY = pFinger->y; // scrolling: position already reported
+    }
+    else if ( indyTouch_HitButton(pFinger->x, pFinger->y, &button) )
     {
         pFinger->role   = INDY_TOUCH_ROLE_BUTTON;
         pFinger->button = button;
@@ -227,6 +241,10 @@ static void indyTouch_FingerDown(IndyTouchFinger* pFinger)
         else if ( button == INDY_TOUCH_BUTTON_ACTION )
         {
             ++indyTouch_aPendingPresses[SITHCONTROL_ACT2]; // the game's action key (Ctrl): use, grab, attack
+        }
+        else if ( button == INDY_TOUCH_BUTTON_HOLSTER )
+        {
+            indyTouch_Pulse(SITHCONTROL_WEAPONTOGGLE);
         }
     }
     else if ( indyTouch_frame.bMenuOpen )
@@ -293,6 +311,11 @@ static void indyTouch_FingerMotion(IndyTouchFinger* pFinger)
             }
             break;
 
+        case INDY_TOUCH_ROLE_UI:
+            indyTouch_uiScroll += pFinger->y - pFinger->camY;
+            pFinger->camY = pFinger->y;
+            break;
+
         case INDY_TOUCH_ROLE_MENU:
         {
             const float step = INDY_TOUCH_MENU_STEP * h;
@@ -349,6 +372,15 @@ static void indyTouch_FingerUp(IndyTouchFinger* pFinger)
             else if ( msec <= INDY_TOUCH_FLICK_MSEC && dy >= INDY_TOUCH_FLICK_DIST * h && dy > 2.0f * fabsf(dx) )
             {
                 indyTouch_Pulse(SITHCONTROL_CRAWLTOGGLE);
+            }
+            break;
+
+        case INDY_TOUCH_ROLE_UI:
+            if ( msec <= 2u * INDY_TOUCH_TAP_MSEC && hypotf(dx, dy) <= INDY_TOUCH_TAP_MOVE * h )
+            {
+                indyTouch_bUiTap  = true;
+                indyTouch_uiTapX  = pFinger->downX;
+                indyTouch_uiTapY  = pFinger->downY;
             }
             break;
 
@@ -450,6 +482,50 @@ bool indyTouch_GetStick(float* pX, float* pY)
     return false;
 }
 
+void indyTouch_SetUiMode(bool bUiMode)
+{
+    indyTouch_bUiMode  = bUiMode;
+    indyTouch_bUiTap   = false;
+    indyTouch_uiScroll = 0.0f;
+    for ( int i = 0; i < INDY_TOUCH_MAXFINGERS; ++i )
+    {
+        indyTouch_aFingers[i].bUsed = false; // fingers down now belong to the old mode
+    }
+}
+
+bool indyTouch_TakeUiTap(float* pX, float* pY)
+{
+    if ( !indyTouch_bUiTap )
+    {
+        return false;
+    }
+    indyTouch_bUiTap = false;
+    *pX = indyTouch_uiTapX;
+    *pY = indyTouch_uiTapY;
+    return true;
+}
+
+float indyTouch_TakeUiScroll(void)
+{
+    const float scroll = indyTouch_uiScroll;
+    indyTouch_uiScroll = 0.0f;
+    return scroll;
+}
+
+bool indyTouch_GetUiPointer(float* pX, float* pY)
+{
+    for ( int i = 0; i < INDY_TOUCH_MAXFINGERS; ++i )
+    {
+        if ( indyTouch_aFingers[i].bUsed && indyTouch_aFingers[i].role == INDY_TOUCH_ROLE_UI )
+        {
+            *pX = indyTouch_aFingers[i].x;
+            *pY = indyTouch_aFingers[i].y;
+            return true;
+        }
+    }
+    return false;
+}
+
 bool indyTouch_TakeMenuTap(float* pX, float* pY)
 {
     if ( !indyTouch_bMenuTap )
@@ -529,90 +605,6 @@ bool J3DAPI indyTouch_GetKey(SithControlFunction function, int* pValue, int* pNu
 
 // ---- overlay ------------------------------------------------------------------------------------------------------
 
-#define INDY_TOUCH_MAXVERTS   2048
-#define INDY_TOUCH_MAXINDICES 6144
-#define INDY_TOUCH_SEGMENTS   32
-
-static D3DTLVERTEX indyTouch_aVerts[INDY_TOUCH_MAXVERTS];
-static uint16_t indyTouch_aIndices[INDY_TOUCH_MAXINDICES];
-static size_t indyTouch_numVerts, indyTouch_numIndices;
-
-static uint16_t indyTouch_AddVertex(float x, float y, D3DCOLOR color)
-{
-    D3DTLVERTEX* pVert = &indyTouch_aVerts[indyTouch_numVerts];
-    memset(pVert, 0, sizeof(*pVert));
-    pVert->sx    = x;
-    pVert->sy    = y;
-    pVert->sz    = 0.0f; // in front of everything
-    pVert->rhw   = 1.0f;
-    pVert->color = color;
-    return (uint16_t)indyTouch_numVerts++;
-}
-
-static bool indyTouch_Reserve(size_t numVerts, size_t numIndices)
-{
-    return indyTouch_numVerts + numVerts <= INDY_TOUCH_MAXVERTS && indyTouch_numIndices + numIndices <= INDY_TOUCH_MAXINDICES;
-}
-
-static void indyTouch_AddTriangle(uint16_t a, uint16_t b, uint16_t c)
-{
-    indyTouch_aIndices[indyTouch_numIndices++] = a;
-    indyTouch_aIndices[indyTouch_numIndices++] = b;
-    indyTouch_aIndices[indyTouch_numIndices++] = c;
-}
-
-static void indyTouch_AddDisc(float cx, float cy, float r, D3DCOLOR color)
-{
-    if ( !indyTouch_Reserve(INDY_TOUCH_SEGMENTS + 1, INDY_TOUCH_SEGMENTS * 3) )
-    {
-        return;
-    }
-    const uint16_t centre = indyTouch_AddVertex(cx, cy, color);
-    for ( int i = 0; i < INDY_TOUCH_SEGMENTS; ++i )
-    {
-        const float a = (float)i * (2.0f * 3.14159265f / INDY_TOUCH_SEGMENTS);
-        indyTouch_AddVertex(cx + cosf(a) * r, cy + sinf(a) * r, color);
-    }
-    for ( int i = 0; i < INDY_TOUCH_SEGMENTS; ++i )
-    {
-        indyTouch_AddTriangle(centre, (uint16_t)(centre + 1 + i), (uint16_t)(centre + 1 + (i + 1) % INDY_TOUCH_SEGMENTS));
-    }
-}
-
-static void indyTouch_AddRing(float cx, float cy, float r, float thickness, D3DCOLOR color)
-{
-    if ( !indyTouch_Reserve(INDY_TOUCH_SEGMENTS * 2, INDY_TOUCH_SEGMENTS * 6) )
-    {
-        return;
-    }
-    const uint16_t first = (uint16_t)indyTouch_numVerts;
-    for ( int i = 0; i < INDY_TOUCH_SEGMENTS; ++i )
-    {
-        const float a = (float)i * (2.0f * 3.14159265f / INDY_TOUCH_SEGMENTS);
-        indyTouch_AddVertex(cx + cosf(a) * r, cy + sinf(a) * r, color);
-        indyTouch_AddVertex(cx + cosf(a) * (r - thickness), cy + sinf(a) * (r - thickness), color);
-    }
-    for ( int i = 0; i < INDY_TOUCH_SEGMENTS; ++i )
-    {
-        const uint16_t o0 = (uint16_t)(first + 2 * i), i0 = (uint16_t)(o0 + 1);
-        const uint16_t o1 = (uint16_t)(first + 2 * ((i + 1) % INDY_TOUCH_SEGMENTS)), i1 = (uint16_t)(o1 + 1);
-        indyTouch_AddTriangle(o0, o1, i0);
-        indyTouch_AddTriangle(i0, o1, i1);
-    }
-}
-
-static void indyTouch_AddRect(float x0, float y0, float x1, float y1, D3DCOLOR color)
-{
-    if ( !indyTouch_Reserve(4, 6) )
-    {
-        return;
-    }
-    const uint16_t a = indyTouch_AddVertex(x0, y0, color), b = indyTouch_AddVertex(x1, y0, color);
-    const uint16_t c = indyTouch_AddVertex(x1, y1, color), d = indyTouch_AddVertex(x0, y1, color);
-    indyTouch_AddTriangle(a, b, c);
-    indyTouch_AddTriangle(a, c, d);
-}
-
 static void indyTouch_DrawButton(IndyTouchButton button)
 {
     float x, y, r;
@@ -620,29 +612,27 @@ static void indyTouch_DrawButton(IndyTouchButton button)
     const bool bHeld   = indyTouch_IsButtonHeld(button);
     const D3DCOLOR fill = D3DCOLOR_ARGB(bHeld ? 90 : 45, 255, 255, 255);
     const D3DCOLOR line = D3DCOLOR_ARGB(140, 255, 255, 255);
-    indyTouch_AddDisc(x, y, r, fill);
-    indyTouch_AddRing(x, y, r, r * 0.06f, line);
+    indyDraw_Disc(x, y, r, fill);
+    indyDraw_Ring(x, y, r, r * 0.06f, line);
 
     switch ( button )
     {
         case INDY_TOUCH_BUTTON_JUMP: // up arrow
-            if ( indyTouch_Reserve(3, 3) )
-            {
-                const uint16_t a = indyTouch_AddVertex(x, y - r * 0.45f, line);
-                const uint16_t b = indyTouch_AddVertex(x + r * 0.42f, y + r * 0.25f, line);
-                const uint16_t c = indyTouch_AddVertex(x - r * 0.42f, y + r * 0.25f, line);
-                indyTouch_AddTriangle(a, b, c);
-            }
+            indyDraw_Triangle(x, y - r * 0.45f, x + r * 0.42f, y + r * 0.25f, x - r * 0.42f, y + r * 0.25f, line);
             break;
 
         case INDY_TOUCH_BUTTON_ACTION: // a dot: "use"
-            indyTouch_AddDisc(x, y, r * 0.28f, line);
+            indyDraw_Disc(x, y, r * 0.28f, line);
+            break;
+
+        case INDY_TOUCH_BUTTON_HOLSTER: // down arrow: put away
+            indyDraw_Triangle(x - r * 0.42f, y - r * 0.22f, x + r * 0.42f, y - r * 0.22f, x, y + r * 0.42f, line);
             break;
 
         default: // menu: three bars
             for ( int i = -1; i <= 1; ++i )
             {
-                indyTouch_AddRect(x - r * 0.45f, y + (float)i * r * 0.32f - r * 0.07f, x + r * 0.45f, y + (float)i * r * 0.32f + r * 0.07f, line);
+                indyDraw_Rect(x - r * 0.45f, y + (float)i * r * 0.32f - r * 0.07f, x + r * 0.45f, y + (float)i * r * 0.32f + r * 0.07f, line);
             }
             break;
     }
@@ -658,12 +648,12 @@ void indyTouch_Frame(const IndyTouchFrame* pFrame)
     {
         bForceVisible = getenv("INDY_TOUCH_OVERLAY") != NULL;
     }
-    if ( !indyTouch_bFrameValid || (!indyTouch_bVisible && !bForceVisible) )
+    if ( !indyTouch_bFrameValid || indyTouch_bUiMode || (!indyTouch_bVisible && !bForceVisible) )
     {
         return;
     }
 
-    indyTouch_numVerts = indyTouch_numIndices = 0;
+    indyDraw_Begin();
     const float h = (float)pFrame->height;
 
     indyTouch_DrawButton(INDY_TOUCH_BUTTON_MENU);
@@ -671,25 +661,25 @@ void indyTouch_Frame(const IndyTouchFrame* pFrame)
     {
         indyTouch_DrawButton(INDY_TOUCH_BUTTON_ACTION);
         indyTouch_DrawButton(INDY_TOUCH_BUTTON_JUMP);
+        if ( pFrame->bHolding )
+        {
+            indyTouch_DrawButton(INDY_TOUCH_BUTTON_HOLSTER);
+        }
 
         // the stick where it is held, else a faint hint where it usually is
         const float r = INDY_TOUCH_STICK_RADIUS * h;
         float x, y;
         if ( indyTouch_GetStick(&x, &y) )
         {
-            indyTouch_AddDisc(indyTouch_stickX, indyTouch_stickY, r, D3DCOLOR_ARGB(40, 255, 255, 255));
-            indyTouch_AddRing(indyTouch_stickX, indyTouch_stickY, r, r * 0.05f, D3DCOLOR_ARGB(110, 255, 255, 255));
-            indyTouch_AddDisc(indyTouch_stickX + x * r, indyTouch_stickY - y * r, r * 0.42f, D3DCOLOR_ARGB(120, 255, 255, 255));
+            indyDraw_Disc(indyTouch_stickX, indyTouch_stickY, r, D3DCOLOR_ARGB(40, 255, 255, 255));
+            indyDraw_Ring(indyTouch_stickX, indyTouch_stickY, r, r * 0.05f, D3DCOLOR_ARGB(110, 255, 255, 255));
+            indyDraw_Disc(indyTouch_stickX + x * r, indyTouch_stickY - y * r, r * 0.42f, D3DCOLOR_ARGB(120, 255, 255, 255));
         }
         else
         {
-            indyTouch_AddRing(0.30f * h, h - 0.30f * h, r, r * 0.04f, D3DCOLOR_ARGB(50, 255, 255, 255));
+            indyDraw_Ring(0.30f * h, h - 0.30f * h, r, r * 0.04f, D3DCOLOR_ARGB(50, 255, 255, 255));
         }
     }
 
-    if ( indyTouch_numIndices )
-    {
-        std3D_DrawRenderList(NULL, (Std3DRenderState)(STD3D_RS_ZWRITE_DISABLED | STD3D_RS_TEXFILTER_BILINEAR), indyTouch_aVerts,
-            indyTouch_numVerts, indyTouch_aIndices, indyTouch_numIndices);
-    }
+    indyDraw_End();
 }

@@ -27,6 +27,14 @@ rdFontColor rdFont_aFontColors;
 static void J3DAPI rdFont_DrawChar(size_t chr, float x, float y, float z, const rdFont* pFont);
 static void J3DAPI rdFont_DrawCharScaled(size_t chr, float x, float y, float z, const rdFont* pFont, float fontSizePt); // New
 
+// INDY: native menus (JonesMenuSDL.c) scale glyphs uniformly by the screen height; the HUD keeps the original scaling
+static bool rdFont_bKeepAspect = false;
+
+void J3DAPI rdFont_SetKeepAspect(bool bKeepAspect)
+{
+    rdFont_bKeepAspect = bKeepAspect;
+}
+
 void rdFont_InstallHooks(void)
 {
     J3D_HOOKFUNC(rdFont_Load);
@@ -413,6 +421,7 @@ void J3DAPI rdFont_DrawTextLineEx(const char* pText, float x, float y, float z, 
 
         double swidth  = (double)width / RD_REF_WIDTH;
         double sheight = (double)height / RD_REF_HEIGHT;
+        if ( rdFont_bKeepAspect ) swidth = sheight; // INDY: menus keep the glyphs' shape on wide screens
 
         float fontScale = fontSizePt / (float)pFont->fontSize; // Added
 
@@ -491,6 +500,7 @@ void J3DAPI rdFont_DrawTextLineClippedEx(const char* pText, float x, float y, fl
         stdDisplay_GetBackBufferSize(&width, &height);
         double swidth = (double)width / RD_REF_WIDTH;
         double sheight = (double)height / RD_REF_HEIGHT;
+        if ( rdFont_bKeepAspect ) swidth = sheight; // INDY: menus keep the glyphs' shape on wide screens
 
         float fontScale = fontSizePt / (float)pFont->fontSize; // Added
 
@@ -567,6 +577,7 @@ void J3DAPI rdFont_DrawCharScaled(size_t chr, float x, float y, float z, const r
     stdDisplay_GetBackBufferSize(&width, &height);
     float swidth  = (float)width / RD_REF_WIDTH;
     float sheight = (float)height / RD_REF_HEIGHT;
+    if ( rdFont_bKeepAspect ) swidth = sheight; // INDY: menus keep the glyphs' shape on wide screens
 
     // Altered: font size
     float scaledWidth  = gwidth * 256.0f * swidth * fontScale;

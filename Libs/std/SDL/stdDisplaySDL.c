@@ -54,6 +54,8 @@ static GLuint stdDisplay_blitProgram;
 static GLuint stdDisplay_blitTexture;
 static GLuint stdDisplay_blitVao;
 static GLint stdDisplay_blitTexLoc;
+static GLint stdDisplay_blitBackdropLoc;  // uBackdrop: x 1 = the backdrop (framebuffer copy: bottom row first, RGB), y brightness
+static GLuint stdDisplay_backdropTexture; // stdDisplay_CaptureBackdrop
 
 static tDisplayDevicePreResetCallback stdDisplay_pfPreReset;
 static tDisplayDevicePostResetCallback stdDisplay_pfPostReset;
@@ -290,10 +292,12 @@ GLuint stdDisplay_GLES_CreateProgram(const char* pVertex, const char* pFragment,
 
 static const char* stdDisplay_blitVS =
     "#version 300 es\n"
+    "uniform vec2 uBackdrop;\n"
     "out vec2 vUV;\n"
     "void main() {\n"
     "    vec2 pos = vec2(gl_VertexID == 1 ? 3.0 : -1.0, gl_VertexID == 2 ? 3.0 : -1.0);\n"
-    "    vUV = vec2((pos.x + 1.0) * 0.5, 1.0 - (pos.y + 1.0) * 0.5);\n" // top row of the CPU copy first
+    "    vUV = vec2((pos.x + 1.0) * 0.5, (pos.y + 1.0) * 0.5);\n"
+    "    if ( uBackdrop.x < 0.5 ) vUV.y = 1.0 - vUV.y;\n" // the CPU copy: top row first
     "    gl_Position = vec4(pos, 0.0, 1.0);\n"
     "}\n";
 
@@ -301,9 +305,13 @@ static const char* stdDisplay_blitFS =
     "#version 300 es\n"
     "precision mediump float;\n"
     "uniform sampler2D uTex;\n"
+    "uniform highp vec2 uBackdrop;\n" // same precision as in the vertex shader
     "in vec2 vUV;\n"
     "out vec4 oColor;\n"
-    "void main() { oColor = vec4(texture(uTex, vUV).bgr, 1.0); }\n"; // X8R8G8B8 bytes are B, G, R, X
+    "void main() {\n"
+    "    vec4 t = texture(uTex, vUV);\n"
+    "    oColor = uBackdrop.x < 0.5 ? vec4(t.bgr, 1.0) : vec4(t.rgb * uBackdrop.y, 1.0);\n" // X8R8G8B8 bytes are B, G, R, X
+    "}\n";
 
 static bool stdDisplay_InitGL(void)
 {
@@ -333,6 +341,7 @@ static bool stdDisplay_InitGL(void)
     {
         stdDisplay_blitProgram = stdDisplay_GLES_CreateProgram(stdDisplay_blitVS, stdDisplay_blitFS, NULL);
         stdDisplay_blitTexLoc  = glGetUniformLocation(stdDisplay_blitProgram, "uTex");
+        stdDisplay_blitBackdropLoc = glGetUniformLocation(stdDisplay_blitProgram, "uBackdrop");
         glGenVertexArrays(1, &stdDisplay_blitVao);
         glGenTextures(1, &stdDisplay_blitTexture);
         glBindTexture(GL_TEXTURE_2D, stdDisplay_blitTexture);
@@ -824,6 +833,54 @@ void stdDisplay_UnlockBackBuffer(void)
     glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, (GLsizei)stdDisplay_g_backBuffer.rasterInfo.width, (GLsizei)stdDisplay_g_backBuffer.rasterInfo.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, stdDisplay_pLockPixels);
     glUniform1i(stdDisplay_blitTexLoc, 0);
+    glUniform2f(stdDisplay_blitBackdropLoc, 0.0f, 1.0f);
+    glBindVertexArray(stdDisplay_blitVao);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glBindVertexArray(0);
+    ++stdDisplay_g_glStateEpoch;
+}
+
+void stdDisplay_CaptureBackdrop(void)
+{
+    if ( !stdDisplay_glDevice.context || !stdDisplay_bModeSet || !stdDisplay_blitProgram )
+    {
+        return;
+    }
+
+    std3D_FlushDraws();
+    if ( !stdDisplay_backdropTexture )
+    {
+        glGenTextures(1, &stdDisplay_backdropTexture);
+        glBindTexture(GL_TEXTURE_2D, stdDisplay_backdropTexture);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    }
+    glBindTexture(GL_TEXTURE_2D, stdDisplay_backdropTexture);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, (GLsizei)stdDisplay_g_backBuffer.rasterInfo.width,
+        (GLsizei)stdDisplay_g_backBuffer.rasterInfo.height, 0);
+    ++stdDisplay_g_glStateEpoch;
+}
+
+void stdDisplay_DrawBackdrop(float brightness)
+{
+    if ( !stdDisplay_backdropTexture || !stdDisplay_bModeSet )
+    {
+        stdDisplay_BackBufferFill(0, NULL);
+        return;
+    }
+
+    std3D_FlushDraws();
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_BLEND);
+    glDisable(GL_SCISSOR_TEST);
+    glUseProgram(stdDisplay_blitProgram);
+    glActiveTexture(GL_TEXTURE0);
+    glBindSampler(0, 0);
+    glBindTexture(GL_TEXTURE_2D, stdDisplay_backdropTexture);
+    glUniform1i(stdDisplay_blitTexLoc, 0);
+    glUniform2f(stdDisplay_blitBackdropLoc, 1.0f, brightness);
     glBindVertexArray(stdDisplay_blitVao);
     glDrawArrays(GL_TRIANGLES, 0, 3);
     glBindVertexArray(0);

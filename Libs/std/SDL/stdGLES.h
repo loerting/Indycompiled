@@ -50,6 +50,7 @@ typedef intptr_t GLsizeiptr;
 #define GL_UNSIGNED_BYTE                0x1401
 #define GL_UNSIGNED_SHORT               0x1403
 #define GL_FLOAT                        0x1406
+#define GL_RGB                          0x1907
 #define GL_RGBA                         0x1908
 #define GL_VENDOR                       0x1F00
 #define GL_RENDERER                     0x1F01
@@ -102,6 +103,7 @@ typedef intptr_t GLsizeiptr;
     X(void, glBufferSubData, (GLenum target, GLintptr offset, GLsizeiptr size, const void* data)) \
     X(void, glClear, (GLbitfield mask)) \
     X(void, glClearColor, (GLfloat r, GLfloat g, GLfloat b, GLfloat a)) \
+    X(void, glCopyTexImage2D, (GLenum target, GLint level, GLenum internalformat, GLint x, GLint y, GLsizei width, GLsizei height, GLint border)) \
     X(void, glClearDepthf, (GLfloat d)) \
     X(void, glClearStencil, (GLint s)) \
     X(void, glCompileShader, (GLuint shader)) \
@@ -150,6 +152,7 @@ typedef intptr_t GLsizeiptr;
     X(void, glTexSubImage2D, (GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const void* pixels)) \
     X(void, glUniform1f, (GLint location, GLfloat v0)) \
     X(void, glUniform1i, (GLint location, GLint v0)) \
+    X(void, glUniform2f, (GLint location, GLfloat v0, GLfloat v1)) \
     X(void, glUniform4f, (GLint location, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3)) \
     X(void, glUseProgram, (GLuint program)) \
     X(void, glVertexAttribPointer, (GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void* pointer)) \
@@ -164,5 +167,9 @@ bool stdGLES_HasExtension(const char* pName);
 
 // std3DGLES.c: draws the queued 3D draws; the display module calls it before it uses GL or ends the frame
 void std3D_FlushDraws(void);
+
+// stdDisplaySDL.c, for the native menus (JonesMenuSDL.c): keeps the current frame, and draws it again (dimmed)
+void stdDisplay_CaptureBackdrop(void);
+void stdDisplay_DrawBackdrop(float brightness);
 
 #endif // STD_SDL_STDGLES_H
