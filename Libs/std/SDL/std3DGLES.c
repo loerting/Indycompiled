@@ -18,6 +18,12 @@
 
 #define STD3D_MAXSTREAMVERTICES 65535
 
+// Ring buffers for the streamed vertices and indices: each draw call appends behind the previous one, and the storage
+// is orphaned only when full. (Orphaning per draw call made the Adreno driver allocate GPU memory, an ioctl, for every
+// call: 2 fps.)
+#define STD3D_RINGVERTICES (STD3D_MAXSTREAMVERTICES * 4)
+#define STD3D_RINGINDICES  (STD3D_MAXSTREAMVERTICES * 3 * 4)
+
 struct sStdGLTexture
 {
     GLuint id;
@@ -71,6 +77,7 @@ static tSystemTexture* std3D_pLastTexCache;
 static GLuint std3D_program;
 static GLint std3D_locViewport, std3D_locTex, std3D_locFogParams, std3D_locFogColor, std3D_locAlphaRef;
 static GLuint std3D_vao, std3D_vbo, std3D_ibo, std3D_sampler;
+static size_t std3D_vboPos, std3D_iboPos; // next free entry in the ring buffers
 static struct sStdGLTexture std3D_whiteTexture;
 
 static void J3DAPI std3D_AddTextureToCacheList(tSystemTexture* pTexture);
@@ -293,9 +300,10 @@ int J3DAPI std3D_Open(size_t deviceNum)
     glGenBuffers(1, &std3D_vbo);
     glGenBuffers(1, &std3D_ibo);
     glBindBuffer(GL_ARRAY_BUFFER, std3D_vbo);
-    glBufferData(GL_ARRAY_BUFFER, (GLsizeiptr)(STD3D_MAXSTREAMVERTICES * sizeof(D3DTLVERTEX)), NULL, GL_STREAM_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, (GLsizeiptr)(STD3D_RINGVERTICES * sizeof(D3DTLVERTEX)), NULL, GL_STREAM_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, std3D_ibo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, (GLsizeiptr)(STD3D_MAXSTREAMVERTICES * 3 * sizeof(uint16_t)), NULL, GL_STREAM_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, (GLsizeiptr)(STD3D_RINGINDICES * sizeof(uint16_t)), NULL, GL_STREAM_DRAW);
+    std3D_vboPos = std3D_iboPos = 0;
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(D3DTLVERTEX), (const void*)offsetof(D3DTLVERTEX, sx));
     glEnableVertexAttribArray(1);
@@ -455,6 +463,42 @@ void J3DAPI std3D_SetRenderState(Std3DRenderState rdflags)
     }
 }
 
+// Appends count elements to the ring buffer bound to target and returns the index of the first one. Unsynchronized
+// mapping is safe: a range is written again only after the storage was orphaned.
+static size_t std3D_StreamData(GLenum target, size_t* pPos, size_t capacity, size_t elemSize, const void* pData, size_t count)
+{
+    if ( *pPos + count > capacity )
+    {
+        glBufferData(target, (GLsizeiptr)(capacity * elemSize), NULL, GL_STREAM_DRAW); // orphan
+        *pPos = 0;
+    }
+
+    const size_t first = *pPos;
+    void* pDest = glMapBufferRange(target, (GLintptr)(first * elemSize), (GLsizeiptr)(count * elemSize), GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
+    if ( pDest )
+    {
+        memcpy(pDest, pData, count * elemSize);
+        glUnmapBuffer(target);
+    }
+    else
+    {
+        glBufferSubData(target, (GLintptr)(first * elemSize), (GLsizeiptr)(count * elemSize), pData);
+    }
+
+    *pPos = first + count;
+    return first;
+}
+
+// Uploads the vertices and points the vertex attributes at them
+static void std3D_StreamVertices(LPD3DTLVERTEX aVerts, size_t numVerts)
+{
+    glBindBuffer(GL_ARRAY_BUFFER, std3D_vbo);
+    const size_t base = std3D_StreamData(GL_ARRAY_BUFFER, &std3D_vboPos, STD3D_RINGVERTICES, sizeof(D3DTLVERTEX), aVerts, numVerts) * sizeof(D3DTLVERTEX);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(D3DTLVERTEX), (const void*)(base + offsetof(D3DTLVERTEX, sx)));
+    glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(D3DTLVERTEX), (const void*)(base + offsetof(D3DTLVERTEX, color)));
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(D3DTLVERTEX), (const void*)(base + offsetof(D3DTLVERTEX, tu)));
+}
+
 static void std3D_PrepareDraw(void)
 {
     if ( std3D_glStateEpoch != stdDisplay_g_glStateEpoch )
@@ -478,13 +522,10 @@ void J3DAPI std3D_DrawRenderList(tSysTexture* pTex, Std3DRenderState rdflags, LP
         std3D_BindTexture(pTex);
     }
 
-    glBindBuffer(GL_ARRAY_BUFFER, std3D_vbo);
-    glBufferData(GL_ARRAY_BUFFER, (GLsizeiptr)(STD3D_MAXSTREAMVERTICES * sizeof(D3DTLVERTEX)), NULL, GL_STREAM_DRAW); // orphan
-    glBufferSubData(GL_ARRAY_BUFFER, 0, (GLsizeiptr)(numVerts * sizeof(D3DTLVERTEX)), aVerts);
+    std3D_StreamVertices(aVerts, numVerts);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, std3D_ibo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, (GLsizeiptr)(STD3D_MAXSTREAMVERTICES * 3 * sizeof(uint16_t)), NULL, GL_STREAM_DRAW);
-    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, (GLsizeiptr)(numIndices * sizeof(uint16_t)), aIndices);
-    glDrawElements(GL_TRIANGLES, (GLsizei)numIndices, GL_UNSIGNED_SHORT, NULL);
+    const size_t firstIndex = std3D_StreamData(GL_ELEMENT_ARRAY_BUFFER, &std3D_iboPos, STD3D_RINGINDICES, sizeof(uint16_t), aIndices, numIndices);
+    glDrawElements(GL_TRIANGLES, (GLsizei)numIndices, GL_UNSIGNED_SHORT, (const void*)(firstIndex * sizeof(uint16_t)));
 }
 
 static void std3D_DrawArrays(GLenum mode, LPD3DTLVERTEX aVerts, size_t numVerts)
@@ -496,9 +537,7 @@ static void std3D_DrawArrays(GLenum mode, LPD3DTLVERTEX aVerts, size_t numVerts)
     }
 
     std3D_PrepareDraw();
-    glBindBuffer(GL_ARRAY_BUFFER, std3D_vbo);
-    glBufferData(GL_ARRAY_BUFFER, (GLsizeiptr)(STD3D_MAXSTREAMVERTICES * sizeof(D3DTLVERTEX)), NULL, GL_STREAM_DRAW);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, (GLsizeiptr)(numVerts * sizeof(D3DTLVERTEX)), aVerts);
+    std3D_StreamVertices(aVerts, numVerts);
     glDrawArrays(mode, 0, (GLsizei)numVerts);
 }
 

@@ -76,6 +76,9 @@ typedef intptr_t GLsizeiptr;
 #define GL_ELEMENT_ARRAY_BUFFER         0x8893
 #define GL_STREAM_DRAW                  0x88E0
 #define GL_STATIC_DRAW                  0x88E4
+#define GL_MAP_WRITE_BIT                0x0002
+#define GL_MAP_INVALIDATE_RANGE_BIT     0x0004
+#define GL_MAP_UNSYNCHRONIZED_BIT       0x0020
 #define GL_FRAGMENT_SHADER              0x8B30
 #define GL_VERTEX_SHADER                0x8B31
 #define GL_COMPILE_STATUS               0x8B81
@@ -134,7 +137,9 @@ typedef intptr_t GLsizeiptr;
     X(const GLubyte*, glGetStringi, (GLenum name, GLuint index)) \
     X(GLint, glGetUniformLocation, (GLuint program, const GLchar* name)) \
     X(void, glLinkProgram, (GLuint program)) \
+    X(void*, glMapBufferRange, (GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access)) \
     X(void, glPixelStorei, (GLenum pname, GLint param)) \
+    X(GLboolean, glUnmapBuffer, (GLenum target)) \
     X(void, glReadPixels, (GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, void* pixels)) \
     X(void, glSamplerParameterf, (GLuint sampler, GLenum pname, GLfloat param)) \
     X(void, glSamplerParameteri, (GLuint sampler, GLenum pname, GLint param)) \
