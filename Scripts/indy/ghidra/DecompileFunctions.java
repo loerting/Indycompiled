@@ -1,4 +1,4 @@
-// Decompiles the named functions of Indy3D.exe v1.2 into <outdir>/<name>.c for analysis.
+// Decompiles the named functions of the program (Indy3D.exe v1.2, or the debug build) into <outdir>/<name>.c for analysis.
 // Output belongs in the git-ignored game/ folder (PROJECT.md §7.4: no decompiler output in git).
 // Usage (headless): -postScript DecompileFunctions.java <outdir> <name or 0xaddress or range:0xstart-0xend> [...]
 // (range: every function whose entry point lies in [start, end))
@@ -57,7 +57,7 @@ public class DecompileFunctions extends GhidraScript {
             DecompileResults res = decomp.decompileFunction(fn, 60, monitor);
             String text = res.getDecompiledFunction() != null ? res.getDecompiledFunction().getC() : "// decompilation failed\n";
             try (PrintWriter w = new PrintWriter(new File(outDir, fn.getName() + ".c"))) {
-                w.println("// " + fn.getName() + " @ " + fn.getEntryPoint() + ", " + fn.getBody().getNumAddresses() + " bytes (Indy3D.exe v1.2)");
+                w.println("// " + fn.getName() + " @ " + fn.getEntryPoint() + ", " + fn.getBody().getNumAddresses() + " bytes (" + currentProgram.getName() + ")");
                 w.print(text);
             }
             println("decompiled " + fn.getName());
