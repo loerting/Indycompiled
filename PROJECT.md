@@ -61,6 +61,7 @@ Changes to §4 (strategy), §5 (toolchain) or §7 (repository workflow) need an 
 | `Resource/Indy3D.exe` **v1.2** | same | SHA-256 `4075e655e0cf0db2…`. **This is our host exe.** It is a near-identical build of v1.0 with shifted addresses, so upstream's v1.0 addresses are translated to v1.2 by our address map (§5.7). |
 | `Resource/ddraw.dll` | same | A DirectDraw-to-Direct3D 9 wrapper added by the 2018 re-release. Not needed: Wine provides DirectDraw itself. |
 | `Indy3D.exe` **v1.0** | not available | Not needed: we use the address map instead (decided 2026-10-06). |
+| `indy3d.exe` **debug build** (Italian release, 1999-10-29) | `game/debug-it/` (git-ignored) | Stored inside the Italian `CD1.GOB` next to `indy3dr.exe` (that disc's release build). SHA-256 `65f9165283b2e00a…`, code 1.4 MB vs 1.0 MB, asserts with source paths, full multiplayer code. **Upstream's reference** for reimplementations (smlu, 2026-10-07): cross-check against it, not only v1.2. |
 | `Resource/*.GOB`, `*.snm` | same | 3 GOB archives (840 MB) and 5 SMUSH cutscene videos |
 
 ### 2.2 Levels
